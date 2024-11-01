@@ -1,0 +1,21 @@
+html, body
+  background-color: var(--data-main-dg-color)
+  color: var(--data-text-color)
+
+.layout
+  display: flex
+  flex-direction: column
+  justify-content: center
+  align-items: center
+  gap: 12px
+
+  @import 'main-menu'
+
+  main
+    width: 1000px
+    @import 'secondary-menu'
+    @import 'pages'
+    @import 'fps'
+
+.page
+  margin: 0 auto

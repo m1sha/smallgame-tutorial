@@ -1,0 +1,16 @@
+@import 'themes/dark'
+
+:root
+  --data-main-dg-color: #{$main-dg-color}
+  --data-text-color: #{$text-color}
+  --data-text-hover-color: #{$text-hover-color}
+  --data-text-disabled-color: #{$text-disabled-color}
+  --data-ascent-color: #{$ascent-color}
+
+a
+  color: var(--data-text-color)
+  text-decoration: none
+  &:hover
+    color: var(--data-text-hover-color)
+  &:disabled
+    color: var(--data-text-disabled-color)
