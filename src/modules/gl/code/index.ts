@@ -1,13 +1,6 @@
 import { gLScriptList, type GLScript } from "./script";
 
-import './hello-world'
-import './uniform-attribute'
-import './vertex-buffer'
-import './vertex-buffer2'
-import './texure'
-import './texure2'
-import './shaders-effect'
-import './shaders-effect2'
+import './scripts'
 
 export class App {
   current: GLScript
@@ -15,6 +8,8 @@ export class App {
   fps: HTMLDivElement | null = null
   names: string[]
   scripts: GLScript[]
+  width: number = 0
+  height: number = 0
 
   constructor (index: number) {
     this.names = gLScriptList.map(p => p.name)
@@ -23,13 +18,15 @@ export class App {
   }
 
   async run () {
-    this.current.settings = { container: this.container!, fps: this.fps! }
+    this.current.settings = { container: this.container!, fps: this.fps!, width: this.width, height: this.height }
     await this.current.run()
   }
 
-  set (container: HTMLDivElement, fps: HTMLDivElement) {
+  set (container: HTMLDivElement, fps: HTMLDivElement, w: number, h: number) {
     this.container = container
     this.fps = fps
+    this.width = w
+    this.height = h
   }
 
   change (name: string) {
@@ -43,8 +40,5 @@ export class App {
 
     return this.scripts.findIndex(p => p.name === name)
   }
-
-  
-
 
 }

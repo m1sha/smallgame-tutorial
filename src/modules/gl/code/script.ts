@@ -3,6 +3,8 @@ import { killgameloop } from "smallgame";
 export type GLScriptSettings = {
   container: HTMLDivElement
   fps: HTMLDivElement
+  width: number
+  height: number
 }
 
 export class GLScript {

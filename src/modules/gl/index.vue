@@ -16,9 +16,11 @@ onMounted(() => {
 
 
 async function main() {
+  const w = 800
+  const h = 400
   const index = parseInt(route.params.id as string)
   app.value = new App(isNaN(index) || !index ? 0 : index)
-  app.value.set(container.value!, fps.value!)
+  app.value.set(container.value!, fps.value!, w, h)
   app.value!.run()
 }
 
@@ -33,7 +35,7 @@ router.afterEach(() => { main() })
   <div class="gl-surface page">
     <menu class="secondary-menu" v-if="app">
       <nav>
-        <a v-for="name, i in app.names" :href="'#/gl/'+ i" @click="onClick(name)" :class="{ selected: name === app.current.name }">
+        <a v-for="name, i in app.names" :key="i" :href="'#/gl/'+ i" @click="onClick(name)" :class="{ selected: name === app.current.name }">
           {{ name }}
         </a>
       </nav>
