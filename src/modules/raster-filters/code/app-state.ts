@@ -1,18 +1,12 @@
 
-import {  Surface } from 'smallgame'
+import { AllFiltersSettings, createDefaultFiltersSettings } from './filters'
+import { EyeDroppperTool, Tool } from './tools'
 
-class AppState {
-  file: File | string = 'mag.jpg'
-  sourceImage: Surface | null = null
-  workImage: Surface | null = null
-  setWorkImage() {
-    return this.workImage = this.sourceImage?.clone() ?? null
-  }
+export class AppState {
+  filtersSettings = createDefaultFiltersSettings()
+  currentTool: Tool = new EyeDroppperTool()
 
-  applyFilter () {
-    this.sourceImage = this.workImage?.clone() ?? null
+  getFilterSettings<T> (type: string): T {
+    return this.filtersSettings.find(p => p.type === type) as T
   }
 }
-
-
-export default new AppState()

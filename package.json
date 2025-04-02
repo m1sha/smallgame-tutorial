@@ -9,6 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "pinia": "^3.0.1",
     "sass": "^1.80.5",
     "smallgame": "file:../smallgame",
     "vue": "^3.4.29",

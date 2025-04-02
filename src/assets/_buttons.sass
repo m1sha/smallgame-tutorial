@@ -1,0 +1,75 @@
+@use '_colors' as colors
+
+button
+  background-color: inherit
+  border: 0
+  color: colors.$btn-color
+  &:not(.toggle)
+    border: 1px solid colors.$btn-border
+    background-color: colors.$btn-background-color
+    border-radius: 4px
+    padding: 8px
+    min-width: 32px
+
+    &.loading
+      animation: k-button-loading 0.7s ease-in //timing-function delay iteration-count direction fill-mode
+      animation-iteration-count: infinite
+      animation-direction: alternate
+      filter: opacity(0.5)
+      border: 1px solid #484848
+      pointer-events: none
+    &.danger
+      border: 1px solid #3b1313
+      background-color: #7e0303
+      &:hover
+        background-color: #940000
+    &:hover
+      background-color: colors.$btn-hover-background-color
+      &:active
+        transform: scale(0.95)
+    &:disabled
+      pointer-events: none
+      filter: brightness(0.85)
+      i
+        color: #777
+
+@keyframes k-button-loading
+  $base-color: #333
+  $glow-color: #464646
+  0%
+    background: linear-gradient(90deg, $base-color 0%, $base-color 0%, $glow-color 0%, $base-color 30%,$base-color 100%)
+    //filter: blur(3px)
+  10%
+    background: linear-gradient(90deg, $base-color 0%, $base-color 10%, $glow-color 30%, $base-color 40%,$base-color 100%)
+    //filter: blur(2px)
+  20%
+    background: linear-gradient(90deg, $base-color 0%, $base-color 20%, $glow-color 40%, $base-color 50%,$base-color 100%)
+    //filter: blur(2px)
+  30%
+    background: linear-gradient(90deg, $base-color 0%, $base-color 30%, $glow-color 50%, $base-color 60%,$base-color 100%)
+    //filter: blur(2px)
+  40%
+    background: linear-gradient(90deg, $base-color 0%, $base-color 40%, $glow-color 60%, $base-color 70%,$base-color 100%)
+    //filter: blur(3px) opacity(0.7)
+  50%
+    background: linear-gradient(90deg, $base-color 0%, $base-color 50%, $glow-color 70%, $base-color 80%,$base-color 100%)
+    //filter: blur(2px) opacity(0.9)
+  60%
+    background: linear-gradient(90deg, $base-color 0%, $base-color 60%, $glow-color 80%, $base-color 90%,$base-color 100%)
+    //filter: blur(3px) opacity(0.7)
+  61%
+    filter: opacity(0.3)
+  62%
+    background: linear-gradient(90deg, $base-color 0%, $base-color 60%, $glow-color 80%, $base-color 90%,$base-color 100%)
+  70%
+    background: linear-gradient(90deg, $base-color 0%, $base-color 70%, $glow-color 90%, $base-color 100%$base-color 100%)
+    //filter: blur(2px)
+  80%
+    background: linear-gradient(90deg, $base-color 0%, $base-color 80%, $glow-color 100%, $base-color 0%, $base-color 100%)
+    //filter: blur(2px)
+  90%
+    background: linear-gradient(90deg, $base-color 0%, $base-color 90%, $glow-color 10%, $base-color 10%,$base-color 100%)
+    filter: blur(2px)
+  100%
+    background: linear-gradient(90deg, $base-color 0%, $base-color 90%, $glow-color 25%, $base-color 20%,$base-color 100%)
+    filter: blur(3px)

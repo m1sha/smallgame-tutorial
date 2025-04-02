@@ -12,13 +12,13 @@ export class ColorBox {
     const dist = new ImageData(src.width, src.height)
     const srcPixels = new Pixels(src)
     const distPixels = new Pixels(dist)
-    const d = 255 / size
+    const d = 256 / size
 
     const getValue = (v: number) => {
-      const g = 0 | v / d
-      const g2 = (g+1) * d
-      const g1 = g * d 
-      return 0 | g1 + (g2 - g1) / 2
+      const i = 0 | v / d
+      const g1 = i * d 
+      const g2 = (i + 1) * d
+      return (g1 + g2) >> 1
     } 
 
     for (let i = 0; i < src.height; i++) {
@@ -57,7 +57,7 @@ export class ColorBox {
       const f = (a: number, b: number) => (a - b) * (a - b)
       const r = f(x[0], y[0]) +  f(x[1], y[1]) + f(x[2], y[2])
 
-      return r >= 0 && r < size
+      return r < size
     }
 
     for (let i = 0; i < src.height; i++) {
