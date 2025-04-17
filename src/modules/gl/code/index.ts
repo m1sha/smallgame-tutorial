@@ -18,7 +18,7 @@ export class App {
   }
 
   async run () {
-    this.current.settings = { container: this.container!, fps: this.fps!, width: this.width, height: this.height }
+    this.current.settings = { container: this.container!, fps: this.fps!, width: this.width, height: this.height, useShaders: true }
     await this.current.run()
   }
 
@@ -39,6 +39,11 @@ export class App {
     }
 
     return this.scripts.findIndex(p => p.name === name)
+  }
+
+  useShaders (value: boolean) {
+    if (!this.current.settings) return
+    this.current.settings.useShaders = value
   }
 
 }

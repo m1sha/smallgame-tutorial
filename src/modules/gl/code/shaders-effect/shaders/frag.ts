@@ -28,21 +28,21 @@ float sdHexagon( in vec2 p, in float r )
 }
 
 void main() {
-  float cc = 8.0;
+  float cc = 16.0;
   vec3 finalColor = vec3(0.0);
   vec2 uv = (gl_FragCoord.xy * 2.0 - iResolution.xy) / iResolution.y;
   vec2 uv0 = uv;
   
   for (float i = 0.0; i < 4.0; i++) {
-    uv = fract(uv * 1.5) - 0.5;
+    uv = fract(uv * 2.5) - 0.5;
     float d = length(uv) * exp(-length(uv0));
     vec3 color = palette(length(uv0) + i *0.4 + time * 0.1);
     d = sin(d * cc + time) / cc;
     d = abs(d);
     d = smoothstep(0.0, 0.1, d);
-    //d = pow(0.01 / d, 0.8);
-    //d = sdHexagon(uv0.xy, d + tan(time)) * 2.;
     d = pow(0.01 / d, 0.8);
+    //d = sdHexagon(uv0.xy, d + tan(time)) * 2.;
+    //d = pow(0.01 / d, 0.8);
     finalColor += color * d;
   }
 

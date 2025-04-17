@@ -9,6 +9,7 @@ const router = useRouter()
 const container = ref<HTMLDivElement>()
 const fps = ref<HTMLDivElement>()
 const app = ref<App | null>(null)
+const useShaders = ref(true)
 
 onMounted(() => {
   main()
@@ -28,6 +29,11 @@ function onClick (name: string) {
   if (app.value) { toRaw(app.value).change(name) }
 }
 
+function onUseShadersChange () {
+  useShaders.value = !useShaders.value
+  app.value!.useShaders(useShaders.value)
+}
+
 router.afterEach(() => { main() })
 
 </script>
@@ -42,5 +48,8 @@ router.afterEach(() => { main() })
     </menu>
     <div class="fps" ref="fps"></div>
     <div ref="container"></div>
+    <div>
+      <input type="checkbox" :checked="useShaders" @change="onUseShadersChange()" /><label>Use Shaders</label>
+    </div>
   </div>
 </template>

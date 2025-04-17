@@ -5,6 +5,7 @@ export type GLScriptSettings = {
   fps: HTMLDivElement
   width: number
   height: number
+  useShaders: boolean
 }
 
 export class GLScript {
