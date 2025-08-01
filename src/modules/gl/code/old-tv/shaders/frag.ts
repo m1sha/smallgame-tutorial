@@ -2,6 +2,7 @@ export default /*glsl*/`
 
 uniform sampler2D u_sampler2D;
 uniform float u_time; 
+uniform vec2 iResolution;
 in  vec2 v_TexCoord;
 out vec4 fragColor;
 
@@ -59,7 +60,7 @@ vec2 screenDistort(vec2 uv)
 }
 
 void main() {
-  vec2 uv = vec2(1024.0, 768.0); 
+  vec2 uv =   iResolution; 
   
 
   float pixelSize = tan(u_time) * 20.0 - 0.1;
@@ -84,10 +85,14 @@ void main() {
   //   distort.x = ((distort.x + tan(u_time) + 0.5) * sin(u_time / 0.1)) + 0.5;
   // } 
 
-  //float xxx = mod(u_time * 0.05, 2.0);
-  //if (xxx > 1.0 && xxx < 1.1){
-  //  distort =vec2(v_TexCoord.x, v_TexCoord.y + sin(u_time * 0.8 + 0.5)) * 1.1;
-  //}
+   float xxx = mod(u_time * 0.05, 2.0);
+   if (xxx > 1.0 && xxx < 1.1){
+     // distort =vec2(v_TexCoord.x, v_TexCoord.y + sin(u_time * 0.8 + 0.5)) * 1.1;
+   }
+
+   if (xxx > 0.1 && xxx < 0.2){
+    // distort =vec2(v_TexCoord.x, v_TexCoord.y + cos(u_time * 0.8 + 0.5)) * 1.1;
+   }
   
   //texColor.r = texture(u_sampler2D, distort).r;
   //texColor.g = texture(u_sampler2D, distort).b;
@@ -101,26 +106,29 @@ void main() {
   texColor.b += noise * 0.05;
 
   vec2 uv2 = screenDistort(v_TexCoord.xy / vec2(1024.0, 768.0)); // screenDistort(vec2(1024.0, 768.0));
-  float vigAmt = 3.+.3*sin(u_time + 5.*cos(u_time*5.));
-	float vignette = (1.-vigAmt*(uv2.y-.5)*(uv2.y-.5))*(1.-vigAmt*(uv2.x-.5)*(uv2.x-.5));
+  //float vigAmt = 3.+.3*sin(u_time + 5.*cos(u_time*5.));
+	//float vignette = (1.-vigAmt*(uv2.y-.5)*(uv2.y-.5))*(1.-vigAmt*(uv2.x-.5)*(uv2.x-.5));
   vec3 video = getVideo(uv2);
-  video += stripes(uv2);
+  //video += stripes(uv2);
   video += noise2(uv2*2.)/2.;
   //video *= vignette;
   video *= (12.+mod(uv2.y*30.+u_time,1.))/13.;
 	
 
 
-  //float xxx = mod(u_time * 0.05, 2.0);
-  //if (xxx > 1.0 && xxx < 1.1){
-  //  texColor.r += video.r;
-  //  texColor.g += video.g;
-  //  texColor.b += video.b;
-  //}
 
   texColor.r += video.r;
   texColor.g += video.g;
   texColor.b += video.b;
+
+
+  
+  float xxx1 = mod(u_time * 0.05, 2.0);
+  if (xxx1 > 0.5 && xxx < 0.7){
+    texColor.r += 0.12;
+    texColor.g += 0.17;
+    texColor.b += 0.05;
+  }
 
   
 

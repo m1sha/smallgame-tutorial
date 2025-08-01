@@ -19,7 +19,7 @@ async function main (container: HTMLDivElement) {
   program.createTexture('u_sampler2D', img)
   
   const vertexCount = program
-    .vertexArray('float', { a_Position: vec2, a_TexCoord: vec2 })
+    .vbo('static', 'float', { a_Position: vec2, a_TexCoord: vec2 })
     .push(Primitive2D.rect(), TexCoord.rect())
 
   program.clear()

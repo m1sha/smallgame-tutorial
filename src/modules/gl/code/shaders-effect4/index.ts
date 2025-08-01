@@ -11,7 +11,7 @@ createGLScript('Shaders Effect 4', async ({ container, fps, width, height }) => 
   const program = glSurface.createDefaultProgram(vertex, fragmnet)
   
   const vertexCount = program
-    .vertexArray('float', { aPosition: vec2 })
+    .vbo('static', 'float', { aPosition: vec2 })
     .push(Primitive2D.rect())
   
   const time = program.uniform('iTime', 'float')

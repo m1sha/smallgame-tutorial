@@ -16,7 +16,7 @@ createGLScript('Texture 2', async ({ container, fps }) => {
   program.createTexture('u_sampler2D_2', img2)
 
   const vertexCount = program
-    .vertexArray('float', { a_Position: vec2, a_TexCoord: vec2 })
+    .vbo('static', 'float', { a_Position: vec2, a_TexCoord: vec2 })
     .push(Primitive2D.rect(), TexCoord.rect())
 
   program.clear()

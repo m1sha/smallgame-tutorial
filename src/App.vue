@@ -7,6 +7,7 @@
       <nav>
         <RouterLink to="/">Home</RouterLink>
         <RouterLink to="/gl/">WebGL</RouterLink>
+        <RouterLink to="/gl-raw/">WebGL RAW</RouterLink>
         <RouterLink to="/flappy/">Flappy</RouterLink>
         <RouterLink to="/raster-filers/">Raster Filers</RouterLink>
       </nav>

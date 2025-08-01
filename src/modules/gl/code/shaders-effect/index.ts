@@ -13,7 +13,7 @@ createGLScript('Shaders Effect', async ({ container, fps }) => {
   
   const time = program.uniform('time', 'float')
   const vertexCount = program
-    .vertexArray('float', { aPosition: vec2 })
+    .vbo('static', 'float', { aPosition: vec2 })
     .push(Primitive2D.rect())
   
   

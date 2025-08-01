@@ -3,6 +3,7 @@ import type { Figure } from "./figure"
 import colors from "./colors"
 
 export class Field extends Sprite {
+  private score_float: number = 0.0
   rows = 20
   cols = 10
   map: number []
@@ -40,7 +41,10 @@ export class Field extends Sprite {
     for (let i = 0; i< this.rows; i++) {
       for (let j = 0; j < this.cols; j++) {
         const colorIndex = this.map[i * this.cols + j]
-        sketch.rect({ fill: colors[colorIndex], stroke: colorIndex > 0 ? '#585858' : '#2c2c2c' }, new Rect(j * this.cellWidth, i * this.cellHeight, this.cellWidth, this.cellHeight ))
+        sketch.rect({ fill: colors[0], stroke: '#2c2c2c' }, new Rect(j * this.cellWidth, i * this.cellHeight, this.cellWidth, this.cellHeight ))
+        if (colorIndex > 0) {
+          sketch.roundedrect({ fill: colors[colorIndex], stroke: '#585858'  }, new Rect(j * this.cellWidth, i * this.cellHeight, this.cellWidth, this.cellHeight ), 4)
+        }
       } 
     }
     sketch.draw(this.image!)
@@ -75,12 +79,23 @@ export class Field extends Sprite {
   }
 
   removeFullLines () {
+    let n = 0
     for (let i = 0; i < this.rows; i++) {
       if (this.checkRow(i)) {
         this.clearRow(i)
         this.shiftLinesDown(i)
-        this.score += 100
+        n++
       }
+    }
+
+    this.score += 100 * n * n
+  }
+
+  updateScore () {
+    this.score_float += 0.1
+    if (this.score_float > 1) {
+      this.score += 1
+      this.score_float = 0
     }
   }
 

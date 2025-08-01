@@ -1,53 +1,82 @@
-import { Game, loadImage, gameloop, Rect, Time, Sketch } from 'smallgame'
+import { displayFps } from '../../../../utils/display-fps'
+import { Game, loadImage, gameloop, Rect, Sketch, Surface, GlSurface } from 'smallgame'
 import { createGLScript, GLScriptSettings } from '../script'
 import { Tetris } from '../../../tetrix/tetris'
-import { createOldTVEffect } from './old-tv'
+import { Effect } from './base/effect'
+import vertex from './shaders/vert'
+import fragmnet from './shaders/frag'
+import fragmnet2 from './shaders/frag2'
+import fragmnet3 from './shaders/frag3'
+import fragmnet4 from './shaders/frag4'
+import brokenTvFrag from './shaders/broken-tv.frag'
+import { EffectPipeline } from './base/effect-pipeline'
 
-createGLScript('Old TV', async setting => {
-  await main(setting)
-})
+createGLScript('Old TV', async setting => new App(setting, 768, 768).create())
 
+class App {
+  private bgColor = "#333"
+  private tetris: Tetris
+  private effectPipeline: EffectPipeline
+  private shift_w = 166
+  private shift_h = 340
+  constructor (
+    private setting: GLScriptSettings,
+    public width: number, 
+    public hight: number
+  ) {
+    const { shift_w, shift_h }  = this
 
-async function main (setting: GLScriptSettings) {
-  const w = 1024 
-  const h = 768
-  const bgColor = "#111111"
-  const { game, screen } = Game.create(w, h, setting.container)
-  
-  const tetris = new Tetris(w, h) 
-
-  const oldTVEffect = createOldTVEffect(w, h)
-
-  const tvLayout = await loadImage('tv.png')
-  tvLayout.resize(w, h)
-  const border = createBorder(bgColor, w, h, 50)
-  
-  screen.fill(bgColor)
-  let i = 0.0
-
-  gameloop(() => {
-    setting.fps.textContent = Time.fps.toFixed(0)
+    this.tetris = new Tetris(width - shift_w, hight - shift_h)
     
-    const surface = tetris.nextFrame(game.event, game.key)
-    oldTVEffect.applyEffect(surface)
-   
-    screen.fill(bgColor)
+    this.effectPipeline = new EffectPipeline( [ 
+      new Effect(width - shift_w, hight - shift_h, fragmnet2, vertex),
+      //new Effect(width - shift_w, hight - shift_h, fragmnet3, vertex), // Pixel Filter 
+      new Effect(width - shift_w, hight - shift_h, fragmnet4, vertex), 
+      //new Effect(width , hight, fragmnet, vertex),   // Old TV Effect 
+      new Effect(width - shift_w + 1, hight - shift_h + 10, brokenTvFrag, vertex), 
+    ])
+  }
 
-    if (setting.useShaders)
-      screen.blit(oldTVEffect.surface, oldTVEffect.surface.rect)
-    else 
-     screen.blit(surface, surface.rect)
+  async create () {
+    const { width, hight, shift_w, shift_h, setting, bgColor, tetris, effectPipeline } = this
+    const { game, screen } = Game.create(width, hight, setting.container)
+    const tvLayout = await loadImage('tv2.png')
+    tvLayout.resize(width, hight)
 
-    screen.blit(border, border.rect)
-    screen.blit(tvLayout, tvLayout.rect)
-    
-    i += 0.01
-    oldTVEffect.tick(i)
-  })
+    const viewport = new Rect(0, 0, width, hight)
+
+    const border = this.createBorder(bgColor, width, hight, 80)
+    const border2 = this.createBorder2('#000', 90, 84, width - shift_w, hight - shift_h, 20)
+
+    gameloop(() => {
+      let surface: Surface | GlSurface = tetris.nextFrame(game.event, game.key)
+
+      if (setting.useShaders)
+        surface = effectPipeline.build(surface)
+
+      
+      screen.fill(bgColor)
+      //screen.blit(border2, border2.rect)
+      //screen.blit(border, border.rect)
+      screen.blit(surface, surface.rect.moveSelf(81, 86))
+      
+      screen.blit(tvLayout, tvLayout.rect)
+      displayFps(setting.fps)
+    })
+  }
+
+  private createBorder (color: string, w: number, h: number, radius: number) {
+    const sketch = new Sketch()
+    sketch.rect({ stroke: color, lineWidth: radius }, new Rect(0, 0, w, h))
+    return sketch.toSurface()
+  }
+
+  private createBorder2 (color: string, x: number, y: number, w: number, h: number, radius: number) {
+    const sketch = new Sketch()
+    sketch.rect({ stroke: color, lineWidth: radius }, new Rect(x, y, w, h))
+    return sketch.toSurface()
+  }
+
 }
 
-function createBorder (color: string, w: number, h: number, radius: number) {
-  const sketch = new Sketch()
-  sketch.rect({ stroke: color, lineWidth: radius }, new Rect(0, 0, w, h))
-  return sketch.toSurface()
-}
+

@@ -4,7 +4,7 @@ import vertex from './shaders/vert'
 import fragmnet from './shaders/frag'
 import { createGLScript } from '../script'
 
-createGLScript('Vertex Buffer 2', ({ container, fps }) => {
+createGLScript('Vertex Buffer 2', async ({ container, fps }) => {
   const w = 800
   const h = 800
   const glSurface = new GlSurface(w, h)
@@ -28,7 +28,7 @@ createGLScript('Vertex Buffer 2', ({ container, fps }) => {
   ]
 
   const vertexeCount = program
-    .vertexArray('float', { aPosition: vec2, aColor: vec3 })
+    .vbo('static', 'float', { aPosition: vec2, aColor: vec3 })
     .push(points, colors)
  
 

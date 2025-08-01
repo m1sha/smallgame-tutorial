@@ -36,7 +36,7 @@ export function createOldTVEffect (w: number, h: number) {
     x.delete()
       
     const vertexCount = program
-        .vertexArray('float', { a_Position: vec2, a_TexCoord: vec2 })
+        .vbo('static', 'float', { a_Position: vec2, a_TexCoord: vec2 })
         .push(Primitive2D.rect(), TexCoord.rect())
 
     return new OldTVEffectController(glSurface, u_time, vertexCount, program)

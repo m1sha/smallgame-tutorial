@@ -25,8 +25,8 @@ export class Tetris {
   private shape:  Shape
 
   constructor (public width: number, public height: number) {
-    this.cellWidth =  0 | ((width - 100) / this.cols) * 1/2.5
-    this.cellHeight = 0 | (height - 180) / this.rows 
+    this.cellWidth =  0 | ((width - 0) / this.cols) * 1/2.5
+    this.cellHeight = 0 | (height - 0) / this.rows 
     this.field = new Field(this.rows, this.cols, this.cellWidth, this.cellHeight)
     this.fillShapeList(this.field)
     this.shape = this.shapes.shift()!
@@ -56,12 +56,17 @@ export class Tetris {
     const keys = key.getPressed()
     if (keys[Key.LEFT]) shape.moveLeft()
     if (keys[Key.RIGHT]) shape.moveRight()
-    if (keys[Key.DOWN]) shape.fastMoveDown()
+    if (keys[Key.DOWN]) {
+      shape.fastMoveDown()
+      field.updateScore()
+    }
 
     for (const event of events.get()){
       if (event.type === 'KEYDOWN') {
-        if (event.key === Key.SPACE)
+        if (event.key === Key.SPACE){
           shape.rotate()
+        }
+          
         if (event.key === Key.PAUSE)
           this.state = 'paused'
       }
@@ -71,7 +76,7 @@ export class Tetris {
     screen.clear()
     screen.fill('#444')
     field.image.blit(shape.image!, shape.rect)
-    screen.blit(field.image!, field.rect.move(180, 80))
+    screen.blit(field.image!, field.rect.move(180, 5))
     shape.update()
     field.update()
     

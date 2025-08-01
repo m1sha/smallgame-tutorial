@@ -4,7 +4,7 @@ import vertex from './shaders/vert'
 import fragmnet from './shaders/frag'
 import { createGLScript } from '../script'
 
-createGLScript('Uniforms & Attributes', ({container, fps}) => {
+createGLScript('Uniforms & Attributes', async ({container, fps}) => {
   const w = 800
   const h = 800
   const glSurface = new GlSurface(w, h)

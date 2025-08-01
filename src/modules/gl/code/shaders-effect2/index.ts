@@ -15,7 +15,7 @@ createGLScript('Shaders Effect 2', async ({ container, fps }) => {
   program.createTexture('u_sampler2D', img)
   
   const vertexCount = program
-    .vertexArray('float', { aPosition: vec2, a_TexCoord: vec2 })
+    .vbo('static', 'float', { aPosition: vec2, a_TexCoord: vec2 })
     .push(Primitive2D.rect(), TexCoord.rect())
   
   const time = program.uniform('time', 'float')
