@@ -8,10 +8,11 @@ createGLScript('Hello World', async ({ container, fps }) => {
   const w = 800
   const h = 800
   const glSurface = new GlSurface(w, h)
-  const program = glSurface.createDefaultProgram(vertex, fragmnet)
+  const ctx = glSurface.context
+  glSurface.createDefaultProgram(vertex, fragmnet)
 
-  program.clear()
-  program.drawArrays()
+  ctx.clear()
+  ctx.drawArrays()
   
   const { screen } = Game.create(w, h, container)
   screen.fill('#f8f8f8')

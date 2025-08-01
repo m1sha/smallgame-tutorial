@@ -1,13 +1,12 @@
-import { Game, gameloop, GlSurface, loadImage, Primitive2D, TexCoord, Time, vec2 } from 'smallgame'
-
+import { Game, gameloop, GlSurface, Primitive2D, Time, vec2 } from 'smallgame'
 import vertex from './shaders/vert'
 import fragmnet from './shaders/frag'
 import { createGLScript } from '../script'
 import { displayFps } from '../../../../utils/display-fps'
 
 createGLScript('Shaders Effect 3', async ({ container, fps, width, height }) => {
-  
   const glSurface = new GlSurface(width, height)
+  const ctx = glSurface.context
   const program = glSurface.createDefaultProgram(vertex, fragmnet)
   
   const vertexCount = program
@@ -22,8 +21,8 @@ createGLScript('Shaders Effect 3', async ({ container, fps, width, height }) => 
 
   let d = 0
   gameloop(() => {
-    program.clear()
-    program.drawArrays('triangle-strip', vertexCount)
+    ctx.clear()
+    ctx.drawArrays('triangle-strip', vertexCount)
     
     screen.fill('#222')
     screen.blit(glSurface, glSurface.rect)

@@ -8,6 +8,7 @@ createGLScript('Uniforms & Attributes', async ({container, fps}) => {
   const w = 800
   const h = 800
   const glSurface = new GlSurface(w, h)
+  const ctx = glSurface.context
   const program = glSurface.createDefaultProgram(vertex, fragmnet)
 
   const color = program.uniform('u_FragColor', 'vec2')
@@ -27,11 +28,11 @@ createGLScript('Uniforms & Attributes', async ({container, fps}) => {
       }
     }
   
-    program.clear()
+    ctx.clear()
 
     for (const point of points) {
       aPosition.value = [point.x, point.y, 0.0]
-      program.drawArrays()
+      ctx.drawArrays()
     }
     
   

@@ -8,6 +8,7 @@ createGLScript('Texture 2', async ({ container, fps }) => {
   const w = 800
   const h = 800
   const glSurface = new GlSurface(w, h)
+  const ctx = glSurface.context
   const program = glSurface.createDefaultProgram(vertex, fragmnet)
 
   const img1 = await loadImage('workflow.png')
@@ -19,8 +20,8 @@ createGLScript('Texture 2', async ({ container, fps }) => {
     .vbo('static', 'float', { a_Position: vec2, a_TexCoord: vec2 })
     .push(Primitive2D.rect(), TexCoord.rect())
 
-  program.clear()
-  program.drawArrays('triangle-strip', vertexCount)
+  ctx.clear()
+  ctx.drawArrays('triangle-strip', vertexCount)
   
   const { screen } = Game.create(w, h, container)
   screen.fill('#f8f8f8')

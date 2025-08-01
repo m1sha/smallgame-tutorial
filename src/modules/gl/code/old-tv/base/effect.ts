@@ -12,6 +12,7 @@ export class Effect {
   constructor (public readonly width: number, public readonly height: number, fragmnet: string, vertex: string) {
     this.surface = new GlSurface(width, height)
     this.program = this.surface.createDefaultProgram(vertex, fragmnet)
+    
     this.texure = this.program.createTexture('u_sampler2D', new Surface(width, height))
     this.u_time = this.program.uniform('u_time', 'float')
     this.program.uniform('iResolution', 'vec2').value = [width * 1.0, height * 1.0]
@@ -21,9 +22,10 @@ export class Effect {
   }
 
   applyEffect (surface: Surface | GlSurface) {
+    const ctx = this.surface.context
     this.texure.update(surface)
-    this.program.clear()
-    this.program.drawArrays('triangle-strip', this.vertexCount)
+    ctx.clear()
+    ctx.drawArrays('triangle-strip', this.vertexCount)
     this.tick()
   }
 

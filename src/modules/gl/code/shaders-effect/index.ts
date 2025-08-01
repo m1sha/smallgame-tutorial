@@ -9,6 +9,7 @@ createGLScript('Shaders Effect', async ({ container, fps }) => {
   const w = 800
   const h = 800
   const glSurface = new GlSurface(w, h)
+  const ctx = glSurface.context
   const program = glSurface.createDefaultProgram(vertex, fragmnet)
   
   const time = program.uniform('time', 'float')
@@ -21,8 +22,8 @@ createGLScript('Shaders Effect', async ({ container, fps }) => {
   const { screen } = Game.create(w, h, container)
   
   gameloop(() => {
-    program.clear()
-    program.drawArrays('triangle-strip', vertexCount)
+    ctx.clear()
+    ctx.drawArrays('triangle-strip', vertexCount)
     
     screen.fill('#e9e9e9')
     screen.blit(glSurface, glSurface.rect)

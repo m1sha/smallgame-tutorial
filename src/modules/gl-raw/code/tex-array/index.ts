@@ -55,8 +55,8 @@ export default async function (): Promise<GL> {
   
 
   program.createTexture('uSampler', img, { minMag: 'nearest' })
-  program.clear()
-  program.drawArrays('triangles', vertexCount)
+  gl.clear()
+  gl.drawArrays('triangles', vertexCount)
   
   return gl
 }

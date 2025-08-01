@@ -12,6 +12,7 @@ async function main (container: HTMLDivElement) {
   const w = 800
   const h = 800
   const glSurface = new GlSurface(w, h)
+  const ctx = glSurface.context
   const program = glSurface.createDefaultProgram(vertex, fragmnet)
 
   const img = await loadImage('workflow.png')
@@ -22,8 +23,8 @@ async function main (container: HTMLDivElement) {
     .vbo('static', 'float', { a_Position: vec2, a_TexCoord: vec2 })
     .push(Primitive2D.rect(), TexCoord.rect())
 
-  program.clear()
-  program.drawArrays('triangle-strip', vertexCount)
+  ctx.clear()
+  ctx.drawArrays('triangle-strip', vertexCount)
   
   const { screen } = Game.create(w, h, container)
   

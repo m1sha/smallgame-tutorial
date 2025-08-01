@@ -14,8 +14,8 @@ export class OldTVEffectController {
   
   applyEffect (surface: Surface) {
     this.a = this.program.createTexture('u_sampler2D', surface)
-    this.program.clear()
-    this.program.drawArrays('triangle-strip', this.vertexCount)
+    this.surface.context.clear()
+    this.surface.context.drawArrays('triangle-strip', this.vertexCount)
     if (this.a) this.a.delete()
   }
 
@@ -23,9 +23,6 @@ export class OldTVEffectController {
     this.time.value = iTime
   }
 }
-
-
-
 
 export function createOldTVEffect (w: number, h: number) {
     const glSurface = new GlSurface(w, h)

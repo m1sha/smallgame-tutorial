@@ -6,8 +6,8 @@ import { createGLScript } from '../script'
 import { displayFps } from '../../../../utils/display-fps'
 
 createGLScript('Shaders Effect 4', async ({ container, fps, width, height }) => {
-  
   const glSurface = new GlSurface(width, height)
+  const ctx = glSurface.context
   const program = glSurface.createDefaultProgram(vertex, fragmnet)
   
   const vertexCount = program
@@ -22,8 +22,8 @@ createGLScript('Shaders Effect 4', async ({ container, fps, width, height }) => 
 
   let d = 0
   gameloop(() => {
-    program.clear()
-    program.drawArrays('triangle-strip', vertexCount)
+    ctx.clear()
+    ctx.drawArrays('triangle-strip', vertexCount)
     
     screen.fill('#222')
     screen.blit(glSurface, glSurface.rect)

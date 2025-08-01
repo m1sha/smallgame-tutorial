@@ -8,6 +8,7 @@ createGLScript('Vertex Buffer', async ({ container, fps }) => {
   const w = 800
   const h = 800
   const glSurface = new GlSurface(w, h)
+  const ctx = glSurface.context
   const program = glSurface.createDefaultProgram(vertex, fragmnet)
 
   const mat = program.uniform('u_mat', 'mat4')
@@ -30,8 +31,8 @@ createGLScript('Vertex Buffer', async ({ container, fps }) => {
     mat.set(m)
     a += Time.deltaTime * 20
 
-    program.clear()
-    program.drawArrays('triangle-strip', vertexeCount)
+    ctx.clear()
+    ctx.drawArrays('triangle-strip', vertexeCount)
     
     screen.fill('#e9e9e9')
     screen.blit(glSurface, glSurface.rect)
