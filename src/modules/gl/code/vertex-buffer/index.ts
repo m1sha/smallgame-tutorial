@@ -1,4 +1,4 @@
-import { Game, gameloop, GlSurface, rad, Time, vec2 } from 'smallgame'
+import { Game, gameloop, rad, SurfaceGL, Time, vec2 } from 'smallgame'
 
 import vertex from './shaders/vert'
 import fragmnet from './shaders/frag'
@@ -7,12 +7,12 @@ import { createGLScript } from '../script'
 createGLScript('Vertex Buffer', async ({ container, fps }) => {
   const w = 800
   const h = 800
-  const glSurface = new GlSurface(w, h)
+  const glSurface = new SurfaceGL(w, h)
   const ctx = glSurface.context
-  const program = glSurface.createDefaultProgram(vertex, fragmnet)
+  ctx.createProgram(vertex, fragmnet, 'assemble-and-use')
 
-  const mat = program.uniform('u_mat', 'mat4')
-  const vertexeCount = program
+  const mat = ctx.uniform('u_mat', 'mat4')
+  const vertexeCount = ctx
     .vbo('static', 'float', { aPosition: vec2 })
     .push([
       -0.5, 0.5,

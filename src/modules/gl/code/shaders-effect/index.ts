@@ -1,4 +1,4 @@
-import { Game, gameloop, GlSurface, Primitive2D, Time, vec2 } from 'smallgame'
+import { Game, gameloop, Primitive2D, SurfaceGL, Time, vec2 } from 'smallgame'
 
 import vertex from './shaders/vert'
 import fragmnet from './shaders/frag'
@@ -8,12 +8,12 @@ import { displayFps } from '../../../../utils/display-fps'
 createGLScript('Shaders Effect', async ({ container, fps }) => {
   const w = 800
   const h = 800
-  const glSurface = new GlSurface(w, h)
+  const glSurface = new SurfaceGL(w, h)
   const ctx = glSurface.context
-  const program = glSurface.createDefaultProgram(vertex, fragmnet)
+  ctx.createProgram(vertex, fragmnet, 'assemble-and-use')
   
-  const time = program.uniform('time', 'float')
-  const vertexCount = program
+  const time = ctx.uniform('time', 'float')
+  const vertexCount = ctx
     .vbo('static', 'float', { aPosition: vec2 })
     .push(Primitive2D.rect())
   

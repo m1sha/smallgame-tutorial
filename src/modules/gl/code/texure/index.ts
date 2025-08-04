@@ -1,4 +1,4 @@
-import { Game, GlSurface, loadImage, vec2, Primitive2D, TexCoord } from 'smallgame'
+import { Game, loadImage, vec2, Primitive2D, TexCoord, SurfaceGL } from 'smallgame'
 
 import vertex from './shaders/vert'
 import fragmnet from './shaders/frag'
@@ -11,15 +11,15 @@ createGLScript('Texture', async ({ container, fps }) => {
 async function main (container: HTMLDivElement) {
   const w = 800
   const h = 800
-  const glSurface = new GlSurface(w, h)
+  const glSurface = new SurfaceGL(w, h)
   const ctx = glSurface.context
-  const program = glSurface.createDefaultProgram(vertex, fragmnet)
+  ctx.createProgram(vertex, fragmnet, 'assemble-and-use')
 
   const img = await loadImage('workflow.png')
 
-  program.createTexture('u_sampler2D', img)
+  ctx.createTexture('u_sampler2D', img)
   
-  const vertexCount = program
+  const vertexCount = ctx
     .vbo('static', 'float', { a_Position: vec2, a_TexCoord: vec2 })
     .push(Primitive2D.rect(), TexCoord.rect())
 

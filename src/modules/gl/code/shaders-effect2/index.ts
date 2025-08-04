@@ -1,4 +1,4 @@
-import { Game, gameloop, GlSurface, loadImage, Primitive2D, TexCoord, Time, vec2 } from 'smallgame'
+import { Game, gameloop, loadImage, Primitive2D, SurfaceGL, TexCoord, Time, vec2 } from 'smallgame'
 
 import vertex from './shaders/vert'
 import fragmnet from './shaders/frag'
@@ -8,18 +8,18 @@ import { displayFps } from '../../../../utils/display-fps'
 createGLScript('Shaders Effect 2', async ({ container, fps }) => {
   const w = 800
   const h = 800
-  const glSurface = new GlSurface(w, h)
+  const glSurface = new SurfaceGL(w, h)
   const ctx = glSurface.context
-  const program = glSurface.createDefaultProgram(vertex, fragmnet)
+  ctx.createProgram(vertex, fragmnet, 'assemble-and-use')
   
   const img = await loadImage('workflow.png')
-  program.createTexture('u_sampler2D', img)
+  ctx.createTexture('u_sampler2D', img)
   
-  const vertexCount = program
+  const vertexCount = ctx
     .vbo('static', 'float', { aPosition: vec2, a_TexCoord: vec2 })
     .push(Primitive2D.rect(), TexCoord.rect())
   
-  const time = program.uniform('time', 'float')
+  const time = ctx.uniform('time', 'float')
 
   const { screen } = Game.create(w, h, container)
 

@@ -1,4 +1,4 @@
-import { Game, gameloop, GlSurface, Primitive2D, Time, vec2 } from 'smallgame'
+import { Game, gameloop, Primitive2D, SurfaceGL, Time, vec2 } from 'smallgame'
 
 import vertex from './shaders/vert'
 import fragmnet from './shaders/frag'
@@ -6,17 +6,17 @@ import { createGLScript } from '../script'
 import { displayFps } from '../../../../utils/display-fps'
 
 createGLScript('Shaders Effect 4', async ({ container, fps, width, height }) => {
-  const glSurface = new GlSurface(width, height)
+  const glSurface = new SurfaceGL(width, height)
   const ctx = glSurface.context
-  const program = glSurface.createDefaultProgram(vertex, fragmnet)
+  ctx.createProgram(vertex, fragmnet, 'assemble-and-use')
   
-  const vertexCount = program
+  const vertexCount = ctx
     .vbo('static', 'float', { aPosition: vec2 })
     .push(Primitive2D.rect())
   
-  const time = program.uniform('iTime', 'float')
-  program.uniform('iResolution', 'vec2').value = [width * 1.0, height * 1.0]
-  const iMouse = program.uniform('iMouse', 'vec4')
+  const time = ctx.uniform('iTime', 'float')
+  ctx.uniform('iResolution', 'vec2').value = [width * 1.0, height * 1.0]
+  const iMouse = ctx.uniform('iMouse', 'vec4')
 
   const { game, screen } = Game.create(width, height, container)
 
