@@ -20,7 +20,7 @@ createGLScript('Texture 2', async ({ container, fps }) => {
     .vbo('static', 'float', { a_Position: vec2, a_TexCoord: vec2 })
     .push(Primitive2D.rect(), TexCoord.rect())
 
-  ctx.clear()
+  ctx.clear(0x0)
   ctx.drawArrays('triangle-strip', vertexCount)
   
   const { screen } = Game.create(w, h, container)

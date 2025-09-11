@@ -3,3 +3,15 @@ menu.main-menu
   nav
     display: flex
     gap: 12px
+    box-shadow: 0 0 20px #444
+    padding: 4px 16px
+
+    a
+      color: #aaa
+      padding-bottom: 0.25em
+      border-bottom: 0.15em solid var(--data-main-dg-color)
+      font-size: 1.1em
+
+      &.router-link-active, &.selected
+        color: #ccc
+        border-bottom: 0.15em solid var(--data-ascent-color)

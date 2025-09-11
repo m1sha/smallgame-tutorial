@@ -1,4 +1,4 @@
-import { setPoint, Sketch, Sprite } from "smallgame";
+import { setPoint, Sketch, Sprite, Time } from "smallgame";
 
 export class Bird extends Sprite {
   accel = 0.2
@@ -19,14 +19,14 @@ export class Bird extends Sprite {
 
   up () {
     if (this.dir == -1) this.v = 0
-    this.dir = 1
+    this.dir = 50 * Time.deltaTime
     this.accel = 0.08
   }
 
   down () {
     if (this.dir == 1) this.v = 0
-    this.dir = -1
-    this.accel = 3
+    this.dir = -20 * Time.deltaTime 
+    this.accel = .5   
   }
 
   protected update(): void {

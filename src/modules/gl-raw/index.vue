@@ -6,7 +6,7 @@ const container = ref<HTMLDivElement>()
 const app = new App()
 
 onMounted(async () => {
-  await app.run(container.value)
+  await app.run(container.value!)
 })
 </script>
 

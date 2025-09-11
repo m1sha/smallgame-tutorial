@@ -12,5 +12,5 @@ export function main (root: HTMLDivElement) {
   
   const cs =  c.toString()
   console.log(cs)
-  screen.fill(cs)
+  screen.fill(c.value)
 }

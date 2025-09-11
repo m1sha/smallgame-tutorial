@@ -1,15 +1,15 @@
-import { GL, loadImage, setSize, vec2 } from "smallgame"
+import { GL, loadImage, setSize, Surface, vec2 } from "smallgame"
 import ver from "./shaders/ver"
 import frag from "./shaders/frag"
 import { UVAtlas } from "./atlas"
 import { Grid } from "./grid"
 
-export default async function (): Promise<GL> {
-  const vwSize = setSize(48,  64)
+export default async function (): Promise<{ canvas: HTMLCanvasElement }> {
+  const vwSize = setSize(16,  16)
   const img = await loadImage('terrain.png')
   const uv = new UVAtlas(img, setSize(16, 16))
-  const gl = new GL(vwSize)
-  const program = gl.createProgram(ver, frag, 'assemble-and-use')
+  const gl = new GL(vwSize, true)
+  gl.createProgram(ver, frag, 'assemble-and-use')
   gl.viewport(vwSize)
 
   const rectClear = uv.rect(3, 0)
@@ -32,31 +32,76 @@ export default async function (): Promise<GL> {
   const grid = new Grid(3, 3, setSize(16, 16), vwSize)
   const rects = grid.rects()
 
-  const vertexCount = program
+  const vertexCount = gl
     .vbo('static', 'float', { aPosition: vec2 })
     .push(rects)
   
   let i = 0
   const count = () => i = i + 12
-  program
+  gl
     .subData('aTexCoord', 'vec2', vertexCount)
     .push(rect11)
-    .push(rect12, count())
-    .push(rect13, count())
-    .push(rect21, count())
-    .push(rect22, count())
-    .push(rect23, count())
-    .push(rect31, count())
-    .push(rect32, count())
-    .push(rect33, count())
+    // .push(rect12, count())
+    // .push(rect13, count())
+    // .push(rect21, count())
+    // .push(rect22, count())
+    // .push(rect23, count())
+    // .push(rect31, count())
+    // .push(rect32, count())
+    // .push(rect33, count())
 
     .build()
     //.push(rect4, 60)
   
 
-  program.createTexture('uSampler', img, { minMag: 'nearest' })
-  gl.clear()
-  gl.drawArrays('triangles', vertexCount)
+  gl.createTexture('uSampler', img, { minMag: 'nearest' })
   
-  return gl
+  gl.enableDepth()
+  gl.enableScissor()
+  gl.viewport(vwSize)
+  gl.scissor(vwSize)
+  gl.clear(0x0)
+  gl.drawArrays('triangles', vertexCount)
+
+ 
+
+  
+  const bitmap = gl.toBitmap()
+  gl.dispose()
+  const c = document.createElement('canvas')
+  c.setAttribute('name', 'c2')
+  c.getContext('bitmaprenderer')?.transferFromImageBitmap(bitmap)
+
+  
+  const gl2 = new GL(vwSize, true)
+  gl2.createProgram(ver, frag, 'assemble-and-use')
+  gl2.viewport(vwSize)
+
+   const vertexCount2 = gl2
+    .vbo('static', 'float', { aPosition: vec2 })
+    .push(rects)
+
+  gl2
+    .subData('aTexCoord', 'vec2', vertexCount)
+    .push(rect11)
+    .build()
+
+  gl2.createTexture('uSampler', img, { minMag: 'nearest' })
+  
+  gl2.enableDepth()
+  gl2.enableScissor()
+  gl2.viewport(vwSize)
+  gl2.scissor(vwSize)
+  gl2.clear(0x0)
+  gl2.drawArrays('triangles', vertexCount2)
+
+  debugger
+  const bitmap2 = gl2.toBitmap() //Export
+  const c2 = document.createElement('canvas')
+  c2.setAttribute('name', 'c2')
+  c2.getContext('bitmaprenderer')?.transferFromImageBitmap(bitmap2) //Import
+
+  
+  
+  return { canvas: c2 }
 }

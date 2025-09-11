@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onMounted, toRaw, ref } from "vue";
-import { useRoute, useRouter } from "vue-router";
-import { App  } from "./code";
+import { useRoute, useRouter } from "vue-router"
+import { App  } from "./code"
 
 const route = useRoute()
 const router = useRouter()
@@ -41,7 +41,7 @@ router.afterEach(() => { main() })
   <div class="gl-surface page">
     <menu class="secondary-menu" v-if="app">
       <nav>
-        <a v-for="name, i in app.names" :key="i" :href="'#/gl/'+ i" @click="onClick(name)" :class="{ selected: name === app.current.name }">
+        <a v-for="name, i in app.names" :key="i" :href="'#/surfaces/'+ i" @click="onClick(name)" :class="{ selected: name === app.current.name }">
           {{ name }}
         </a>
       </nav>

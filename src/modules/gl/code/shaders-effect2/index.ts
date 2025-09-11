@@ -15,22 +15,33 @@ createGLScript('Shaders Effect 2', async ({ container, fps }) => {
   const img = await loadImage('workflow.png')
   ctx.createTexture('u_sampler2D', img)
   
-  const vertexCount = ctx
-    .vbo('static', 'float', { aPosition: vec2, a_TexCoord: vec2 })
-    .push(Primitive2D.rect(), TexCoord.rect())
+  const vao = ctx.vao(
+    'static', 
+    'float', 
+    { 
+      aPosition: vec2, 
+      a_TexCoord: vec2 
+    }, 
+    Primitive2D.rect(), 
+    TexCoord.rect()
+  )
+    
   
   const time = ctx.uniform('time', 'float')
 
   const { screen } = Game.create(w, h, container)
+  
 
   gameloop(() => {
-    ctx.clear()
-    ctx.drawArrays('triangle-strip', vertexCount)
+    ctx.clear(0x00000000)
+    vao.bind()
+    ctx.drawArrays('triangle-strip', vao.vertexCount)
+    vao.unbind()
     
     screen.fill('#222')
     screen.blit(glSurface, glSurface.rect)
     time.value = Time.time
     
-    displayFps(fps, Time.fps)
+    displayFps(fps)
   })
 })

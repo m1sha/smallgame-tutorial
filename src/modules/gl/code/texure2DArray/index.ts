@@ -4,35 +4,26 @@ import vertex from './shaders/vert'
 import fragmnet from './shaders/frag'
 import { createGLScript } from '../script'
 
-createGLScript('Texture', async ({ container, fps }) => {
-  await main(container)
-})
-
-async function main (container: HTMLDivElement) {
+createGLScript('Texture 2D Array', async ({ container, fps }) => {
   const w = 800
   const h = 800
   const glSurface = new SurfaceGL(w, h)
   const ctx = glSurface.context
   ctx.createProgram(vertex, fragmnet, 'assemble-and-use')
 
-  const img = await loadImage('workflow.png')
-  const tv = await loadImage('tv.png')
-
-  const tex = ctx.createTexture('u_sampler2D', img)
+  const img1 = await loadImage('workflow.png')
+  const img2 = await loadImage('terrain.png')
   
+  ctx.createTextureArray('u_sampler2D_1', [img1, img2])
+
   const vertexCount = ctx
     .vbo('static', 'float', { a_Position: vec2, a_TexCoord: vec2 })
     .push(Primitive2D.rect(), TexCoord.rect())
 
   ctx.clear(0x0)
   ctx.drawArrays('triangle-strip', vertexCount)
-
-  tex.update(tv)
-  ctx.clear(0x0)
-  ctx.drawArrays('triangle-strip', vertexCount)
   
   const { screen } = Game.create(w, h, container)
-  
-  screen.fill('#18f8f8')
+  screen.fill('#f8f8f8')
   screen.blit(glSurface, glSurface.rect)
-}
+})
