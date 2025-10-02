@@ -12,7 +12,7 @@ onMounted(()=>{
 </script>
 
 <template>
-  <h1>Getting started</h1>
+  <h1>SmallGame Tutorial</h1>
 
 
   <div ref="root">

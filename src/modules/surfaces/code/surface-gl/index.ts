@@ -3,11 +3,13 @@ import { createScript } from "../script"
 import { displayFps } from "../../../../utils/display-fps"
 
 createScript('Simple Text (GL)', async ({ container, width, height, fps }) => {
+  const img = await loadImage('beautiful-fall-nature-scenery-picjumbo-com.jpeg')
+  
+  console.time('Simple Text (GL)')
+  
   const surface = new SurfaceGL(width, height)
   surface.create()
   surface.fill(0x0)
-  
-  const img = await loadImage('beautiful-fall-nature-scenery-picjumbo-com.jpeg')
   
   const text = new Text('HELLO!', { 
     //fontName: 'Swis721 Blk BT', 
@@ -36,12 +38,13 @@ createScript('Simple Text (GL)', async ({ container, width, height, fps }) => {
   // const s = new Sketch()
   // s.rect({ stroke: '#fdf9f9ff' }, text.bounds)
   // const bound = s.toSurface()
-  
+  console.time('Simple Text (GL) Render')
   surface.blita(0.35, bg, bg.rect.move(surface.rect.center, 'center-center'))
   surface.blit(bgText, bgText.rect.move(surface.rect.center, 'center-center'))
   surface.blit(result, bgText.rect.move(surface.rect.center, 'center-center'))
+  console.timeEnd('Simple Text (GL) Render')
   //surface.blit(bound, bgText.rect.move(surface.rect.center, 'center-center'))
-
+  console.timeEnd('Simple Text (GL)')
   container.append(surface.origin as HTMLCanvasElement)
   displayFps(fps)
 })

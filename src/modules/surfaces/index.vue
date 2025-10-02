@@ -9,7 +9,6 @@ const router = useRouter()
 const container = ref<HTMLDivElement>()
 const fps = ref<HTMLDivElement>()
 const app = ref<App | null>(null)
-const useShaders = ref(true)
 
 onMounted(() => {
   main()
@@ -27,11 +26,6 @@ async function main() {
 
 function onClick (name: string) {
   if (app.value) { toRaw(app.value).change(name) }
-}
-
-function onUseShadersChange () {
-  useShaders.value = !useShaders.value
-  app.value!.useShaders(useShaders.value)
 }
 
 router.afterEach(() => { main() })

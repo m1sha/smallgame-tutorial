@@ -3,10 +3,12 @@ import { createScript } from "../script"
 import { displayFps } from "../../../../utils/display-fps"
 
 createScript('Simple Text', async ({ container, width, height, fps }) => {
+  const img = await loadImage('beautiful-fall-nature-scenery-picjumbo-com.jpeg')
+  
+  console.time('Simple Text')
+  
   const surface = new Surface(width, height)
   surface.fill('#2b2b2bff')
-  
-  const img = await loadImage('beautiful-fall-nature-scenery-picjumbo-com.jpeg')
   
   const text = new Text('HELLO!', { 
     //fontName: 'Swis721 Blk BT', 
@@ -32,14 +34,17 @@ createScript('Simple Text', async ({ container, width, height, fps }) => {
   const result = Surface.mix('destination-in', bg, fgText, fgText.rect).clip(fgText.rect)  
   //result.rect.center = bgText.rect.center
   
-  const s = new Sketch()
-  s.rect({ stroke: '#fdf9f9ff' }, text.bounds)
-  const bound = s.toSurface()
+  //const s = new Sketch()
+  //s.rect({ stroke: '#fdf9f9ff' }, text.bounds)
+  //const bound = s.toSurface()
   
+  console.time('Simple Text Render')
   surface.blita(0.35, bg, bg.rect.move(surface.rect.center, 'center-center'))
   surface.blit(bgText, bgText.rect.move(surface.rect.center, 'center-center'))
   surface.blit(result, bgText.rect.move(surface.rect.center, 'center-center'))
+  console.timeEnd('Simple Text Render')
   //surface.blit(bound, bgText.rect.move(surface.rect.center, 'center-center'))
+  console.timeEnd('Simple Text')
 
   container.append(surface.origin as HTMLCanvasElement)
   displayFps(fps)

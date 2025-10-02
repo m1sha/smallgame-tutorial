@@ -17,8 +17,8 @@ onMounted(() => {
 
 
 async function main() {
-  const w = 800
-  const h = 400
+  const w = 1200
+  const h = 880
   const index = parseInt(route.params.id as string)
   app.value = new App(isNaN(index) || !index ? 0 : index)
   app.value.set(container.value!, fps.value!, w, h)
