@@ -13,7 +13,8 @@
     "sass": "^1.80.5",
     "smallgame": "file:../smallgame",
     "vue": "^3.4.29",
-    "vue-router": "^4.4.5"
+    "vue-router": "^4.4.5",
+    "vue3-universal-components": "file:../vue3-universal-components"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.0.5",

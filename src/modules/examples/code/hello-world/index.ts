@@ -1,6 +1,14 @@
-import { loadImage, Point, Game, gameloop, lerp, Time } from "smallgame"
+import { loadImage, Point, Game, gameloop, Time, TPoint, lerp } from "smallgame"
 import { createScript } from "../script"
 import { displayFps } from "../../../../utils/display-fps"
+
+// function lerp (p0: TPoint, p1: TPoint, t: number): TPoint {
+//   const l = (a: number, b: number) => a + (b - a) * t
+//   return {
+//     x: l(p0.x, p1.x),
+//     y: l(p0.y, p1.y),
+//   }
+// }
 
 createScript('Hello World', async ({ container, width, height, fps }) => {
   const HERO_SPEED       = 20

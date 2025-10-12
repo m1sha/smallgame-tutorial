@@ -1,3 +1,4 @@
+import 'vue3-universal-components/dist/vue3-universal-components.css'
 import { createApp } from 'vue'
 import { createWebHashHistory, createRouter } from 'vue-router'
 import App from './App.vue'

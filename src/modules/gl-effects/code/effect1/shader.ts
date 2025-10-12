@@ -30,6 +30,8 @@ float sdHexagon( in vec2 p, in float r )
 void main() {
   float cc = 16.0;
   vec3 finalColor = vec3(0.0);
+
+  vec2 st = gl_FragCoord.xy/iResolution.xy;
   vec2 uv = (gl_FragCoord.xy * 2.0 - iResolution.xy) / iResolution.y;
   vec2 uv0 = uv;
   

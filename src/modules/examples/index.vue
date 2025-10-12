@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { onMounted, toRaw, ref } from "vue";
+import { onMounted, toRaw, ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router"
+import { DropDownList } from 'vue3-universal-components'
 import { App  } from "./code"
 
 const route = useRoute()
@@ -10,11 +11,11 @@ const container = ref<HTMLDivElement>()
 const fps = ref<HTMLDivElement>()
 const app = ref<App | null>(null)
 const list = ref<{id: string, name: string}[]>([])
+const selectedItem = ref('')
 
 onMounted(() => {
   main()
 })
-
 
 async function main() {
   const w = 1400
@@ -24,11 +25,13 @@ async function main() {
   app.value.set(container.value!, fps.value!, w, h)
   app.value!.run()
   list.value = app.value.selector.items
+  selectedItem.value = list.value[0] ? list.value[0].id : ''
 }
 
-function onModeChanged (ev: Event) {
-  const select = ev.target as HTMLSelectElement
-  app.value?.selector.setCurrentId(select.value)
+watch(() => selectedItem.value, () => onModeChanged())
+
+function onModeChanged () {
+  app.value?.selector.setCurrentId(selectedItem.value)
 }
 
 function onClick (name: string) {
@@ -55,10 +58,10 @@ router.afterEach(() => { main() })
 
     <div class="controls">
       <div class="control" v-if="list.length > 0">
-        <label>Mode</label>
-        <select @change="onModeChanged">
-          <option :value="item.id" v-for="item in list">{{ item.name }}</option>
-        </select>
+        
+        <DropDownList v-model="selectedItem" :items="list"  caption="Mode" />
+          <!-- <option :value="item.id" v-for="item in list">{{ item.name }}</option>
+        </select> -->
       </div>
       
     </div>
@@ -77,6 +80,7 @@ router.afterEach(() => { main() })
     .control
       display: flex
       gap: 4px
+      width: 180px
       label
         font-size: 0.8em
         color: #eee
