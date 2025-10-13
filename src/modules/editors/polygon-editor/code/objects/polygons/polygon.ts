@@ -1,8 +1,9 @@
-import { Point, points2segments, setPoint, Sketch, Sprite, type TPoint } from "smallgame";
+import { Point, points2segments, setPoint, Sketch, type TPoint } from "smallgame"
+import { BaseObject } from "../base-object"
 
 type TempPoint = TPoint & { index: number }
 
-export class Polygon extends Sprite {
+export class Polygon extends BaseObject {
   #sketch = new Sketch()
   #points: TPoint[] = []
   #tempPoints: TempPoint[] = []

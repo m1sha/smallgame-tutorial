@@ -1,9 +1,8 @@
-import { Game, Screen, Surface } from "smallgame"
+import { Game, Screen } from "smallgame"
 import { Grid } from "./grid"
-import { Polygons } from "./polygons"
+import { Polygons, Images, BaseObject } from "./objects"
 import type { Command } from "./commands/command"
 import { CommandHistory } from "./commands/command-history"
-import { Background } from "./background"
 
 export class EditorState {
   #commandHistory: CommandHistory
@@ -13,7 +12,9 @@ export class EditorState {
   readonly grid: Grid
   readonly width: number
   readonly height: number
-  readonly background: Background
+  readonly images: Images
+  onObjectChanged: ((action: 'created' | 'edited' | 'deleted' | 'selectd', obj: BaseObject) => void) | null = null
+  onObjectedSelected: ((obj: BaseObject) => void) | null = null
 
   constructor (width: number, height: number, root: HTMLDivElement) {
     this.#commandHistory = new CommandHistory(this)
@@ -24,7 +25,7 @@ export class EditorState {
     screen.imageRendering = 'pixelated'
     this.screen = screen
     this.game = game
-    this.background = new Background(width, height)
+    this.images = new Images({ width, height })
     this.polygons = new Polygons()
     this.grid = new Grid(width, height)
     this.grid.visible = false
@@ -37,4 +38,6 @@ export class EditorState {
   undo () { this.#commandHistory.undo() }
   
   redo () { this.#commandHistory.redo() }
+
+  
 }

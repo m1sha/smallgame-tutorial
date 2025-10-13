@@ -1,5 +1,5 @@
 import type { EditorState } from "../editor-state";
-import type { Polygon } from "../polygon";
+import type { Polygon } from "../objects/polygons/polygon";
 import { Command } from "./command";
 
 export class RemoveActivePolygonCommand extends Command {

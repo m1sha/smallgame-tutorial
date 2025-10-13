@@ -1,58 +1,17 @@
 <script setup lang="ts">
 import { ref, onMounted } from "vue"
-import { Editor } from "./code/"
+import editor from "./editor-app"
+import { ObjectList, ObjectProperties, Toolbar } from "./components"
 
 const container = ref<HTMLDivElement>()
-const inputFile = ref<HTMLInputElement>()
+const isInit = ref(false)
 
-let editor: Editor | null = null
-const layer = []
 
 onMounted(() => {
-  editor = new Editor(container.value!)
+  editor.init(container.value!)
+  isInit.value = true
 })
 
-function openDialog() { inputFile.value?.click() }
-
-function onLoadFile () {
-  if (!editor) return
-  if (!inputFile.value) return
-  if (!inputFile.value.files) return
-  const file = inputFile.value.files[0]
-
-  editor.addImage(file)
-  inputFile.value.value = ''
-}
-
-function createPolygon () {
-  if (!editor) return
-  editor.addPolygon({ x: 200, y: 200})
-}
-
-function zoomPlus() {
-  if (!editor) return
-  editor.zoomPlus()
-}
-
-function zoomMinus() {
-  if (!editor) return
-  editor.zoomMinus()
-}
-
-function showGrid () {
- if (!editor) return
-  editor.editorState.grid.visible = !editor.editorState.grid.visible
-}
-
-function undo () {
-  if (!editor) return
-  editor.editorState.undo()
-}
-
-function redo () {
-  if (!editor) return
-  editor.editorState.redo()
-}
 
 
 </script>
@@ -60,18 +19,16 @@ function redo () {
 <template>
 <div class="polygon-editor-page">
   <div class="editor">
-    <div class="control-panel">
-      <input type="file" style="display: none;" ref="inputFile" @input="onLoadFile" />
-      <button @click="undo">Undo</button>
-      <button @click="redo">Redo</button>
-      <button @click="openDialog">Load Backround Image</button>
-      <button @click="createPolygon">Create polygon</button>
-      <button @click="zoomPlus">Zoom In</button>
-      <button @click="zoomMinus">Zoom Out</button>
-      <button @click="showGrid">Show Grid</button>
-    </div>
+    <Toolbar />
 
-    <div ref="container"></div>
+    <div class="flex-panel">
+      <ObjectList v-if="isInit" />
+      <div class="container-wrapper">
+        <div ref="container"></div>  
+      </div>
+      <ObjectProperties v-if="isInit" />
+    </div>
+    
   </div>
 </div>
 </template>
@@ -83,9 +40,16 @@ function redo () {
   .editor
     display: flex
     flex-direction: column
+
+    .flex-panel
+      display: grid
+      grid-template-columns: 300px 1fr 300px
+      gap: 12px
+
+      .container-wrapper
+        background-color: #888
+        padding: 4px
+        border-radius: 4px
   
-.control-panel 
-  display: flex
-  margin: 18px 0
-  gap: 12px
+
 </style>

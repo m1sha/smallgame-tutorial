@@ -1,9 +1,11 @@
 import { loadBlob } from 'smallgame'
 import type { EditorState } from "../editor-state"
 import { Command } from "./command"
+import { ImageObject } from '../objects'
 
 export class SetBackgroundCommand extends Command {
   private file: Blob
+  private img: ImageObject | null = null
 
   constructor (file: Blob) {
     super()
@@ -12,10 +14,10 @@ export class SetBackgroundCommand extends Command {
 
   async commit (state: EditorState) {
     const surface = await loadBlob(this.file)
-    state.background.setImage(surface)
+    this.img = state.images.createImage(surface)
   }
 
   rollback (state: EditorState): void {
-    state.background.clear()
+    if (this.img) state.images.remove(this.img)
   }
 }

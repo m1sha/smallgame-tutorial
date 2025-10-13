@@ -35,6 +35,7 @@ export class Controller {
     const polygons =  state.polygons
     const activePolygon = polygons.activePolygon
     const screenDelta = screen.ratio
+    const images = state.images
     polygons.setZoomIndex(viewport.zoom)
 
     for (const event of state.game.event.get()) {
@@ -64,12 +65,15 @@ export class Controller {
         case "MOUSEDOWN": {
           if (event.button !== MouseButton.LEFT) return
           const pos = divPoints(event.pos, screenDelta)
+
+          let someOtherSelected = false
           
           if (!activePolygon || !activePolygon.selectedPoint) {
             polygons.collidePoint(pos, polygon => {
               state.sendCommand(new SelectPolygonCommand(polygon))
               this.points = polygon.getPoints()
-            }, true)
+              someOtherSelected = true
+            }, { once: true, reverseEnum: true, predicate: s => s.pointInside(pos) })
           }
           
           if (activePolygon && activePolygon.selectedPoint) {
@@ -80,7 +84,12 @@ export class Controller {
             if (activePolygon.selectedPointType === 'temp') {
               this.editorState.sendCommand(new CreateFundamentalPointCommand())
             }
+            someOtherSelected = true
           }
+
+          images.collidePoint(pos, img => {})
+
+          //background.active = (!someOtherSelected && background.collidePoint(pos)) 
           break
         }
 
