@@ -8,11 +8,14 @@ import {
   MoveActivePointCommand, 
   MoveActivePolygonCommand, 
   RemoveActivePolygonCommand, 
+  SelectImageObjectCommand, 
   SelectPointCommand, 
   SelectPolygonCommand, 
   SetActivePointPosCommand,
   SetActivePolygonPosCommand
 } from "./commands"
+import { Viewer } from "./rasterization"
+import { ImageObject, Polygon } from "./objects"
 
 export class Controller {
   private editorState: EditorState
@@ -22,23 +25,24 @@ export class Controller {
   private selectedPoint: TPoint | null
   private points: TPoint[] = []
 
-  constructor (editorState: EditorState) {
+  constructor (editorState: EditorState, private viewer: Viewer) {
     this.editorState = editorState
     this.startMovePos = zeroPoint()
     this.selectedPoint = null
   }
 
   checkInput () {
+    const viewer = this.viewer
     const state = this.editorState
-    const screen = state.screen
+    const screen = viewer.screen
     const viewport = screen.viewport
-    const polygons =  state.polygons
-    const activePolygon = polygons.activePolygon
     const screenDelta = screen.ratio
-    const images = state.images
+    const objects = state.objects
+
+    const polygons =  state.polygons
     polygons.setZoomIndex(viewport.zoom)
 
-    for (const event of state.game.event.get()) {
+    for (const event of viewer.game.event.get()) {
   
       switch (event.type) {
         case "KEYDOWN": {
@@ -65,66 +69,88 @@ export class Controller {
         case "MOUSEDOWN": {
           if (event.button !== MouseButton.LEFT) return
           const pos = divPoints(event.pos, screenDelta)
+            
+          objects.collide(
+            obj => {
+              if (obj instanceof Polygon)
+                return obj.pointInside(pos) 
+              if (obj instanceof ImageObject)
+                return obj.rect.containsPoint(pos)
+              return false
+            }, 
+            obj => {
+              const curr = objects.currentObject
+              if (curr === obj) return
+              if (curr instanceof Polygon && curr.selectedPoint) return
 
-          let someOtherSelected = false
+              if (obj instanceof Polygon) {
+                state.sendCommand(new SelectPolygonCommand(obj))
+                this.points = obj.getPoints()
+              }
+
+              if (obj instanceof ImageObject) {
+                state.sendCommand(new SelectImageObjectCommand(obj))
+              }
+            }, 
+            { once: true, reverseEnum: true }
+          )
+
+          const curr = objects.currentObject
+
+          if (!curr) return
           
-          if (!activePolygon || !activePolygon.selectedPoint) {
-            polygons.collidePoint(pos, polygon => {
-              state.sendCommand(new SelectPolygonCommand(polygon))
-              this.points = polygon.getPoints()
-              someOtherSelected = true
-            }, { once: true, reverseEnum: true, predicate: s => s.pointInside(pos) })
-          }
-          
-          if (activePolygon && activePolygon.selectedPoint) {
-            this.editorState.sendCommand(new SelectPointCommand())
-            this.selectedPoint = activePolygon.selectedPoint
+          if (curr instanceof Polygon && curr.selectedPoint) {
+            this.editorState.sendCommand(new SelectPointCommand(curr.selectedPoint))
+            this.selectedPoint = curr.selectedPoint
             this.startMovePos = setPoint(this.selectedPoint.x, this.selectedPoint.y) 
 
-            if (activePolygon.selectedPointType === 'temp') {
+            if (curr.selectedPointType === 'temp') {
               this.editorState.sendCommand(new CreateFundamentalPointCommand())
             }
-            someOtherSelected = true
           }
 
-          images.collidePoint(pos, img => {})
-
-          //background.active = (!someOtherSelected && background.collidePoint(pos)) 
           break
         }
 
-        case "MOUSEMOVE":
+        case "MOUSEMOVE": {
           const pos = divPoints(event.pos, screenDelta)
           const shift = divPoints(event.shift, screenDelta)
           screen.cursor = 'default'
 
-          if (!activePolygon) break
+          const curr = objects.currentObject
 
-          activePolygon.hittest(pos)
-          if (event.button !== MouseButton.LEFT) return
+          if (!curr) break
+
+          if (curr instanceof Polygon) {
+            curr.hittest(pos)
+            if (event.button !== MouseButton.LEFT) return
           
-          if (polygons.activePointSelected) {
-            this.editorState.sendCommand(new MoveActivePointCommand(pos))
-            this.isPointMoved = true
-          } else if (activePolygon) {
-            this.isPolygonMoved = true
-            this.editorState.sendCommand(new MoveActivePolygonCommand(shift))
-            screen.cursor = 'move'
-            break
+            if (polygons.activePointSelected) {
+              this.editorState.sendCommand(new MoveActivePointCommand(pos))
+              this.isPointMoved = true
+            } else  {
+              this.isPolygonMoved = true
+              this.editorState.sendCommand(new MoveActivePolygonCommand(shift))
+              screen.cursor = 'move'
+              
+            }
           }
-        break
+          
+          break
+        }
 
         case "MOUSEUP":
         case "MOUSELEAVE": 
-          if (!activePolygon) return
+          const curr = objects.currentObject
+          if (!curr) return
           this.editorState.sendCommand(new DeselectPointCommand())
 
           if (this.isPointMoved && this.selectedPoint) {
             const oldPos = setPoint(this.selectedPoint.x, this.selectedPoint.y)
             this.editorState.sendCommand(new SetActivePointPosCommand(this.selectedPoint, this.startMovePos, oldPos))
           } else {
-            if (this.isPolygonMoved) {
-              this.editorState.sendCommand(new SetActivePolygonPosCommand(this.points, activePolygon.getPoints()))
+            if (this.isPolygonMoved && curr instanceof Polygon) {
+              this.editorState.sendCommand(new SetActivePolygonPosCommand(this.points, curr.getPoints()))
             }
           }
           this.isPolygonMoved = false

@@ -2,7 +2,7 @@
 import { ref } from 'vue'
 import editorApp from '../editor-app'
 import { BaseObject, Polygon } from '../code/objects'
-import { TextBox } from 'vue3-universal-components'
+import { TextBox, KeyValue } from 'vue3-universal-components'
 import { TPoint } from 'smallgame'
 
 const currentObject = ref<BaseObject | null>(null)
@@ -27,8 +27,12 @@ editorApp.editorState.onObjectedSelected = obj => {
 
     <div>
       <div v-for="point in points">
-        <TextBox v-model="point.x" type="number" caption="X" />
-        <TextBox v-model="point.y" type="number" caption="Y" />
+        <div style="display: flex; gap: 8px;">
+          <KeyValue header="X" :value="point.x" />
+          <KeyValue header="Y" :value="point.y" />
+        </div>
+        <!-- <TextBox v-model="point.x" type="number" caption="X" />
+        <TextBox v-model="point.y" type="number" caption="Y" /> -->
       </div>
     </div>
   </div>

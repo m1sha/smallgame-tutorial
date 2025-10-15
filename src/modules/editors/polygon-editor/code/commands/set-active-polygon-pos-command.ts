@@ -15,6 +15,8 @@ export class SetActivePolygonPosCommand extends Command {
   commit(state: EditorState): void {
     if (!state.polygons.activePolygon) return
     state.polygons.activePolygon.setPoints(this.endPos)
+
+    state.emit('select', state.polygons.activePolygon)
   }
 
   rollback(state: EditorState): void {

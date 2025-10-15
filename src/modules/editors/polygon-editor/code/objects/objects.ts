@@ -1,0 +1,28 @@
+import { Group, Surface, TPoint, type TSize } from "smallgame"
+import { BaseObject } from "./base-object"
+import { ImageObject } from "./images"
+
+export class Objects extends Group<BaseObject> {
+  currentObject: BaseObject | null = null
+  markerPoint: TPoint | null = null
+
+  constructor (private screenSize: TSize) {
+    super()
+  }
+
+  createImage (surface: Surface) {
+    const { width, height } = this.screenSize
+    const img = new ImageObject(width, height)
+    img.setImage(surface)
+    this.add(img)
+    return img
+  }
+
+  pickObject (obj: BaseObject | null = null) {
+    this.currentObject = obj
+  }
+
+  pickMarkerPoint (point: TPoint | null) {
+    this.markerPoint = point
+  }
+}

@@ -15,12 +15,13 @@ export class CreatePolygonCommand extends Command {
   
   commit(state: EditorState): void {
     state.polygons.add(this.polygon)
-    if (state.onObjectChanged) state.onObjectChanged('created', this.polygon)
+    state.objects.add(this.polygon)
+    state.emit('create', this.polygon)
   }
 
   rollback(state: EditorState): void {
     state.polygons.removePolygon(this.polygon)
-    if (state.onObjectChanged) state.onObjectChanged('deleted', this.polygon)
+    state.emit('delete', this.polygon)
   }
 
 }

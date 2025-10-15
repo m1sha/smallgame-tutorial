@@ -14,10 +14,11 @@ export class SetBackgroundCommand extends Command {
 
   async commit (state: EditorState) {
     const surface = await loadBlob(this.file)
-    this.img = state.images.createImage(surface)
+    this.img = state.objects.createImage(surface)
+    state.emit('create', this.img)
   }
 
   rollback (state: EditorState): void {
-    if (this.img) state.images.remove(this.img)
+    if (this.img) state.objects.remove(this.img)
   }
 }

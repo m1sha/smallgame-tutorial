@@ -1,6 +1,7 @@
-import { Sprite } from "smallgame"
+import { Entity, Sprite } from "smallgame"
 import { uid } from "../utils/uid"
 
-export class BaseObject extends Sprite {
+export abstract class BaseObject extends Sprite {
   readonly id = uid()
+  abstract readonly type: 'polygon' | 'image'
 }

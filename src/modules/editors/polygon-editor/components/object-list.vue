@@ -12,11 +12,12 @@ const currentItem = ref('')
 
 editorApp.editorState.onObjectChanged = (action, object) => {
   switch (action) {
-    case 'selectd': 
+    case 'selected': 
       currentItem.value = object.id
     break
     case 'created': 
-    list.value.push({ id: object.id, name: object.id, object })
+      list.value.push({ id: object.id, name: object.id, object })
+      currentItem.value = object.id
     break
   }
 }

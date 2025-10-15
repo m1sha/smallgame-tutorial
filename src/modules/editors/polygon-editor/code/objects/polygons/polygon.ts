@@ -1,10 +1,10 @@
-import { Point, points2segments, setPoint, Sketch, type TPoint } from "smallgame"
+import { Point, setPoint, type TPoint } from "smallgame"
 import { BaseObject } from "../base-object"
 
 type TempPoint = TPoint & { index: number }
 
 export class Polygon extends BaseObject {
-  #sketch = new Sketch()
+  readonly type = 'polygon'
   #points: TPoint[] = []
   #tempPoints: TempPoint[] = []
   #sliceIndex: number = -1
@@ -16,15 +16,8 @@ export class Polygon extends BaseObject {
 
   constructor (pos?: TPoint) {
     super()
-    this.#sketch.defineStyle('normal', { stroke: 'green', fill:'#00dd0025' })
-    this.#sketch.defineStyle('hover', { stroke: 'green', fill:'#00f60050' })
-    this.#sketch.defineStyle('point_fund', { fill: 'tomato', stroke: 'red' })
-    this.#sketch.defineStyle('point_temp', { fill: 'grey', stroke: 'grey' })
-    this.#sketch.defineStyle('point_selected_fund', { fill: 'tomato', stroke: 'transparent' })
-    this.#sketch.defineStyle('point_selected_temp', { fill: 'grey', stroke: 'transparent' })
-    //this.sketch.sx = 2
-    //this.sketch.sy = 2
-
+    
+    this.rect.resizeSelf(800, 800)
     if (pos) {
       const { x, y } = pos
       const w = 150 / 2
@@ -36,29 +29,11 @@ export class Polygon extends BaseObject {
     }
   }
 
+  get points () { return this.#points }
+  get tempPoints () { return this.#tempPoints }
+
   update () {
-    this.#sketch.clear()
     
-    const vecs = points2segments(this.#points, true)
-    this.#sketch.polygon(this.isPolygonSelected ? 'hover' : 'normal', this.#points)
-    this.#sketch.arrows(this.isPolygonSelected ? 'hover' : 'normal', vecs)
-    
-    
-    if (this.isActive) {
-      this.#sketch.dots('point_fund', this.#points, 3 / this.zoomIndex)
-      this.calcTemp()
-      this.#sketch.dots('point_temp', this.#tempPoints, 3 / this.zoomIndex)
-
-      if (this.selectedPoint) {
-        if (this.selectedPointType === 'fund')
-          this.#sketch.circle('point_selected_fund', this.selectedPoint, 5 / this.zoomIndex)
-        if (this.selectedPointType === 'temp')
-          this.#sketch.circle('point_selected_temp', this.selectedPoint, 5 / this.zoomIndex)
-      }
-    }
-
-    this.image = this.#sketch.toSurface(800, 800)
-    this.rect = this.image.rect
   }
 
   hittest (pos: TPoint): boolean {
@@ -115,7 +90,7 @@ export class Polygon extends BaseObject {
     }
   }
 
-  private calcTemp() {
+   calculateTempPoints () {
     if (this.#points.length < 2) return 
     this.#tempPoints = []
     for (let i = 0; i < this.#points.length - 1; i ++) {

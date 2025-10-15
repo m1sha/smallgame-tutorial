@@ -2,6 +2,7 @@ import { Rect, type TShapeStyle, Sketch, Surface, TPoint } from "smallgame"
 import { BaseObject } from "../base-object"
 
 export class ImageObject extends BaseObject {
+  readonly type = 'image'
   #surface: Surface
   #img: Surface | null = null
   #framSurface: Surface | null = null

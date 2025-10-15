@@ -18,6 +18,10 @@ export class Polygons extends Group<Polygon> {
     sprite.isActive = true
   }
 
+  unselectPolygon () {
+    this.deactivate()
+  }
+
   selectPoint () {
     const poly = this.activePolygon
     if (poly) this.point = poly.selectedPoint
@@ -46,16 +50,6 @@ export class Polygons extends Group<Polygon> {
     this.point = null
     super.remove(this.activePolygon)
   }
-
-  // collidePoint (point: TPoint, callback: (sprite: Polygon) => void, once: boolean = false): void {
-  //   for (let i = this.polygons.length -1; i>= 0; i--) {
-  //     const sprt = this.polygons[i]
-  //     if (sprt.pointInside(point)) {
-  //       callback(sprt)
-  //       if (once) break
-  //     }
-  //   }
-  // }
 
   setZoomIndex (zoomIndex: number) {
     this.polygons.forEach(p => p.zoomIndex = zoomIndex)
