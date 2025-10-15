@@ -6,12 +6,12 @@ export class RemoveActivePolygonCommand extends Command {
   private activePolygon: Polygon | undefined = undefined
 
   commit(state: EditorState): void {
-    this.activePolygon = state.polygons.activePolygon
-    state.polygons.removeActivePolygon()
+    this.activePolygon = state.objects.currentObject as Polygon
+    state.objects.remove(this.activePolygon)
   }
 
   rollback(state: EditorState): void {
     if (!this.activePolygon) return
-    state.polygons.add(this.activePolygon)
+    state.objects.add(this.activePolygon)
   }
 }

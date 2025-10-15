@@ -7,7 +7,7 @@ export class DeselectPointCommand extends Command {
     this.saveInHistory = false
   }
   commit(state: EditorState): void {
-    state.polygons.deselectActivePoint()
+    state.objects.pickMarkerPoint(null)
   }
   rollback(state: EditorState): void {
   

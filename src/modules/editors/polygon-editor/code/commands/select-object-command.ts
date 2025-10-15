@@ -8,7 +8,7 @@ export class SelectObjectCommand extends Command {
   }
 
   commit(state: EditorState): void {
-    state.polygons.selectPoint()
+    //state.polygons.selectPoint()
   }
   
   rollback(_: EditorState): void {}

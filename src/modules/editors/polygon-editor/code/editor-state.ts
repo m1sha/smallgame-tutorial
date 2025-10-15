@@ -1,5 +1,5 @@
 import { Grid } from "./grid"
-import { Polygons, BaseObject } from "./objects"
+import { BaseObject } from "./objects"
 import type { Command } from "./commands/command"
 import { CommandHistory } from "./commands/command-history"
 import { Objects } from "./objects/objects"
@@ -12,7 +12,7 @@ export class EditorState {
   readonly grid: Grid
   readonly width: number
   readonly height: number
- readonly polygons: Polygons
+  //readonly polygons: Polygons
   readonly objects: Objects
   readonly selectedObject: BaseObject | null = null
   onObjectChanged: ((action: TActionTypes, obj: BaseObject) => void) | null = null
@@ -25,7 +25,7 @@ export class EditorState {
     
     this.objects = new Objects({ width, height })
     
-    this.polygons = new Polygons()
+    //this.polygons = new Polygons()
     this.grid = new Grid(width, height)
     this.grid.visible = false
   }

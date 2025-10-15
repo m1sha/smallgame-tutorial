@@ -1,34 +1,15 @@
 import { Sketch, Surface, TPoint, TSegment } from "smallgame"
-import { Polygon } from "../../objects"
+import { BaseObject, Polygon } from "../../objects"
 
-export function drawPolygon (polygon: Polygon, surface: Surface) {
+export function drawPolygon (polygon: Polygon, surface: Surface, currentObject: BaseObject | null) {
   const sketch = new Sketch()
   sketch.defineStyle('normal', { stroke: 'green', fill:'#00dd0025' })
   sketch.defineStyle('hover', { stroke: 'green', fill:'#00f60050' })
-  sketch.defineStyle('point_fund', { fill: 'tomato', stroke: 'red' })
-  sketch.defineStyle('point_temp', { fill: 'grey', stroke: 'grey' })
-  sketch.defineStyle('point_selected_fund', { fill: 'tomato', stroke: 'transparent' })
-  sketch.defineStyle('point_selected_temp', { fill: 'grey', stroke: 'transparent' })
 
   const vecs = points2segments(polygon.points, true)
   sketch.polygon(polygon.isPolygonSelected ? 'hover' : 'normal', polygon.points)
   sketch.arrows(polygon.isPolygonSelected ? 'hover' : 'normal', vecs)
-      
-      
-  if (polygon.isActive) {
-    sketch.dots('point_fund', polygon.points, 3 / polygon.zoomIndex)
-    
-    polygon.calculateTempPoints()
-    sketch.dots('point_temp', polygon.tempPoints, 3 / polygon.zoomIndex)
-    if (polygon.selectedPoint) {
-      if (polygon.selectedPointType === 'fund')
-        sketch.circle('point_selected_fund', polygon.selectedPoint, 5 / polygon.zoomIndex)
-      if (polygon.selectedPointType === 'temp')
-        sketch.circle('point_selected_temp', polygon.selectedPoint, 5 / polygon.zoomIndex)
-    }
-  }
-
-  return sketch.draw(surface)
+  sketch.draw(surface)
 }
 
 

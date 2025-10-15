@@ -5,6 +5,7 @@ import {
   ChangeImageVisibleCommand, 
   CreateFundamentalPointCommand, 
   DeselectPointCommand, 
+  MoveActiveImageCommand, 
   MoveActivePointCommand, 
   MoveActivePolygonCommand, 
   RemoveActivePolygonCommand, 
@@ -35,12 +36,8 @@ export class Controller {
     const viewer = this.viewer
     const state = this.editorState
     const screen = viewer.screen
-    const viewport = screen.viewport
     const screenDelta = screen.ratio
     const objects = state.objects
-
-    const polygons =  state.polygons
-    polygons.setZoomIndex(viewport.zoom)
 
     for (const event of viewer.game.event.get()) {
   
@@ -75,7 +72,7 @@ export class Controller {
               if (obj instanceof Polygon)
                 return obj.pointInside(pos) 
               if (obj instanceof ImageObject)
-                return obj.rect.containsPoint(pos)
+                return obj.imageRect.containsPoint(pos)
               return false
             }, 
             obj => {
@@ -99,12 +96,12 @@ export class Controller {
 
           if (!curr) return
           
-          if (curr instanceof Polygon && curr.selectedPoint) {
+          if (curr.selectedPoint) {
             this.editorState.sendCommand(new SelectPointCommand(curr.selectedPoint))
             this.selectedPoint = curr.selectedPoint
             this.startMovePos = setPoint(this.selectedPoint.x, this.selectedPoint.y) 
 
-            if (curr.selectedPointType === 'temp') {
+            if (curr instanceof Polygon && curr.selectedPointType === 'temp') {
               this.editorState.sendCommand(new CreateFundamentalPointCommand())
             }
           }
@@ -120,20 +117,20 @@ export class Controller {
           const curr = objects.currentObject
 
           if (!curr) break
-
-          if (curr instanceof Polygon) {
-            curr.hittest(pos)
-            if (event.button !== MouseButton.LEFT) return
           
-            if (polygons.activePointSelected) {
-              this.editorState.sendCommand(new MoveActivePointCommand(pos))
-              this.isPointMoved = true
-            } else  {
-              this.isPolygonMoved = true
+          curr.hittest(pos)
+          if (event.button !== MouseButton.LEFT) return
+          
+          if (objects.markerPoint) {
+            this.editorState.sendCommand(new MoveActivePointCommand(pos))
+            this.isPointMoved = true
+          } else  {
+            this.isPolygonMoved = true
+            if (curr.type === 'polygon')
               this.editorState.sendCommand(new MoveActivePolygonCommand(shift))
-              screen.cursor = 'move'
-              
-            }
+            if (curr.type === 'image')
+              this.editorState.sendCommand(new MoveActiveImageCommand(shift))
+            screen.cursor = 'move'
           }
           
           break
@@ -160,7 +157,6 @@ export class Controller {
 
         case "MOUSEENTER": break
       }
-
     }
   }
 }

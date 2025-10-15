@@ -8,10 +8,10 @@ export class Polygon extends BaseObject {
   #points: TPoint[] = []
   #tempPoints: TempPoint[] = []
   #sliceIndex: number = -1
-  selectedPoint: TPoint | null = null
+  
   selectedPointType: 'fund' | 'temp' = 'fund'
   isPolygonSelected: boolean = false
-  isActive: boolean = false
+  
   zoomIndex: number = 1
 
   constructor (pos?: TPoint) {

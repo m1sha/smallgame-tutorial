@@ -1,6 +1,7 @@
-import { setPoint, type TPoint } from "smallgame";
-import type { EditorState } from "../editor-state";
-import { Command } from "./command";
+import { setPoint, type TPoint } from "smallgame"
+import type { EditorState } from "../editor-state"
+import { Command } from "./command"
+
 
 export class MoveActivePointCommand extends Command {
   point: TPoint
@@ -12,7 +13,7 @@ export class MoveActivePointCommand extends Command {
   }
   
   commit (state: EditorState): void {
-    state.polygons.changeActivePointPos(this.point)
+    state.objects.setMarkerPointPos(this.point)
   }
 
   rollback (state: EditorState): void {}

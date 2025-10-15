@@ -1,6 +1,7 @@
-import type { TPoint } from "smallgame";
-import type { EditorState } from "../editor-state";
-import { Command } from "./command";
+import type { TPoint } from "smallgame"
+import type { EditorState } from "../editor-state"
+import { Command } from "./command"
+import { Polygon } from "../objects"
 
 export class SetActivePolygonPosCommand extends Command {
   private startPos: TPoint[]
@@ -13,14 +14,21 @@ export class SetActivePolygonPosCommand extends Command {
   }
 
   commit(state: EditorState): void {
-    if (!state.polygons.activePolygon) return
-    state.polygons.activePolygon.setPoints(this.endPos)
+    const currentObject = state.objects.currentObject
+    if (!currentObject) return
+    if (currentObject instanceof Polygon) {
+      currentObject.setPoints(this.endPos)
+    }
+    
 
-    state.emit('select', state.polygons.activePolygon)
+    state.emit('select', currentObject)
   }
 
   rollback(state: EditorState): void {
-    if (!state.polygons.activePolygon) return
-    state.polygons.activePolygon.setPoints(this.startPos)
+    const currentObject = state.objects.currentObject
+    if (!currentObject) return
+    if (currentObject instanceof Polygon) {
+      currentObject.setPoints(this.startPos)
+    }
   }
 }

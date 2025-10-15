@@ -25,4 +25,10 @@ export class Objects extends Group<BaseObject> {
   pickMarkerPoint (point: TPoint | null) {
     this.markerPoint = point
   }
+
+  setMarkerPointPos (point: TPoint) {
+    if (!this.markerPoint) return
+    this.markerPoint.x = point.x
+    this.markerPoint.y = point.y
+  }
 }

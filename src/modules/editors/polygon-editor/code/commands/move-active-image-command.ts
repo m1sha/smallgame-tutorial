@@ -1,9 +1,9 @@
 import { setPoint, type TPoint } from "smallgame"
 import type { EditorState } from "../editor-state"
 import { Command } from "./command"
-import { Polygon } from "../objects"
+import { ImageObject } from "../objects"
 
-export class MoveActivePolygonCommand extends Command {
+export class MoveActiveImageCommand extends Command {
   private point: TPoint
 
   constructor (point: TPoint) {
@@ -16,8 +16,8 @@ export class MoveActivePolygonCommand extends Command {
     const currentObject = state.objects.currentObject
     if (!currentObject) return
 
-    if (currentObject instanceof Polygon) {
-      currentObject.shiftPoints(this.point)
+    if (currentObject instanceof ImageObject) {
+      currentObject.shift(this.point)
     }
   }
 

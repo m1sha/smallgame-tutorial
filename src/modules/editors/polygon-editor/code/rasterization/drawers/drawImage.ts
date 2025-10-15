@@ -1,6 +1,6 @@
 import { Surface } from "smallgame"
-import { ImageObject } from "../../objects"
+import { BaseObject, ImageObject } from "../../objects"
 
-export function drawImage (img: ImageObject, surface: Surface) {
+export function drawImage (img: ImageObject, surface: Surface, currentObject: BaseObject | null) {
   surface.blit(img.image, img.image.rect)
 }

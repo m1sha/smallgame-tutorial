@@ -10,7 +10,6 @@ export class SelectPointCommand extends Command {
 
   commit(state: EditorState): void {
     state.objects.pickMarkerPoint(this.point)
-    state.polygons.selectPoint()
   }
   
   rollback(_: EditorState): void {}
