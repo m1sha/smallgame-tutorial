@@ -18,6 +18,7 @@ export class MoveActiveImageCommand extends Command {
 
     if (currentObject instanceof ImageObject) {
       currentObject.shift(this.point)
+      state.emit('select', currentObject)
     }
   }
 

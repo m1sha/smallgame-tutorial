@@ -1,28 +1,36 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import editorApp from '../editor-app'
-import { BaseObject, Polygon } from '../code/objects'
+import { BaseObject, ImageObject, Polygon } from '../code/objects'
 import { TextBox, KeyValue } from 'vue3-universal-components'
-import { TPoint } from 'smallgame'
+import { Rect, TPoint } from 'smallgame'
 
 const currentObject = ref<BaseObject | null>(null)
 
 const points = ref<TPoint[]>([])
+const rect = ref(Rect.zero)
 
 editorApp.editorState.onObjectedSelected = obj => {
   currentObject.value = obj
+  points.value = []
   if (obj instanceof Polygon) {
     points.value = obj.getPoints()
+    rect.value = obj.rect
+  }
+
+  if (obj instanceof ImageObject) {
+    rect.value.moveSelf(obj.imageRect)
+    rect.value.resizeSelf(obj.imageRect)
   }
 }
 </script>
 <template>
   <div v-if="currentObject">
-    <div>
-      <TextBox v-model="currentObject.rect.x" type="number" caption="X" />
-      <TextBox v-model="currentObject.rect.y" type="number" caption="Y" />
-      <TextBox v-model="currentObject.rect.width" type="number" caption="Width" />
-      <TextBox v-model="currentObject.rect.height" type="number" caption="Height" />
+    <div v-if="currentObject.type === 'image'">
+      <TextBox v-model="rect.x" type="number" caption="X" />
+      <TextBox v-model="rect.y" type="number" caption="Y" />
+      <TextBox v-model="rect.width" type="number" caption="Width" />
+      <TextBox v-model="rect.height" type="number" caption="Height" />
     </div>
 
     <div>

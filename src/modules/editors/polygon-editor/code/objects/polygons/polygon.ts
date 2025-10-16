@@ -17,7 +17,7 @@ export class Polygon extends BaseObject {
   constructor (pos?: TPoint) {
     super()
     
-    this.rect.resizeSelf(800, 800)
+    this.rect.resizeSelf(1200, 800)
     if (pos) {
       const { x, y } = pos
       const w = 150 / 2

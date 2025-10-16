@@ -14,6 +14,7 @@ export class MoveActivePointCommand extends Command {
   
   commit (state: EditorState): void {
     state.objects.setMarkerPointPos(this.point)
+    state.emit('select', state.objects.currentObject)
   }
 
   rollback (state: EditorState): void {}

@@ -7,7 +7,7 @@ import { ZoomOutCommand } from "./commands/zoom-out-coomand"
 import { ZoomInCommand } from "./commands/zoom-in-coomand"
 import { Viewer } from "./rasterization"
 
-const SCREEN_WIDTH = 800
+const SCREEN_WIDTH = 1200
 const SCREEN_HEIGHT = 800
 
 export class Editor {

@@ -37,6 +37,7 @@ export class EditorState {
   emit (action: TEmitEvetTyps, obj: BaseObject | null) {
     switch (action) {
       case 'select':
+        this.onObjectChanged?.('selected', obj!)
         this.onObjectedSelected?.(obj)
         break
       case 'edit':

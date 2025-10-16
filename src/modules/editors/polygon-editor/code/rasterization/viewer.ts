@@ -1,15 +1,16 @@
 import { Game, Screen, Surface } from "smallgame"
 import { EditorState } from "../editor-state"
-import { drawPolygon } from "./drawers/drawPolygons"
-import { ImageObject, Polygon } from "../objects"
-import { drawImage } from "./drawers/drawImage"
-import { drawSelectedObjectFrame } from "./drawers/draw-seleced-object-frame"
+import { Drawable, ImageDrawable, PolygonDrawable } from "./drawers"
+import { BaseObject } from "../objects"
+
 
 export class Viewer {
   readonly screen: Screen
   readonly game: Game
   private objectsLayer: Surface
   private selectedObjectLayer: Surface
+
+  private drawables: Map<string, Drawable<BaseObject>> = new Map()
 
   constructor (width: number, height: number, root: HTMLDivElement, private state: EditorState) {
     const { game, screen } = Game.create(width, height, root, { viewportType: 'css' })
@@ -19,6 +20,9 @@ export class Viewer {
 
     this.objectsLayer = new Surface(width, height, { useOffscreen: true })
     this.selectedObjectLayer = new Surface(width, height, { useOffscreen: true })
+
+    this.drawables.set('polygon', new PolygonDrawable())
+    this.drawables.set('image', new ImageDrawable())
   }
 
   nextFrame () {
@@ -33,28 +37,24 @@ export class Viewer {
     grid.draw(screen as any)
 
     objects.compute()
-    this.drawPolygons()
+    this.drawObjects()
   }
 
-  private drawPolygons () {
+  private drawObjects () {
     this.objectsLayer.clear()
-
-    const currentObject = this.state.objects.currentObject
-    
-    this.state.objects.sprites.forEach(obj => { 
-      if (obj.type === 'polygon')
-        drawPolygon(obj as Polygon, this.objectsLayer, currentObject) 
-      if (obj.type === 'image') {
-        drawImage(obj as ImageObject, this.objectsLayer, currentObject)
-      }
+    this.state.objects.sprites.forEach(obj => {
+      const drawable = this.drawables.get(obj.type)
+      drawable?.normal(this.objectsLayer, obj)
+      drawable?.hover(this.objectsLayer, obj)
     })
     this.screen.blit(this.objectsLayer, this.objectsLayer.rect)
 
+    const currentObject = this.state.objects.currentObject
     if (currentObject) {
       this.selectedObjectLayer.clear()
-      drawSelectedObjectFrame(currentObject, this.selectedObjectLayer)
+      const drawable = this.drawables.get(currentObject.type)
+      drawable?.selected(this.selectedObjectLayer, currentObject)
       this.screen.blit(this.selectedObjectLayer, this.selectedObjectLayer.rect)
     }
-    
   }
 }

@@ -1,4 +1,4 @@
-import { Group, Surface, TPoint, type TSize } from "smallgame"
+import { Entity, Group, Surface, TPoint, type TSize } from "smallgame"
 import { BaseObject } from "./base-object"
 import { ImageObject } from "./images"
 
@@ -30,5 +30,15 @@ export class Objects extends Group<BaseObject> {
     if (!this.markerPoint) return
     this.markerPoint.x = point.x
     this.markerPoint.y = point.y
+  }
+
+  add (sprite: BaseObject): void {
+    super.add(sprite)
+    this.currentObject = sprite
+  }
+
+  remove (sprite: Entity): void {
+    if (this.currentObject === sprite) this.currentObject = null
+    super.remove(sprite)
   }
 }

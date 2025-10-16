@@ -18,6 +18,7 @@ export class MoveActivePolygonCommand extends Command {
 
     if (currentObject instanceof Polygon) {
       currentObject.shiftPoints(this.point)
+      state.emit('select', currentObject)
     }
   }
 

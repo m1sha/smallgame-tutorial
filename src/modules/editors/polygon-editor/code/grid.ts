@@ -11,7 +11,7 @@ export class Grid extends Sprite {
     this.width = width
     this.height = height
 
-    const rows = 20
+    const rows = 30
     const cols = 20
 
     const rows2 = 60
