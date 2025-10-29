@@ -1,19 +1,16 @@
-import { divPoints, Key, MouseButton, setPoint, zeroPoint, type TPoint } from "smallgame"
+import { divPoints, Key, MouseButton, Point, setPoint, zeroPoint, type TPoint } from "smallgame"
 import type { EditorState } from "./editor-state"
 import { 
   ChangeGridVisibleCommand, 
   ChangeImageVisibleCommand, 
   CreateFundamentalPointCommand, 
   DeselectPointCommand, 
-  MoveActiveImageCommand, 
   MoveActivePointCommand, 
-  MoveActivePolygonCommand, 
+  MoveObjectCommand, 
   RemoveActivePolygonCommand, 
-  SelectImageObjectCommand, 
+  SelectObjectCommand, 
   SelectPointCommand, 
-  SelectPolygonCommand, 
   SetActivePointPosCommand,
-  SetActivePolygonPosCommand
 } from "./commands"
 import { Viewer } from "./rasterization"
 import { ImageObject, Polygon } from "./objects"
@@ -24,7 +21,7 @@ export class Controller {
   private isPointMoved: boolean = false
   private isPolygonMoved: boolean = false
   private selectedPoint: TPoint | null
-  private points: TPoint[] = []
+  //private points: TPoint[] = []
 
   constructor (editorState: EditorState, private viewer: Viewer) {
     this.editorState = editorState
@@ -68,26 +65,18 @@ export class Controller {
           const pos = divPoints(event.pos, screenDelta)
             
           objects.collide(
-            obj => {
-              if (obj instanceof Polygon)
-                return obj.pointInside(pos) 
-              if (obj instanceof ImageObject)
-                return obj.imageRect.containsPoint(pos)
-              return false
-            }, 
+            obj =>  obj instanceof Polygon 
+                  ? obj.pointInside(pos) 
+                  : obj instanceof ImageObject 
+                  ? obj.imageRect.containsPoint(pos) 
+                  : false
+            , 
             obj => {
               const curr = objects.currentObject
               if (curr === obj) return
-              if (curr instanceof Polygon && curr.selectedPoint) return
+              if (curr && curr.selectedPoint) return
 
-              if (obj instanceof Polygon) {
-                state.sendCommand(new SelectPolygonCommand(obj))
-                this.points = obj.getPoints()
-              }
-
-              if (obj instanceof ImageObject) {
-                state.sendCommand(new SelectImageObjectCommand(obj))
-              }
+              state.sendCommand(new SelectObjectCommand(obj))
             }, 
             { once: true, reverseEnum: true }
           )
@@ -126,10 +115,7 @@ export class Controller {
             this.isPointMoved = true
           } else  {
             this.isPolygonMoved = true
-            if (curr.type === 'polygon')
-              this.editorState.sendCommand(new MoveActivePolygonCommand(shift))
-            if (curr.type === 'image')
-              this.editorState.sendCommand(new MoveActiveImageCommand(shift))
+            this.editorState.sendCommand(new MoveObjectCommand(shift))
             screen.cursor = 'move'
           }
           
@@ -140,6 +126,7 @@ export class Controller {
         case "MOUSELEAVE": 
           const curr = objects.currentObject
           if (!curr) return
+          this.editorState.sendCommand(new MoveObjectCommand(Point.zero, true))
           this.editorState.sendCommand(new DeselectPointCommand())
 
           if (this.isPointMoved && this.selectedPoint) {
@@ -147,7 +134,7 @@ export class Controller {
             this.editorState.sendCommand(new SetActivePointPosCommand(this.selectedPoint, this.startMovePos, oldPos))
           } else {
             if (this.isPolygonMoved && curr instanceof Polygon) {
-              this.editorState.sendCommand(new SetActivePolygonPosCommand(this.points, curr.getPoints()))
+              //this.editorState.sendCommand(new SetActivePolygonPosCommand(this.points, curr.getPoints()))
             }
           }
           this.isPolygonMoved = false

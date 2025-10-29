@@ -6,4 +6,6 @@ export abstract class BaseObject extends Sprite {
   abstract readonly type: 'polygon' | 'image'
   abstract hittest (pos: TPoint): boolean
   selectedPoint: TPoint | null = null
+
+  abstract shift (point: TPoint): void
 }

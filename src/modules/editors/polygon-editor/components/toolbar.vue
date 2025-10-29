@@ -18,7 +18,7 @@ function onLoadFile () {
 
 function createPolygon () {
   if (!editor) return
-  editor.addPolygon({ x: 200, y: 200})
+  editor.addPolygon({ x: 200, y: 200 })
 }
 
 function zoomPlus() {

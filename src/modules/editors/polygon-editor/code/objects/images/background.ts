@@ -8,7 +8,7 @@ export class ImageObject extends BaseObject {
   #img: Surface | null = null
   
   visible: boolean = true
-  active = false
+  
 
   constructor(width: number, height: number) {
     super()

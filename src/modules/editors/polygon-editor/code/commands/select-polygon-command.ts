@@ -1,14 +1,13 @@
 
 import type { EditorState } from "../editor-state"
 import { BaseObject } from "../objects"
-import type { Polygon } from "../objects/polygons/polygon"
 import { Command } from "./command"
 
 export class SelectPolygonCommand extends Command {
-  #polygon: Polygon
+  #polygon: BaseObject
   #prevObject: BaseObject | null = null
 
-  constructor (polygon: Polygon) {
+  constructor (polygon: BaseObject) {
     super()
     this.#polygon = polygon
   }

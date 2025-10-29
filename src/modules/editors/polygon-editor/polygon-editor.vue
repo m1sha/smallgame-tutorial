@@ -3,6 +3,9 @@ import { ref, onMounted } from "vue"
 import editor from "./editor-app"
 import { ObjectList, ObjectProperties, Toolbar } from "./components"
 
+import ViewerWorker from './workers/viewer-worker?worker'
+import HistoryLog from "./components/history-log.vue"
+
 const container = ref<HTMLDivElement>()
 const isInit = ref(false)
 
@@ -10,6 +13,7 @@ const isInit = ref(false)
 onMounted(() => {
   editor.init(container.value!)
   isInit.value = true
+  new ViewerWorker().postMessage('my message')
 })
 
 
@@ -22,7 +26,11 @@ onMounted(() => {
     <Toolbar />
 
     <div class="flex-panel">
+      <div style="display: flex; flex-direction: column; gap:24px">
       <ObjectList v-if="isInit" />
+      <HistoryLog v-if="isInit" />
+      </div>
+
       <div class="container-wrapper">
         <div ref="container"></div>  
       </div>

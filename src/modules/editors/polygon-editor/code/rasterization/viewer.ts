@@ -2,6 +2,7 @@ import { Game, Screen, Surface } from "smallgame"
 import { EditorState } from "../editor-state"
 import { Drawable, ImageDrawable, PolygonDrawable } from "./drawers"
 import { BaseObject } from "../objects"
+import { Renderer } from "./render"
 
 
 export class Viewer {
@@ -11,6 +12,7 @@ export class Viewer {
   private selectedObjectLayer: Surface
 
   private drawables: Map<string, Drawable<BaseObject>> = new Map()
+  private renderer: Renderer
 
   constructor (width: number, height: number, root: HTMLDivElement, private state: EditorState) {
     const { game, screen } = Game.create(width, height, root, { viewportType: 'css' })
@@ -23,6 +25,7 @@ export class Viewer {
 
     this.drawables.set('polygon', new PolygonDrawable())
     this.drawables.set('image', new ImageDrawable())
+    this.renderer = new Renderer({ width, height })
   }
 
   nextFrame () {
@@ -38,6 +41,9 @@ export class Viewer {
 
     objects.compute()
     this.drawObjects()
+
+    const surface = this.renderer.render(this.state)
+    screen.blit(surface, surface.rect)
   }
 
   private drawObjects () {

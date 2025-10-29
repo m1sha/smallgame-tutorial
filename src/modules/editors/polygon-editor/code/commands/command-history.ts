@@ -16,10 +16,18 @@ export class CommandHistory {
     return this.#commands.some(p => p.id === command.id)
   }
 
-  add (command: Command): void {
+  add (command: Command): boolean {
+    if ( this.#commands.length) {
+      const prevCommand = this.#commands[this.#commands.length-1]
+      if (prevCommand.constructor.name === command.constructor.name && prevCommand.useMerge) {
+        prevCommand.merge(command)
+        return false
+      }
+    }
+
     command.commit(this.#state)
     //console.log("%s inHistory: %s", command.constructor.name, command.saveInHistory)
-    if (!command.saveInHistory) return
+    if (!command.saveInHistory) return false
     //console.log(command.constructor.name)
 
     if (this.#heap < this.commandCount) {
@@ -30,6 +38,7 @@ export class CommandHistory {
     
     this.#commands.push(command)
     this.#heap = this.commandCount
+    return true
   }
 
   undo () {
@@ -52,5 +61,9 @@ export class CommandHistory {
 
   get commandCount () {
     return this.#commands.length
+  }
+
+  get commands () {
+    return this.#commands.filter((_, index) => index < this.#heap).map(p => p.constructor.name)
   }
 }

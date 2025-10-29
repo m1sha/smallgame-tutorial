@@ -15,13 +15,11 @@ export class SelectImageObjectCommand extends Command {
   commit(state: EditorState): void {
     this.#prevObject = state.objects.currentObject
     state.objects.pickObject(this.imageObject)
-    this.imageObject.active = true
     state.emit('select', this.imageObject)
   }
 
   rollback(state: EditorState): void {
     state.objects.pickObject(this.#prevObject)
-    this.imageObject.active = false
     state.emit('select', null)
   }
 }

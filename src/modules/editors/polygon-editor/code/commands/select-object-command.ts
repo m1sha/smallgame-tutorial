@@ -1,16 +1,24 @@
 import type { EditorState } from "../editor-state"
+import { BaseObject } from "../objects"
 import { Command } from "./command"
 
 export class SelectObjectCommand extends Command {
-  constructor () {
-    super()
-    //this.saveInHistory = false
-  }
+  #polygon: BaseObject
+  #prevObject: BaseObject | null = null
 
-  commit(state: EditorState): void {
-    //state.polygons.selectPoint()
+  constructor (polygon: BaseObject) {
+    super()
+    this.#polygon = polygon
   }
   
-  rollback(_: EditorState): void {}
+  commit(state: EditorState): void {
+    this.#prevObject = state.objects.currentObject
+    state.objects.pickObject(this.#polygon)
+    state.emit('select', this.#polygon)
+  }
 
+  rollback(state: EditorState): void {
+    state.objects.pickObject(this.#prevObject)
+    state.emit('select', this.#prevObject)
+  }
 }

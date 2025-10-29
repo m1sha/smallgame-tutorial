@@ -42,7 +42,7 @@ createGLScript('Vertex Buffer 2', async ({ container, fps }) => {
     mat.set(m)
     a += Time.deltaTime * 200
 
-    ctx.clear()
+    ctx.clear(0x0)
     ctx.drawArrays('points', vertexeCount)
     
     screen.fill('#e9e9e9')

@@ -19,6 +19,9 @@ async function main() {
   const w = 800
   const h = 400
   const index = parseInt(route.params.id as string)
+  if (app.value) {
+    app.value.dispose()
+  }
   app.value = new App(isNaN(index) || !index ? 0 : index)
   app.value.set(container.value!, fps.value!, w, h)
   app.value!.run()

@@ -33,6 +33,10 @@ editorApp.editorState.onObjectedSelected = obj => {
       <TextBox v-model="rect.height" type="number" caption="Height" />
     </div>
 
+    <div v-if="currentObject.type === 'polygon'">
+      <label for="">Show Arrows</label> <input type="checkbox" checked />
+    </div>
+
     <div>
       <div v-for="point in points">
         <div style="display: flex; gap: 8px;">

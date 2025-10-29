@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { ItemList } from 'vue3-universal-components'
 import editorApp from '../editor-app'
-import { ref, watch } from 'vue'
+import { markRaw, ref, watch } from 'vue'
 import { BaseObject } from '../code/objects'
-import { SelectPolygonCommand } from '../code/commands'
+import { SelectObjectCommand } from '../code/commands'
 
 type TItem = { id: string, name: string, object: BaseObject }
 
@@ -16,14 +16,17 @@ editorApp.editorState.onObjectChanged = (action, object) => {
       currentItem.value = object.id
     break
     case 'created': 
-      list.value.push({ id: object.id, name: object.id, object })
+      list.value.push({ id: object.id, name: object.id, object: markRaw(object) })
       currentItem.value = object.id
     break
+    case 'deleted': {
+      list.value = list.value.filter(p => p.id !== object.id)
+    }
   }
 }
 
 const onItemClick = (item: any) => {
-  editorApp.editorState.sendCommand(new SelectPolygonCommand(item.object))
+  editorApp.editorState.sendCommand(new SelectObjectCommand(item.object))
 }
 
 watch(() => currentItem.value, () => console.log(currentItem.value))

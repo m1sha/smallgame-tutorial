@@ -32,11 +32,6 @@ createScript('Simple Text', async ({ container, width, height, fps }) => {
   fgText.rect.center = bg.rect.center
   
   const result = Surface.mix('destination-in', bg, fgText, fgText.rect).clip(fgText.rect)  
-  //result.rect.center = bgText.rect.center
-  
-  //const s = new Sketch()
-  //s.rect({ stroke: '#fdf9f9ff' }, text.bounds)
-  //const bound = s.toSurface()
   
   console.time('Simple Text Render')
   surface.blita(0.35, bg, bg.rect.move(surface.rect.center, 'center-center'))

@@ -5,8 +5,8 @@ import { Polygon } from "../../objects"
 export class PolygonDrawable extends Drawable<Polygon> {
   normal(surface: Surface, polygon: Polygon): void {
     const sketch = new Sketch()
-    sketch.defineStyle('normal', { stroke: 'green', fill:'#00dd0025' })
-    sketch.defineStyle('hover', { stroke: 'green', fill:'#00f60050' })
+    sketch.defineStyle('normal', { stroke: 'green', fill:'#00dd007e' })
+    sketch.defineStyle('hover', { stroke: 'green', fill:'#00f6008f' })
     
     const vecs = points2segments(polygon.points, true)
     sketch.polygon(polygon.isPolygonSelected ? 'hover' : 'normal', polygon.points)

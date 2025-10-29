@@ -40,4 +40,8 @@ export class App {
 
     return this.scripts.findIndex(p => p.name === name)
   }
+
+  dispose () {
+    this.current.stop()
+  }
 }

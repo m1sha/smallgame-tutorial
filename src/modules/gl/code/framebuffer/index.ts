@@ -13,7 +13,7 @@ createGLScript('FrameBuffer', async ({ container, fps }) => {
   
   gl.blendFunc('SRC_ALPHA', 'ONE_MINUS_SRC_ALPHA')
 
-  const prog = gl.createProgram(ver, frag, 'assemble-and-use')
+  using prog = gl.createProgram(ver, frag, 'assemble-and-use')
   const trianglesVAO = gl.vao('static', 'float', { pos: vec2, aColor: vec3 }, [
      0.5,  0.5,  0.00,    0.32,  0.93,
      0.0,  0.5,  0.00,    0.32,  0.63,
@@ -28,7 +28,7 @@ createGLScript('FrameBuffer', async ({ container, fps }) => {
     -0.5, -0.2,  0.04,    0.52,  0.03,
   ])
 
-  const prog2 = gl.createProgram(tex_ver, tex_frag, 'assemble-and-use')
+  using prog2 = gl.createProgram(tex_ver, tex_frag, 'assemble-and-use')
   const rectVAO = gl.vao('static', 'float', { pos: vec2, aTexCoord: vec2 }, [
     -1,   1,    0, 1,
     -1,  -1,    0, 0,
@@ -67,8 +67,7 @@ createGLScript('FrameBuffer', async ({ container, fps }) => {
   canvas.getContext('bitmaprenderer')?.transferFromImageBitmap(gl.toBitmap())
   container.append(canvas)
   displayFps(fps)
-  prog.remove()
-  prog2.remove()
+  
 
   canvas.style.border = '1px solid white'
 })

@@ -4,10 +4,14 @@ import { BaseObject } from "../base-object"
 type TempPoint = TPoint & { index: number }
 
 export class Polygon extends BaseObject {
+  
   readonly type = 'polygon'
   #points: TPoint[] = []
   #tempPoints: TempPoint[] = []
   #sliceIndex: number = -1
+
+  showArrows: boolean = true
+  color: string = '#00dd007e'
   
   selectedPointType: 'fund' | 'temp' = 'fund'
   isPolygonSelected: boolean = false
@@ -71,7 +75,7 @@ export class Polygon extends BaseObject {
     this.selectedPointType = 'fund'
   }
 
-  shiftPoints(shift: TPoint) {
+  shift (shift: TPoint) {
     this.#points.forEach(point => {
       point.x += shift.x
       point.y += shift.y

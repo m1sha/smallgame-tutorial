@@ -17,6 +17,7 @@ export class EditorState {
   readonly selectedObject: BaseObject | null = null
   onObjectChanged: ((action: TActionTypes, obj: BaseObject) => void) | null = null
   onObjectedSelected: ((obj: BaseObject | null) => void) | null = null
+  onHistoryLogChanged: ((commands: string[]) => void) | null = null
 
   constructor (width: number, height: number) {
     this.#commandHistory = new CommandHistory(this)
@@ -32,6 +33,7 @@ export class EditorState {
 
   sendCommand (command: Command) {
     this.#commandHistory.add(command)
+    this.onHistoryLogChanged?.(this.#commandHistory.commands)
   }
 
   emit (action: TEmitEvetTyps, obj: BaseObject | null) {
@@ -55,9 +57,15 @@ export class EditorState {
     }
   }
 
-  undo () { this.#commandHistory.undo() }
+  undo () { 
+    this.#commandHistory.undo() 
+    this.onHistoryLogChanged?.(this.#commandHistory.commands)
+  }
   
-  redo () { this.#commandHistory.redo() }
+  redo () { 
+    this.#commandHistory.redo() 
+    this.onHistoryLogChanged?.(this.#commandHistory.commands)
+  }
 
   
 }
