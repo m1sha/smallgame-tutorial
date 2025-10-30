@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import Range from '../../../../components/range.vue'
+import Range from '../../../../../components/range.vue'
 import { useEditorStore } from "../../store/editor-store"
 import { EraseColorFilterSetting } from '../../code/filters/erase-color-filter'
 import { ApplyEraseColorFilterColorCommand, ChangeEraseColorFilterValueCommand } from '../../code/commands'

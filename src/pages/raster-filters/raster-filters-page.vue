@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { RasterFilter } from '../../modules/raster-filters'
+import { RasterFilter } from '../../modules/editors/raster-filters'
 </script>
 <template>
   <RasterFilter />

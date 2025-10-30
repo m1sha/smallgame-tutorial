@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { onMounted } from 'vue'
-import Range from '../../../../components/range.vue'
+import Range from '../../../../../components/range.vue'
 import { useEditorStore } from "../../store/editor-store"
 import { DepletePaletteFilterSetting } from '../../code/filters'
 import { ApplyDepletePaletteFilterCommand, ChangeDepletePaletteFilterValueCommand } from '../../code/commands'
