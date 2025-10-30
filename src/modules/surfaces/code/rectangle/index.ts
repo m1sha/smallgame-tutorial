@@ -1,7 +1,7 @@
 import { loadImage, Surface } from "smallgame"
-import { createScript } from "../script"
+import { type ScriptModule, type ScriptSettings } from "../../../../components/example"
 
-createScript('Rectangle', async ({ container, width, height }) => {
+export default async ({ container, width, height }: ScriptSettings): Promise<ScriptModule> => {
   const s = new Surface(width, height)
   s.fill(0x118845)
 
@@ -12,4 +12,6 @@ createScript('Rectangle', async ({ container, width, height }) => {
   s.blit(img, img.rect)
 
   container.append(s.draw.origin.canvas)
-})
+
+  return {}
+}

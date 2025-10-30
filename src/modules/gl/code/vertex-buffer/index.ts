@@ -2,12 +2,10 @@ import { Game, gameloop, rad, SurfaceGL, Time, vec2 } from 'smallgame'
 
 import vertex from './shaders/vert'
 import fragmnet from './shaders/frag'
-import { createGLScript } from '../script'
+import { type ScriptModule, type ScriptSettings } from "../../../../components/example"
 
-createGLScript('Vertex Buffer', async ({ container, fps }) => {
-  const w = 800
-  const h = 800
-  const glSurface = new SurfaceGL(w, h)
+export default async ({ container, width, height, fps }: ScriptSettings): Promise<ScriptModule> => {
+  const glSurface = new SurfaceGL(width, height)
   const ctx = glSurface.context
   ctx.createProgram(vertex, fragmnet, 'assemble-and-use')
 
@@ -22,7 +20,7 @@ createGLScript('Vertex Buffer', async ({ container, fps }) => {
     ])
   
 
-  const { screen } = Game.create(w, h, container)
+  const { screen } = Game.create(width, height, container)
 
   let a = 0
 
@@ -31,7 +29,7 @@ createGLScript('Vertex Buffer', async ({ container, fps }) => {
     mat.set(m)
     a += Time.deltaTime * 20
 
-    ctx.clear()
+    ctx.clear(0x0)
     ctx.drawArrays('triangle-strip', vertexeCount)
     
     screen.fill('#e9e9e9')
@@ -41,4 +39,5 @@ createGLScript('Vertex Buffer', async ({ container, fps }) => {
     fps.textContent = Time.fps.toFixed(0)
   })
   
-})
+  return {}
+}

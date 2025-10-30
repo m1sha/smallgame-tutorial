@@ -1,7 +1,0 @@
-import './hello-world'
-import './effect1'
-import './effect2'
-import './effect3'
-import './effect4'
-import './grid'
-import './grid2'

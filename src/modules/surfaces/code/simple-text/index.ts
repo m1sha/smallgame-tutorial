@@ -1,8 +1,8 @@
 import { loadImage, Rect, Sketch, Surface, Text } from "smallgame"
-import { createScript } from "../script"
+import { type ScriptModule, type ScriptSettings } from "../../../../components/example"
 import { displayFps } from "../../../../utils/display-fps"
 
-createScript('Simple Text', async ({ container, width, height, fps }) => {
+export default async ({ container, width, height, fps }: ScriptSettings): Promise<ScriptModule> => {
   const img = await loadImage('beautiful-fall-nature-scenery-picjumbo-com.jpeg')
   
   console.time('Simple Text')
@@ -43,4 +43,6 @@ createScript('Simple Text', async ({ container, width, height, fps }) => {
 
   container.append(surface.origin as HTMLCanvasElement)
   displayFps(fps)
-})
+
+  return {}
+}

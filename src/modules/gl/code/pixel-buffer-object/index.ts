@@ -1,11 +1,11 @@
 import { gameloop, GL, loadImage, Primitive2D, Size, Surface, TexCoord, vec2 } from "smallgame"
-import { createGLScript } from "../script"
+import { type ScriptModule, type ScriptSettings } from "../../../../components/example"
 import { displayFps } from "../../../../utils/display-fps"
 
 import vertex from './shaders/vert'
 import fragmnet from './shaders/frag'
 
-createGLScript('Pixel Buffer Object', async ({ container, fps }) => {
+export default async ({ container, fps }: ScriptSettings): Promise<ScriptModule> => {
   const gl = new GL(new Size(800, 800))
   container.append(gl.canvas as HTMLCanvasElement)
 
@@ -78,8 +78,8 @@ gl.clear(0x0)
 
   
 
-  
-})
+ return {} 
+}
 
 function flipImageDataVertically(imageData: ImageData) {
   const rowSize = imageData.width * 4;

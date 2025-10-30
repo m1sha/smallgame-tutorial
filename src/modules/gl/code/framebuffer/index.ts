@@ -1,5 +1,5 @@
 import { GL, Size, vec2, vec3 } from "smallgame"
-import { createGLScript } from "../script"
+import { type ScriptModule, type ScriptSettings } from "../../../../components/example"
 import { displayFps } from "../../../../utils/display-fps"
 
 import ver from "./shaders/ver"
@@ -7,8 +7,8 @@ import frag from "./shaders/frag"
 import tex_ver from "./shaders/tex_ver"
 import tex_frag from "./shaders/tex_frag"
 
-createGLScript('FrameBuffer', async ({ container, fps }) => {
-  const size = new Size(800, 800)
+export default async ({ container, width, height, fps }: ScriptSettings): Promise<ScriptModule> => {
+  const size = new Size(width, height)
   const gl = new GL(size, true)
   
   gl.blendFunc('SRC_ALPHA', 'ONE_MINUS_SRC_ALPHA')
@@ -36,7 +36,7 @@ createGLScript('FrameBuffer', async ({ container, fps }) => {
      1,  -1,    1, 0,
   ])
 
-  const texure = gl.createEmptyTexture(new Size(800, 800))
+  const texure = gl.createEmptyTexture(new Size(width, height))
   const fbo = gl.fbo(texure)
  
   prog.use(() => {
@@ -70,4 +70,6 @@ createGLScript('FrameBuffer', async ({ container, fps }) => {
   
 
   canvas.style.border = '1px solid white'
-})
+
+  return {}
+}

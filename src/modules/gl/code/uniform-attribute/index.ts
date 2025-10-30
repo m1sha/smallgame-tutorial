@@ -2,12 +2,10 @@ import { Game, gameloop, gl_normalize, SurfaceGL, Time, type TPoint } from 'smal
 
 import vertex from './shaders/vert'
 import fragmnet from './shaders/frag'
-import { createGLScript } from '../script'
+import { type ScriptModule, type ScriptSettings } from "../../../../components/example"
 
-createGLScript('Uniforms & Attributes', async ({container, fps}) => {
-  const w = 800
-  const h = 800
-  const glSurface = new SurfaceGL(w, h)
+export default async ({ container, width, height, fps }: ScriptSettings): Promise<ScriptModule> => {
+  const glSurface = new SurfaceGL(width, height)
   const ctx = glSurface.context
   ctx.createProgram(vertex, fragmnet, 'assemble-and-use')
 
@@ -16,7 +14,7 @@ createGLScript('Uniforms & Attributes', async ({container, fps}) => {
 
   const aPosition = ctx.attribute('aPosition', 'vec3')
 
-  const { game, screen } = Game.create(w, h, container)
+  const { game, screen } = Game.create(width, height, container)
 
   const points: TPoint[] = []
   gameloop(() => {
@@ -24,11 +22,11 @@ createGLScript('Uniforms & Attributes', async ({container, fps}) => {
     for (const event of game.event.get()) {
       if (event.type === 'MOUSEDOWN') {
         
-        points.push(gl_normalize( event.pos, w, h))
+        points.push(gl_normalize( event.pos, width, height))
       }
     }
   
-    ctx.clear()
+    ctx.clear(0x0)
 
     for (const point of points) {
       aPosition.value = [point.x, point.y, 0.0]
@@ -41,4 +39,5 @@ createGLScript('Uniforms & Attributes', async ({container, fps}) => {
 
     fps.textContent = Time.fps.toFixed(0)
   })
-})
+  return {}
+}

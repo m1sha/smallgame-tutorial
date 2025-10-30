@@ -1,25 +1,24 @@
 import { Game, PolyRect, Rect, Screen, Sketch } from "smallgame"
-import { createScript } from "../script"
 import { displayFps } from "../../../../utils/display-fps"
+import { createSelect, type ScriptSettings, type ScriptModule } from "../../../../components/example"
 
-createScript('Sketching', async ({ container, width, height, fps, selector }) => {
-  selector
-    .add('v1', 'Base Figures')
-    .add('v2', 'Polyrect')
-  
-  const { screen } = Game.create(width, height, container)
-
-  selector.callback = id => { }
+export default async ({ container, width, height, fps }: ScriptSettings): Promise<ScriptModule> => {
+  const { screen, game } = Game.create(width, height, container)
 
   polyRect(screen)
 
   displayFps(fps)
-  // gameloop(() => {
-  //     screen.clear()
-  //     parallax.draw(screen as any)
-  //     displayFps(fps)
-  //   })
-})
+
+  const shapeParam = createSelect('Shape', ['Base Figures', 'Polyrect'], value => {}, 'Base Figures')
+
+  return {
+    parameters: [shapeParam],
+    dispose () {
+      game.kill()
+    }
+  }
+}
+
 
 function polyRect (screen: Screen) {
   const rect = new Rect(80, 80, 80, 80)

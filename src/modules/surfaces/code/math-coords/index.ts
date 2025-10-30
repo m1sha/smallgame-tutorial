@@ -1,8 +1,7 @@
 import { Color, Coords, loadImage, Point, Rect, Sketch, Surface } from "smallgame"
-import { createScript } from "../script"
+import { type ScriptModule, type ScriptSettings } from "../../../../components/example"
 
-createScript('Math Coords', async ({ container, width, height }) => {
-
+export default async ({ container, width, height }: ScriptSettings): Promise<ScriptModule> => {
   const screen = new Surface(width, height)
   screen.fill(0x118845)
   
@@ -32,7 +31,7 @@ createScript('Math Coords', async ({ container, width, height }) => {
 
   container.append(screen.draw.origin.canvas)
 
-
-})
+  return {}
+}
 
 

@@ -1,6 +1,6 @@
-import { Game, gameloop, GL, Primitive2D, Size, TexCoord, Time, u_float, u_vec2, u_vec4, vec2 } from "smallgame"
-import { BaseScriptSettings } from "../script"
+import { Game, gameloop, GL, GlProgram, Primitive2D, Size, TexCoord, Time, u_float, u_vec2, u_vec4, vec2 } from "smallgame"
 import { displayFps } from "../../../../utils/display-fps"
+import { ScriptSettings } from "../../../../components/example"
 
 const ver = /*glsl*/`
 in vec4 aPosition;
@@ -18,18 +18,19 @@ void main()
 
 export class Effect {
   readonly gl: GL
+  private prog: GlProgram | null = null
   private time: u_float | null = null
   private iMouse: u_vec4 | null = null
   private iMouseShift: u_vec2 | null = null
   private iEndPos: u_vec2 | null = null
   private vertexCount = 0
 
-  constructor (private settings: BaseScriptSettings) {
+  constructor (private settings: ScriptSettings) {
     this.gl = new GL(new Size(settings.width, settings.height))
   }
 
   create (fragmnet: string) {
-    this.gl.createProgram(ver, fragmnet, 'assemble-and-use')
+    this.prog = this.gl.createProgram(ver, fragmnet, 'assemble-and-use')
   
     this.time = this.gl.uniform('time', 'float')
     this.gl.uniform('iResolution', 'vec2').value = [this.settings.width * 1.0, this.settings.height * 1.0]
@@ -77,5 +78,14 @@ export class Effect {
 
       
     })
+  }
+
+  dispose () {
+    if (this.prog) this.prog.remove()
+  }
+
+  [Symbol.dispose]() {
+    this.dispose()
+    console.log('Effect Disposed')
   }
 }

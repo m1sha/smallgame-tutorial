@@ -2,18 +2,20 @@
 html, body
   background-color: var(--data-main-dg-color)
   color: var(--data-text-color)
+  margin: 0
+  padding: 0
 
 .layout
   display: flex
   flex-direction: column
   justify-content: center
   align-items: center
-  gap: 12px
+  gap: 4px
 
   @import 'main-menu'
 
   main
-    width: 90vw
+    width: 100%
     @import 'secondary-menu'
     @import 'pages'
     @import 'fps'

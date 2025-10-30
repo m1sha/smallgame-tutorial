@@ -2,16 +2,15 @@ import { Game, loadImage, vec2, Primitive2D, TexCoord, SurfaceGL } from 'smallga
 
 import vertex from './shaders/vert'
 import fragmnet from './shaders/frag'
-import { createGLScript } from '../script'
+import { type ScriptModule, type ScriptSettings } from "../../../../components/example"
 
-createGLScript('Texture', async ({ container, fps }) => {
-  await main(container)
-})
+export default async ({ container, width, height, fps }: ScriptSettings): Promise<ScriptModule> => {
+  await main(container, width, height)
+  return {}
+}
 
-async function main (container: HTMLDivElement) {
-  const w = 800
-  const h = 800
-  const glSurface = new SurfaceGL(w, h)
+async function main (container: HTMLDivElement, width: number, height: number) {
+  const glSurface = new SurfaceGL(width, height)
   const ctx = glSurface.context
   ctx.createProgram(vertex, fragmnet, 'assemble-and-use')
 
@@ -31,7 +30,7 @@ async function main (container: HTMLDivElement) {
   ctx.clear(0x0)
   ctx.drawArrays('triangle-strip', vertexCount)
   
-  const { screen } = Game.create(w, h, container)
+  const { screen } = Game.create(width, height, container)
   
   screen.fill('#18f8f8')
   screen.blit(glSurface, glSurface.rect)

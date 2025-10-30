@@ -67,7 +67,7 @@ export default async function (): Promise<{ canvas: HTMLCanvasElement }> {
 
   
   const bitmap = gl.toBitmap()
-  gl.dispose()
+  //gl.dispose()
   const c = document.createElement('canvas')
   c.setAttribute('name', 'c2')
   c.getContext('bitmaprenderer')?.transferFromImageBitmap(bitmap)
