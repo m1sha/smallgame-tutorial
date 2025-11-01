@@ -19,7 +19,7 @@ export default async ({ container, width, height, fps }: ScriptSettings): Promis
       )
     )
 
-    screen.fill(0xFFFFFF00)
+    screen.fill(0xFFFFFFFF)
     screen.blit(car, car.rect)
 
     displayFps(fps)

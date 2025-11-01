@@ -49,11 +49,11 @@ export class Effect {
     let dTime = 0
     let wheelRotates = 0
     gameloop(() => {
-      this.gl.clear(0x0)
+      this.gl.clear(0x111111f0)
       this.gl.drawArrays('triangle-strip', this.vertexCount)
       const s = this.gl.toSurface()
     
-      screen.fill('#e9e9e9')
+      screen.fill('#111')
       screen.blit(s, s.rect)
       this.time!.value = dTime 
     

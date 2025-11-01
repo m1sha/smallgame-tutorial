@@ -8,8 +8,18 @@ export type SelectParameter = {
   callback: (index: string) => void
 }
 
-export function createSelect(caption: string, items: string[] | TOption[], callback: (index: string) => void, defaultValue?: string): SelectParameter {
+export type ButtonParameter = {
+  type: 'button'
+  caption: string
+  callback: () => void
+}
+
+export function createSelect (caption: string, items: string[] | TOption[], callback: (index: string) => void, defaultValue?: string): SelectParameter {
   return { type: 'select',  caption, items, callback, defaultValue: defaultValue ?? '' }
 }
 
-export type AnyParameter = SelectParameter
+export function createButton (caption: string, callback: () => void): ButtonParameter {
+  return { type: 'button', caption, callback }
+}
+
+export type AnyParameter = SelectParameter | ButtonParameter

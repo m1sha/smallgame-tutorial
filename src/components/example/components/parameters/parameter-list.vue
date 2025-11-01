@@ -21,6 +21,7 @@ function getItems (items: string[] | TOption[]): TOption[] {
     <div class="parameter-list">
       <div v-for="parameter in parameters">
         <DropDownList v-if="parameter.type === 'select'" v-model="parameter.defaultValue" :items="getItems(parameter.items)" :caption="parameter.caption" @update:model-value="value => parameter.callback(value ?? '')" />
+        <PushButton v-if="parameter.type === 'button'" @click="parameter.callback()">{{ parameter.caption }}</PushButton>
       </div>
 
     </div>
@@ -43,5 +44,8 @@ function getItems (items: string[] | TOption[]): TOption[] {
     display: flex
     flex-direction: column
     gap: 12px
+
+  button
+    width: 100%
   
 </style>
