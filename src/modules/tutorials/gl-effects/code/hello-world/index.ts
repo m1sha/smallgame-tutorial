@@ -1,9 +1,9 @@
 import { type ScriptModule, type ScriptSettings } from "../../../../../components/example"
-import { Effect } from '../core'
+import { EffectController } from '../core'
 import fragmnet from './shader'
 
 export default async (settings: ScriptSettings): Promise<ScriptModule> => {
-  using effect = new Effect(settings)
+  using effect = new EffectController(settings)
   effect.create(fragmnet)
   effect.play()
 

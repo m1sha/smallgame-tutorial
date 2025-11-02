@@ -1,5 +1,4 @@
-import { Game, gameloop, GL, GlProgram, Primitive2D, Size, TexCoord, Time, u_float, u_vec2, u_vec4, vec2 } from "smallgame"
-import { displayFps } from "../../../../../utils/display-fps"
+import { Screen, GL, GlProgram, Primitive2D, Size, TexCoord, Time, u_float, u_vec2, u_vec4, vec2, GameEvent } from "smallgame"
 import { ScriptSettings } from "../../../../../components/example"
 
 const ver = /*glsl*/`
@@ -25,6 +24,9 @@ export class Effect {
   private iEndPos: u_vec2 | null = null
   private vertexCount = 0
 
+  private dTime = 0
+  private wheelRotates = 0
+
   constructor (private settings: ScriptSettings) {
     this.gl = new GL(new Size(settings.width, settings.height))
   }
@@ -43,41 +45,29 @@ export class Effect {
       .push(Primitive2D.rect(), TexCoord.rect())
   }
 
-  play () {
-    const { screen, game } = Game.create(this.settings.width, this.settings.height, this.settings.container)
-  
-    let dTime = 0
-    let wheelRotates = 0
-    gameloop(() => {
-      this.gl.clear(0x111111f0)
-      this.gl.drawArrays('triangle-strip', this.vertexCount)
-      const s = this.gl.toSurface()
+  tick (screen: Screen) {
+    this.gl.clear(0x111111f0)
+    this.gl.drawArrays('triangle-strip', this.vertexCount)
+    const s = this.gl.toSurface()
     
-      screen.fill('#111')
-      screen.blit(s, s.rect)
-      this.time!.value = dTime 
-    
-      displayFps(this.settings.fps)
-      dTime += Time.deltaTime
+    screen.fill('#111')
+    screen.blit(s, s.rect)
+    this.time!.value = this.dTime 
+    this.dTime += Time.deltaTime
+  }
 
-      for (const event of game.event.get()) {
-        if (event.type === 'MOUSEUP'){
-          this.iEndPos!.value = [event.pos.x * 1.0, event.pos.y * 1.0]
-        }
-        if (event.type === 'MOUSEMOVE') {
-          
-          this.iMouse!.value = [event.pos.x * 1.0, event.pos.y * 1.0, event.button * 1.0, wheelRotates * 1.0]
-          this.iMouseShift!.value = [event.shift.x * 1.0, event.shift.y * 1.0]
-        }
-
-        if (event.type === 'WHEEL') {
-          wheelRotates += event.deltaY > 0 ? 1: -1
-          this.iMouse!.value = [event.pos.x * 1.0, event.pos.y * 1.0, -1.0, wheelRotates * 1.0]
-        }
+  input (event: GameEvent) {
+      if (event.type === 'MOUSEUP'){
+        this.iEndPos!.value = [event.pos.x * 1.0, event.pos.y * 1.0]
       }
-
-      
-    })
+      if (event.type === 'MOUSEMOVE') {
+        this.iMouse!.value = [event.pos.x * 1.0, event.pos.y * 1.0, event.button * 1.0, this.wheelRotates * 1.0]
+        this.iMouseShift!.value = [event.shift.x * 1.0, event.shift.y * 1.0]
+      }
+      if (event.type === 'WHEEL') {
+        this.wheelRotates += event.deltaY > 0 ? 1: -1
+        this.iMouse!.value = [event.pos.x * 1.0, event.pos.y * 1.0, -1.0, this.wheelRotates * 1.0]
+      }
   }
 
   dispose () {
@@ -86,6 +76,5 @@ export class Effect {
 
   [Symbol.dispose]() {
     this.dispose()
-    console.log('Effect Disposed')
   }
 }

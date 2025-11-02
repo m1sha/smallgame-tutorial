@@ -42,6 +42,7 @@ export default async ({ container, width, height, fps }: ScriptSettings): Promis
     }
 
     screen.fill('#38393dff')
+    //screen.clear()
     
     path.draw(screen as any)
     markers.draw(screen as any)
