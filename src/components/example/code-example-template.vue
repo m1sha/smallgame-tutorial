@@ -15,6 +15,10 @@ const currentModule = ref<ScriptModule | null>()
 
 onMounted(async () => {
   await main()
+  window.addEventListener('resize', () => {
+    clearPrevious()
+    main()
+  })
 })
 
 async function main() {
@@ -34,21 +38,22 @@ function changeScript (id: number) {
   router.push({ params: { id }})
 }
 
-router.beforeEach(() => {
-  if (currentModule.value) {
-    const module = currentModule.value
-    module.dispose?.()
-  }
+router.beforeEach(() => { clearPrevious() })
+router.afterEach(() => { main() })
 
+function clearPrevious () {
   if (container.value)
   while(true) {
     const child = container.value.children[0]
     if (!child) break
     container.value.removeChild(child)
   }
-})
 
-router.afterEach(() => { main() })
+  if (currentModule.value) {
+    const module = currentModule.value
+    module.dispose?.()
+  }
+}
 
 </script>
 <template>

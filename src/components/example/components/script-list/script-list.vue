@@ -29,6 +29,7 @@ watch(() => porps.selectIndex, () => selected.value = porps.items[porps.selectIn
   background-color: #3737377e
   height: calc( 100vh -  76px)
   width: 10vw
+  overflow-y: auto
 
   box-shadow: inset -16px 0px 60px #4444444e, 16px 0px 20px #3636364e
 
