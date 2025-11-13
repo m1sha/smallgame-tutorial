@@ -1,6 +1,6 @@
 import { Game, gameloop } from "smallgame"
 import { ScriptSettings } from "../../../../../components/example"
-import { Effect } from "./effect"
+import { Effect } from "../../../../../utils/effects"
 import { displayFps } from "../../../../../utils/display-fps"
 
 export class EffectController {

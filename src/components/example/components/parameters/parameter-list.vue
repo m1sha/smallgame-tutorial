@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { DropDownList, PushButton } from 'vue3-universal-components'
+import { ColorPicker, DropDownList, PushButton, Tracker } from 'vue3-universal-components'
 import { AnyParameter, TOption } from '../../code'
 
 defineProps<{ parameters: AnyParameter[] }>()
@@ -21,7 +21,9 @@ function getItems (items: string[] | TOption[]): TOption[] {
     <div class="parameter-list">
       <div v-for="parameter in parameters">
         <DropDownList v-if="parameter.type === 'select'" v-model="parameter.defaultValue" :items="getItems(parameter.items)" :caption="parameter.caption" @update:model-value="value => parameter.callback(value ?? '')" />
-        <PushButton v-if="parameter.type === 'button'" @click="parameter.callback()">{{ parameter.caption }}</PushButton>
+        <PushButton v-if="parameter.type === 'button'" @click="parameter.callback(parameter)">{{ parameter.caption }}</PushButton>
+        <ColorPicker v-if="parameter.type === 'color'" v-model="parameter.defaultColor" :caption="parameter.caption" @update:model-value="value => parameter.callback(value ?? '')" />
+        <Tracker v-if="parameter.type === 'tracker'" v-model="parameter.defaultValue" :caption="parameter.caption" :min="parameter.min" :max="parameter.max" :step="parameter.step" @update:model-value="value => parameter.callback(value ?? 0)" />
       </div>
 
     </div>

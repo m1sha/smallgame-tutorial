@@ -1,4 +1,4 @@
-import { loadImage, Point, Game, gameloop, Time, lerp } from "smallgame"
+import { loadImage, Point, Game, gameloop, Time, GMath } from "smallgame"
 import { displayFps } from "../../../../../utils/display-fps"
 import { type ScriptModule, type ScriptSettings } from "../../../../../components/example"
 
@@ -12,14 +12,14 @@ export default async ({ container, width, height, fps }: ScriptSettings): Promis
 
   gameloop(() => {
     car.rect.shiftSelf(
-      lerp(
+      GMath.moveTowardsAccum(
         game.key.axises.scale(HERO_SPEED), 
         velocity, 
         HERO_ACCEL * Time.deltaTime
       )
     )
 
-    screen.fill(0xFFFFFFFF)
+    screen.fill('#888')
     screen.blit(car, car.rect)
 
     displayFps(fps)

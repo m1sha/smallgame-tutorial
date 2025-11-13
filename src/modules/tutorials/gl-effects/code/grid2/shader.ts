@@ -47,12 +47,12 @@ void main() {
 
   vec2 grid10 = abs(fract(st * (1.0 / 8.0) - 0.5) - 0.5);
   grid10 /= fwidth(st * 0.1);
-  float lines10 = 1.0 - min(min(grid10.x, grid10.y), 1.0);
+  float lines10 = 1.0 - min(min(grid10.x, grid10.y), 1.0) * 0.9;
                 
   // Второстепенные линии (каждую единицу)
   vec2 grid1 = abs(fract(st - 0.5) - 0.5);
   grid1 /= fwidth(st);
-  float lines1 = (1.0 - min(min(grid1.x, grid1.y), 1.0)) * 0.3;
+  float lines1 = (1.0 - min(min(grid1.x, grid1.y), 1.0)) * 0.9;
                 
   // Центральные оси
   float axisX = 1.0 - min(abs(st.x) / fwidth(st.x) * 0.5, 1.0);
@@ -60,19 +60,20 @@ void main() {
   float axes = max(axisX, axisY) * 0.2;
                 
   // Комбинируем все элементы
-  float alpha = max(max(lines10, lines1 * 0.6), axes);
+  float alpha = max(max(lines10, lines1 ), axes);
                 
   // Цвет в зависимости от типа линии
-  vec3 color = mix(axisesCrossColor.rgb * 0.7, axisesCrossColor.rgb, lines10);
+  vec3 color = mix(axisesCrossColor.rgb * 0.3, axisesCrossColor.rgb, lines10);
   color = mix(color, vec3(0.5, 0.2, 0.2), axisX);
   color = mix(color, vec3(0.2, 0.4, 0.2), axisY);
+  //color.rgb -= 0.2;
                 
   // Затухание к краям
   //vec2 screenCoord = gl_FragCoord.xy / iResolution;
   //vec2 centerDist = abs(screenCoord - 0.5) * 2.0;
   //float fade = 1.0 - smoothstep(0.8, 1.0, max(centerDist.x, centerDist.y));
                 
-  fragColor = vec4(color, alpha * 1.0);
+  fragColor = vec4(color, alpha );
  
 }
 `

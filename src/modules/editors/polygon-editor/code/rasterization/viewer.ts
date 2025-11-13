@@ -3,13 +3,15 @@ import { EditorState } from "../editor-state"
 import { Drawable, ImageDrawable, PolygonDrawable } from "./drawers"
 import { BaseObject } from "../objects"
 import { Renderer } from "./render"
-
+import { Effect } from "../../../../../utils/effects"
+import f from '../../../../tutorials/gl-effects/code/grid2/shader'
 
 export class Viewer {
   readonly screen: Screen
   readonly game: Game
   private objectsLayer: Surface
   private selectedObjectLayer: Surface
+  //readonly effect: Effect
 
   private drawables: Map<string, Drawable<BaseObject>> = new Map()
   private renderer: Renderer
@@ -26,6 +28,9 @@ export class Viewer {
     this.drawables.set('polygon', new PolygonDrawable())
     this.drawables.set('image', new ImageDrawable())
     this.renderer = new Renderer({ width, height })
+
+    //this.effect = new Effect({ width, height })
+    //this.effect.create(f)
   }
 
   nextFrame () {
@@ -36,14 +41,19 @@ export class Viewer {
     const screen = this.screen
     const { grid, objects } = this.state
     
-    screen.fill(0xFFFFFF00)
+    screen.fill('#242424ff')
+    //this.effect.tick(screen)
     grid.draw(screen as any)
 
     objects.compute()
-    this.drawObjects()
+    
 
     const surface = this.renderer.render(this.state)
     screen.blit(surface, surface.rect)
+
+
+    this.drawObjects()
+    
   }
 
   private drawObjects () {

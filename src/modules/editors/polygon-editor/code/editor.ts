@@ -31,7 +31,7 @@ export class Editor {
     
     this.#controller = new Controller(this.editorState, this.#viewer)
     gameloop(() => {
-      this.#controller!.checkInput()
+      this.#controller!.checkInput(ev => {} /*this.#viewer?.effect.input(ev)*/)
       this.#viewer!.nextFrame()
     })
   }

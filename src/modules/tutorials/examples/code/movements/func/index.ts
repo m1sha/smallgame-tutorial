@@ -1,4 +1,7 @@
 export * from './lerp'
+export * from './easeInBounce'
+export * from './easeInElastic'
+export * from './easeInOutBounce'
 export * from './easeInOutCirc'
 export * from './easeInOutElastic'
 export * from './easeInOutQuad'

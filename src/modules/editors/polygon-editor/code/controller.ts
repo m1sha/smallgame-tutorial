@@ -1,4 +1,4 @@
-import { divPoints, Key, MouseButton, Point, setPoint, zeroPoint, type TPoint } from "smallgame"
+import { divPoints, GameEvent, Key, MouseButton, Point, setPoint, zeroPoint, type TPoint } from "smallgame"
 import type { EditorState } from "./editor-state"
 import { 
   ChangeGridVisibleCommand, 
@@ -29,7 +29,7 @@ export class Controller {
     this.selectedPoint = null
   }
 
-  checkInput () {
+  checkInput (callback: (event: GameEvent) => void) {
     const viewer = this.viewer
     const state = this.editorState
     const screen = viewer.screen
@@ -37,7 +37,7 @@ export class Controller {
     const objects = state.objects
 
     for (const event of viewer.game.event.get()) {
-  
+      callback(event)
       switch (event.type) {
         case "KEYDOWN": {
           switch (event.key){

@@ -1,5 +1,4 @@
-import { Screen, GL, GlProgram, Primitive2D, Size, TexCoord, Time, u_float, u_vec2, u_vec4, vec2, GameEvent } from "smallgame"
-import { ScriptSettings } from "../../../../../components/example"
+import { Screen, GL, GlProgram, Primitive2D, Size, TexCoord, Time, u_float, u_vec2, u_vec4, vec2, GameEvent, TSize } from "smallgame"
 
 const ver = /*glsl*/`
 in vec4 aPosition;
@@ -27,15 +26,15 @@ export class Effect {
   private dTime = 0
   private wheelRotates = 0
 
-  constructor (private settings: ScriptSettings) {
-    this.gl = new GL(new Size(settings.width, settings.height))
+  constructor (private viewportSize: TSize) {
+    this.gl = new GL(new Size(viewportSize.width, viewportSize.height))
   }
 
   create (fragmnet: string) {
     this.prog = this.gl.createProgram(ver, fragmnet, 'assemble-and-use')
   
     this.time = this.gl.uniform('time', 'float')
-    this.gl.uniform('iResolution', 'vec2').value = [this.settings.width * 1.0, this.settings.height * 1.0]
+    this.gl.uniform('iResolution', 'vec2').value = [this.viewportSize.width * 1.0, this.viewportSize.height * 1.0]
     this.iMouse = this.gl.uniform('iMouse', 'vec4')
     this.iMouseShift = this.gl.uniform('iMouseShift', 'vec2')
     this.iEndPos = this.gl.uniform('iEndPos', 'vec2')
