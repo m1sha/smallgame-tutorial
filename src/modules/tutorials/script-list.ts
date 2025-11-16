@@ -12,6 +12,7 @@ const scriptList: ScriptDef[] = [
   { name: 'Move & Rotate', category: cat0, module: async (state: any) => (await import('./examples/code/rotate-move')).default(state)  },
   { name: 'Force Bar', category: cat0, module: async (state: any) => (await import('./examples/code/force-bar')).default(state)  },
   { name: 'Flappy', category: cat0, module: async (state: any) => (await import('./examples/code/flappy')).default(state)  },
+  { name: 'One Direction Shooter', category: cat0, module: async (state: any) => (await import('./examples/code/one-dir-shooting')).default(state)  },
 
   { name: 'Hello World', category: cat1, module: async (state: any) => (await import('./examples/code/hello-world')).default(state)  },
   { name: 'Parallax', category: cat1, module: async (state: any) => (await import('./examples/code/parallax')).default(state)  },

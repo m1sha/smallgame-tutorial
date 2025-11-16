@@ -1,5 +1,4 @@
-import { Sprite, Sketch, Rect, Point, setSize } from "smallgame"
-import { lerp } from "../func"
+import { Sprite, Sketch, Rect, Point, setSize, GMath } from "smallgame"
 
 export class Ball extends Sprite {
   size = setSize(100, 100)
@@ -15,6 +14,6 @@ export class Ball extends Sprite {
   }
 
   setPath (startPoint: Point, endPoint: Point, value: number) {
-    this.rect.moveSelf(lerp(startPoint, endPoint, value), 'center-center')  
+    this.rect.moveSelf(GMath.lerp(startPoint, endPoint, value), 'center-center')  
   }
 }
