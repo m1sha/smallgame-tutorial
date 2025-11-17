@@ -1,0 +1,1 @@
+export type ControlType = 'button' | 'upload' | 'tracker' | 'select' | 'color' | 'group' | 'toolbar'

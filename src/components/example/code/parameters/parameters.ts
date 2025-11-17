@@ -35,6 +35,13 @@ export type TrackerParameter = {
   group: string
 }
 
+export type UploadFileParameter = {
+  type: 'upload-file'
+  caption: string
+  callback: (file: File, sender: UploadFileParameter) => void
+  group: string
+}
+
 
 export function createSelect (caption: string, items: string[] | TOption[], callback: (index: string) => void, defaultValue?: string, group?: string): SelectParameter {
   return { type: 'select',  caption, items, callback, defaultValue: defaultValue ?? '', group: group ?? '' }
@@ -52,5 +59,9 @@ export function createTracker (caption: string, min: number, max: number, step: 
   return { type: 'tracker', caption, min, max, step, defaultValue: defaultValue ?? 0, callback, group: group ?? '' }
 }
 
+export function createUploadFile (caption: string, callback: (file: File, sender: UploadFileParameter) => void, group?: string): UploadFileParameter {
+  return { type: 'upload-file', caption, callback, group: group ?? '' }
+}
 
-export type AnyParameter = SelectParameter | ButtonParameter | ColorParameter | TrackerParameter
+
+export type AnyParameter = SelectParameter | ButtonParameter | ColorParameter | TrackerParameter | UploadFileParameter

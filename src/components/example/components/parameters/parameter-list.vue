@@ -1,8 +1,10 @@
 <script setup lang="ts">
-import { ColorPicker, DropDownList, PushButton, Tracker } from 'vue3-universal-components'
+import { ColorPicker, DropDownList, PushButton, Tracker, UploadButton } from 'vue3-universal-components'
 import { AnyParameter, TOption } from '../../code'
+import { IUI } from '../../code/ui';
+import UI from './ui/ui.vue';
 
-const props = defineProps<{ parameters: AnyParameter[] }>()
+const props = defineProps<{ parameters: AnyParameter[], ui: IUI }>()
 
 function getItems (items: string[] | TOption[]): TOption[] {
   if (!items || !items.length) return []
@@ -21,7 +23,8 @@ const getGroup = (parameters: AnyParameter[]): string[] => {
 </script>
 
 <template>
-  <div class="parameter-list-wrapper" v-if="parameters.length">
+  <div class="parameter-list-wrapper" v-if="parameters.length || ui.controls.length > 0">
+    <UI :ui="ui" />
     <div class="parameter-list">
       
       <template v-for="parameter in parameters">
@@ -29,6 +32,7 @@ const getGroup = (parameters: AnyParameter[]): string[] => {
         <PushButton v-if="parameter.type === 'button' && !parameter.group" @click="parameter.callback(parameter)">{{ parameter.caption }}</PushButton>
         <ColorPicker v-if="parameter.type === 'color' && !parameter.group" v-model="parameter.defaultColor" :caption="parameter.caption" @update:model-value="value => parameter.callback(value ?? '')" />
         <Tracker v-if="parameter.type === 'tracker' && !parameter.group" v-model="parameter.defaultValue" :caption="parameter.caption" :min="parameter.min" :max="parameter.max" :step="parameter.step" @update:model-value="value => parameter.callback(value ?? 0)" />
+        <UploadButton v-if="parameter.type === 'upload-file' && !parameter.group" @change="file => parameter.callback(file, parameter)">{{ parameter.caption }}</UploadButton>
       </template>
 
       <details v-for="group in getGroup(parameters)">
@@ -58,7 +62,7 @@ const getGroup = (parameters: AnyParameter[]): string[] => {
 
   box-shadow: inset 16px 0px 60px #4444444e, -16px 0px 20px #3636364e
   .parameter-list
-    margin-top: 80px
+    
     padding-right: 12px
     display: flex
     flex-direction: column
@@ -81,6 +85,10 @@ const getGroup = (parameters: AnyParameter[]): string[] => {
       margin: -0.5em -0.5em 0
       padding: 0.5em
       font-size: 0.8em
+      cursor: pointer
+
+      &:hover
+        background-color: var(--panel-color)
 
     details[open] 
       padding: 0.5em
@@ -93,8 +101,8 @@ const getGroup = (parameters: AnyParameter[]): string[] => {
 
     
 
-  button
-    margin-top: 8px
-    width: 100%
+    button
+      margin-top: 8px
+      width: 100%
   
 </style>

@@ -64,10 +64,10 @@ export default async ({ container, width, height, fps }: ScriptSettings): Promis
   const clearScreenParam = createSelect('Clear Screen', ['Yes', 'No'], v => needClearScreen = v == 'Yes', 'Yes')
   const shipTypeParam = createSelect('Ship type', ['Fighter', 'Fighter 2', 'Fighter 3', 'Fighter 4',  'Alien', 'Alien 2', 'Frigate', 'Cruiser', 'Destroyer 1', 'Destroyer 2', 'Huge'], v => hero.setSkin(v), 'Fighter')
   const moveTypeParam = createSelect('Movement Object', ['Ship', 'World'], v => hero.moveSelf = v == 'Ship', 'Ship')
-  const speedParam = createTracker('Speed', 0.1, 15, 0.1, v=> hero.speed = v, hero.speed, 'Ship Movement')
+  const speedParam = createTracker('Speed', 0.1, 30, 0.1, v=> hero.speed = v, hero.speed, 'Ship Movement')
   // const angleParam = createTracker('Rot Angle', 0.1, 15, 0.1, v=> hero.rotation_step = v, hero.rotation_step)
   const smoothTimeParam = createTracker('Friction', 0.01, 10, 0.01, v=> hero.smoothTime = v, hero.smoothTime, 'Ship Movement')
-  const deltaTimeMultiParam = createTracker('Acceleration', 0.01, 10, 0.01, v=> hero.deltaTimeMulti = v, hero.deltaTimeMulti, 'Ship Movement')
+  
   const angleDeltaTimeMultiParam = createTracker('Rotation Speed', 1, 300, 1, v => hero.angleDeltaTimeMulti = v, hero.angleDeltaTimeMulti, 'Ship Rotation')
   const torqueForceParam = createTracker('Torque Force', 1, 600, 1, v => hero.torqueForce = v, hero.torqueForce, 'Ship Rotation')
   const inertiaParam = createTracker('inertia', 0.1, 20, 0.01, v => hero.inertia = v, hero.inertia, 'Ship Rotation')
@@ -75,7 +75,7 @@ export default async ({ container, width, height, fps }: ScriptSettings): Promis
   const getbackParam = createButton('Get back the hero', () => hero.getBack(screen.rect.center))
 
   return {
-    parameters: [clearScreenParam, shipTypeParam, moveTypeParam, speedParam, /*angleParam,*/  deltaTimeMultiParam, smoothTimeParam, angleDeltaTimeMultiParam, torqueForceParam, inertiaParam, angularDragParam, getbackParam],
+    parameters: [clearScreenParam, shipTypeParam, moveTypeParam, speedParam, /*angleParam,*/ smoothTimeParam, angleDeltaTimeMultiParam, torqueForceParam, inertiaParam, angularDragParam, getbackParam],
     dispose () { 
       game.kill() 
     }

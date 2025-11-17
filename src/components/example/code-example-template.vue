@@ -61,7 +61,7 @@ function clearPrevious () {
     <ScriptList :items="scriptList.map((p, i) => ({ id: i + '', name: p.name, category: p.category }))" :select-index="index" @click="changeScript" class="hiddable" />
     <div ref="container" class="container"></div>
     
-    <ParameterList v-if="currentModule" :parameters="currentModule.parameters ?? []" class="hiddable" />  
+    <ParameterList v-if="currentModule" :parameters="currentModule.parameters ?? []" :ui="currentModule.ui ?? { controls: [] }" class="hiddable" />  
     <div class="fps" ref="fps"></div>
   </div>
 </template>

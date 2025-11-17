@@ -12,7 +12,7 @@ export class Hero extends Sprite {
   
   
   smoothTime: number = 2.96
-  deltaTimeMulti: number = 2
+  deltaTimeMulti: number = 1
   angleDeltaTimeMulti: number = 11
   //radius = 30
   get sin_a () { return  Math.sin(rad(this.currentAngle)) }
@@ -78,7 +78,7 @@ export class Hero extends Sprite {
   }
   
   turn (dir: 'left' | 'right') {
-    this.rigid.addTorque(dir === 'left' ? -this.torqueForce: this.torqueForce, Time.deltaTime)
+    this.rigid.addTorque(dir === 'left' ? -this.torqueForce: this.torqueForce)
   }
   
   forward () {
@@ -98,7 +98,9 @@ export class Hero extends Sprite {
     this.currentAngle = this.rigid.angle
     this.pos = GMath.smoothDamp(this.pos, this.goal, this.currentVelocity, this.smoothTime, this.deltaTimeMulti*Time.deltaTime)
     if (this.moveSelf) this.rect.center = this.rect.center.shift(this.pos)
-    this.rigid.update(this.angleDeltaTimeMulti * Time.deltaTime)
+
+    this.rigid.angularSpeed = this.angleDeltaTimeMulti
+    this.rigid.update()
 
     //const center = this.rect.center
     //const p1 = new Point(this.cos_a * this.radius + center.x, this.sin_a * this.radius + center.y)
