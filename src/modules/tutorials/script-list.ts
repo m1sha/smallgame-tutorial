@@ -8,6 +8,7 @@ const cat4 = 'WebGL'
 
 
 const scriptList: ScriptDef[] = [
+  { name: 'Linear Movement', category: cat0, module: async (state: any) => (await import('./examples/code/linear-movement')).default(state)  },
   { name: 'Movements', category: cat0, module: async (state: any) => (await import('./examples/code/movements')).default(state)  },
   { name: 'Move & Rotate', category: cat0, module: async (state: any) => (await import('./examples/code/rotate-move')).default(state)  },
   { name: 'Force Bar', category: cat0, module: async (state: any) => (await import('./examples/code/force-bar')).default(state)  },
@@ -33,6 +34,8 @@ const scriptList: ScriptDef[] = [
   { name: 'effect 6', category: cat3, module: async (state: any) => (await import('./gl-effects/code/effect6')).default(state)  },
   { name: 'Grid', category: cat3, module: async (state: any) => (await import('./gl-effects/code/grid')).default(state)  },
   { name: 'Grid 2', category: cat3, module: async (state: any) => (await import('./gl-effects/code/grid2')).default(state)  },
+  { name: 'Coords Understanding', category: cat3, module: async (state: any) => (await import('./gl-effects/code/coords-understanding')).default(state)  },
+  
 
   { name: 'Hello World (WebGL)', category: cat4, module: async (state: any) => (await import('./gl/code/hello-world')).default(state)  },
   { name: 'Framebuffer', category: cat4, module: async (state: any) => (await import('./gl/code/framebuffer')).default(state)  },

@@ -23,9 +23,9 @@ const getGroup = (parameters: AnyParameter[]): string[] => {
 </script>
 
 <template>
-  <div class="parameter-list-wrapper" v-if="parameters.length || ui.controls.length > 0">
-    <UI :ui="ui" />
-    <div class="parameter-list">
+  <div class="parameter-list-wrapper">
+    <UI :ui="ui" v-if="ui.controls.length > 0" />
+    <div class="parameter-list" v-if="parameters.length">
       
       <template v-for="parameter in parameters">
         <DropDownList v-if="parameter.type === 'select' && !parameter.group" v-model="parameter.defaultValue" :items="getItems(parameter.items)" :caption="parameter.caption" @update:model-value="value => parameter.callback(value ?? '')" />

@@ -11,3 +11,10 @@ defineProps<{ ui: IUI }>()
   </div>
   
 </template>
+
+<style lang="sass">
+.ui
+  overflow-y: auto
+  height: 100%
+  padding-right: 4px
+</style>

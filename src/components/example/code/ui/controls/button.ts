@@ -1,6 +1,6 @@
-import { IControl } from "./control";
-import { ControlType } from "./control-type";
-import { Toolbar } from "./toolbar";
+import { IControl } from "./control"
+import { ControlType } from "./control-type"
+import { Toolbar } from "./toolbar"
 
 export class Button implements IControl {
   readonly type: ControlType = 'button'

@@ -1,4 +1,7 @@
+import { TOption } from "../parameters"
 import { Button, Group, IControl, Toolbar, Tracker, UploadFile } from "./controls"
+import { Color } from "./controls/color"
+import { Select } from "./controls/select"
 
 export abstract class Contariner  {
   controls: IControl[] 
@@ -35,4 +38,14 @@ export abstract class Contariner  {
     this.controls.push(new UploadFile(caption, callback, options))
     return this
   }
+
+  color (caption: string,  callback: (color: string) => void, defaultColor?: string) {
+      this.controls.push(new Color(caption, callback, defaultColor))
+      return this
+    }
+
+    select (caption: string, items: string[] | TOption[], callback: (value: string) => void, defaultValue?: string | undefined, options?: any) {
+            this.controls.push(new Select(caption, items, callback, defaultValue, options))
+            return this
+          }
 }

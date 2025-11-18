@@ -1,7 +1,10 @@
 
+import { TOption } from "../../parameters"
 import { Button } from "./button"
+import { Color } from "./color"
 import { IControl } from "./control"
 import { ControlType } from "./control-type"
+import { Select } from "./select"
 import { Toolbar } from "./toolbar"
 import { Tracker } from "./tracker"
 import { UploadFile } from "./upload-file"
@@ -50,4 +53,13 @@ export class Group implements IControl {
       return this
     }
 
+    color (caption: string,  callback: (color: string) => void, defaultColor?: string) {
+        this.controls.push(new Color(caption, callback, defaultColor))
+        return this
+      }
+
+      select (caption: string, items: string[] | TOption[], callback: (value: string) => void, defaultValue?: string | undefined, options?: any) {
+        this.controls.push(new Select(caption, items, callback, defaultValue, options))
+        return this
+      }
 }

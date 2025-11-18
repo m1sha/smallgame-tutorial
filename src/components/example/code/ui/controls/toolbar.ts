@@ -1,7 +1,10 @@
+import { TOption } from "../../parameters"
 import { Button } from "./button"
+import { Color } from "./color"
 import { IControl } from "./control"
 import { ControlType } from "./control-type"
 import { Group } from "./group"
+import { Select } from "./select"
 import { Tracker } from "./tracker"
 import { UploadFile } from "./upload-file"
 
@@ -47,4 +50,14 @@ export class Toolbar  implements IControl {
         this.controls.push(new UploadFile(caption, callback, options))
         return this
       }
+
+  color (caption: string,  callback: (color: string) => void, defaultColor?: string) {
+    this.controls.push(new Color(caption, callback, defaultColor))
+    return this
+  }
+
+  select (caption: string, items: string[] | TOption[], callback: (value: string) => void, defaultValue?: string | undefined, options?: any) {
+          this.controls.push(new Select(caption, items, callback, defaultValue, options))
+          return this
+        }
 }
