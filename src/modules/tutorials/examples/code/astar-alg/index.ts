@@ -6,6 +6,7 @@ import { MapSource } from "./astar/game-map"
 import { mapArray1 } from "./maps/map1"
 import { Path } from "./objects/path"
 import { MapObject as GameMap } from "./objects/map-object"
+import { mapArray2 } from "./maps/map2"
 
 
 
@@ -16,7 +17,7 @@ export default async ({ container, width, height, fps }: ScriptSettings): Promis
   let toolNum = 0
   let constPath = false
 
-  const mapSource = new MapSource(800, 800, mapArray1)
+  const mapSource = new MapSource(mapArray2)
   const path = new Path(mapSource)
   const gameMap = new GameMap(mapSource)
   
