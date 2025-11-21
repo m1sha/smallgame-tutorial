@@ -9,7 +9,6 @@ import { MapObject as GameMap } from "./objects/map-object"
 import { mapArray2 } from "./maps/map2"
 
 
-
 export default async ({ container, width, height, fps }: ScriptSettings): Promise<ScriptModule> => {
   const { game, screen } = Game.create(width, height, container)
 
@@ -17,7 +16,7 @@ export default async ({ container, width, height, fps }: ScriptSettings): Promis
   let toolNum = 0
   let constPath = false
 
-  const mapSource = new MapSource(mapArray2)
+  const mapSource = new MapSource(mapArray1)
   const path = new Path(mapSource)
   const gameMap = new GameMap(mapSource)
   

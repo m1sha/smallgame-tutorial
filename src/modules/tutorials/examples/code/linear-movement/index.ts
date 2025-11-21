@@ -4,8 +4,10 @@ import { createButton, type ScriptModule, type ScriptSettings } from "../../../.
 import { Car } from "./car"
 import { UIBuilder } from "../../../../../components/example/code/ui"
 import { easeInBounce, easeInOutBounce, easeInOutElastic, easeInSine, easeOutBounce } from "../movements/func"
+import { TelemetryBuilder } from "../../../../../components/example/code/telemetry"
 
 export default async ({ container, width, height, fps }: ScriptSettings): Promise<ScriptModule> => {
+  const telemetry = new TelemetryBuilder()
   const { game, screen } = Game.create(width, height, container)
   const car              = new Car()
   await car.create()
@@ -22,24 +24,23 @@ export default async ({ container, width, height, fps }: ScriptSettings): Promis
     .rect({ fill: 'rgba(51, 49, 40, 1)' }, new Rect(0, car.rect.absHeight - 80 + 200, width, 300))
     .toSurface()
 
+  let currSpeed = 0
   
   let t = 0
   gameloop(() => {
-   
     screen.fill('#c1cce0ff')
     screen.blit(ground, ground.rect)
     car.draw(screen)
     
-
-    if (t < 1)
-      t += Time.deltaTime * speed
+    t = t < 1 ? t + Time.deltaTime * speed : 1
     
     const c = GMath.smoothstep(0.2, 1., easeOutBounce(t))
+    currSpeed = Math.abs(c * dist - car.rect.x)  * Time.deltaTime
     car.rect.x = c * dist
     car.i = c * dist
-    
 
     displayFps(fps)
+    telemetry.tick()
   })
 
 
@@ -56,8 +57,16 @@ export default async ({ container, width, height, fps }: ScriptSettings): Promis
   )
   ui.button('Restart', () => t = 0)
 
+  telemetry.open()
+  telemetry.openChart()
+  telemetry.param('Distance', () => car.rect.x.toFixed(4))
+  telemetry.param('t', () => t.toFixed(4))
+  telemetry.auto(() => t > 0, () => t > 1)
+ 
+
   return {
     ui: ui.build(),
+    telemetry: telemetry.build(),
     dispose () { 
       game.kill() 
     }

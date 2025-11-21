@@ -1,7 +1,7 @@
 import { setSegment, Sketch, Sprite, Surface, rad, Point, Time, GMath, type TPoint, PolyRect, Rect, RigidBody2D, loadImage } from "smallgame"
 
 export class Hero extends Sprite {
-  private currentVelocity = {
+  currentVelocity = {
     x: { value: 0 },
     y: { value: 0 }
   }
@@ -20,7 +20,7 @@ export class Hero extends Sprite {
   private sketch: Sketch
   private size = { width: 300, height: 300 }
 
-  private rigid: RigidBody2D
+  rigid: RigidBody2D
   torqueForce = 200
   private _inertia = 2
   private _angularDrag: number = 0.1
@@ -111,22 +111,35 @@ export class Hero extends Sprite {
     if (this.surface) {
       this.image.blit(this.surface, this.surface.rect, { angle: this.rigid.angle + 90, pivote: 'center-center' })
     }
+
+    if (this.isGoBack) {
+      const a = this.aGoal < 0 ? this.aGoal + 360 : this.aGoal
+      const e = 0 | (a - this.rigid.angle)
+
+      if ( e === 0  ) {
+        this.isGoBack = false
+      } else {
+        if (Math.abs(this.rigid.angularVelocity) < 0.01) {
+          
+          this.rigid.addTorque( this.torqueForce * Math.sign(this.aGoal))
+        }
+        
+      }
+    }
   }
+
+  private isGoBack = false
+  private started = false
+  private aGoal = 0
 
   getBack (point: TPoint) {
     this.goal.moveSelf(point)
+    this.isGoBack = true
 
     const p = Point.from(point).shiftSelf(this.pos.neg())
     const a = Math.atan2(p.y, p.x) * 180 / Math.PI
-
-
-    //const deltaAngle = a - this.rigid.angle;//  getDeltaAngle(this.rigid.angle, a);
-
-    // Добавить крутящий момент пропорционально разнице
-    //const torque = (deltaAngle * this.rigid.inertia);
-    //this.rigid.addTorque(torque, Time.deltaTime)
-
-    this.rigid.angle = a
+    this.aGoal = a
+    //this.rigid.angle = a
   }
 }
 

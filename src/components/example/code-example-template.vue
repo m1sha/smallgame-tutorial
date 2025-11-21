@@ -4,6 +4,7 @@ import { useRoute, useRouter } from "vue-router"
 import ParameterList from './components/parameters/parameter-list.vue'
 import ScriptList from './components/script-list/script-list.vue'
 import { ScriptDef, ScriptModule } from "./code"
+import Telemetry from "./components/telemetry/telemetry.vue"
 
 const props = defineProps<{ scriptList: ScriptDef[] }>()
 const route = useRoute()
@@ -59,6 +60,7 @@ function clearPrevious () {
 <template>
   <div class="example-page show-hiddable">
     <ScriptList :items="scriptList.map((p, i) => ({ id: i + '', name: p.name, category: p.category }))" :select-index="index" @click="changeScript" class="hiddable" />
+    <Telemetry  v-if="currentModule && currentModule.telemetry" :telemetry="currentModule.telemetry" />
     <div ref="container" class="container"></div>
     
     <ParameterList v-if="currentModule" :parameters="currentModule.parameters ?? []" :ui="currentModule.ui ?? { controls: [] }" class="hiddable" />  

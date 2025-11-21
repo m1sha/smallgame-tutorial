@@ -4,8 +4,10 @@ import { createButton, createSelect, createTracker, type ScriptModule, type Scri
 import { setDebounce } from "smallgame/src/time"
 import { Hero } from "./hero"
 import { Background } from "./background"
+import { TelemetryBuilder } from "../../../../../components/example/code/telemetry"
 
 export default async ({ container, width, height, fps }: ScriptSettings): Promise<ScriptModule> => {
+  const telemetry = new TelemetryBuilder()
   const { game, screen } = Game.create(width, height, container)
 
   let needClearScreen = true
@@ -59,6 +61,7 @@ export default async ({ container, width, height, fps }: ScriptSettings): Promis
     group.draw(screen as any)
 
     displayFps(fps)
+    telemetry.tick()
   })
 
   const clearScreenParam = createSelect('Clear Screen', ['Yes', 'No'], v => needClearScreen = v == 'Yes', 'Yes')
@@ -74,8 +77,17 @@ export default async ({ container, width, height, fps }: ScriptSettings): Promis
   const angularDragParam = createTracker('Angular Drag', 0.01, 1, 0.01, v => hero.angularDrag = v, hero.angularDrag, 'Ship Rotation')
   const getbackParam = createButton('Get back the hero', () => hero.getBack(screen.rect.center))
 
+  telemetry.open()
+  telemetry.param('Angle', () => hero.rigid.angle.toFixed(4))
+  telemetry.param('Angular Velocity', () => hero.rigid.angularVelocity.toFixed(4))
+  telemetry.param('X Velocity', () => hero.currentVelocity.x.value.toFixed(4))
+  telemetry.param('Y Velocity', () => hero.currentVelocity.y.value.toFixed(4))
+  telemetry.param('X Pos', () => hero.pos.x.toFixed(4))
+  telemetry.param('Y Pos', () => hero.pos.y.toFixed(4))
+
   return {
     parameters: [clearScreenParam, shipTypeParam, moveTypeParam, speedParam, /*angleParam,*/ smoothTimeParam, angleDeltaTimeMultiParam, torqueForceParam, inertiaParam, angularDragParam, getbackParam],
+    telemetry: telemetry.build(),
     dispose () { 
       game.kill() 
     }
