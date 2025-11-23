@@ -4,10 +4,12 @@ import { lerp, easeOutBounce, funcMap } from "./func"
 import { createSelect, type ScriptSettings, type ScriptModule, createButton } from "../../../../../components/example"
 
 import { Ball, Markers, Path } from './objects'
+import { TelemetryBuilder } from "../../../../../components/example/code/telemetry"
 
 export default async ({ container, width, height, fps }: ScriptSettings): Promise<ScriptModule> => {
   //const screen = new Surface(width, height)
   //container.append(screen.origin as any)
+  const telemetry = new TelemetryBuilder()
   const { screen, game } = Game.create( width, height, container)
   
 
@@ -22,6 +24,9 @@ export default async ({ container, width, height, fps }: ScriptSettings): Promis
   
   const path = new Path(startPoint, endPoint, screen.rect)
   const markers = new Markers(startPoint, endPoint)
+
+  let currSpeed = 0
+  let s = false
 
   gameloop(() => {
     for (const event of game.event.get()) {
@@ -41,6 +46,8 @@ export default async ({ container, width, height, fps }: ScriptSettings): Promis
       }
     }
 
+    const oldPos = ball.rect.topLeft
+
     screen.fill('#38393dff')
     //screen.clear()
     
@@ -54,6 +61,12 @@ export default async ({ container, width, height, fps }: ScriptSettings): Promis
     ball.setPath(startPoint, endPoint, func(t))
     path.setPath(startPoint, endPoint)
     displayFps(fps)
+    telemetry.tick()
+
+    if (s)
+    currSpeed = ball.rect.topLeft.shift(oldPos.neg()).length / Time.deltaTime
+    s = true
+    if (isNaN(currSpeed)) currSpeed = 0
   })
 
   
@@ -63,6 +76,7 @@ export default async ({ container, width, height, fps }: ScriptSettings): Promis
     name => {
       t = 0
       func = funcMap.get(name)!
+      telemetry.resetAuto() 
     }, 
     'easeOutBounce'
   )
@@ -73,9 +87,20 @@ export default async ({ container, width, height, fps }: ScriptSettings): Promis
     if (v === 'Fast') speed = 0.5
   }, 'Noraml')
 
-  const resetButtonParam = createButton('Reset', () => t = 0)
+  const resetButtonParam = createButton('Reset', () => { 
+    t = 0; 
+    telemetry.resetAuto() 
+  })
+
+  telemetry
+  .open()
+  .openChart()
+  .param('Distance', () => ball.rect.topLeft.length.toFixed(4))
+  .param('Speed', () => currSpeed.toFixed(4))
+  .auto(() => t > 0, () => t > 1)
 
   return {
+    telemetry: telemetry.build(),
     parameters: [
       curveTypeParam,
       speedParam,

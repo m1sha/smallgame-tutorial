@@ -1,7 +1,8 @@
-import { Game, gameloop, Parallax, Rect, loadImage, killgameloop } from "smallgame"
+import { Game, gameloop, Parallax, Rect, loadImage, killgameloop, Time, GMath } from "smallgame"
 import { backgroundImageListV4, backgroundImageListV5, backgroundImageListV3 } from "./img-list"
 import { displayFps } from "../../../../../utils/display-fps"
-import { createSelect, type ScriptModule, type ScriptSettings } from "../../../../../components/example"
+import { createButton, createSelect, type ScriptModule, type ScriptSettings } from "../../../../../components/example"
+import { Ease, easeInOutBounce } from "../movements/func"
 
 const SCREEN_WIDTH = 570 * 2
 const SCREEN_HEIGHT = 324 * 2
@@ -16,8 +17,8 @@ export default async ({ container, width, height, fps }: ScriptSettings): Promis
  
 
   const parallax = new Parallax(new Rect(0,0, SCREEN_WIDTH, SCREEN_HEIGHT))
-  parallax.settings.speed = 1000
-  parallax.settings.directionX = -1
+  let speed = 0.05
+  let directionX = -1
 
   const loadImages = async (list: string[]) => {
     const rates = [0.02, 0.1, 0.2, 0.5, 0.9,    0.1, 0.2,0.3,0.9]
@@ -35,11 +36,17 @@ export default async ({ container, width, height, fps }: ScriptSettings): Promis
 
   await loadImages(backgroundImageListV4)
 
+  
 
+  let t = 0
+  let func = Ease.get('easeInOutBounce')
   
   gameloop(() => {
     screen.clear()
     parallax.draw(screen as any)
+    if (t < 1) t += Time.deltaTime * speed
+    
+    parallax.pos.x = -GMath.lerp(-8000, 8000, func(t))  //.shiftXSelf(speed * Time.deltaTime * directionX)
     displayFps(fps)
   })
 
@@ -52,20 +59,24 @@ export default async ({ container, width, height, fps }: ScriptSettings): Promis
   }, 'City V4')
 
   const dirParam = createSelect('Direction', ['Forward', 'Backward'], value => {
-    if (value === 'Forward') parallax.settings.directionX = -1
-    if (value === 'Backward') parallax.settings.directionX = 1
+    if (value === 'Forward') directionX = -1
+    if (value === 'Backward') directionX = 1
   }, 'Forward')
 
   const speedParam = createSelect('Speed', ['Slow', 'Normal', 'Fast'], value => {
 
-    if (value === 'Slow') parallax.settings.speed = 100
-    if (value === 'Normal') parallax.settings.speed = 1000
-    if (value === 'Fast') parallax.settings.speed = 3000
+    if (value === 'Slow') speed = 0.05
+    if (value === 'Normal') speed = 0.1
+    if (value === 'Fast') speed = 0.2
 
-  }, 'Normal')
+  }, 'Slow')
+
+  const funcParam = createSelect('Func', Ease.names(), v => func = Ease.get(v), 'easeInOutBounce' )
+
+  const resetBtn = createButton('Restart', () => t = 0)
 
   return {
-    parameters: [ variantParam, dirParam, speedParam ],
+    parameters: [ variantParam, dirParam, speedParam, funcParam, resetBtn ],
     dispose () {
       killgameloop()
     }

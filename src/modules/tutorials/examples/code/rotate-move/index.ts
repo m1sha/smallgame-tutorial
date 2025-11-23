@@ -78,7 +78,7 @@ export default async ({ container, width, height, fps }: ScriptSettings): Promis
   const getbackParam = createButton('Get back the hero', () => hero.getBack(screen.rect.center))
 
   telemetry.open()
-  telemetry.param('Angle', () => hero.rigid.angle.toFixed(4))
+  telemetry.param('Angle', () => (hero.rigid.angle % 360).toFixed(4))
   telemetry.param('Angular Velocity', () => hero.rigid.angularVelocity.toFixed(4))
   telemetry.param('X Velocity', () => hero.currentVelocity.x.value.toFixed(4))
   telemetry.param('Y Velocity', () => hero.currentVelocity.y.value.toFixed(4))

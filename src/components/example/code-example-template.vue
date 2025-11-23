@@ -58,6 +58,9 @@ function clearPrevious () {
 
 </script>
 <template>
+  <div class="example-page-toolbar">
+
+  </div>
   <div class="example-page show-hiddable">
     <ScriptList :items="scriptList.map((p, i) => ({ id: i + '', name: p.name, category: p.category }))" :select-index="index" @click="changeScript" class="hiddable" />
     <Telemetry  v-if="currentModule && currentModule.telemetry" :telemetry="currentModule.telemetry" />
@@ -69,6 +72,10 @@ function clearPrevious () {
 </template>
 
 <style lang="sass">
+.example-page-toolbar 
+  background-color: #333
+  height: 24px
+  width: 100%
 .example-page
   position: relative
   display: flex
@@ -77,7 +84,7 @@ function clearPrevious () {
   .container
     background-color: #2b2b2b
     width: 100%
-    height: calc( 100vh -  60px)
+    height: calc( 100vh -  90px)
 
 .hiddable
   opacity: 0
