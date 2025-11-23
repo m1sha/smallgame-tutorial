@@ -1,14 +1,19 @@
-import { TPoint } from "smallgame"
+import { TPoint, TSize } from "smallgame"
 
 export class MapSource {
   readonly map
-  readonly dx
-  readonly dy
+   dx
+   dy
 
-  constructor (data: number[][]) {
+  constructor (data: number[][], cellSize: TSize) {
     this.map = data
-    this.dx = 16 //0 | this.width / this.mx 
-    this.dy = 16 //0 | this.height / this.my
+    this.dx = cellSize.width //0 | this.width / this.mx 
+    this.dy = cellSize.height //0 | this.height / this.my
+  }
+
+  setSize (cellSize: TSize) {
+    this.dx = cellSize.width //0 | this.width / this.mx 
+    this.dy = cellSize.height 
   }
 
   get rows ()  { return this.map.length }

@@ -19,6 +19,11 @@ export class MapObject extends Sprite {
     return Point.from(pos).shiftSelf(this.rect.topLeft.neg()).scaleSelf(1/this.map.dx, 1/this.map.dy).intSelf()
    }
 
+   reDraw () {
+      this.image = this.toSurface() //new Surface(map.width, map.height)
+      this.rect.resizeSelf(this.image.rect)
+   }
+
    private toSurface () {
     const { dx, dy } = this.map
     const surface = new Surface(this.map.width, this.map.height)
