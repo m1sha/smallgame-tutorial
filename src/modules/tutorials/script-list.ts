@@ -5,6 +5,7 @@ const cat1 = 'Examples'
 const cat2 = 'Surfaces'
 const cat3 = 'Raw GLSL'
 const cat4 = 'WebGL'
+const cat5 = 'AI'
 
 
 const scriptList: ScriptDef[] = [
@@ -14,7 +15,8 @@ const scriptList: ScriptDef[] = [
   { name: 'Force Bar', category: cat0, module: async (state: any) => (await import('./examples/code/force-bar')).default(state)  },
   { name: 'Flappy', category: cat0, module: async (state: any) => (await import('./examples/code/flappy')).default(state)  },
   { name: 'One Direction Shooter', category: cat0, module: async (state: any) => (await import('./examples/code/one-dir-shooting')).default(state)  },
-  { name: 'A* Alogorithm', category: cat0, module: async (state: any) => (await import('./examples/code/astar-alg')).default(state)  },
+  
+  { name: 'A* Alogorithm', category: cat5, module: async (state: any) => (await import('./ai/astar-alg')).default(state)  },
 
   { name: 'Hello World', category: cat1, module: async (state: any) => (await import('./examples/code/hello-world')).default(state)  },
   { name: 'Parallax', category: cat1, module: async (state: any) => (await import('./examples/code/parallax')).default(state)  },
@@ -36,7 +38,6 @@ const scriptList: ScriptDef[] = [
   { name: 'Grid', category: cat3, module: async (state: any) => (await import('./gl-effects/code/grid')).default(state)  },
   { name: 'Grid 2', category: cat3, module: async (state: any) => (await import('./gl-effects/code/grid2')).default(state)  },
   { name: 'Coords Understanding', category: cat3, module: async (state: any) => (await import('./gl-effects/code/coords-understanding')).default(state)  },
-  
 
   { name: 'Hello World (WebGL)', category: cat4, module: async (state: any) => (await import('./gl/code/hello-world')).default(state)  },
   { name: 'Framebuffer', category: cat4, module: async (state: any) => (await import('./gl/code/framebuffer')).default(state)  },
