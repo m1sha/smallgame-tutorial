@@ -6,12 +6,13 @@ const props = defineProps<{
   data: Map<string, string[]>
   legend: { name: string, color: string }[] 
   checked: Set<string>
+  
 }>()
 
 const canvas1 = ref()
 let chart = null
 
-const drawGraph = () => {
+const drawGraph = (normalize: boolean) => {
   if (chart) {
     (chart as any).destroy()
   }
@@ -25,9 +26,12 @@ const drawGraph = () => {
     const color = props.legend.find(p => p.name === key)?.color ?? '#333'
     
     const points = props.data.has(key) ? props.data.get(key)!.map((v, i) => ({ x: i, y: +v })) : []
+    if (normalize) {
     const ys = points.map(p => p.y)
-    const d = Math.max(...ys) - Math.min(...ys)
-    points.forEach(p=>p.y /= d)
+    const min = Math.min(...ys)
+    const d = Math.max(...ys) - min
+    points.forEach(p=>p.y = (p.y - min) / d)
+    }
 
     const dataset = {
       label: key,
@@ -93,12 +97,12 @@ const drawGraph = () => {
   `)
 }
 
-onMounted (() => drawGraph())
+onMounted (() => drawGraph(false))
 defineExpose({ drawGraph })
 </script>
 <template>
   <div>
 
-<canvas ref="canvas1" style="height: 45vh; width: 40vw;"></canvas>
+<canvas ref="canvas1" style="height: 52vh; width: 55vw;"></canvas>
 </div>
 </template>

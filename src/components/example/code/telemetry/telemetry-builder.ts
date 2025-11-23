@@ -37,6 +37,12 @@ export class TelemetryBuilder {
     this.autoStopTrigger = stopTrigger
   }
 
+  resetAuto () {
+    this.data.clear()
+    this.autoDone = false
+    this.autoStartIsStopped = true
+  }
+
   tick (): void {
     if (this.autoStartTrigger && this.autoStartIsStopped) {
       if (this.autoStartTrigger()) {

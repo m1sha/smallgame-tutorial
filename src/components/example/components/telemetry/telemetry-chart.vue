@@ -5,15 +5,16 @@ import Chart from './chart.vue'
 import { computed, onMounted, reactive, ref, watch } from 'vue'
 
 const props = defineProps<{ telemetry: ITelemetry }>()
-const chart = ref<{ drawGraph: () => void }>()
+const chart = ref<{ drawGraph: (normalize: boolean) => void }>()
 const colors: string[] = ['#11cc12', '#1123ee', '#bb1123', '#cfe221', '#aa00a2ff', '#1ed1c2ff', '#cececeff', '#ca862eff', '#e728c7ff', '#72eeb4ff']
 const getLegend = () => props.telemetry.parameters.map((parameter, index) => ({ name: parameter.name, color: colors[index ]}))
 const legend = computed(() => getLegend())
 const checked = reactive<Set<string>>(new Set())
 const getColor = (name: string) => getLegend().find(p=>p.name === name)?.color ?? '#222'
+const normalize = ref(false)
 
 const drawChart = () => {
-  chart.value?.drawGraph()
+  chart.value?.drawGraph(normalize.value)
 }
 
 const selectParameter = (name: string) => {
@@ -35,6 +36,8 @@ watch(() => props.telemetry.startRecord, () => {
   if (!props.telemetry.startRecord) drawChart()
 })
 
+watch(() => normalize.value, () => drawChart())
+
 </script>
 
 <template>
@@ -43,8 +46,13 @@ watch(() => props.telemetry.startRecord, () => {
     <div class="header">
       <button :disabled="telemetry.startRecord" @click="telemetry.claerData(); telemetry.startRecord = true"><i class="fa fa-circle"></i></button>
       <button :disabled="!telemetry.startRecord" @click="telemetry.startRecord = false; drawChart();"><i class="fa fa-stop"></i></button>
+      <div></div>
+      <div>
+        <input type="checkbox" v-model="normalize"></input>
+        <label for="">Normalize values</label>
+      </div>
     </div>
-    <div class="telemetry-char-content">
+    <div class="telemetry-char-content" :class="{ record: telemetry.startRecord }">
       <div class="telemetry-params">
         <div class="parameter-list">
           <div class="parameter" v-for="parameter in telemetry.parameters">
@@ -72,9 +80,10 @@ watch(() => props.telemetry.startRecord, () => {
   left: anchor(right)
   top: anchor(top)
   margin-left: 2px
+  margin-top: 0px
   
-  min-width: 50vw
-  height: 50vh
+  min-width: 65vw
+  height: 60vh
 
   .telemetry-char-block
     background-color: #3737377e
@@ -82,16 +91,17 @@ watch(() => props.telemetry.startRecord, () => {
     height: 100%
     display: grid
     grid-template-rows: 32px 1fr
-    gap: 4px
+    
 
     .header
+      background-color: var(--panel-color)
       display: flex
       gap: 4px
       padding: 4px 8px
       button
-        height: 28px
-        width: 29px
-        padding: 4px
+        height: 23px
+        width: 24px
+        padding: 2px
         background-color: transparent
         
 
@@ -101,6 +111,11 @@ watch(() => props.telemetry.startRecord, () => {
     .telemetry-char-content
       display: grid
       grid-template-columns: 10vw 1fr
+
+      border: 3px solid #333
+
+      &.record
+        border: 3px solid #801111
 
       .telemetry-params
         background-color: #3737377e

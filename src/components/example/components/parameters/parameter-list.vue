@@ -57,7 +57,7 @@ const getGroup = (parameters: AnyParameter[]): string[] => {
   right: 0
   padding: 8px 16px 
   background-color: #3737377e
-  height: calc( 100vh -  76px)
+  height: calc( 100vh -  100px)
   width: 10vw
 
   box-shadow: inset 16px 0px 60px #4444444e, -16px 0px 20px #3636364e

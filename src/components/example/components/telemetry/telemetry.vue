@@ -35,7 +35,7 @@ watch(() => props.telemetry.opennedChart, () => openChart.value = props.telemetr
 .telemetry-wrapper
   position: absolute
   left: calc( 12vw + 8px )
-  top: 4px
+  top: -24px
   anchor-name: --telemetry-wrapper
 
   .telemetry-header
