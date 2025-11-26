@@ -1,0 +1,25 @@
+import { Game, gameloop, TileMap } from "smallgame"
+import { displayFps } from "../../../../../utils/display-fps"
+import { type ScriptModule, type ScriptSettings } from "../../../../../components/example"
+import { UIBuilder } from "../../../../../components/example/code/ui"
+
+export default async ({ container, width, height, fps }: ScriptSettings): Promise<ScriptModule> => {
+  const { game, screen } = Game.create(width, height, container)
+
+  gameloop(() => {
+    screen.fill('#888')
+    displayFps(fps)
+  })
+
+  const ui = new UIBuilder()
+  ui.upload('Load Sprite Sheet', file => {})
+
+  //TileMap.fromImage()
+  
+  return {
+    ui: ui.build(),
+    dispose () { 
+      game.kill() 
+    }
+  }
+}

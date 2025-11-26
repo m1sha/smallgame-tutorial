@@ -27,6 +27,7 @@ const scriptList: ScriptDef[] = [
   { name: 'Textured Text', category: cat2, module: async (state: any) => (await import('./surfaces/code/simple-text')).default(state)  },
   { name: 'Textured Text (GL)', category: cat2, module: async (state: any) => (await import('./surfaces/code/surface-gl')).default(state)  },
   { name: 'Surface Combiner', category: cat2, module: async (state: any) => (await import('./examples/code/surface-combiner')).default(state)  },
+  { name: 'Sprite Sheet', category: cat2, module: async (state: any) => (await import('./surfaces/code/sprite-sheet')).default(state)  },
 
   { name: 'Hello World (GLSL)', category: cat3, module: async (state: any) => (await import('./gl-effects/code/hello-world')).default(state)  },
   { name: 'Abstracion', category: cat3, module: async (state: any) => (await import('./gl-effects/code/effect1')).default(state)  },

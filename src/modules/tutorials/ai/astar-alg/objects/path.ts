@@ -1,32 +1,42 @@
 import { Sketch, Rect, Sprite, Surface, Time } from "smallgame"
-import { AStar, MapSource, Node } from "../astar"
+import { AStar, Node } from "../astar"
+import { MapObject } from "./map-object"
 
 
 export class Path extends Sprite {
   private aStar: AStar
-
+  private pathImg: Surface
   private path: Node[] = []
 
   private started = false
   
-  constructor (private map: MapSource) {
+  constructor (private map: MapObject) {
     super()
 
-    this.image = new Surface(map.width, map.height)
+    this.image = new Surface(map.width, map.height, { useOffscreen: true })
+    this.pathImg = new Surface(map.width, map.height, { useOffscreen: true })
     this.rect = this.image.rect
 
-    this.aStar = new AStar(map)
-    this.aStar.setStart(map.find_ij(2))
-    this.aStar.setGoal(map.find_ij(3))
+    this.aStar = new AStar(map.source, (y, x, g) => this.__cal_g_index(y, x, g))
+    this.aStar.setStart(map.source.find_ij(2))
+    this.aStar.setGoal(map.source.find_ij(3))
     
     if (!this.constPath) {
       this.path = this.aStar.getPath()
     }
   }
 
+  private __cal_g_index (y: any, x: any, g: any) {
+    let n = 1
+    if (this.map.source.get(y, x) == 1) n = g * 1000 + 1000
+    if (this.map.source.get(y, x) == 4) n = g * 2
+    if (this.map.source.get(y, x) == 5) n = g * 200
+    return n
+  }
+
   updatePath () {
-    this.aStar.setStart(this.map.find_ij(2))
-    this.aStar.setGoal(this.map.find_ij(3))
+    this.aStar.setStart(this.map.source.find_ij(2))
+    this.aStar.setGoal(this.map.source.find_ij(3))
     
     if (!this.constPath) {
       this.path = this.aStar.getPath()
@@ -50,10 +60,10 @@ export class Path extends Sprite {
       } else {
         this.i += Time.deltaTime * 10
         const v =  (0 | this.i) % 2 === 0
-        if (!this.aStar.is_path_found && v) this.aStar.nextIteration()
+        if (!this.aStar.isPathFound && v) this.aStar.nextIteration()
       }
 
-      if (this.aStar.is_path_found) {
+      if (this.aStar.isPathFound) {
         this.path = this.aStar.path
       }
     }
@@ -80,8 +90,11 @@ export class Path extends Sprite {
       }
     }
    
-    const img = sk.toSurface(this.map.width, this.map.height)
+    //const img = sk.toSurface(this.map.width, this.map.height)
+    this.pathImg.clear()
     this.image.clear()
-    this.image.blit(img, img.rect)
+    sk.draw(this.pathImg)
+    this.image.blit(this.pathImg, this.pathImg.rect)
+    
   }
 }

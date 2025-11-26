@@ -1,47 +1,43 @@
-import { Game, gameloop, GMath, MouseButton, setSize } from "smallgame"
+import { Game, gameloop, MouseButton, setSize } from "smallgame"
 import { displayFps } from "../../../../utils/display-fps"
 import { type ScriptModule, type ScriptSettings } from "../../../../components/example"
 import { UIBuilder } from "../../../../components/example/code/ui"
 import { MapSource } from "./astar/game-map"
 import { mapArray1 } from "./maps/map1"
-import { Path } from "./objects/path"
 import { MapObject as GameMap } from "./objects/map-object"
-import { mapArray2 } from "./maps/map2"
+//import { mapArray2 } from "./maps/map2"
+import { Zoom } from "./zoom"
+import { TelemetryBuilder } from "../../../../components/example/code/telemetry"
 
 
 export default async ({ container, width, height, fps }: ScriptSettings): Promise<ScriptModule> => {
+  const telemetry = new TelemetryBuilder()
+  let findPathTime = 0
   const { game, screen } = Game.create(width, height, container)
+  screen.disableContextMenu()
 
   let isEditMode = false
   let toolNum = 0
   let constPath = false
 
-
-  const cellSize = 16
-  const zoomSteps = 10          
-  const minZoom = 0.25
-  const maxZoom = 4
-  let zoomStep = 5
-  const v = cellSize * GMath.logZoom(zoomStep, zoomSteps, minZoom, maxZoom)
-
-
-  const mapSource = new MapSource(mapArray1, setSize(v, v))
-  const path = new Path(mapSource)
-  const gameMap = new GameMap(mapSource)
+  //const cellSize = 16
+  const zoom = new Zoom(16)
+  const mapSource = new MapSource(mapArray1)
+  const gameMap = new GameMap(mapSource, setSize(zoom.value, zoom.value))
   
   gameMap.rect.center = screen.rect.center
-  path.rect.center = screen.rect.center
-
   
-
   gameloop(() => {
     for (const ev of game.event.get()) {
       if (ev.type === 'MOUSEDOWN') {
+        if (ev.button !== MouseButton.LEFT) return
         const cell = gameMap.getCell(ev.pos) 
 
         if (!isEditMode) {
           mapSource.setGoal(cell)
-          path.updatePath()
+          findPathTime = performance.now()
+          gameMap.path.updatePath()
+          findPathTime = performance.now() - findPathTime
           gameMap.updateMap()
           return
         }
@@ -51,25 +47,23 @@ export default async ({ container, width, height, fps }: ScriptSettings): Promis
       }
 
       if (ev.type === 'MOUSEMOVE') {
-        if (ev.button === MouseButton.LEFT) {
+        if (ev.button === MouseButton.RIGHT) {
           gameMap.rect.shiftSelf(ev.shift)
-          path.rect.shiftSelf(ev.shift)
         }
       }
 
       if (ev.type === 'WHEEL') {
-        
-
         if (ev.deltaY < 0)  {
-          if (zoomStep < 10) zoomStep += 1
+          zoom.inc()
+          
         } else {
-          if (zoomStep > 0) zoomStep -= 1
+          zoom.dec()
         }
 
-        const v = cellSize * GMath.logZoom(zoomStep, zoomSteps, minZoom, maxZoom)
+        const v = zoom.value
 
-        mapSource.setSize(setSize(v, v))
-        gameMap.reDraw()
+        //mapSource.setSize(setSize(v, v))
+        //gameMap.reDraw()
 
         // gameMap.rect.center = screen.rect.center
         // path.rect.topLeft = gameMap.rect.topLeft
@@ -79,12 +73,8 @@ export default async ({ container, width, height, fps }: ScriptSettings): Promis
     screen.fill('#272727ff')
     gameMap.draw(screen)
 
-    if (!isEditMode) {
-      path.constPath = constPath
-      path.draw(screen)
-    }
-
     displayFps(fps)
+    telemetry.tick()
   })
 
   const ui = new UIBuilder()
@@ -106,10 +96,11 @@ export default async ({ container, width, height, fps }: ScriptSettings): Promis
     .button('Download', () => {})
   )
 
-
+  telemetry.param('A* GetPath time (ms)', () => findPathTime.toFixed(4))
 
   return {
     ui: ui.build(),
+    telemetry: telemetry.build(),
     dispose () { 
       game.kill() 
     }
