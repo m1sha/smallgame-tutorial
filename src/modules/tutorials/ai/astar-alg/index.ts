@@ -83,6 +83,7 @@ export default async ({ container, width, height, fps }: ScriptSettings): Promis
 
   ui.group('Test Path', group => group
     .open()
+    .select('heuristic', ['Manhattan', 'Euclidean'], val => { gameMap.path.setHeuristicType(val as any) }, 'Manhattan')
     .select('Path Type', ['Only Path', 'Full Construction'], val => { constPath = (val === 'Full Construction') } , 'Only Path')
   )
   ui.group('Edit Map', group => group

@@ -1,4 +1,5 @@
 import { MapSource } from "./game-map"
+import { manhattanHeuristic } from "./heuristic"
 import { Node, TPoint2 } from "./node"
 
 const eqeals = (a: TPoint2 | null, b: TPoint2 | null) => {
@@ -16,6 +17,9 @@ export class AStar {
   start: TPoint2 | null = null
   goal: TPoint2 | null = null
 
+  heuristic: (a: TPoint2, b: TPoint2) => number = manhattanHeuristic
+  
+
   constructor (public map: MapSource, private gCallback: (y: number, x: number, g: number) => number) {}
 
   setStart (start: TPoint2 | null) { this.start = start }
@@ -29,7 +33,7 @@ export class AStar {
 
     this.isPathFound = false
 
-    const start_node = new Node(0, this.start!, this.goal!, null)
+    const start_node = this.createNode(0, this.start!, this.goal!, null)
     this.path = []
     this.checked = [start_node]
     this.waiting = this.getNeighborhoods(start_node)
@@ -60,7 +64,7 @@ export class AStar {
     let counter = 0
     if (eqeals(this.start, this.goal)) return []
 
-    const startNode = new Node(0, this.start!, this.goal!, null)
+    const startNode = this.createNode(0, this.start!, this.goal!, null)
     let path: Node[] = []
     const closeList = [startNode]
     const openList = this.getNeighborhoods(startNode)
@@ -116,7 +120,7 @@ export class AStar {
 
       if (!node.parent || ( y !== 0 || x !== 0)){
         const g = this.gCallback(y, x, node.G)
-        arr.push(new Node(g, [y, x], [node.target[0], node.target[1]], node))
+        arr.push(this.createNode(g, [y, x], [node.target[0], node.target[1]], node))
       }
     }
   }
@@ -129,6 +133,10 @@ export class AStar {
       curr = curr.parent
     }
     return result
+  }
+
+  private createNode (g: number, start: TPoint2, goal: TPoint2, parent: Node | null) {
+    return new Node(g, this.heuristic(goal, start), start, goal, parent)
   }
 }
 

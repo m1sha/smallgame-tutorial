@@ -1,6 +1,7 @@
 import { Sketch, Rect, Sprite, Surface, Time } from "smallgame"
 import { AStar, Node } from "../astar"
 import { MapObject } from "./map-object"
+import { euclideanHeuristic, manhattanHeuristic } from "../astar/heuristic"
 
 
 export class Path extends Sprite {
@@ -96,5 +97,9 @@ export class Path extends Sprite {
     sk.draw(this.pathImg)
     this.image.blit(this.pathImg, this.pathImg.rect)
     
+  }
+
+  setHeuristicType (val: 'Manhattan' | 'Euclidean') {
+    this.aStar.heuristic = val === 'Manhattan' ? manhattanHeuristic : euclideanHeuristic
   }
 }
