@@ -17,6 +17,8 @@ const scriptList: ScriptDef[] = [
   { name: 'One Direction Shooter', category: cat0, module: async (state: any) => (await import('./examples/code/one-dir-shooting')).default(state)  },
   
   { name: 'A* Alogorithm', category: cat5, module: async (state: any) => (await import('./ai/astar-alg')).default(state)  },
+  { name: 'Concentration Places', category: cat5, module: async (state: any) => (await import('./ai/concentration-places')).default(state)  },
+  
 
   { name: 'Hello World', category: cat1, module: async (state: any) => (await import('./examples/code/hello-world')).default(state)  },
   { name: 'Parallax', category: cat1, module: async (state: any) => (await import('./examples/code/parallax')).default(state)  },

@@ -5,6 +5,7 @@ uniform vec4 iMouse;
 uniform vec2 iMouseShift;
 uniform vec2 iEndPos;
 uniform sampler2D u_sampler2D;
+uniform vec2 uTileSize;
 in  vec2 v_TexCoord;
 out vec4 fragColor;
 
