@@ -16,8 +16,8 @@ export default async ({ container, width, height, fps }: ScriptSettings): Promis
   car.rect.center        = screen.rect.center.shiftY(320)
   //car.rect.shiftSelf(-width / 2 + 400, 0)
 
-  const parallaxBg = new ParallaxBG(screen.size)
-  await parallaxBg.create()
+  //const parallaxBg = new ParallaxBG(screen.size)
+  //await parallaxBg.create()
 
   const startFlag = new Flag('#e04c1fff')
   startFlag.rect.moveSelf(car.rect.bottomRight, 'top-right')
@@ -43,7 +43,7 @@ export default async ({ container, width, height, fps }: ScriptSettings): Promis
   endFlag.rect.x = dist
   gameloop(() => {
     screen.fill('#c1cce0ff')
-    parallaxBg.draw(screen)
+    //parallaxBg.draw(screen)
     screen.blit(ground, ground.rect)
     car.draw(screen)
     startFlag.draw(screen)
@@ -60,7 +60,7 @@ export default async ({ container, width, height, fps }: ScriptSettings): Promis
     car.i = x
     s = true
 
-    parallaxBg.setPos(x+ startPos)
+    //parallaxBg.setPos(x+ startPos)
 
     startFlag.rect.x = -currPos + startPos
     endFlag.rect.x =   - currPos + dist + startPos
