@@ -30,6 +30,7 @@ function isSelected (control: any)  {
     <template v-for="control in controls">
       
       <!--@vue-ignore-->
+      <!--@ts-ignore-->
       <Group v-if="control.type === 'group'" :group="control" />
       <!--@vue-ignore-->
       <Toolbar v-if="control.type === 'toolbar'" :toolbar="control" />

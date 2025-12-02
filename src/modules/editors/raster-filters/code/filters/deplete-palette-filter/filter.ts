@@ -17,11 +17,11 @@ export class DepletePaletteFilter implements Filter {
     const image = this.app.workImage
     if (!image) return
 
-    const imageData = image.getPixels()
+    const imageData = image.pixels.imageData
     const colorBox = new ColorBox()
     const newImageData = colorBox.squeeze(imageData, value)
     
-    image.setPixels(newImageData)
+    image.pixels.imageData = (newImageData)
 
     if (!this.pal || !this.info) return
 

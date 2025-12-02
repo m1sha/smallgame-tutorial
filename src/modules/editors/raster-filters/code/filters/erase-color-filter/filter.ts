@@ -14,11 +14,11 @@ export class EraseColorFilter implements Filter {
     const image = this.app.workImage
     if (!image) return
   
-    const imageData = image.getPixels()
+    const imageData = image.pixels.imageData
     const colorBox = new ColorBox()
     
     const newImageData = colorBox.eraseColor(imageData, value, color)
-    image.setPixels(newImageData)
+    image.pixels.imageData = newImageData
   }
 
   applyFilter () {

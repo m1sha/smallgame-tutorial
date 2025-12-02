@@ -8,7 +8,7 @@ const store = useEditorStore()
 const currentTool = ref('select-tool')
 const setCurrentTool = (name: string) => {
   currentTool.value = name
-  store.appState.setTool(name)
+  //store.appState.setTool(name)
 }
 </script>
 
