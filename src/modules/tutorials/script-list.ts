@@ -12,9 +12,11 @@ const scriptList: ScriptDef[] = [
   { name: 'Linear Movement', category: cat0, module: async (state: any) => (await import('./examples/code/linear-movement')).default(state)  },
   { name: 'Movements', category: cat0, module: async (state: any) => (await import('./examples/code/movements')).default(state)  },
   { name: 'Move & Rotate', category: cat0, module: async (state: any) => (await import('./examples/code/rotate-move')).default(state)  },
+  { name: 'Rotation', category: cat0, module: async (state: any) => (await import('./examples/code/rotation')).default(state)  },
   { name: 'Force Bar', category: cat0, module: async (state: any) => (await import('./examples/code/force-bar')).default(state)  },
   { name: 'Flappy', category: cat0, module: async (state: any) => (await import('./examples/code/flappy')).default(state)  },
   { name: 'One Direction Shooter', category: cat0, module: async (state: any) => (await import('./examples/code/one-dir-shooting')).default(state)  },
+  { name: 'Collision', category: cat0, module: async (state: any) => (await import('./examples/code/collision')).default(state)  },
   
   { name: 'A* Alogorithm', category: cat5, module: async (state: any) => (await import('./ai/astar-alg')).default(state)  },
   { name: 'Concentration Places', category: cat5, module: async (state: any) => (await import('./ai/concentration-places')).default(state)  },

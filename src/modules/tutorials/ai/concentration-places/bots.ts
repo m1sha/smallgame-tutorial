@@ -9,7 +9,7 @@ export class Bots extends Group<Bot> {
   }
 
   protected update (): void {
-    this.grid.update(this.sprites as Bot[])
+    //this.grid.update(this.sprites as Bot[])
   }
 
   add (sprite: Bot): void {

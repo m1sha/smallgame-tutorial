@@ -27,7 +27,7 @@ export class Bot extends Sprite {
     this.current = Point.from(ppb.point)
   }
 
-  private a = Math.random() * 0.035 + 0.015
+  private a = Math.random() * 0.035 + 0.095
 
 
   protected update (): void {
