@@ -5,6 +5,7 @@ export class Effect {
   private frameCounter: number = 0
   private readonly vertexCount: number
   private readonly texure: GlTexture
+  private readonly prevTexure: GlTexture
   private readonly u_time: u_float
   public readonly surface: SurfaceGL
   
@@ -13,6 +14,7 @@ export class Effect {
     const context = this.surface.context
     context.createProgram(vertex, fragmnet, 'assemble-and-use')
     this.texure = context.createTexture('u_sampler2D', new Surface(width, height))
+    this.prevTexure = context.createTexture('u_prevSampler2D', new Surface(width, height))
     this.u_time = context.uniform('u_time', 'float')
     context.uniform('iResolution', 'vec2').value = [width * 1.0, height * 1.0]
     this.vertexCount = context
@@ -20,9 +22,10 @@ export class Effect {
         .push(Primitive2D.rect(), TexCoord.rect())
   }
 
-  applyEffect (surface: SurfaceBase) {
+  applyEffect (surface: SurfaceBase, prevSurface: SurfaceBase) {
     const cxt = this.surface.context
     this.texure.update(surface)
+    this.prevTexure.update(prevSurface)
     cxt.clear(0x0)
     cxt.drawArrays('triangle-strip', this.vertexCount)
     this.tick()

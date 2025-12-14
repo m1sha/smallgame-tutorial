@@ -4,6 +4,6 @@ export const sizes = {
 
   balloon_radius: 12,
 
-  platform_width: 60,
-  platform_height: 10
+  platform_width: 100,
+  platform_height: 30
 }

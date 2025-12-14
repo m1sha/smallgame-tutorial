@@ -45,11 +45,13 @@ export class GameStation {
     await currentScene.create()
     currentScene.onAction = (name, data) => this.callbackHandler(name, data)
 
+    let prevSurface = this.currentScene.nextFrame(game.event, game.key)
+
     gameloop(() => {
       let surface = this.currentScene.nextFrame(game.event, game.key)
 
       if (setting.useShaders)
-        surface = effectPipeline.build(surface)
+        surface = effectPipeline.build(surface, prevSurface)
      
       //if (setting.showTV)
         screen.fill('#242525ff')
@@ -57,6 +59,8 @@ export class GameStation {
       //   screen.clear()
 
       screen.blit(surface, this.gameRect)
+
+      prevSurface = surface
       
       // if (setting.showTV)
       //   screen.blit(tvLayout, tvLayout.rect)

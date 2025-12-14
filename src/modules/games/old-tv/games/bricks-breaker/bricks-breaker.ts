@@ -17,6 +17,9 @@ export class BricksBreaker implements IScene {
   constructor (width: number, height: number, index: number) {
     this.screen = new Surface(width, height)
 
+    sizes.brick_width = width / 20
+    sizes.brick_height = height / 20
+
     this.hero = new Hero(0, 0)
     this.hero.x = width * 0.5  - this.hero.rect!.width / 2
     this.hero.y = height - 30
@@ -76,7 +79,7 @@ export class BricksBreaker implements IScene {
   }
 
   async create(): Promise<void> {
-    const img = await loadImage('falling-blocks.png') //brick-breaker.png
+    const img = await loadImage('old-tv/falling-blocks.png') //brick-breaker.png
     this.screen.blit(img, this.screen.rect)
   }
 

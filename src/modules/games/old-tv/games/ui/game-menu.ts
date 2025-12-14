@@ -6,7 +6,7 @@ export class GameMenu implements IScene {
   private surface: Surface
   private select: Surface | null
   private index: number = 0
-  private readonly menuY = 140
+  private readonly menuY: number
   private readonly menuX: number
   private readonly menuItemH = 30
   
@@ -16,7 +16,8 @@ export class GameMenu implements IScene {
     this.screen = new Surface(width, height)
     this.surface = new Surface(width, height)
     this.select = null
-    this.menuX = width / 6
+    this.menuX = width / 3
+    this.menuY = height / 3
   }
 
   async create(): Promise<void> {
@@ -35,9 +36,10 @@ export class GameMenu implements IScene {
     menuTitle.pos = { x: this.menuX, y: this.menuY }
     menuTitle.draw(this.surface)
     
+    
     for (let i = 0; i < this.gameNames.length; i++) {
       const name = this.gameNames[i]
-      const y = this.menuY + this.menuItemH + (this.menuItemH * (i * 1.2))
+      const y = this.menuY + this.menuItemH + (this.menuItemH * (i *  this.height / 500) + this.height / 20)
       const menuItem = new Text(name, itemsStyle)
       menuItem.pos = { x: this.menuX, y }
       menuItem.draw(this.surface)  
@@ -66,7 +68,7 @@ export class GameMenu implements IScene {
     this.screen.blit(this.surface, this.surface.rect)
 
     if (this.select) {
-      const y = this.menuY + this.menuItemH - 5  + (this.menuItemH * this.index)
+      const y = this.menuY + this.menuItemH - 5  + (this.menuItemH * this.index * this.height / 500)  + this.height / 20
       this.screen.blit(this.select, this.select.rect.move(this.menuX - 115, y))  
     }
 

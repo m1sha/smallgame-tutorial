@@ -41,7 +41,7 @@ void main() //(out vec4 c, vec2 p)
   vec2 crtUV = CRTCurveUV( uv );
   if ( crtUV.x < 0.0 || crtUV.x > 1.0 || crtUV.y < 0.0 || crtUV.y > 1.0 )
   {
-      color = vec3( 0.0, 0.0, 0.0 );
+      color = vec3( .01, 0.01, 0.01 );
   }
   DrawVignette( color, crtUV );
   DrawScanline( color, uv );
