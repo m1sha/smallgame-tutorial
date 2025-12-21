@@ -1,6 +1,10 @@
 import { reactive, ref } from "vue"
 import { ITelemetry } from "./telemetry"
-import { ITelemetryParameter } from "./telemetry-parameter"
+import { ITelemetryParameter, TelemetryParameter } from "./telemetry-parameter"
+
+
+
+
 
 export class TelemetryBuilder {
   private parameters: ITelemetryParameter[] = reactive([])
@@ -26,7 +30,14 @@ export class TelemetryBuilder {
     return this
   }
 
-  param (caption: string, callback: () => string, defaultValue?: string) {
+  def <C>(caption: string, value?: C) {
+    this.parameters.push({ name: caption, value: TelemetryParameter.convertToString(value) ?? '' })
+    this.callbacks.push(undefined)
+    return new TelemetryParameter<C>(this.parameters[this.parameters.length -1], value)
+  }
+
+  /**@deprecated use "def" method instead */
+  param (caption: string, callback?: () => string, defaultValue?: string) {
     this.parameters.push({ name: caption, value: defaultValue ?? '' })
     this.callbacks.push(callback)
     return this
@@ -58,7 +69,7 @@ export class TelemetryBuilder {
 
     for (let i = 0; i < this.parameters.length; i++) {
       const parameter = this.parameters[i]
-      parameter.value = this.callbacks[i]()
+      if (this.callbacks[i]) parameter.value = this.callbacks[i]()
 
       if (this.startRecord.value) {
         if (this.data.has(parameter.name)) {

@@ -2,6 +2,7 @@
 import { ref, watch } from 'vue';
 import { ITelemetry } from '../../code/telemetry'
 import TelemetryChart from './telemetry-chart.vue'
+import { ParameterColors } from './param-colors';
 const props = defineProps<{telemetry: ITelemetry}>()
 const toggle = ref(props.telemetry.openned)
 const openChart = ref(props.telemetry.opennedChart)
@@ -21,9 +22,13 @@ watch(() => props.telemetry.opennedChart, () => openChart.value = props.telemetr
       <button class="chart-button" :class="{ selected: openChart }" @click="openChart = !openChart"><i class="fa fa-chart-column"></i></button>
     </div>
     <div class="telemetry-list" v-show="toggle">
-      <div v-for="parameter in telemetry.parameters" class="telemetry-parameter">
-        <span>{{ parameter.name }}</span>
-        <span>{{ parameter.value }}</span>
+      <div v-for="parameter, i in telemetry.parameters" class="telemetry-parameter">
+        
+        <span class="telemetry-parameter-key">
+          <i :style="{ backgroundColor: ParameterColors[i]}"></i>
+          <span>{{ parameter.name }}</span>  
+        </span>
+        <span class="telemetry-parameter-value" v-html="parameter.value"></span>
       </div>
     </div>
   </div>
@@ -80,15 +85,24 @@ watch(() => props.telemetry.opennedChart, () => openChart.value = props.telemetr
       &:last-child
         border: 0
 
-      & > span
+     
+
+      .telemetry-parameter-key, .telemetry-parameter-value
         font-size: 0.65em
-
-        &:first-child
-          color: var(--text-secondary-color)
-
-        &:last-child
-          margin-left: auto
-
+      .telemetry-parameter-key
+        color: var(--text-secondary-color)
+        display: flex
+        align-items: center
+        gap: 4px
+        i
+          width: 8px
+          height: 8px 
+          border-radius: 50%
+          display: block
+          opacity: 0.6
+      .telemetry-parameter-value
+        font-family: "MesloLGSDZ Nerd Font"
+        margin-left: auto
       
        
 </style>

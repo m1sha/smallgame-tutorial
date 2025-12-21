@@ -59,7 +59,7 @@ function clearPrevious () {
 </script>
 <template>
   <div class="example-page-toolbar">
-
+    
   </div>
   <div class="example-page show-hiddable">
     <ScriptList :items="scriptList.map((p, i) => ({ id: i + '', name: p.name, category: p.category }))" :select-index="index" @click="changeScript" class="hiddable" />

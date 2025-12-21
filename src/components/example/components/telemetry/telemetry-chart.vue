@@ -3,11 +3,12 @@ import { ColorPicker } from 'vue3-universal-components'
 import { ITelemetry } from '../../code/telemetry'
 import Chart from './chart.vue'
 import { computed, onMounted, reactive, ref, watch } from 'vue'
+import { ParameterColors } from './param-colors';
 
 const props = defineProps<{ telemetry: ITelemetry }>()
 const chart = ref<{ drawGraph: (normalize: boolean) => void }>()
-const colors: string[] = ['#11cc12', '#1123ee', '#bb1123', '#cfe221', '#aa00a2ff', '#1ed1c2ff', '#cececeff', '#ca862eff', '#e728c7ff', '#72eeb4ff']
-const getLegend = () => props.telemetry.parameters.map((parameter, index) => ({ name: parameter.name, color: colors[index ]}))
+
+const getLegend = () => props.telemetry.parameters.map((parameter, index) => ({ name: parameter.name, color: ParameterColors[index ]}))
 const legend = computed(() => getLegend())
 const checked = reactive<Set<string>>(new Set())
 const getColor = (name: string) => getLegend().find(p=>p.name === name)?.color ?? '#222'
