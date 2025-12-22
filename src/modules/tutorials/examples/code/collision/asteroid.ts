@@ -9,17 +9,19 @@ export class Asteroid {
     this.rect = this.sprite.rect.clone()
     //this.rect.x = 0 | Math.random() * (fieldSize.width - this.rect.width)
     //this.rect.y = 0 | Math.random() * (fieldSize.height - this.rect.height)
-    this.vel = new Point(Math.random() * 55 + 1, Math.random() * 97 + 1)
+    this.vel = new Point(Math.random() * 115 + 1, Math.random() * 197 + 1)
   }
 
-  a = 0 //Math.random() * 360
+  a = Math.random() * 360
+
+  collidedWith: Set<Asteroid> = new Set()
   
 
   draw (surface: Surface) {
     this.rect.x += this.vel.x * Time.deltaTime
     this.rect.y += this.vel.y * Time.deltaTime
 
-    //this.a += (10 * Time.deltaTime) % 360
+    this.a += (10 * Time.deltaTime) % 360
 
     if (this.rect.x <= 0 || this.rect.absWidth >= this.fieldSize.width) this.vel.x *= -1
     if (this.rect.y <= 0 || this.rect.absHeight >= this.fieldSize.height) this.vel.y *= -1

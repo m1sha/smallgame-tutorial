@@ -14,14 +14,16 @@ export class TelemetryBuilder {
 
   private openned = ref(false)
   private opennedChart = ref(false)
+  private wide = ref(false)
 
   private autoStartTrigger: (() => boolean) | null = null
   private autoStopTrigger: (() => boolean) | null = null
   private autoStartIsStopped = true
   private autoDone = false
 
-  open () {
+  open (size?: 'nornal' | 'wide') {
     this.openned.value = true
+    if (size === 'wide') this.wide.value = true
     return this
   }
 
@@ -88,6 +90,7 @@ export class TelemetryBuilder {
       data: this.data,
       claerData: () => this.data.clear(),
       openned: this.openned as any as boolean,
+      wide: this.wide as any as boolean,
       opennedChart: this.opennedChart as any as boolean
     }
   }

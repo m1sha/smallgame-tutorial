@@ -92,12 +92,12 @@ export default async ({ container, width, height, fps }: ScriptSettings): Promis
     telemetry.resetAuto() 
   })
 
-  telemetry
-  .open()
-  .openChart()
-  .param('Distance', () => ball.rect.topLeft.length.toFixed(4))
-  .param('Speed', () => currSpeed.toFixed(4))
-  .auto(() => t > 0, () => t > 1)
+  
+  telemetry.open()
+  telemetry.openChart()
+  telemetry.param('Distance', () => ball.rect.topLeft.length.toFixed(4))
+  telemetry.param('Speed', () => currSpeed.toFixed(4))
+  telemetry.auto(() => t > 0, () => t > 1)
 
   return {
     telemetry: telemetry.build(),

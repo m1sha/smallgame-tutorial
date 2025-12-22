@@ -20,7 +20,8 @@ export class TelemetryParameter<T> {
 
   static convertToString (obj: any) {
     const keyval = (key: string, val: string) => `<span style="color: #888">${key}:</span><span style="padding-left: 1px; padding-right: 2px;">${val}</span>`
-    if (!obj) return 'Null'
+    //
+    if (!obj) return '<span style="color: #999">null</span>'
     if (typeof obj === 'number') return this.toNum(obj)
     if (typeof obj === 'boolean') return obj.toString()
     if (typeof obj === 'object'  && typeof obj.x === 'number' && typeof obj.y === 'number' && typeof obj.width === 'number' && typeof obj.height === 'number') {
@@ -37,6 +38,8 @@ export class TelemetryParameter<T> {
   }
 
   private static toNum (obj: any) {
+    if (isNaN(obj)) return '<span style="color: #ce5959ff">NaN</span>'
+    if (!isFinite(obj)) return '<span style="color: #ce5959ff;font-size:1.4em">∞</span>'
     return obj.toFixed(3).toString()
   }
 }

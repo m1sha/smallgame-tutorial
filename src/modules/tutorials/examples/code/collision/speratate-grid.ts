@@ -1,4 +1,4 @@
-import { Rect, Size, TSize } from "smallgame";
+import { Rect, Size, TPoint, TSize } from "smallgame";
 
 
 
@@ -20,9 +20,10 @@ export class SeparateGrid<T extends { rect: Rect }> {
 
     objects.forEach(object => {
       const rect = object.rect
-      const col = 0 | (rect.x / this.cellSize.width)
-      const row = 0 | (rect.y / this.cellSize.height)
-      this.map.get(row * this.cols + col)?.push(object)
+      this.addObject(rect.topLeft, object)
+      this.addObject(rect.topRight, object)
+      this.addObject(rect.bottomLeft, object)
+      this.addObject(rect.bottomRight, object)
     })
   }
 
@@ -34,5 +35,11 @@ export class SeparateGrid<T extends { rect: Rect }> {
 
   clear () {
     this.map = new Map()
+  }
+
+  private addObject (point: TPoint, object: T) {
+    const col = 0 | (point.x / this.cellSize.width)
+    const row = 0 | (point.y / this.cellSize.height)
+    this.map.get(row * this.cols + col)?.push(object)
   }
 }

@@ -8,8 +8,10 @@ export class Asteroids {
   private fieldSurface: Surface
 
   constructor (private fieldSize: TSize) {
-    this.separateGrid = new SeparateGrid(fieldSize, 8, 16)
-    this.fieldSurface = new Sketch().rects({ stroke: '#2A2A2A' }, Rect.size(fieldSize.width / 16, fieldSize.height / 8), 16, 8).toSurface()
+    const rows = 4
+    const cols = 8
+    this.separateGrid = new SeparateGrid(fieldSize, rows, cols)
+    this.fieldSurface = new Sketch().rects({ stroke: '#2A2A2A' }, Rect.size(fieldSize.width / cols, fieldSize.height / rows), cols, rows).toSurface()
   }
 
   add (count: number) {
@@ -33,10 +35,20 @@ export class Asteroids {
       for (const neighbor of neighbors) {
         if (neighbor === asteroid) continue
 
-        if (!neighbor.rect.overlaps(asteroid.rect)) continue
+        if (!neighbor.rect.overlaps(asteroid.rect)) {
+          asteroid.collidedWith.delete(neighbor)
+          neighbor.collidedWith.delete(asteroid)
+          continue
+        }
+
+        if ( neighbor.collidedWith.has(asteroid)) continue
+
         neighbor.vel.x *= -1
         neighbor.vel.y *= -1
-        neighbor.vel.y -= 1
+        
+
+        asteroid.collidedWith.add(neighbor)
+        neighbor.collidedWith.add(asteroid)
         d = true
       }
       if (d) asteroid.vel.negSelf()

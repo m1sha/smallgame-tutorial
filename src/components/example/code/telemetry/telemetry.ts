@@ -6,5 +6,6 @@ export interface ITelemetry {
   data: Map<string, string[]>
   claerData: () => void
   openned: boolean
+  wide: boolean
   opennedChart: boolean
 }

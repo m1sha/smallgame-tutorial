@@ -32,6 +32,8 @@ const scriptList: ScriptDef[] = [
   { name: 'Textured Text (GL)', category: cat2, module: async (state: any) => (await import('./surfaces/code/surface-gl')).default(state)  },
   { name: 'Surface Combiner', category: cat2, module: async (state: any) => (await import('./examples/code/surface-combiner')).default(state)  },
   { name: 'Sprite Sheet', category: cat2, module: async (state: any) => (await import('./surfaces/code/sprite-sheet')).default(state)  },
+  { name: 'Pixel Mask', category: cat2, module: async (state: any) => (await import('./surfaces/code/pixel-mask')).default(state)  },
+  { name: 'Pixel Collision', category: cat2, module: async (state: any) => (await import('./surfaces/code/pixel-collision')).default(state)  },
 
   { name: 'Hello World (GLSL)', category: cat3, module: async (state: any) => (await import('./gl-effects/code/hello-world')).default(state)  },
   { name: 'Abstracion', category: cat3, module: async (state: any) => (await import('./gl-effects/code/effect1')).default(state)  },

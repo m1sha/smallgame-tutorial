@@ -11,7 +11,7 @@ export default async ({ container, width, height, fps }: ScriptSettings): Promis
 
   await new AssetStore().load()
   const asteroids = new Asteroids({ width, height })
-  asteroids.add(110)
+  asteroids.add(20)
   
 
   gameloop(() => {

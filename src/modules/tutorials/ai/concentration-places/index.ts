@@ -8,13 +8,13 @@ export default async ({ container, width, height, fps }: ScriptSettings): Promis
   const { game, screen } = Game.create(width, height, container)
 
   const model = new Model({ width, height })
-  model.settings.concentrationPoints = 16
-  model.settings.concentrationPointRadius = 300
-  model.settings.avgBotsPerPoint = 30
+  model.settings.concentrationPoints = 20
+  model.settings.concentrationPointRadius = 200
+  model.settings.avgBotsPerPoint = 100
   model.create()
 
   gameloop(() => {
-    screen.fill('#3f3f3fff')
+    screen.fill('#000000ff')
     model.update()
     screen.blit(model.surface, model.surface.rect)
 
