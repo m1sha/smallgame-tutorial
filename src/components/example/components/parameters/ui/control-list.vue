@@ -4,6 +4,7 @@ import { Button, IControl } from '../../../code/ui/controls'
 import Group from './group.vue'
 import Toolbar from './toolbar.vue'
 import { TOption } from '../../../code';
+import { InfoPanel } from '../../../code/ui/controls/info-panel';
 
 defineProps<{ controls: IControl[], isToolbar: boolean }>()
 
@@ -57,6 +58,12 @@ function isSelected (control: any)  {
         <i v-if="isToolbar" :class="'fa fa-' + cast<Button>(control).options!.icon"></i>
       </UploadButton> 
       </div>
+
+      <div v-if="control.type === 'info-panel'">
+        <div class="ui-info-panel" v-html="cast<InfoPanel>(control).text">
+          
+        </div>
+      </div>
         
       
     </template>
@@ -77,4 +84,12 @@ function isSelected (control: any)  {
       background-color: var(--data-accident-color)
       &:hover
         background-color: var(--data-accident-color)
+
+  .ui-info-panel
+    padding: 8px 12px
+    background-color: var(--panel-color)
+    border: 1px solid var(--panel-border)
+    border-radius: 8px
+    font-size: .8em
+    color: #ccc
 </style>

@@ -1,6 +1,7 @@
 import { TOption } from "../parameters"
 import { Button, Group, IControl, Toolbar, Tracker, UploadFile } from "./controls"
 import { Color } from "./controls/color"
+import { InfoPanel } from "./controls/info-panel"
 import { Select } from "./controls/select"
 
 export abstract class Contariner  {
@@ -44,8 +45,12 @@ export abstract class Contariner  {
       return this
     }
 
-    select (caption: string, items: string[] | TOption[], callback: (value: string) => void, defaultValue?: string | undefined, options?: any) {
-            this.controls.push(new Select(caption, items, callback, defaultValue, options))
-            return this
-          }
+  select (caption: string, items: string[] | TOption[], callback: (value: string) => void, defaultValue?: string | undefined, options?: any) {
+    this.controls.push(new Select(caption, items, callback, defaultValue, options))
+    return this
+  }
+
+  info (text: string, title?: string) {
+    this.controls.push(new InfoPanel(text, title ?? ''))
+  }
 }

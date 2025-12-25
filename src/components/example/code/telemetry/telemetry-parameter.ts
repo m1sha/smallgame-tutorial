@@ -25,10 +25,10 @@ export class TelemetryParameter<T> {
     if (typeof obj === 'number') return this.toNum(obj)
     if (typeof obj === 'boolean') return obj.toString()
     if (typeof obj === 'object'  && typeof obj.x === 'number' && typeof obj.y === 'number' && typeof obj.width === 'number' && typeof obj.height === 'number') {
-      return `${keyval('x', this.toNum(obj.x))} ${keyval('y', this.toNum(obj.x))} ${keyval('w', this.toNum(obj.width))} ${keyval('h', this.toNum(obj.height))}`
+      return `${keyval('x', this.toNum(obj.x))} ${keyval('y', this.toNum(obj.y))} ${keyval('w', this.toNum(obj.width))} ${keyval('h', this.toNum(obj.height))}`
     }
     if (typeof obj === 'object'  && typeof obj.x === 'number' && typeof obj.y === 'number') {
-      return `${keyval('x', this.toNum(obj.x))} ${keyval('y', this.toNum(obj.x))}`
+      return `${keyval('x', this.toNum(obj.x))} ${keyval('y', this.toNum(obj.y))}`
     }
     if (typeof obj === 'object'  && typeof obj.width === 'number' && typeof obj.height === 'number') {
       return `${keyval('width', this.toNum(obj.width))} ${keyval('height', this.toNum(obj.height))}`
