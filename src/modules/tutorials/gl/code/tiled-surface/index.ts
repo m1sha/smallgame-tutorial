@@ -4,7 +4,7 @@ import { displayFps } from "../../../../../utils/display-fps"
 import { TiledSurfaceGl } from "smallgame/src/surface-gl/tiled-surface-gl"
 
 export default async ({ container, width, height, fps }: ScriptSettings): Promise<ScriptModule> => {
-  const img = await loadImage('terrain.png')
+  const img = await loadImage('platformer/Terrain_(16x16).png')
 
   const surface = new TiledSurfaceGl(width, height)
   surface.imageRendering = 'pixelated'
@@ -17,7 +17,7 @@ export default async ({ container, width, height, fps }: ScriptSettings): Promis
   const { screen } = Game.create(width, height, container)
 
   gameloop(() => {
-    screen.fill('#92fadbff')
+    screen.fill('#757978ff')
     screen.blit(surface, surface.rect)
     displayFps(fps)
   })

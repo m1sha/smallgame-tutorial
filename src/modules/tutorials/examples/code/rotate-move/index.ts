@@ -1,4 +1,4 @@
-import { Game, gameloop, Rect, Group, Key,  } from "smallgame"
+import { Game, gameloop, Rect, Group, Key, Point,  } from "smallgame"
 import { displayFps } from "../../../../../utils/display-fps"
 import { createButton, createSelect, createTracker, type ScriptModule, type ScriptSettings } from "../../../../../components/example"
 import { setDebounce } from "smallgame/src/time"
@@ -7,7 +7,12 @@ import { Background } from "./background"
 import { TelemetryBuilder } from "../../../../../components/example/code/telemetry"
 
 export default async ({ container, width, height, fps }: ScriptSettings): Promise<ScriptModule> => {
-  const telemetry = new TelemetryBuilder()
+  const telemetry = new TelemetryBuilder().open()
+  const pos = telemetry.def('Position', Point.zero)
+  const velocity = telemetry.def('Velocity', Point.zero)
+  const angle = telemetry.def('Angle', 0)
+  const angularVelocity = telemetry.def('Angular Velocity', 0)
+   
   const { game, screen } = Game.create(width, height, container)
 
   let needClearScreen = true
@@ -62,6 +67,11 @@ export default async ({ container, width, height, fps }: ScriptSettings): Promis
 
     displayFps(fps)
     telemetry.tick()
+
+    pos.value =  hero.pos
+    velocity.value = new Point(hero.currentVelocity.x.value, hero.currentVelocity.y.value)
+    angle.value = (hero.rigid.angle % 360)
+    angularVelocity.value = hero.rigid.angularVelocity
   })
 
   const clearScreenParam = createSelect('Clear Screen', ['Yes', 'No'], v => needClearScreen = v == 'Yes', 'Yes')
@@ -76,14 +86,6 @@ export default async ({ container, width, height, fps }: ScriptSettings): Promis
   const inertiaParam = createTracker('inertia', 0.1, 20, 0.01, v => hero.inertia = v, hero.inertia, 'Ship Rotation')
   const angularDragParam = createTracker('Angular Drag', 0.01, 1, 0.01, v => hero.angularDrag = v, hero.angularDrag, 'Ship Rotation')
   const getbackParam = createButton('Get back the hero', () => hero.getBack(screen.rect.center))
-
-  telemetry.open()
-  telemetry.param('Angle', () => (hero.rigid.angle % 360).toFixed(4))
-  telemetry.param('Angular Velocity', () => hero.rigid.angularVelocity.toFixed(4))
-  telemetry.param('X Velocity', () => hero.currentVelocity.x.value.toFixed(4))
-  telemetry.param('Y Velocity', () => hero.currentVelocity.y.value.toFixed(4))
-  telemetry.param('X Pos', () => hero.pos.x.toFixed(4))
-  telemetry.param('Y Pos', () => hero.pos.y.toFixed(4))
 
   return {
     parameters: [clearScreenParam, shipTypeParam, moveTypeParam, speedParam, /*angleParam,*/ smoothTimeParam, angleDeltaTimeMultiParam, torqueForceParam, inertiaParam, angularDragParam, getbackParam],

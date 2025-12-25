@@ -14,7 +14,7 @@ export class Asteroid extends Sprite {
 
   async create (): Promise<void> {
     
-    this.surface = await loadImage('space-fighter/Asteroids/Asteroid_'+ this.num +'.png')
+    this.surface = await loadImage('space-striker/asteroids/Asteroid_'+ this.num +'.png')
     const size = this.surface.rect.diagonal
     this.image = new Surface(size, size)
     this.rect = this.image.rect

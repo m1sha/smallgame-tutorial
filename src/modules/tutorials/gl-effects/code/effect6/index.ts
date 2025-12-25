@@ -10,5 +10,5 @@ export default async (settings: ScriptSettings): Promise<ScriptModule> => {
   const tex = controller.effect.gl.createTexture('u_sampler2D', img)
   controller.play()
 
-  return { dispose() { tex.delete } }
+  return { dispose() { tex.remove } }
 }

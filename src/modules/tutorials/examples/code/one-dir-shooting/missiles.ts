@@ -10,8 +10,8 @@ export class Missiles extends Group<Missile> {
   missilePerShoot = 1
   
   async create () {
-    this.img1 = await loadImage('space-fighter/Missiles/Missile_1.png')
-    this.img2 = await loadImage('space-fighter/Missiles/Missile_3.png')
+    this.img1 = await loadImage('space-striker/missiles/Missile_1.png')
+    this.img2 = await loadImage('space-striker/missiles/Missile_3.png')
   }
 
   private get img () {

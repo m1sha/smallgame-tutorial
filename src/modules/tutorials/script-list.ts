@@ -45,8 +45,12 @@ const scriptList: ScriptDef[] = [
   { name: 'Grid', category: cat3, module: async (state: any) => (await import('./gl-effects/code/grid')).default(state)  },
   { name: 'Grid 2', category: cat3, module: async (state: any) => (await import('./gl-effects/code/grid2')).default(state)  },
   { name: 'Coords Understanding', category: cat3, module: async (state: any) => (await import('./gl-effects/code/coords-understanding')).default(state)  },
+  { name: 'Chess', category: cat3, module: async (state: any) => (await import('./gl-effects/code/chess')).default(state)  },
 
   { name: 'Hello World (WebGL)', category: cat4, module: async (state: any) => (await import('./gl/code/hello-world')).default(state)  },
+  { name: 'Vertex Array Object (Points)', category: cat4, module: async (state: any) => (await import('./gl/code/vao-points')).default(state)  },
+  { name: 'GL Screen Coords', category: cat4, module: async (state: any) => (await import('./gl/code/gl-screen-coords')).default(state)  },
+  { name: 'UI Screen Coords', category: cat4, module: async (state: any) => (await import('./gl/code/ui-screen-coords')).default(state)  },
   { name: 'Framebuffer', category: cat4, module: async (state: any) => (await import('./gl/code/framebuffer')).default(state)  },
   { name: 'Particle System', category: cat4, module: async (state: any) => (await import('./gl/code/particle-system')).default(state)  },
   { name: 'Pixel Buffer Object', category: cat4, module: async (state: any) => (await import('./gl/code/pixel-buffer-object')).default(state)  },

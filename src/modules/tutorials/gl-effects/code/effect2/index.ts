@@ -12,6 +12,6 @@ export default async (settings: ScriptSettings): Promise<ScriptModule> => {
   controller.play()
 
   return {
-    dispose() { tex.delete() }
+    dispose() { tex.remove() }
   }
 }

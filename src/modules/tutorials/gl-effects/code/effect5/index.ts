@@ -11,5 +11,5 @@ export default async (settings: ScriptSettings): Promise<ScriptModule> => {
   controller.effect.gl.uniform('uTileSize', 'vec2').value = new Point(32, 32).uv(settings).arr()
   controller.play()
 
-  return { dispose() { tex.delete } }
+  return { dispose() { tex.remove } }
 }

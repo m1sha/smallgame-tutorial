@@ -15,10 +15,10 @@ export class World extends Sprite {
   }
 
   async create (): Promise<void> {
-    this.img = await loadImage('star-field.png')
+    this.img = new Surface(500, 500) //await loadImage('star-field.png')
     this.moveRect = this.img.rect.clone()
     
-    this.img2 = await loadImage('stars.png')
+    this.img2 = new Surface(500, 500)// await loadImage('stars.png')
     this.moveRect2 = this.img2.rect.clone()
 
     this.moveRect.shiftSelf(0, -(this.moveRect.height - this.size.height))

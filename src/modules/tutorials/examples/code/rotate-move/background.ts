@@ -4,7 +4,7 @@ export class Background extends Sprite {
   pos = Point.zero
 
   async create(): Promise<void> {
-    this.image = await loadImage('space-fighter/Backgrounds/4.png')
+    this.image = await loadImage('space-striker/bg/4.png')
     this.rect = this.image.rect
   }
 

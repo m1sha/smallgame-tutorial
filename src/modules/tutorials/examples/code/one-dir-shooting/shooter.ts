@@ -21,7 +21,7 @@ export class Shooter extends Sprite {
   }
 
   async create(): Promise<void> {
-    this.image = await loadImage('space-fighter/Ships/Fighter_1.png')
+    this.image = await loadImage('space-striker/ships/Fighter_1.png')
     this.rect = this.image.rect
   }
 
