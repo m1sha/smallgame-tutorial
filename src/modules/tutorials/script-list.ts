@@ -49,6 +49,7 @@ const scriptList: ScriptDef[] = [
 
   { name: 'Hello World (WebGL)', category: cat4, module: async (state: any) => (await import('./gl/code/hello-world')).default(state)  },
   { name: 'Vertex Array Object (Points)', category: cat4, module: async (state: any) => (await import('./gl/code/vao-points')).default(state)  },
+  { name: 'Vertex Array Object (Rects)', category: cat4, module: async (state: any) => (await import('./gl/code/vao-rects')).default(state)  },
   { name: 'GL Screen Coords', category: cat4, module: async (state: any) => (await import('./gl/code/gl-screen-coords')).default(state)  },
   { name: 'UI Screen Coords', category: cat4, module: async (state: any) => (await import('./gl/code/ui-screen-coords')).default(state)  },
   { name: 'Framebuffer', category: cat4, module: async (state: any) => (await import('./gl/code/framebuffer')).default(state)  },
