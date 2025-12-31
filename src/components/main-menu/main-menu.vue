@@ -15,7 +15,7 @@ const editorsMenu = ref<HTMLElement>()
       
       <div class="sep"></div>
       <div class="nav-link">
-        <a href="#/tutorials" :class="{ 'router-link-active': route.path.startsWith('/tutorials')  }">Tutorials</a>
+        <a href="#/sandbox" :class="{ 'router-link-active': route.path.startsWith('/sandbox')  }">Sandbox</a>
         <div class="border"></div>
       </div>
       

@@ -11,8 +11,9 @@ const route = useRoute()
 const router = useRouter()
 const container = ref<HTMLDivElement>()
 const fps = ref<HTMLDivElement>()
-const index = computed(() => parseInt(route.params.id as string) || 0)
+const scriptId = computed(() => route.params.name as string)
 const currentModule = ref<ScriptModule | null>()
+const scriptListItems = computed(() => props.scriptList.map((p, i) => ({ id: p.name.replaceAll(' ', '_').toLocaleLowerCase(), name: p.name, category: p.category })) )
 
 onMounted(async () => {
   await main()
@@ -23,9 +24,14 @@ onMounted(async () => {
 })
 
 async function main() {
-  const script = props.scriptList[index.value]
+  const script = !scriptId.value ? props.scriptList[0] : props.scriptList.find(p => p.name.replaceAll(' ', '_').toLocaleLowerCase() === scriptId.value)
   if (!script) {
     console.warn('Script is not found')
+    return
+  }
+
+  if (!container.value) {
+    console.warn('container is not found')
     return
   }
 
@@ -35,8 +41,8 @@ async function main() {
   currentModule.value = await script.module({ container: container.value!, fps: fps.value!, width, height })
 }
 
-function changeScript (id: number) {
-  router.push({ params: { id }})
+function changeScript (id: string) {
+  router.push({ params: { name: id }})
 }
 
 router.beforeEach(() => { clearPrevious() })
@@ -62,7 +68,7 @@ function clearPrevious () {
     
   </div>
   <div class="example-page show-hiddable">
-    <ScriptList :items="scriptList.map((p, i) => ({ id: i + '', name: p.name, category: p.category }))" :select-index="index" @click="changeScript" class="hiddable" />
+    <ScriptList :items="scriptListItems" :selected-id="scriptId" @click="changeScript" class="hiddable" />
     <Telemetry  v-if="currentModule && currentModule.telemetry" :telemetry="currentModule.telemetry" />
     <div ref="container" class="container"></div>
     

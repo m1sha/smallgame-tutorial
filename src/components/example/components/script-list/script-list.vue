@@ -2,17 +2,17 @@
 import { computed, ref, watch } from 'vue';
 import { ItemList, TextBox } from 'vue3-universal-components'
 
-const porps = defineProps<{ items: {id: string, name: string, category: string }[], selectIndex: number}>()
-const emit = defineEmits<{click: [id: number]}>()
+const props = defineProps<{ items: {id: string, name: string, category: string }[], selectedId: string}>()
+const emit = defineEmits<{click: [id: string]}>()
 const filtredItems = computed(() => {
-  if (!search.value) return porps.items
-  return porps.items.filter(p => p.name.toLocaleLowerCase().includes(search.value.toLocaleLowerCase()))
+  if (!search.value) return props.items
+  return props.items.filter(p => p.name.toLocaleLowerCase().includes(search.value.toLocaleLowerCase()))
 })
-const categories = computed(() => new Set(filtredItems.value.map(p => p.category)).keys())
-const selected = ref(porps.items[porps.selectIndex].id)
+const categories = computed(() => [...new Set(filtredItems.value.map(p => p.category)).keys()])
+const selected = ref(props.selectedId)
 const search = ref('')
 
-watch(() => porps.selectIndex, () => selected.value = porps.items[porps.selectIndex].id)
+watch(() => props.selectedId, () => selected.value = props.selectedId)
 
 </script>
 <template>
@@ -24,7 +24,7 @@ watch(() => porps.selectIndex, () => selected.value = porps.items[porps.selectIn
       
     <template v-for="cat in categories">
       <p class="category">{{ cat }}</p>
-      <ItemList :items="filtredItems.filter(p => p.category === cat)" v-model="selected" @click="({ id }) => emit('click', items.findIndex(p => p.id === id) )" />
+      <ItemList :items="filtredItems.filter(p => p.category === cat)" v-model="selected" @click="({ id }) => emit('click', id )" />
     </template>
 
     <p v-if="!filtredItems.length && search">Empty Result</p>
