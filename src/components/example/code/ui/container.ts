@@ -1,14 +1,15 @@
+import { reactive } from "vue"
 import { TOption } from "../parameters"
-import { Button, Group, IControl, Toolbar, Tracker, UploadFile } from "./controls"
+import { Button, Group, IControl, Panel, Switch, Toolbar, Tracker, UploadFile } from "./controls"
 import { Color } from "./controls/color"
 import { InfoPanel } from "./controls/info-panel"
 import { Select } from "./controls/select"
 
 export abstract class Contariner  {
-  controls: IControl[] 
+  controls: IControl[]
 
   constructor () {
-    this.controls = []
+    this.controls = reactive([])
   }
 
   toolbar (settings: (group: Toolbar) => void) {
@@ -17,9 +18,16 @@ export abstract class Contariner  {
     this.controls.push(control)
     return control
   }
+
+  panel (settings: (group: Panel) => void) {
+    const control = reactive(new Panel())
+    settings(control)
+    this.controls.push(control)
+    return control
+  }
   
   group (name: string, settings: (group: Group) => void) {
-    const control = new Group(name)
+    const control = reactive(new Group(name))
     settings(control)
     this.controls.push(control)
     return control
@@ -52,5 +60,9 @@ export abstract class Contariner  {
 
   info (text: string, title?: string) {
     this.controls.push(new InfoPanel(text, title ?? ''))
+  }
+
+  switch (caption: string, callback: (value: boolean) => void, defaultValue?: boolean) {
+    this.controls.push(new Switch(caption, callback, defaultValue ?? false))
   }
 }

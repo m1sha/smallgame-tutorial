@@ -10,7 +10,7 @@ import { UploadFile } from "./upload-file"
 
 export class Toolbar  implements IControl {
   readonly type: ControlType = 'toolbar'
-  
+  hidden: boolean = false
   controls: IControl[]
   
   constructor (...controls: IControl[]) {

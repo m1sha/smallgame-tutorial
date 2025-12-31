@@ -1,4 +1,4 @@
-import { Group, loadBlob, Size, Screen, Point } from "smallgame"
+import { Group, loadBlob, Size, Point, Surface } from "smallgame"
 import { ImageSprite } from "./objects/image-sprite"
 import { CanvasSprite } from "./objects/canvas-sprite"
 import { SelectedImage } from "./objects/selected-image"
@@ -12,7 +12,7 @@ export class EditorState {
   offeset = Point.zero
   zoom = 1
 
-  constructor (canvasSize: Size, public screen: Screen) {
+  constructor (canvasSize: Size, public screen: Surface) {
     this.canvas = new CanvasSprite(canvasSize, screen.rect)
   }
 

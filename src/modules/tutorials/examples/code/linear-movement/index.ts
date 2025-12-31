@@ -1,4 +1,4 @@
-import { Game, gameloop, GMath, Rect, Sketch, Time } from "smallgame"
+import { GMath, Rect, Sketch, Time } from "smallgame"
 import { displayFps } from "../../../../../utils/display-fps"
 import { createButton, type ScriptModule, type ScriptSettings } from "../../../../../components/example"
 import { Car } from "./car"
@@ -7,13 +7,14 @@ import { easeInBounce, easeInOutBounce, easeInOutElastic, easeInSine, easeOutBou
 import { TelemetryBuilder } from "../../../../../components/example/code/telemetry"
 import { Flag } from "./flag"
 import { ParallaxBG } from "./parallax-bg"
+import { Viewer } from "../../../../shared"
 
 export default async ({ container, width, height, fps }: ScriptSettings): Promise<ScriptModule> => {
   const telemetry = new TelemetryBuilder()
-  const { game, screen } = Game.create(width, height, container)
+  const viewer = new Viewer({ width, height}, container)
   const car              = new Car()
   await car.create()
-  car.rect.center        = screen.rect.center.shiftY(320)
+  car.rect.center        = viewer.surface.rect.center.shiftY(320)
   //car.rect.shiftSelf(-width / 2 + 400, 0)
 
   //const parallaxBg = new ParallaxBG(screen.size)
@@ -41,13 +42,15 @@ export default async ({ container, width, height, fps }: ScriptSettings): Promis
   let startPos = startFlag.rect.x
   let currPos = 0
   endFlag.rect.x = dist
-  gameloop(() => {
-    screen.fill('#c1cce0ff')
+  viewer.onFrameChanged = surface => {
+    
+    //screen.fill('#c1cce0ff')
+    surface.clear()
     //parallaxBg.draw(screen)
-    screen.blit(ground, ground.rect)
-    car.draw(screen)
-    startFlag.draw(screen)
-    endFlag.draw(screen)
+    surface.blit(ground, ground.rect)
+    car.draw(surface)
+    startFlag.draw(surface)
+    endFlag.draw(surface)
     
     t = t < 1 ? t + Time.deltaTime * speed : 1
     
@@ -61,14 +64,14 @@ export default async ({ container, width, height, fps }: ScriptSettings): Promis
     s = true
 
     //parallaxBg.setPos(x+ startPos)
-
+    
     startFlag.rect.x = -currPos + startPos
     endFlag.rect.x =   - currPos + dist + startPos
 
     displayFps(fps)
     telemetry.tick()
-  })
 
+  }
 
   const ui = new UIBuilder()
   ui.group('Common', group => group
@@ -95,7 +98,7 @@ export default async ({ container, width, height, fps }: ScriptSettings): Promis
     ui: ui.build(),
     telemetry: telemetry.build(),
     dispose () { 
-      game.kill() 
+      viewer.remove() 
     }
   }
 }

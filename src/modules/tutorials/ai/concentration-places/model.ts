@@ -27,9 +27,9 @@ export class Model {
     for (let j = 0; j < this.settings.concentrationPoints; j++) {
       const hue = 0 | Math.random()*360
       const sat = 0 | Math.random()*40 + 20
-      const colorF = `hsl(${hue}, 4%, ${sat}%)`
+      const colorF = `hsl(${hue}, 14%, ${sat}%)`
       const colorS = `hsl(${hue}, 0%, ${sat}%)`
-      const botColor = `hsl(${hue}, 5%, ${sat}%)`
+      const botColor = `hsl(${hue}, 15%, ${sat}%)`
       const concentrationPoint = new ConcentrationPoint(colorF, colorS, botColor, new Size(this.screenSize).scaleSelf(0.5).toPoint())
       //const sc = new Point(this.screenSize.width / 2 + Math.random() * 500 - 500, this.screenSize.height / 2 + Math.random() * 500 - 500)
     

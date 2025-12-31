@@ -2,9 +2,10 @@ import { AnimatedSprite, deg, Game, gameloop, loadImage, M33, Point, rad, Rect, 
 import { displayFps } from "../../../../../utils/display-fps"
 import { type ScriptModule, type ScriptSettings } from "../../../../../components/example"
 import { UIBuilder } from "../../../../../components/example/code/ui"
+import { Viewer } from "../../../../shared"
 
 export default async ({ container, width, height, fps }: ScriptSettings): Promise<ScriptModule> => {
-  const { game, screen } = Game.create(width, height, container)
+  const viewer = new Viewer({ width, height}, container)
 
   const img = await loadImage('space-striker/tiny-ships/tinyShip1.png')
   const img2 = await loadImage('space-striker/tiny-ships/tinyShip2.png')
@@ -35,7 +36,7 @@ export default async ({ container, width, height, fps }: ScriptSettings): Promis
 
   
   const centerPointImg = new Sketch().circle({ fill: '#419b66ff', stroke: '#204122ff', lineWidth: 2 }, Rect.size(16, 16).center, 6).toSurface()
-  centerPointImg.rect.center = screen.rect.center
+  centerPointImg.rect.center = viewer.surface.rect.center
   
   sprite.rect.center = centerPointImg.rect.absCenter.shiftX(-240)
   sprite2.rect.center = sprite.rect.absCenter.shiftX(240)
@@ -54,7 +55,7 @@ export default async ({ container, width, height, fps }: ScriptSettings): Promis
 
   let ca = 0
 
-  gameloop(() => {
+  viewer.onFrameChanged = surface => {
     //screen.fill('#888')
     ca += 4.85
     console.log(Math.sin(rad(ca % 360)))
@@ -62,10 +63,10 @@ export default async ({ container, width, height, fps }: ScriptSettings): Promis
 
     center = centerPointImg.rect.absCenter
 
-    screen.blit(centerPointImg, centerPointImg.rect)
+    surface.blit(centerPointImg, centerPointImg.rect)
     //sprite.draw(screen)
-    sprite2.draw(screen)
-    sprite3.draw(screen)
+    sprite2.draw(surface)
+    sprite3.draw(surface)
 
 
     const m = M33.rotate(a, center)
@@ -91,13 +92,13 @@ export default async ({ container, width, height, fps }: ScriptSettings): Promis
 
 
     displayFps(fps)
-  })
+  }
 
   const ui = new UIBuilder()
   return {
     ui: ui.build(),
     dispose () { 
-      game.kill() 
+      viewer.remove() 
     }
   }
 }

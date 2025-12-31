@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import { ColorPicker, DropDownList, PushButton, Tracker, UploadButton } from 'vue3-universal-components'
+import { ColorPicker, DropDownList, PushButton, Switch, Tracker, UploadButton } from 'vue3-universal-components'
 import { Button, IControl } from '../../../code/ui/controls'
 import Group from './group.vue'
 import Toolbar from './toolbar.vue'
 import { TOption } from '../../../code';
 import { InfoPanel } from '../../../code/ui/controls/info-panel';
+import Panel from './panel.vue';
 
 defineProps<{ controls: IControl[], isToolbar: boolean }>()
 
@@ -34,6 +35,9 @@ function isSelected (control: any)  {
       <!--@ts-ignore-->
       <Group v-if="control.type === 'group'" :group="control" />
       <!--@vue-ignore-->
+      <!--@ts-ignore-->
+      <Panel v-if="control.type === 'panel'" :panel="control" />
+      <!--@vue-ignore-->
       <Toolbar v-if="control.type === 'toolbar'" :toolbar="control" />
 
       <!--@vue-ignore-->
@@ -58,6 +62,9 @@ function isSelected (control: any)  {
         <i v-if="isToolbar" :class="'fa fa-' + cast<Button>(control).options!.icon"></i>
       </UploadButton> 
       </div>
+
+      <!--@vue-ignore-->
+      <Switch v-if="control.type === 'switch'" v-model="control.defaultValue" :caption="control.caption" @update:model-value="value => control.callback(value ?? false)" />
 
       <div v-if="control.type === 'info-panel'">
         <div class="ui-info-panel" v-html="cast<InfoPanel>(control).text">

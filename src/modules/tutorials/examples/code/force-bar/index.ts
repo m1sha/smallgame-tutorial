@@ -4,6 +4,8 @@ import { createSelect, createTracker, type ScriptModule, type ScriptSettings } f
 import { setDebounce } from "smallgame/src/time"
 import { easeInElastic, easeInQuad, easeInBounce } from "../movements/func"
 import { Bar } from "./bar"
+import { Viewer } from "../../../../shared"
+import { UIBuilder } from "../../../../../components/example/code/ui"
 
 
 const lerp = (a: number, b: number, t: number) => a + (b - a) * t
@@ -11,13 +13,14 @@ const lerp = (a: number, b: number, t: number) => a + (b - a) * t
 const linear = (t: number) => t
 
 export default async ({ container, width, height, fps }: ScriptSettings): Promise<ScriptModule> => {
-  const { game, screen } = Game.create(width, height, container)
+  //const { game, screen } = Game.create(width, height, container)
+  const viewer = new Viewer({ width, height}, container)
 
   const bar = new Bar(setSize(0,0))
   const bar2 = new Bar(setSize(0,0))
   const bar3 = new Bar(setSize(0,0))
   
-  const text = new Text('Press Space', { fontSize: '50px', color: 'rgba(31, 48, 41, 1)' }).toSurface(250, 80)
+  //const text = new Text('Press Space', { fontSize: '50px', color: 'rgba(31, 48, 41, 1)' }).toSurface(250, 80)
 
   let func = easeInQuad
   let func2 = linear
@@ -42,48 +45,54 @@ export default async ({ container, width, height, fps }: ScriptSettings): Promis
     force3 = GMath.smoothstep(.1, .5, func(t)) * 800
   }, 30)
 
-  gameloop(() => {
-    screen.fill('#154d36ff')
-    
-    bar.force = force
-    bar.update()
-    screen.blit(bar.image, bar.rect.move(screen.rect.center.shiftX(-100), 'center-center'))
-
-    bar2.force = force2
-    bar2.update()
-    screen.blit(bar2.image, bar2.rect.move(screen.rect.center.shiftX(-340), 'center-center'))
-
-    bar3.force = force3
-    bar3.update()
-    screen.blit(bar3.image, bar3.rect.move(screen.rect.center.shiftX(-580), 'center-center'))
-
-    
-    screen.blit(text, text.rect.move(screen.rect.center.shift(200, -20), 'center-center'))
-
-    displayFps(fps)
-
-
-    if (game.key.getPressed()[Key.SPACE]) {
+  viewer.onKeyPressed = key => {
+    if (key.getPressed()[Key.SPACE]) {
       raiseForce()
     } else {
       fallForce()
     }
-  })
+  }
+
+  viewer.onFrameChanged = surface => {
+    surface.clear()
+    
+    bar.force = force
+    bar.update()
+    surface.blit(bar.image, bar.rect.move(surface.rect.center.shiftX(300), 'center-center'))
+
+    bar2.force = force2
+    bar2.update()
+    surface.blit(bar2.image, bar2.rect.move(surface.rect.center.shiftX(0), 'center-center'))
+
+    bar3.force = force3
+    bar3.update()
+    surface.blit(bar3.image, bar3.rect.move(surface.rect.center.shiftX(-300), 'center-center'))
+
+    
+    //surface.blit(text, text.rect.move(surface.rect.center.shift(200, -20), 'center-center'))
+
+    displayFps(fps)
 
 
-  const funcParam = createSelect('function', [ 'linear', 'easeInElastic', 'easeInBounce', 'easeInQuad' ], v => {
+    
+  }
+
+//  const speedParam = createTracker('Speed', 0.01, 4, 0.001, v => speed = v, 1)
+
+  const ui = new UIBuilder()
+  ui.info('Press Space key to take force for bars')
+  ui.select('function', [ 'linear', 'easeInElastic', 'easeInBounce', 'easeInQuad' ], v => {
     if (v === 'linear') func = linear
     if (v === 'easeInElastic') func = easeInElastic
     if (v === 'easeInBounce') func = easeInBounce
     if (v === 'easeInQuad') func = easeInQuad
   }, 'easeInQuad')
-
-  const speedParam = createTracker('Speed', 0.01, 4, 0.001, v => speed = v, 1)
+  ui.tracker('Speed', 0.01, 4, 0.001, v => speed = v, 1)
 
   return {
-    parameters: [funcParam, speedParam],
+    ui: ui.build(),
     dispose () { 
-      game.kill() 
+      viewer.remove() 
     }
   }
 }

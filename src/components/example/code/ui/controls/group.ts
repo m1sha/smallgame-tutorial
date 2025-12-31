@@ -4,7 +4,9 @@ import { Button } from "./button"
 import { Color } from "./color"
 import { IControl } from "./control"
 import { ControlType } from "./control-type"
+import { Panel } from "./panel"
 import { Select } from "./select"
+import { Switch } from "./switch"
 import { Toolbar } from "./toolbar"
 import { Tracker } from "./tracker"
 import { UploadFile } from "./upload-file"
@@ -13,6 +15,7 @@ export class Group implements IControl {
   readonly type: ControlType = 'group'
   controls: IControl[] = []
   openned: boolean = false
+  hidden: boolean = false
   constructor (public name: string, ...controls: IControl[]) {
     
     this.controls.push(...controls)
@@ -26,6 +29,13 @@ export class Group implements IControl {
 
  toolbar (settings: (group: Toolbar) => void) {
     const control = new Toolbar()
+    settings(control)
+    this.controls.push(control)
+    return control
+  }
+
+  panel (settings: (group: Panel) => void) {
+    const control = new Panel()
     settings(control)
     this.controls.push(control)
     return control
@@ -62,4 +72,9 @@ export class Group implements IControl {
         this.controls.push(new Select(caption, items, callback, defaultValue, options))
         return this
       }
+
+  switch (caption: string, callback: (value: boolean) => void, defaultValue?: boolean) {
+    this.controls.push(new Switch(caption, callback, defaultValue ?? false))
+    return this
+  }
 }

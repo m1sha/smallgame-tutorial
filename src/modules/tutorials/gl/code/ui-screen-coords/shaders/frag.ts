@@ -1,13 +1,20 @@
 export default /*glsl*/`
 
 uniform sampler2D uSampler;
-in float v_Color;
+//in vec2 v_TexCoord;
 out vec4 fragColor;
 
 void main() {
+  vec2 texSize = vec2(textureSize(uSampler, 0));
+  vec2 uv =  vec2(gl_PointCoord.x, 1. - gl_PointCoord.y);
   
-  fragColor = texture(uSampler, gl_FragCoord.xy / vec2(800, 900));
-  //fragColor = color * vec4(v_Color, v_Color, v_Color + 0.1, 0.8);  
+  uv /= texSize;
+  uv *= 16.;
+  //uv.x += v_TexCoord.x;
+  //uv.y -= v_TexCoord.y;
+
+  fragColor = texture(uSampler, uv);
+  //fragColor = vec4(uv, 0., 1.);
 }
 
 `

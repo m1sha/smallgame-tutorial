@@ -7,40 +7,42 @@ import { Missiles } from "./missiles"
 import { Asteroids } from "./asteroids"
 import { asteroidsSettings } from "./asteroid-setting"
 import { World } from "./world"
+import { Viewer } from "../../../../shared"
 
 export default async ({ container, width, height, fps }: ScriptSettings): Promise<ScriptModule> => {
-  const { game, screen } = Game.create(width, height, container)
+  //const { game, screen } = Game.create(width, height, container)
+  const viewer = new Viewer({ width, height}, container)
 
-  const world = new World(setSize(800, screen.size.height))
+  const world = new World(setSize(800, viewer.surface.rect.height))
   await world.create()
-  world.rect.center = screen.rect.center
+  world.rect.center = viewer.surface.rect.center
   
   const shooter = new Shooter()  
   await shooter.create()
   const missiles = new Missiles()
   await missiles.create()
-  shooter.setPos(screen.rect.center.shiftY(screen.size.height * 0.42))
+  shooter.setPos(viewer.surface.rect.center.shiftY(viewer.surface.rect.height * 0.42))
   shooter.setMissile(missiles)
 
   const fireTrigger = setDebounce(() => shooter.fire(), 250)
 
-  const asteroids = new Asteroids(screen.size, asteroidsSettings)
+  const asteroids = new Asteroids(viewer.surface.rect, asteroidsSettings)
   
-  
-
-  gameloop(() => {
-    shooter.move(game.key.horizontalAxis)
-
-    if (game.key.getPressed()[Key.SPACE]) {
+  viewer.onKeyPressed = key => {
+    shooter.move(key.horizontalAxis)
+    if (key.getPressed()[Key.SPACE]) {
       fireTrigger()
     }
+  }
 
-    screen.fill('#7c7c7cff')
-    world.draw(screen)
+  viewer.onFrameChanged = (surface => {
     
-    missiles.draw(screen as any)
-    asteroids.draw(screen as any)
-    shooter.draw(screen)
+    surface.clear()
+    world.draw(surface)
+    
+    missiles.draw(surface)
+    asteroids.draw(surface)
+    shooter.draw(surface)
     displayFps(fps)
 
     missiles.collideGroup(asteroids, (m, a) => {
@@ -131,7 +133,7 @@ export default async ({ container, width, height, fps }: ScriptSettings): Promis
       maxCountd5Param,
     ],
     dispose () { 
-      game.kill() 
+      viewer.remove() 
     }
   }
 }

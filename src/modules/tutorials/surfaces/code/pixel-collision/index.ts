@@ -3,11 +3,11 @@ import { displayFps } from "../../../../../utils/display-fps"
 import { type ScriptModule, type ScriptSettings } from "../../../../../components/example"
 import { UIBuilder } from "../../../../../components/example/code/ui"
 import { TelemetryBuilder } from "../../../../../components/example/code/telemetry"
+import { Viewer } from "../../../../shared"
 
 export default async ({ container, width, height, fps }: ScriptSettings): Promise<ScriptModule> => {
-  const { game, screen } = Game.create(width, height, container)
+  const viewer = new Viewer({ width, height}, container)
   const telemetry = new TelemetryBuilder().open('wide')
- 
   const overlapRect = telemetry.def('Overlap Rect', Rect.zero)
   const frigateRect = telemetry.def('Frigate Rect', Rect.zero)
   const alienRect = telemetry.def('Alien Rect', Rect.zero)
@@ -18,7 +18,7 @@ export default async ({ container, width, height, fps }: ScriptSettings): Promis
   const frigateMask = frigate.createMask()
   const alien = await loadImage('space-striker/ships/Alien_4.png')
   const alienMask = alien.createMask()
-  frigate.rect.absCenter = screen.rect.center
+  frigate.rect.absCenter = viewer.surface.rect.center
   frigateRect.value = frigate.rect
   alienRect.value = alien.rect
 
@@ -31,17 +31,17 @@ export default async ({ container, width, height, fps }: ScriptSettings): Promis
   let showFrame = true
 
   const preview = new Surface(400, 400)
-  
-  gameloop(() => {
-    screen.fill('#383838ff')
-    for (const ev of game.event.get()) {
-      if (ev.type === 'MOUSEMOVE') {
-        alien.rect.absCenter = ev.pos
-        alienRect.value = alien.rect
-        mousePos.value = Point.from(ev.pos)
-      }
-    }
 
+  viewer.onInput = ev => {
+    if (ev.type === 'MOUSEMOVE') {
+      alien.rect.absCenter = ev.pos
+      alienRect.value = alien.rect
+      mousePos.value = Point.from(ev.pos)
+    }
+  }
+
+  viewer.onFrameChanged = surface => {
+    surface.clear()
     overlapRect.value = frigate.rect.getOverlapRect(alien.rect)
     let color = overlapRect ? '#a33' : 'transparent'
 
@@ -58,7 +58,7 @@ export default async ({ container, width, height, fps }: ScriptSettings): Promis
         .rect({ stroke: '#ddd' }, frigate.rect.move(0,0).shift(viewPoint0))
         .rect({ stroke: '#188' }, alienOffesetRect.shift(viewPoint1))
         .rect({ stroke: '#ddd' }, alien.rect.move(0,0).shift(viewPoint1))
-        .draw(screen.surface)
+        .draw(surface)
       
         hittest.value = frigateMask.overlaps(alienMask)
 
@@ -70,43 +70,47 @@ export default async ({ container, width, height, fps }: ScriptSettings): Promis
     if (showFrame) Sketch.new()
       .rect({ stroke: color }, frigate.rect)
       .rect({ stroke: color }, alien.rect)
-      .draw(screen.surface)
+      .draw(surface)
     
     if (showMask) {
       if (hittest.value){
-        screen.blit(frigateMaskImgSelected, frigate.rect)
-        screen.blit(alienMaskImgSelected, alien.rect)
+        surface.blit(frigateMaskImgSelected, frigate.rect)
+        surface.blit(alienMaskImgSelected, alien.rect)
       } else {
-        screen.blit(frigateMaskImg, frigate.rect)
-        screen.blit(alienMaskImg, alien.rect)
+        surface.blit(frigateMaskImg, frigate.rect)
+        surface.blit(alienMaskImg, alien.rect)
       }
     } else {
-      screen.blit(frigate, frigate.rect)
-      screen.blit(alien, alien.rect)
+      surface.blit(frigate, frigate.rect)
+      surface.blit(alien, alien.rect)
     }
 
     if (overlapRect.value) {
       preview.clear()
-      preview.blit(screen.surface, screen.surface.rect.move(mousePos.value.shift(-preview.width / 6).neg()).scale(3))
-      screen.blit(preview, preview.rect.move(300, 450))
+      preview.blit(surface, surface.rect.move(mousePos.value.shift(-preview.width / 6).neg()).scale(3))
+      surface.blit(preview, preview.rect.move(300, 450))
       Sketch
         .new()
         .rect({ stroke: '#999' }, preview.rect.move(300, 450))
-        .draw(screen.surface)
+        .draw(surface)
     }
     
     displayFps(fps)
     telemetry.tick()
-  })
-
+  }
+  
+  
   const ui = new UIBuilder()
-  ui.select('Show Mask', ['Yes', 'No'], val => showMask = val === 'Yes', 'No')
-  ui.select('Show Frames', ['Yes', 'No'], val => showFrame = val === 'Yes', 'Yes')
+  ui.group('Settings', group => group.open()
+    .switch('Show Mask', val => showMask = val, false)
+    .switch('Show Frames', val => showFrame = val, true)
+  )
+  
   return {
     ui: ui.build(),
     telemetry: telemetry.build(),
     dispose () { 
-      game.kill() 
+      viewer.remove() 
     }
   }
 }

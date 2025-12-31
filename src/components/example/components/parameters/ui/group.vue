@@ -5,7 +5,7 @@ import ControlList from './control-list.vue'
 defineProps<{group: Group}> ()
 </script>
 <template>
-  <details class="control-group" :open="group.openned">
+  <details class="control-group" :open="group.openned" v-show="!group.hidden">
     <summary>{{ group.name }}</summary>
     <ControlList :controls="group.controls ?? []" :is-toolbar="false" />
   </details>

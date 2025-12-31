@@ -2,14 +2,15 @@ export default /*glsl*/`
 
 uniform float uPointSize;
 in vec2 aPosition;
+in vec2 aTexCoord;
 in float aColor;
-out float vColor;
+out vec2 vTexCoord;
 
 void main()
 {
   gl_Position = vec4(aPosition, 0.0, 1.0);
   gl_PointSize = uPointSize;
-  vColor = aColor;
+  vTexCoord = aTexCoord;
 }
 
 `

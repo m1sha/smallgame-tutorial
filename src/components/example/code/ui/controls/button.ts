@@ -15,6 +15,7 @@ export class Button implements IControl {
     }
     this._selected = value
   }
+  hidden: boolean = false
   
   constructor (public caption: string, public callback: (sender: Button) => void, public options?: any) {
     this._selected = options && options.selected

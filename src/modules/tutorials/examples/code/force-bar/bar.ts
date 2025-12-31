@@ -10,7 +10,7 @@ export class Bar extends Sprite {
     this.rect = this.image.rect
 
     this.barBg = new Sketch()
-        .rect({ fill: '#1f2722ff' }, new Rect(0, 0, 200, 800))
+        .rect({ fill: '#222222ff' }, new Rect(0, 0, 200, 800))
         .toSurface()
       
       
@@ -24,6 +24,6 @@ export class Bar extends Sprite {
   }
 
   private getBarForce = (value: number) => new Sketch()
-        .rect({ fill: '#0e803aff' }, new Rect(0, 800 - value, 200, value))
+        .rect({ fill: '#0e803aff' }, new Rect(4, 800 - value, 192 , value))
         .toSurface()
 }

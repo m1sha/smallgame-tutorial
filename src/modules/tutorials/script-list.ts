@@ -25,6 +25,9 @@ const scriptList: ScriptDef[] = [
   { name: 'Hello World', category: cat1, module: async (state: any) => (await import('./examples/code/hello-world')).default(state)  },
   { name: 'Parallax', category: cat1, module: async (state: any) => (await import('./examples/code/parallax')).default(state)  },
   { name: 'Sketching', category: cat1, module: async (state: any) => (await import('./examples/code/sketching')).default(state)  },
+  { name: 'Bezier Lines', category: cat1, module: async (state: any) => (await import('./examples/code/bezier-lines')).default(state)  },
+  { name: 'Bezier Interpolation', category: cat1, module: async (state: any) => (await import('./examples/code/bezier-interpolation')).default(state)  },
+  { name: 'Path Interpolation', category: cat1, module: async (state: any) => (await import('./examples/code/path-interpolation')).default(state)  },
 
   { name: 'Blit', category: cat2, module: async (state: any) => (await import('./surfaces/code/rectangle')).default(state)  },
   { name: 'Math Coords', category: cat2, module: async (state: any) => (await import('./surfaces/code/math-coords')).default(state)  },
@@ -50,6 +53,7 @@ const scriptList: ScriptDef[] = [
   { name: 'Hello World (WebGL)', category: cat4, module: async (state: any) => (await import('./gl/code/hello-world')).default(state)  },
   { name: 'Vertex Array Object (Points)', category: cat4, module: async (state: any) => (await import('./gl/code/vao-points')).default(state)  },
   { name: 'Vertex Array Object (Rects)', category: cat4, module: async (state: any) => (await import('./gl/code/vao-rects')).default(state)  },
+  { name: 'Tiles (Rects)', category: cat4, module: async (state: any) => (await import('./gl/code/tiles-rects')).default(state)  },
   { name: 'GL Screen Coords', category: cat4, module: async (state: any) => (await import('./gl/code/gl-screen-coords')).default(state)  },
   { name: 'UI Screen Coords', category: cat4, module: async (state: any) => (await import('./gl/code/ui-screen-coords')).default(state)  },
   { name: 'Framebuffer', category: cat4, module: async (state: any) => (await import('./gl/code/framebuffer')).default(state)  },
