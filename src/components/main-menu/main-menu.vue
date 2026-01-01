@@ -9,13 +9,13 @@ const editorsMenu = ref<HTMLElement>()
   <menu class="main-menu">
     <nav>
       <div class="nav-link">
-        <a href="#/" :class="{ 'router-link-active': route.name === 'Home' }">Home</a>
+        <a href="#/" :class="{ 'router-link-active': route.name === 'Home' }"><i class="nf nf-md-home"></i>Home</a>
         <div class="border"></div>
       </div>
       
       <div class="sep"></div>
       <div class="nav-link">
-        <a href="#/sandbox" :class="{ 'router-link-active': route.path.startsWith('/sandbox')  }">Sandbox</a>
+        <a href="#/sandbox" :class="{ 'router-link-active': route.path.startsWith('/sandbox')  }"><i class="nf nf-md-atom_variant"></i> Sandbox</a>
         <div class="border"></div>
       </div>
       
@@ -23,7 +23,7 @@ const editorsMenu = ref<HTMLElement>()
 
       <div class="sublink">
         <div class="nav-link">
-          <a id="btn-menu" popovertarget="EditorsMenu" href="javascript:void(0)" @click="editorsMenu?.togglePopover()" :class="{ 'router-link-active': route.path.startsWith('/editors')  }">Editors</a>
+          <a id="btn-menu" popovertarget="EditorsMenu" href="javascript:void(0)" @click="editorsMenu?.togglePopover()" :class="{ 'router-link-active': route.path.startsWith('/editors')  }"><i class="nf nf-md-vector_square_edit"></i> Editors</a>
           <div class="border"></div>
         </div>
         
@@ -46,7 +46,7 @@ const editorsMenu = ref<HTMLElement>()
 
       <div class="sep"></div>
       <div class="nav-link">
-        <a href="#/games" :class="{ 'router-link-active': route.path.startsWith('/games')  }">Games</a>
+        <a href="#/games" :class="{ 'router-link-active': route.path.startsWith('/games')  }"><i class="nf nf-md-gamepad_square"></i>Games</a>
         <div class="border"></div>
       </div>
       
@@ -68,6 +68,13 @@ menu.main-menu
       display: flex
       flex-direction: column
       gap: 2px
+
+      a 
+        display: flex
+        align-items: center
+        gap: 6px
+        i
+          font-size: 0.95em
 
     .sublink
       position: relative

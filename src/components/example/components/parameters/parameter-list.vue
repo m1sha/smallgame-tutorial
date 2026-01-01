@@ -54,10 +54,12 @@ const getGroup = (parameters: AnyParameter[]): string[] => {
 <style lang="sass">
 .parameter-list-wrapper
   position: absolute
+  z-index: 1
   right: 0
   padding: 8px 16px 
-  background-color: #3737377e
-  height: calc( 100vh -  100px)
+  background-color: rgba(55, 55, 55, 0.4941176471)
+  border: 1px solid var(--panel-border)
+  height: calc( 100vh -  116px)
   width: 10vw
 
   box-shadow: inset 16px 0px 60px #4444444e, -16px 0px 20px #3636364e

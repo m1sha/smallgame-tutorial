@@ -1,10 +1,8 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from "vue"
 import { useRoute, useRouter } from "vue-router"
-import ParameterList from './components/parameters/parameter-list.vue'
-import ScriptList from './components/script-list/script-list.vue'
 import { ScriptDef, ScriptModule } from "./code"
-import Telemetry from "./components/telemetry/telemetry.vue"
+import { ParameterList, ScriptList, Telemetry, Toolbar, ToolbarDropdownPanel, ContextMenu } from './components'
 
 const props = defineProps<{ scriptList: ScriptDef[] }>()
 const route = useRoute()
@@ -64,24 +62,42 @@ function clearPrevious () {
 
 </script>
 <template>
-  <div class="example-page-toolbar">
-    
-  </div>
+  <Toolbar>
+    <template #project>
+      <ToolbarDropdownPanel caption="Projects">
+        <template #content>
+          <ScriptList :items="scriptListItems" :selected-id="scriptId" @click="changeScript" />
+        </template>
+      </ToolbarDropdownPanel>
+      
+    </template>
+
+    <template #common-space>
+      <ToolbarDropdownPanel caption="Telemetry">
+        <template #content>
+          <Telemetry  v-if="currentModule && currentModule.telemetry" :telemetry="currentModule.telemetry" />
+        </template>
+      </ToolbarDropdownPanel>
+    </template>
+
+    <template #command-panel>
+      <ToolbarDropdownPanel caption="Parameters">
+        <template #content>
+          <ParameterList v-if="currentModule" :parameters="currentModule.parameters ?? []" :ui="currentModule.ui ?? { controls: [] }" />  
+        </template>
+      </ToolbarDropdownPanel>
+    </template>
+  </Toolbar>
+
   <div class="example-page show-hiddable">
-    <ScriptList :items="scriptListItems" :selected-id="scriptId" @click="changeScript" class="hiddable" />
-    <Telemetry  v-if="currentModule && currentModule.telemetry" :telemetry="currentModule.telemetry" />
     <div ref="container" class="container"></div>
-    
-    <ParameterList v-if="currentModule" :parameters="currentModule.parameters ?? []" :ui="currentModule.ui ?? { controls: [] }" class="hiddable" />  
+    <ContextMenu v-if="currentModule && currentModule.contextMenu" :context="currentModule.contextMenu" />
     <div class="fps" ref="fps"></div>
   </div>
 </template>
 
 <style lang="sass">
-.example-page-toolbar 
-  background-color: #333
-  height: 24px
-  width: 100%
+
 .example-page
   position: relative
   display: flex
@@ -90,7 +106,7 @@ function clearPrevious () {
   .container
     background-color: #2b2b2b
     width: 100%
-    height: calc( 100vh -  90px)
+    height: calc( 100vh -  100px)
 
 .hiddable
   opacity: 0

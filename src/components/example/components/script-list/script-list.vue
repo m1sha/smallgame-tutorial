@@ -37,9 +37,11 @@ watch(() => props.selectedId, () => selected.value = props.selectedId)
 <style lang="sass">
 .script-list-wrapper
   position: absolute
+  z-index: 1
   top: 0
   padding: 8px 16px 
-  background-color: #3737377e
+  background-color: rgba(55, 55, 55, 0.4941176471)
+  border: 1px solid var(--panel-border)
   width: 10vw
   box-shadow: inset -16px 0px 60px #4444444e, 16px 0px 20px #3636364e
 
@@ -49,7 +51,7 @@ watch(() => props.selectedId, () => selected.value = props.selectedId)
 
   .scroll-list
     
-    height: calc( 100vh -  150px)
+    height: calc( 100vh -  168px)
     overflow-y: auto
 
   p.category

@@ -3,6 +3,7 @@ import { displayFps } from "../../../../../utils/display-fps"
 import { type ScriptModule, type ScriptSettings } from "../../../../../components/example"
 import { UIBuilder } from "../../../../../components/example/code/ui"
 import { Viewer } from "../../../../shared"
+import { ContextMenuBuilder } from "../../../../../components/example/code/context-menu"
 
 class SmoothFunc {
   funcName = 'Chaikin'
@@ -46,6 +47,7 @@ class Path {
 }
 
 export default async ({ container, width, height, fps }: ScriptSettings): Promise<ScriptModule> => {
+  const contextMenu = new ContextMenuBuilder()
   const viewer = new Viewer({ width, height }, container, { disableContextMenu: true })
   const func = new SmoothFunc()
   const path = new Path(func)
@@ -56,6 +58,8 @@ export default async ({ container, width, height, fps }: ScriptSettings): Promis
       if (ev.rbc && !ev.cmdKey) path.deleteSegment()
     }
   }
+
+  viewer.onContextMenuClick = pos => { contextMenu.open(pos); console.log('aaa') }
 
   viewer.onFrameChanged = surface => {
     surface.clear()
@@ -98,9 +102,14 @@ export default async ({ container, width, height, fps }: ScriptSettings): Promis
   ui.button('Smooth Line', () => path.setSmooth())
   ui.button('Remove Smooth', () => path.cleanSmoothPoint())
   ui.info('Use Mouse for draw line. LBC start new segment. RBC to delete the last line segment.')
+
+  contextMenu.addItem('Item 1', () => alert('Hello 1'))
+  contextMenu.addItem('Item 2', () => alert('Hello 2'))
+  contextMenu.addItem('Item 3', () => alert('Hello 3'))
   
   return {
     ui: ui.build(),
+    contextMenu: contextMenu.build(),
     dispose () { 
       viewer.remove() 
     }

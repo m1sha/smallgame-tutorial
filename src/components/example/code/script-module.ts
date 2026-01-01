@@ -1,3 +1,4 @@
+import { type IContextMenu } from "./context-menu"
 import { type AnyParameter } from "./parameters"
 import { type ITelemetry } from "./telemetry"
 import { type IUI } from "./ui"
@@ -7,4 +8,5 @@ export interface ScriptModule {
   dispose?: () => void
   ui?: IUI
   telemetry?: ITelemetry
+  contextMenu?: IContextMenu
 }

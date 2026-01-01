@@ -77,6 +77,7 @@ watch(() => normalize.value, () => drawChart())
 <style lang="sass">
 .telemetry-chart-wrapper
   position: absolute
+  z-index: 1
   position-anchor: --telemetry-wrapper
   left: anchor(right)
   top: anchor(top)

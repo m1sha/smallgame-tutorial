@@ -1,4 +1,4 @@
-import { Game, TSize, Screen, gameloop, GameEvent, Surface, MemSurface, Rect, Point, Size, Keys } from "smallgame"
+import { Game, TSize, Screen, gameloop, GameEvent, Surface, MemSurface, Rect, Point, Size, Keys, TPoint } from "smallgame"
 import { Background } from "./background"
 import { SelectRegion } from "./select-region"
 
@@ -13,6 +13,7 @@ export class Viewer {
   onInput: ((event: GameEvent) => void) | null = null
   onKeyPressed: ((key: Keys) => void) | null = null
   onSelectedRect: ((rect: Rect) => void) | null = null
+  onContextMenuClick: ((pos: TPoint) => void) | null = null
 
   constructor (viewportSize: TSize, container: HTMLDivElement, options?: { disableContextMenu?: boolean }) {
     const { game, screen } = Game.create(viewportSize.width, viewportSize.height, container)
@@ -39,6 +40,9 @@ export class Viewer {
             startSelectRect = true
             selectRect.moveSelf(ev.pos)
             this.selectRegion.selectRect(selectRect)
+          }
+          if (ev.rbc) {
+            this.onContextMenuClick?.(ev.pos)
           }
         }
         if (ev.type === 'MOUSEMOVE') {

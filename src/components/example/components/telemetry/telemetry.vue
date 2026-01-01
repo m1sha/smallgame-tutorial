@@ -14,14 +14,11 @@ watch(() => props.telemetry.opennedChart, () => openChart.value = props.telemetr
 
 <template>
   <div class="telemetry-wrapper">
-    <div class="telemetry-header">
-      <div @click="toggle = !toggle">
-        <i class="fa fa-chevron-down"></i>
-      </div> 
-      <span @click="toggle = !toggle">Telemetry</span>
+    <!-- <div class="telemetry-header">
+      
       <button class="chart-button" :class="{ selected: openChart }" @click="openChart = !openChart"><i class="fa fa-chart-column"></i></button>
-    </div>
-    <div class="telemetry-list" :style="{ minWidth: telemetry.wide ? '18vw': '8vw' }"  v-show="toggle">
+    </div> -->
+    <div class="telemetry-list" :style="{ minWidth: telemetry.wide ? '18vw': '8vw' }">
       <div v-for="parameter, i in telemetry.parameters" class="telemetry-parameter">
         
         <span class="telemetry-parameter-key">
@@ -39,8 +36,9 @@ watch(() => props.telemetry.opennedChart, () => openChart.value = props.telemetr
 <style lang="sass">
 .telemetry-wrapper
   position: absolute
-  left: calc( 12vw + 8px )
-  top: -24px
+  z-index: 1
+  left: 0
+  //top: -24px
   anchor-name: --telemetry-wrapper
 
   .telemetry-header
