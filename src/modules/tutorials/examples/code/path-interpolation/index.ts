@@ -1,9 +1,10 @@
-import { Sketch, Splines, TPoint } from "smallgame"
+import { Point, setPoint, Sketch, Splines, TPoint } from "smallgame"
 import { displayFps } from "../../../../../utils/display-fps"
 import { type ScriptModule, type ScriptSettings } from "../../../../../components/example"
 import { UIBuilder } from "../../../../../components/example/code/ui"
 import { Viewer } from "../../../../shared"
 import { ContextMenuBuilder } from "../../../../../components/example/code/context-menu"
+import { TelemetryBuilder } from "../../../../../components/example/code/telemetry"
 
 class SmoothFunc {
   funcName = 'Chaikin'
@@ -47,19 +48,32 @@ class Path {
 }
 
 export default async ({ container, width, height, fps }: ScriptSettings): Promise<ScriptModule> => {
+  const telemetry = new TelemetryBuilder()
   const contextMenu = new ContextMenuBuilder()
   const viewer = new Viewer({ width, height }, container, { disableContextMenu: true })
   const func = new SmoothFunc()
   const path = new Path(func)
 
+  const cursorPos = telemetry.def('Cursor', Point.zero)
+  
+  //viewer.onContextMenuClick = pos => contextMenu.open(pos)
   viewer.onInput = ev => {
+    if (ev.type === 'MOUSEMOVE') {
+      cursorPos.value = Point.from(ev.pos)
+    }
+    if (ev.type === 'MOUSEDOWN') {
+      for (const point of path.points) {
+        if (Point.from(point).inRadius(ev.pos, 8)) {
+          contextMenu.open(ev.pos)
+          return
+        }
+      }
+    }
     if (ev.type === 'MOUSEDOWN') {
       if (ev.lbc && !ev.cmdKey) path.addSegment(ev.pos)
       if (ev.rbc && !ev.cmdKey) path.deleteSegment()
     }
   }
-
-  viewer.onContextMenuClick = pos => { contextMenu.open(pos); console.log('aaa') }
 
   viewer.onFrameChanged = surface => {
     surface.clear()
@@ -74,7 +88,6 @@ export default async ({ container, width, height, fps }: ScriptSettings): Promis
   }
  
   const ui = new UIBuilder()
-  ui.switch('Use', v => {}, true)
   const panels: Map<string, { hidden: boolean }> = new Map()
   ui.select('Smooth method', ['Chaikin', 'CatmullRom', 'B-Spline', 'Gaussian Smooth'], val => { 
     [...panels.values()].forEach(p => p.hidden = true)
@@ -109,6 +122,7 @@ export default async ({ container, width, height, fps }: ScriptSettings): Promis
   
   return {
     ui: ui.build(),
+    telemetry: telemetry.build(),
     contextMenu: contextMenu.build(),
     dispose () { 
       viewer.remove() 

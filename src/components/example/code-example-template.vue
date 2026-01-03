@@ -80,6 +80,20 @@ function clearPrevious () {
       </ToolbarDropdownPanel>
     </template>
 
+    <template #viewer-settings>
+      <ToolbarDropdownPanel caption="Viewer">
+        <template #content>
+        </template>
+      </ToolbarDropdownPanel>
+    </template>
+
+    <template #entity-list>
+      <ToolbarDropdownPanel caption="Objects">
+        <template #content>
+        </template>
+      </ToolbarDropdownPanel>
+    </template>
+
     <template #command-panel>
       <ToolbarDropdownPanel caption="Parameters">
         <template #content>

@@ -7,8 +7,8 @@ const open = ref(true)
 
 <template>
 <div class="toolbar-dropdown-panel">
-  <div class="toolbar-button" >
-    <div class="caption" role="button" @click="open = !open">
+  <div class="toolbar-button" role="button" @click="open = !open">
+    <div class="caption" >
       <i class="fa" :class="{ 'fa-chevron-down': open, 'fa-chevron-right': !open }"></i>
       <span>{{ caption }}</span>
     </div>
@@ -32,15 +32,17 @@ const open = ref(true)
   align-items: center
   cursor: pointer
   user-select: none
+  &:hover
+    i, span
+      color: var(--text-color)
+
   .caption
     display: flex
     gap: 4px
     align-items: center
     i
       min-width: 12px
-    i, span
-      &:hover
-        color: var(--text-color)
+    
 .toolbar-dropdown-panel__content
   position: relative
 </style>

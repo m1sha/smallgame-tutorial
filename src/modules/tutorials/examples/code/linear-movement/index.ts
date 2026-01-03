@@ -1,4 +1,4 @@
-import { GMath, Rect, Sketch, Time } from "smallgame"
+import { GMath, Point, Rect, Sketch, Time } from "smallgame"
 import { displayFps } from "../../../../../utils/display-fps"
 import { createButton, type ScriptModule, type ScriptSettings } from "../../../../../components/example"
 import { Car } from "./car"
@@ -12,6 +12,7 @@ import { Viewer } from "../../../../shared"
 export default async ({ container, width, height, fps }: ScriptSettings): Promise<ScriptModule> => {
   const telemetry = new TelemetryBuilder()
   const viewer = new Viewer({ width, height}, container)
+  viewer.ui.setCellSize(120, 120)
   const car              = new Car()
   await car.create()
   car.rect.center        = viewer.surface.rect.center.shiftY(320)
@@ -31,8 +32,8 @@ export default async ({ container, width, height, fps }: ScriptSettings): Promis
   let speed = 0.1
 
   const ground = new Sketch()
-    .rect({ fill: 'rgba(58, 58, 58, 1)' }, new Rect(0, car.rect.absHeight - 80, width, 200))
-    .rect({ fill: 'rgba(51, 49, 40, 1)' }, new Rect(0, car.rect.absHeight - 80 + 200, width, 300))
+    .rect({ fill: '#2a2a2a' }, new Rect(0, car.rect.absHeight - 20, width, 200))
+    
     .toSurface()
 
   let currSpeed = 0
@@ -59,6 +60,7 @@ export default async ({ container, width, height, fps }: ScriptSettings): Promis
     if (s)
     currSpeed = Math.abs(x - currPos)  / Time.deltaTime
     currPos = x
+    viewer.offset = new Point(currPos, 0)
     //car.rect.x = x
     car.i = x
     s = true
