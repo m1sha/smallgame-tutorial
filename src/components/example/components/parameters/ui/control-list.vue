@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ColorPicker, DropDownList, PushButton, Switch, Tracker, UploadButton } from 'vue3-universal-components'
+import { ColorPicker, DropDownList, PushButton, Switch, TextBox, Tracker, UploadButton } from 'vue3-universal-components'
 import { Button, IControl } from '../../../code/ui/controls'
 import Group from './group.vue'
 import Toolbar from './toolbar.vue'
@@ -66,6 +66,9 @@ function isSelected (control: any)  {
       <!--@vue-ignore-->
       <Switch v-if="control.type === 'switch'" v-model="control.defaultValue" :caption="control.caption" @update:model-value="value => control.callback(value ?? false)" />
 
+      <!--@vue-ignore-->
+      <TextBox v-if="control.type === 'input'" v-model="control.defaultValue" :caption="control.caption" @update:model-value="value => control.callback(value)" />
+
       <div v-if="control.type === 'info-panel'">
         <div class="ui-info-panel" v-html="cast<InfoPanel>(control).text">
           
@@ -99,4 +102,7 @@ function isSelected (control: any)  {
     border-radius: 8px
     font-size: .8em
     color: #ccc
+
+  input[type="text"]
+    width: 8vw
 </style>

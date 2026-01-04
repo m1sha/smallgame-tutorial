@@ -4,6 +4,7 @@ import { Button } from "./button"
 import { Color } from "./color"
 import { IControl } from "./control"
 import { ControlType } from "./control-type"
+import { Input } from "./input"
 import { Panel } from "./panel"
 import { Select } from "./select"
 import { Switch } from "./switch"
@@ -75,6 +76,11 @@ export class Group implements IControl {
 
   switch (caption: string, callback: (value: boolean) => void, defaultValue?: boolean) {
     this.controls.push(new Switch(caption, callback, defaultValue ?? false))
+    return this
+  }
+
+  input (caption: string, callback: (value: string) => void, defaultValue?: string) {
+    this.controls.push(new Input(caption, callback, defaultValue ?? ''))
     return this
   }
 }

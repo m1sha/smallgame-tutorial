@@ -17,7 +17,7 @@ defineProps<{panel: Panel }> ()
   display: flex
   flex-direction: column
   color: var(--text-color)
-  padding: 0.5em 0.5em 0
+  padding: 0.5em
   border-radius: 4px
     
  

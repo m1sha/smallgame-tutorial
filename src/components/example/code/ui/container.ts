@@ -1,9 +1,10 @@
 import { reactive } from "vue"
 import { TOption } from "../parameters"
-import { Button, Group, IControl, Panel, Switch, Toolbar, Tracker, UploadFile } from "./controls"
+import { Button, ControlMap, Group, IControl, Panel, Switch, Toolbar, Tracker, UploadFile } from "./controls"
 import { Color } from "./controls/color"
 import { InfoPanel } from "./controls/info-panel"
 import { Select } from "./controls/select"
+import { Input } from "./controls/input"
 
 export abstract class Contariner  {
   controls: IControl[]
@@ -49,9 +50,9 @@ export abstract class Contariner  {
   }
 
   color (caption: string,  callback: (color: string) => void, defaultColor?: string) {
-      this.controls.push(new Color(caption, callback, defaultColor))
-      return this
-    }
+    this.controls.push(new Color(caption, callback, defaultColor))
+    return this
+  }
 
   select (caption: string, items: string[] | TOption[], callback: (value: string) => void, defaultValue?: string | undefined, options?: any) {
     this.controls.push(new Select(caption, items, callback, defaultValue, options))
@@ -64,5 +65,31 @@ export abstract class Contariner  {
 
   switch (caption: string, callback: (value: boolean) => void, defaultValue?: boolean) {
     this.controls.push(new Switch(caption, callback, defaultValue ?? false))
+  }
+
+  input (caption: string, callback: (value: string) => void, defaultValue?: string) {
+    this.controls.push(new Input(caption, callback, defaultValue ?? ''))
+    return this
+  }
+
+  controlMap (name?: string) {
+    return new ControlMap()
+  }
+
+  show (caption: string) {
+    this.setVisible(caption, true)
+  }
+
+  hide (caption: string) {
+    this.setVisible(caption, false)
+  }
+
+  private setVisible (caption: string, value: boolean) {
+    const visible = (controls: IControl[]) =>
+      this.controls.forEach(p => {
+        p.hidden = !value
+        if (p.controls) visible(p.controls)
+      })
+    visible(this.controls)
   }
 }

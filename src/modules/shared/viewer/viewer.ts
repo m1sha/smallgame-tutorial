@@ -110,6 +110,10 @@ export class Viewer {
     this.onViewportChanged?.(old, 1)
   }
 
+  get viewportRect () {
+    return this.surface.rect
+  }
+
   [Symbol.dispose] () {
     this.remove()
   }
