@@ -1,11 +1,13 @@
 import { Game, TSize, Screen, gameloop, GameEvent, Surface, MemSurface, Rect, Point, Size, Keys, TPoint } from "smallgame"
 import { Background } from "./background"
 import { SelectRegion } from "./select-region"
+import { SelectedObjects } from "./selected-objects"
 import { ViewerUI } from "./ui"
 
 export class Viewer {
   private background: Background
   private selectRegion: SelectRegion
+  private selectedObjects: SelectedObjects
   private screen: Screen
   private game: Game
   readonly surface: Surface
@@ -30,6 +32,7 @@ export class Viewer {
     this.background.render()
     this.selectRegion = new SelectRegion(viewportSize)
     this.selectRegion.render()
+    this.selectedObjects = new SelectedObjects(viewportSize)
 
     if (options && options.disableContextMenu) {
       screen.disableContextMenu()
@@ -94,6 +97,7 @@ export class Viewer {
       this.screen.clear()
       this.screen.blit(this.background.surface, this.background.surface.rect)
       this.screen.blit(this.surface, this.surface.rect)
+      this.screen.blit(this.selectedObjects.surface, this.selectedObjects.surface.rect)
       this.screen.blit(this.selectRegion.surface, this.selectRegion.surface.rect)
     })
   }
@@ -112,6 +116,10 @@ export class Viewer {
 
   get viewportRect () {
     return this.surface.rect
+  }
+
+  selectObjects (objects: { rect: Rect }[]) {
+    this.selectedObjects.addObjects(objects)
   }
 
   [Symbol.dispose] () {
