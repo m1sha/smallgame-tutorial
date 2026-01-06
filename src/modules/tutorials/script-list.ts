@@ -30,6 +30,8 @@ const scriptList: ScriptDef[] = [
   { name: 'Bezier Interpolation', category: cat1, module: async (state: any) => (await import('./examples/code/bezier-interpolation')).default(state)  },
   { name: 'Path Interpolation', category: cat1, module: async (state: any) => (await import('./examples/code/path-interpolation')).default(state)  },
   { name: 'Viewer Navigations', category: cat1, module: async (state: any) => (await import('./examples/code/viewer-navigations')).default(state)  },
+  { name: 'Rect Move + Pivote', category: cat1, module: async (state: any) => (await import('./examples/code/rect-shift-pivote')).default(state)  },
+  { name: 'Rect Scale + Pivote', category: cat1, module: async (state: any) => (await import('./examples/code/rect-scale-pivote')).default(state)  },
 
   { name: 'Blit', category: cat2, module: async (state: any) => (await import('./surfaces/code/rectangle')).default(state)  },
   { name: 'Math Coords', category: cat2, module: async (state: any) => (await import('./surfaces/code/math-coords')).default(state)  },
