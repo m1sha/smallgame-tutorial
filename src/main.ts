@@ -8,7 +8,13 @@ import { createPinia } from 'pinia'
 
 const router = createRouter({
   history: createWebHashHistory(),
-  routes,
+  routes
+})
+
+router.beforeEach((to, _, next) => {
+  const title = to.meta.title ? 'Smallgame - ' + to.meta.title as string : 'Smallgame'
+  document.title =  title
+  next()
 })
 
 const pinia = createPinia()
