@@ -6,7 +6,7 @@ defineProps<{group: Group}> ()
 </script>
 <template>
   <details class="control-group" :open="group.openned" v-show="!group.hidden">
-    <summary>{{ group.name }}</summary>
+    <summary v-html="group.name"></summary>
     <ControlList :controls="group.controls ?? []" :is-toolbar="false" />
   </details>
 </template>
@@ -38,4 +38,19 @@ details.control-group[open] summary
   border-bottom: 1px solid var(--panel-border)
   margin-bottom: 0.5em
 
+</style>
+
+<style lang="sass">
+  .ui-icon
+    display: inline-block
+    width: 9px
+    height: 9px
+    margin-right: 4px
+    border-radius: 6px
+    &.red-sq
+      background-color: #912229
+    &.green-sq
+      background-color: #11a229
+    &.blue-sq
+      background-color: #112299
 </style>
