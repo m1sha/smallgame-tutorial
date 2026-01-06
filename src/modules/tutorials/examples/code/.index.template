@@ -1,7 +1,6 @@
 import { Viewer } from "../../../../shared"
 import { displayFps } from "../../../../../utils/display-fps"
-import { type ScriptModule, type ScriptSettings } from "../../../../../components/example"
-import { UIBuilder } from "../../../../../components/example/code/ui"
+import { type ScriptModule, type ScriptSettings, UIBuilder } from "../../../../../components/example"
 
 export default async ({ container, width, height, fps }: ScriptSettings): Promise<ScriptModule> => {
   const viewer = new Viewer({ width, height }, container, { disableContextMenu: true })
