@@ -40,7 +40,7 @@ function showGrid () {
 </script>
 
 <template>
-<div class="control-panel">
+<div class="polygon-editor-control-panel">
   <input type="file" style="display: none;" ref="inputFile" @input="onLoadFile" />
   <button title="Undo" @click="editor.editorState.undo()"><i class="fa fa-undo"></i></button>
   <button title="Redo" @click="editor.editorState.redo()"><i class="fa fa-redo"></i></button>
@@ -53,7 +53,7 @@ function showGrid () {
 </template>
 
 <style lang="sass" scoped>
-.control-panel 
+.polygon-editor-control-panel 
   display: flex
   justify-content: center
   margin: 18px 0
