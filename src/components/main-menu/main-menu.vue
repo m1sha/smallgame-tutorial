@@ -39,6 +39,12 @@ const editorsMenu = ref<HTMLElement>()
             <a href="#/editors/polygon-editor" :class="{ 'router-link-active': route.name === 'PolygonEditor' }">Polygon Editor</a>
             <div class="border"></div>
           </div>
+
+           <div class="sep"></div>
+          <div class="nav-link">
+            <a href="#/editors/sprite-editor" :class="{ 'router-link-active': route.name === 'SpriteEditor' }">Sprite Editor</a>
+            <div class="border"></div>
+          </div>
           
         </div>
       </div>
