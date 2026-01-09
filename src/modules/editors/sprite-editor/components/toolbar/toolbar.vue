@@ -20,17 +20,14 @@ watch(() => zoomId.value, () => {
       Create Sprite Sheet
     </UploadButton>
 
-    <UploadManyButton @change="onCombineImage">
+    <!-- <UploadManyButton @change="onCombineImage">
       Combine images
-    </UploadManyButton>
+    </UploadManyButton> -->
 
-    <div style="width: 300px;display: flex; gap: 8px; align-items: center;">
+    <!-- <div style="width: 300px;display: flex; gap: 8px; align-items: center;">
       <label>Zoom</label>
       <Tracker v-model="zoomId" :min="1" :max="8" :step="0.1" />
-<!-- <DropDownList v-model="zoomId" :items="[ { id: '1', name: '100%' }, { id: '1.5', name: '150%' }, { id: '2', name: '200%' }, { id: '4', name: '400%' } ]">
-
-    </DropDownList> -->
-    </div>
+    </div> -->
 
     
   </div>

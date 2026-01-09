@@ -9,4 +9,6 @@ export type SpriteSheetObject = {
   rows: number
   batches: Batch[]
   batch: Batch
+
+  playingBatchIndex: number
 }

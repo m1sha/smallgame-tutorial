@@ -3,6 +3,7 @@ import { Viewer } from "../../../shared"
 import { DrawableObject, ImageCombineObject, SpriteSheetObject } from "./drawable-object"
 
 export class SpriteEditor {
+ 
   private _viewer: Viewer | null = null
   private get viewer () { if (!this._viewer) throw Error('Viewer is not created'); return this._viewer }
   private objects: DrawableObject[] = []
@@ -59,6 +60,7 @@ export class SpriteEditor {
     obj.addBatch()
     this.onCurrentObjectChanged?.(obj)
   }
+  
 
   destroyViewer () {
     this.viewer.remove()
@@ -69,6 +71,7 @@ export class SpriteEditor {
     this.objects.forEach(obj => obj.draw(surface))
   }
 
+  private zoom = 1
   private handleInput(ev: GameEvent): void {
     const obj = this.objects.findLast(p => p as SpriteSheetObject) as SpriteSheetObject
     if (!obj) return
@@ -86,6 +89,12 @@ export class SpriteEditor {
         obj.rect.shiftSelf(ev.shift)
         this.onCurrentObjectChanged?.(obj)
       }
+    }
+
+    if (ev.type === 'WHEEL') {
+      this.zoom -= Math.sign(ev.deltaY) * 0.1
+      if (this.zoom < 1) this.zoom = 1
+      this.setZoom(this.zoom)
     }
   }
 }

@@ -116,7 +116,8 @@ export class SpriteSheetObject extends DrawableObject {
       cols: this.cols,
       rows: this.rows,
       batches: this.batches,
-      batch: this.batch
+      batch: this.batch,
+      playingBatchIndex: -1
     }
   }
 
