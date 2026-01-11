@@ -5,7 +5,7 @@ import { setDebounce } from "smallgame/src/time"
 import { easeInElastic, easeInQuad, easeInBounce } from "../movements/func"
 import { Bar } from "./bar"
 import { Viewer } from "../../../../shared"
-import { UIBuilder } from "../../../../../components/example/code/ui"
+import { Icons, UIBuilder } from "../../../../../components/example/code/ui"
 
 
 const lerp = (a: number, b: number, t: number) => a + (b - a) * t
@@ -80,7 +80,7 @@ export default async ({ container, width, height, fps }: ScriptSettings): Promis
 //  const speedParam = createTracker('Speed', 0.01, 4, 0.001, v => speed = v, 1)
 
   const ui = new UIBuilder()
-  ui.info('Press Space key to take force for bars')
+  ui.info(Icons.keyboard + ' Press Space key to take force for bars')
   ui.select('function', [ 'linear', 'easeInElastic', 'easeInBounce', 'easeInQuad' ], v => {
     if (v === 'linear') func = linear
     if (v === 'easeInElastic') func = easeInElastic

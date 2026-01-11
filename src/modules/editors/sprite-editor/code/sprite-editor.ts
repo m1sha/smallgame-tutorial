@@ -1,4 +1,4 @@
-import { GameEvent, loadBlob, Rect, Size, Surface, TSize } from "smallgame"
+import { GameEvent, GMath, loadBlob, Rect, Size, Surface, TSize } from "smallgame"
 import { Viewer } from "../../../shared"
 import { DrawableObject, ImageCombineObject, SpriteSheetObject } from "./drawable-object"
 
@@ -18,6 +18,7 @@ export class SpriteEditor {
   createViewer(viewportSize: TSize, container: HTMLDivElement) {
     this.viewportSize.reset(viewportSize)
     this._viewer = new Viewer(viewportSize, container, { disableContextMenu: true })
+    this._viewer.surface.imageRendering = 'pixelated'
 
     this._viewer.onInput = ev => this.handleInput(ev)
     this._viewer.onFrameChanged = surface => this.frameChanged(surface)
@@ -92,9 +93,11 @@ export class SpriteEditor {
     }
 
     if (ev.type === 'WHEEL') {
-      this.zoom -= Math.sign(ev.deltaY) * 0.1
+      //this.zoom -= Math.sign(ev.deltaY) * 0.1
+      this.zoom -= Math.sign(ev.deltaY)
       if (this.zoom < 1) this.zoom = 1
-      this.setZoom(this.zoom)
+
+      this.setZoom(GMath.logZoom(this.zoom, 10, 1, 2))
     }
   }
 }
