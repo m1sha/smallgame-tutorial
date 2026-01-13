@@ -3,6 +3,7 @@ import { useSpriteEditorStore } from "./editor-store"
 import { ref, watch } from "vue"
 import { DisplaySpriteSheetObject } from "../code/display-object/sprite-sheet-object"
 import editor from "../code"
+import { SpriteSheetObject } from "../code/drawable-object"
 
 const useSpriteSheetStore = defineStore('SpriteSheetStore', () => {
   const store = useSpriteEditorStore()
@@ -19,11 +20,17 @@ const useSpriteSheetStore = defineStore('SpriteSheetStore', () => {
   }
 
   function addClip () {
-    editor.addBatch()
+    if (!store.state.currentObject) return
+    const obj = editor.getObject<SpriteSheetObject>(store.state.currentObject.id)
+    obj?.addBatch()
+    editor.markForUpdate(obj)
   }
 
   function setCellDim (cols: number, rows: number) {
-    editor.setCellDim(cols, rows)
+    if (!store.state.currentObject) return
+    const obj = editor.getObject<SpriteSheetObject>(store.state.currentObject.id)
+    obj?.setGrid(cols, rows)
+    editor.markForUpdate(obj)
   }
 
   return {

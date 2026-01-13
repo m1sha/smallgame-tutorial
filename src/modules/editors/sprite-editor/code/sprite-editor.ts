@@ -3,7 +3,6 @@ import { Viewer } from "../../../shared"
 import { DrawableObject, drawSelectedObjects, ImageCombineObject, SpriteSheetObject } from "./drawable-object"
 
 export class SpriteEditor {
- 
   private _viewer: Viewer | null = null
   private get viewer () { if (!this._viewer) throw Error('Viewer is not created'); return this._viewer }
   private objects: DrawableObject[] = []
@@ -24,7 +23,7 @@ export class SpriteEditor {
 
   setZoom (index: number) {
     this.objects.forEach(o => o.setZoom(index))
-    if (this.objects[0]) this.onCurrentObjectChanged?.(this.objects[0])
+    if (this.currentObject) this.onCurrentObjectChanged?.(this.currentObject)
   }
 
   async createImageCombiner (files: File[]) {
@@ -45,32 +44,19 @@ export class SpriteEditor {
     return obj
   }
 
-  setCellDim(cols: number, rows: number) {
-    const obj = this.currentObject as SpriteSheetObject
-    if (!obj) return
-    obj.setGrid(cols, rows)
-    this.onCurrentObjectChanged?.(obj)
+  getObject<T> (id: string) {
+    return this.objects.find(p => p.id === id) as T
   }
 
-  addBatch() {
-    const obj = this.currentObject as SpriteSheetObject
-    if (!obj) return
-    obj.addBatch()
+  markForUpdate (obj: DrawableObject) {
     this.onCurrentObjectChanged?.(obj)
   }
-
+ 
   setCurrentObject(id: string) {
     this.currentObject = this.objects.find(p => p.id === id)
     if (!this.currentObject) return null
     this.selectedObjects = [this.currentObject]
     return this.currentObject
-  }
-  
-  downloadCombinedImage() {
-    
-    if (this.currentObject instanceof ImageCombineObject) {
-      this.currentObject.download()
-    }
   }
 
   destroyViewer () {

@@ -1,15 +1,15 @@
 import { defineStore } from "pinia"
 import { TSize } from "smallgame"
-import editor , { ISpriteEditorState, } from "../code"
+import editor, { ISpriteEditorState, } from "../code"
 import { ref } from "vue"
 import { useSpriteSheetStore } from "./sprite-sheet-store"
+import { useImagesCombinerStore } from "./images-combiner-store"
 
 const useSpriteEditorStore = defineStore('SpriteEditorStore', () => {
   const state = ref<ISpriteEditorState>({ currentObject: null, objects: [] })
 
   editor.onCurrentObjectChanged = obj => { 
     state.value.currentObject = obj.toDisplay()
-    if (!state.value.currentObject) return
   }
   
   const createViewer = (viewportSize: TSize, container: HTMLDivElement) => {
@@ -17,7 +17,9 @@ const useSpriteEditorStore = defineStore('SpriteEditorStore', () => {
   }
 
   const createImageCombiner = async (files: File[]) => {
-    await editor.createImageCombiner(files)
+    useImagesCombinerStore()
+    const obj = await editor.createImageCombiner(files)
+    state.value.objects.push(obj.toDisplay())
   }
 
   const createSpriteSheet  = async (file: File) => {
