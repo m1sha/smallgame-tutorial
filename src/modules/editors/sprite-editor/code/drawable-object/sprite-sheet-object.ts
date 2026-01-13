@@ -1,5 +1,6 @@
 import { Color, MemSurface, Point, Rect, setSize, Sketch, Surface, TSize } from "smallgame"
 import { DrawableObject } from "./drawable-object"
+import { DisplaySpriteSheetObject } from "../display-object/sprite-sheet-object"
 export type Batch = { name: string, start: number, count: number }
 const emptyBatch  = (): Batch => ({ name: '', start: -1, count: 0 })
 export class SpriteSheetObject extends DrawableObject {
@@ -8,7 +9,7 @@ export class SpriteSheetObject extends DrawableObject {
   batch: Batch = emptyBatch()
   batches: Batch[] = []
 
-  constructor (private image: Surface, viewportSize: TSize) {
+  constructor (private image: Surface, viewportSize: TSize, private name: string) {
     super ()
     this.surface = new MemSurface(image.rect.size)
     this.rect = this.surface.rect
@@ -109,8 +110,11 @@ export class SpriteSheetObject extends DrawableObject {
       }
   }
 
-  toDisplay () {
+  toDisplay (): DisplaySpriteSheetObject {
     return {
+      type: 'sprite-sheet-object',
+      id: this.id,
+      name: this.name,
       rect: this.rect.clone(),
       tileSize: setSize(this.image.rect.width / this.cols, this.image.rect.height / this.rows),
       cols: this.cols,

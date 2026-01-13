@@ -1,12 +1,16 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue';
 import { FormControl, PushButton, TextBox } from 'vue3-universal-components'
-import { useSpriteEditorStore } from '../../store';
+import { useSpriteEditorStore } from '../../../store';
 
+const obj = () => {
+  if (store.state.currentObject && store.state.currentObject.type === 'sprite-sheet-object') return store.state.currentObject
+  throw new Error('is not sprite-sheet-object')
+}
 
 const store = useSpriteEditorStore()
-const rows = ref(store.state.currentObject.rows)
-const cols = ref(store.state.currentObject.cols)
+const rows = ref(obj().rows)
+const cols = ref(obj().cols)
 const offestX = ref(0)
 const offestY = ref(0)
 
@@ -16,8 +20,8 @@ const onApplyClick = () => {
 
 watch(() => store.state.currentObject, () => { 
   if (!store.state.currentObject) return
-  rows.value = store.state.currentObject.rows
-  cols.value = store.state.currentObject.cols
+  rows.value = obj().rows
+  cols.value = obj().cols
 }, { deep: true })
 
 </script>

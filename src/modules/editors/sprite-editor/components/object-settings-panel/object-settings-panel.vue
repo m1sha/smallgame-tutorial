@@ -1,16 +1,15 @@
 <script setup lang="ts">
 import { useSpriteEditorStore } from '../../store'
-import BatchList from './batch-list.vue'
-import GridSettings from './grid-settings.vue'
-import ImageInfo from './image-info.vue'
+import { ImagesCombineSettings } from './images-combine-settings';
+
+import { SpriteSheetSettings } from './sprite-sheet-settings'
 
 const store = useSpriteEditorStore()
 </script>
 <template>
   <div class="object-settings-panel" v-if="store.state.currentObject">
-    <ImageInfo />
-    <GridSettings />
-    <BatchList />
+    <SpriteSheetSettings v-if="store.state.currentObject.type === 'sprite-sheet-object'" />
+    <ImagesCombineSettings v-if="store.state.currentObject.type === 'image-combiner-object'" />
   </div>
 </template>
 
@@ -21,7 +20,4 @@ const store = useSpriteEditorStore()
     right: 8px
     background-color: rgba(55, 55, 55, 0.4941176471)
     border: 1px solid var(--panel-border)
-    display: flex
-    flex-direction: column
-    gap: 16px
 </style>

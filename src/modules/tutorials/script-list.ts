@@ -26,6 +26,7 @@ const scriptList: ScriptDef[] = [
   { name: 'Car Movement', category: cat1, module: async (state: any) => (await import('./examples/code/car-movement')).default(state)  },
   { name: 'Parallax', category: cat1, module: async (state: any) => (await import('./examples/code/parallax')).default(state)  },
   { name: 'Sketching', category: cat1, module: async (state: any) => (await import('./examples/code/sketching')).default(state)  },
+  { name: 'Paint', category: cat1, module: async (state: any) => (await import('./examples/code/paint')).default(state)  },
   { name: 'Bezier Lines', category: cat1, module: async (state: any) => (await import('./examples/code/bezier-lines')).default(state)  },
   { name: 'Bezier Interpolation', category: cat1, module: async (state: any) => (await import('./examples/code/bezier-interpolation')).default(state)  },
   { name: 'Path Interpolation', category: cat1, module: async (state: any) => (await import('./examples/code/path-interpolation')).default(state)  },

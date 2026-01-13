@@ -1,3 +1,4 @@
-import { SpriteSheetObject } from "./sprite-sheet-object"
+import { DisplayImagesCombinerObject } from "./images-combiner-object"
+import { DisplaySpriteSheetObject } from "./sprite-sheet-object"
 
-export type DisplayObject = SpriteSheetObject
+export type DisplayObject = DisplaySpriteSheetObject | DisplayImagesCombinerObject

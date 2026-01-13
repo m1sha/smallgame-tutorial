@@ -55,6 +55,12 @@ const editorsMenu = ref<HTMLElement>()
         <a href="#/games" :class="{ 'router-link-active': route.path.startsWith('/games')  }"><i class="nf nf-md-gamepad_square"></i>Games</a>
         <div class="border"></div>
       </div>
+
+      <!-- <div class="sep"></div>
+      <div class="nav-link">
+        <a href="#/games" :class="{ 'router-link-active': route.path.startsWith('/games')  }"><i class="nf nf-md-view_dashboard_variant"></i>Board</a>
+        <div class="border"></div>
+      </div> -->
       
     </nav>
   </menu>

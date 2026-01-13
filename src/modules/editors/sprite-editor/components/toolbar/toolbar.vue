@@ -20,9 +20,9 @@ watch(() => zoomId.value, () => {
       Create Sprite Sheet
     </UploadButton>
 
-    <!-- <UploadManyButton @change="onCombineImage">
-      Combine images
-    </UploadManyButton> -->
+    <UploadManyButton @change="onCombineImage">
+      Combine images to Sprite Sheet
+    </UploadManyButton>
 
     <!-- <div style="width: 300px;display: flex; gap: 8px; align-items: center;">
       <label>Zoom</label>

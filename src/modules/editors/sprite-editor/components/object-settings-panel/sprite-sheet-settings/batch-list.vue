@@ -1,20 +1,23 @@
 <script setup lang="ts">
 import { FormControl, ItemList, PushButton, TextBox } from 'vue3-universal-components'
-import { useSpriteEditorStore } from '../../store'
+import { useSpriteEditorStore } from '../../../store'
 import { computed, ref } from 'vue'
-import { PlaySpriteSheetDialog } from '../play-sprite-sheet'
 
-const showPlaySpriteSheetDialog = ref(false)
 const store = useSpriteEditorStore()
 const outputObject = ref('')
 
+const obj = () => {
+  if (store.state.currentObject && store.state.currentObject.type === 'sprite-sheet-object') return store.state.currentObject
+  throw new Error('is not sprite-sheet-object')
+}
+
 const canSave = computed(() => {
-  const batch = store.state.currentObject.batch
+  const batch = obj().batch
   return Boolean(batch.name) && batch.start > -1
 })
 
 const downloadSpriteSheetBatches = () => {
-  const batches = store.state.currentObject?.batches
+  const batches = obj().batches
   if (!batches) return
   outputObject.value = ''
   let result = '{\n'
@@ -33,17 +36,17 @@ const downloadSpriteSheetBatches = () => {
       <div class="current-batch">
         <p>Frame Range </p>
         <div class="batch-range">
-          <span>Start</span><span>{{ store.state.currentObject.batch.start }}</span>
-          <span>Count</span><span>{{ store.state.currentObject.batch.count + 1 }}</span>
+          <span>Start</span><span>{{ obj().batch.start }}</span>
+          <span>Count</span><span>{{ obj().batch.count + 1 }}</span>
         </div>
       </div>
       <div class="batch-input">
-        <TextBox caption="Clip Name" v-model="store.state.currentObject.batch.name" /> 
+        <TextBox caption="Clip Name" v-model="obj().batch.name" /> 
         <PushButton @click="store.addBatch()" :disabled="!canSave">Add Clip</PushButton>
       </div>
 
       <div class="batch-list-wrapper">
-      <ItemList :items="store.state.currentObject.batches.map(p => ({ id: p.name, ...p}))">
+      <ItemList :items="obj().batches.map(p => ({ id: p.name, ...p}))">
         <template #list-item-title="{item}">
           <div class="batch-row-template">
             <span>{{ item.name }}</span>
@@ -51,7 +54,7 @@ const downloadSpriteSheetBatches = () => {
               <span>Start</span><span>{{ item.start }}</span>
               <span>Count</span><span>{{ item.count + 1 }}</span>
             </div>
-              <PushButton @click.stop="showPlaySpriteSheetDialog = true" size="small">Play</PushButton>
+            
           </div>
         </template>
       </ItemList>
@@ -70,8 +73,6 @@ const downloadSpriteSheetBatches = () => {
       
     </div>
   </FormControl>
-
-  <PlaySpriteSheetDialog :show="showPlaySpriteSheetDialog" @closed="showPlaySpriteSheetDialog = false" />
 </template>
 
 <style lang="sass">

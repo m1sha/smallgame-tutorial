@@ -1,17 +1,15 @@
 import { GameEvent, GMath, loadBlob, Rect, Size, Surface, TSize } from "smallgame"
 import { Viewer } from "../../../shared"
-import { DrawableObject, ImageCombineObject, SpriteSheetObject } from "./drawable-object"
+import { DrawableObject, drawSelectedObjects, ImageCombineObject, SpriteSheetObject } from "./drawable-object"
 
 export class SpriteEditor {
  
   private _viewer: Viewer | null = null
   private get viewer () { if (!this._viewer) throw Error('Viewer is not created'); return this._viewer }
   private objects: DrawableObject[] = []
+  private selectedObjects: DrawableObject[] = []
+  private currentObject: DrawableObject | null = null
   private viewportSize: Size = Size.zero
-
-  constructor () {
-
-  }
 
   onCurrentObjectChanged: ((obj: DrawableObject) => void) | null = null
   
@@ -29,39 +27,51 @@ export class SpriteEditor {
     if (this.objects[0]) this.onCurrentObjectChanged?.(this.objects[0])
   }
 
-  async loadImages (files: File[]) {
-    const imgs: Surface[] = [] 
-    for (const file of files) imgs.push(await loadBlob(file))
+  async createImageCombiner (files: File[]) {
+    const imgs: { name: string, surface: Surface }[] = [] 
+    for (const file of files) imgs.push({ name: file.name, surface: await loadBlob(file) })
     const obj = new ImageCombineObject(imgs, this.viewportSize)
-    this.objects.push(obj)
-    this.viewer.selectObjects([obj])
+    
+    this.afterObjectCreated(obj)
+    return obj
   }
 
   async createSpriteSheet (file: File) {
     const img = await loadBlob(file)
-    const obj = new SpriteSheetObject(img, this.viewportSize)
-    obj.setGrid(6, 12)
-    this.onCurrentObjectChanged?.(obj)
+    const obj = new SpriteSheetObject(img, this.viewportSize, file.name)
+    obj.setGrid(1, 1)
     
-    this.objects.push(obj)
-    //this.viewer.selectObjects([obj])
-
-   // this.state.currentObject = obj.toDisplay()
+    this.afterObjectCreated(obj)
+    return obj
   }
 
   setCellDim(cols: number, rows: number) {
-    const obj = this.objects.findLast(p => p as SpriteSheetObject) as SpriteSheetObject
+    const obj = this.currentObject as SpriteSheetObject
     if (!obj) return
     obj.setGrid(cols, rows)
+    this.onCurrentObjectChanged?.(obj)
   }
 
   addBatch() {
-    const obj = this.objects.findLast(p => p as SpriteSheetObject) as SpriteSheetObject
+    const obj = this.currentObject as SpriteSheetObject
     if (!obj) return
     obj.addBatch()
     this.onCurrentObjectChanged?.(obj)
   }
+
+  setCurrentObject(id: string) {
+    this.currentObject = this.objects.find(p => p.id === id)
+    if (!this.currentObject) return null
+    this.selectedObjects = [this.currentObject]
+    return this.currentObject
+  }
   
+  downloadCombinedImage() {
+    
+    if (this.currentObject instanceof ImageCombineObject) {
+      this.currentObject.download()
+    }
+  }
 
   destroyViewer () {
     this.viewer.remove()
@@ -70,11 +80,12 @@ export class SpriteEditor {
   private frameChanged (surface: Surface) {
     surface.clear()
     this.objects.forEach(obj => obj.draw(surface))
+    drawSelectedObjects(this.selectedObjects, surface)
   }
 
   private zoom = 1
   private handleInput(ev: GameEvent): void {
-    const obj = this.objects.findLast(p => p as SpriteSheetObject) as SpriteSheetObject
+    const obj = this.currentObject as SpriteSheetObject
     if (!obj) return
 
     if (ev.type === 'MOUSEDOWN'){
@@ -99,5 +110,12 @@ export class SpriteEditor {
 
       this.setZoom(GMath.logZoom(this.zoom, 10, 1, 2))
     }
+  }
+
+  private afterObjectCreated (obj: DrawableObject) {
+    this.currentObject = obj
+    this.objects.push(obj)
+    this.selectedObjects = [obj]
+    this.onCurrentObjectChanged?.(obj)
   }
 }

@@ -2,7 +2,10 @@ import { TRect, TSize } from "smallgame"
 
 export type Batch = { name: string, start: number, count: number }
 
-export type SpriteSheetObject = {
+export type DisplaySpriteSheetObject = {
+  type: 'sprite-sheet-object'
+  id: string
+  name: string
   rect: TRect
   tileSize: TSize
   cols: number

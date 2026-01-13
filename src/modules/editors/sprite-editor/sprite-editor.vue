@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
-import { ObjectSettingsPanel, PreviewPanel, Toolbar } from './components'
+import { ObjectListPanel, ObjectSettingsPanel, PreviewPanel, Toolbar } from './components'
 import { useSpriteEditorStore } from './store'
 
 const container = ref<HTMLDivElement>()
@@ -18,7 +18,8 @@ onMounted(() => {
     <div class="container-wrapper">
       <div ref="container" class="container"></div>
       <ObjectSettingsPanel />
-      <PreviewPanel />
+      <PreviewPanel v-if="store.state.currentObject && store.state.currentObject.type === 'sprite-sheet-object'" />
+      <ObjectListPanel />
     </div>
 </div>
 </template>

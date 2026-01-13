@@ -4,9 +4,11 @@ import { ISpriteEditorState, SpriteEditor } from "../code"
 import { reactive, ref } from "vue"
 
 const useSpriteEditorStore = defineStore('SpriteEditorStore', () => {
-  const state = ref<ISpriteEditorState>({ currentObject: null })
+  const state = ref<ISpriteEditorState>({ currentObject: null, objects: [] })
   const editor = new SpriteEditor()
   const imageFile = ref<File | null>(null)
+
+  const filesForCombine = ref<File[]>([])
 
   editor.onCurrentObjectChanged = obj => { 
     state.value.currentObject = obj.toDisplay()
@@ -18,12 +20,14 @@ const useSpriteEditorStore = defineStore('SpriteEditorStore', () => {
   }
 
   const createImageCombiner = async (files: File[]) => {
-    await editor.loadImages(files)
+    await editor.createImageCombiner(files)
+    filesForCombine.value = files
   }
 
   const createSpriteSheet  = async (file: File) => {
     imageFile.value = file
-    await editor.createSpriteSheet(file)
+    const obj = await editor.createSpriteSheet(file)
+    state.value.objects.push(obj.toDisplay())
   }
 
   const setZoom = (index: number) => {
@@ -38,6 +42,16 @@ const useSpriteEditorStore = defineStore('SpriteEditorStore', () => {
     editor.addBatch()
   }
 
+  const setCurrentObject = (id: string) => {
+    const obj = editor.setCurrentObject(id)
+    if (!obj) return
+    state.value.currentObject = obj.toDisplay()
+  }
+
+  const downloadCombinedImage = () => {
+    editor.downloadCombinedImage()
+  }
+
 
   return {
     createViewer,
@@ -46,6 +60,8 @@ const useSpriteEditorStore = defineStore('SpriteEditorStore', () => {
     setZoom,
     setCellDim,
     addBatch,
+    setCurrentObject,
+    downloadCombinedImage,
     state,
     imageFile
   }
