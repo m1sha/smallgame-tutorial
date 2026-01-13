@@ -1,14 +1,11 @@
 import { defineStore } from "pinia"
-import { setRect, TSize } from "smallgame"
-import { ISpriteEditorState, SpriteEditor } from "../code"
-import { reactive, ref } from "vue"
+import { TSize } from "smallgame"
+import editor , { ISpriteEditorState, } from "../code"
+import { ref } from "vue"
+import { useSpriteSheetStore } from "./sprite-sheet-store"
 
 const useSpriteEditorStore = defineStore('SpriteEditorStore', () => {
   const state = ref<ISpriteEditorState>({ currentObject: null, objects: [] })
-  const editor = new SpriteEditor()
-  const imageFile = ref<File | null>(null)
-
-  const filesForCombine = ref<File[]>([])
 
   editor.onCurrentObjectChanged = obj => { 
     state.value.currentObject = obj.toDisplay()
@@ -21,11 +18,10 @@ const useSpriteEditorStore = defineStore('SpriteEditorStore', () => {
 
   const createImageCombiner = async (files: File[]) => {
     await editor.createImageCombiner(files)
-    filesForCombine.value = files
   }
 
   const createSpriteSheet  = async (file: File) => {
-    imageFile.value = file
+    useSpriteSheetStore().setImageFile(file)
     const obj = await editor.createSpriteSheet(file)
     state.value.objects.push(obj.toDisplay())
   }
@@ -34,36 +30,19 @@ const useSpriteEditorStore = defineStore('SpriteEditorStore', () => {
     editor.setZoom(index)
   }
 
-  const setCellDim = (cols: number, rows: number) => {
-    editor.setCellDim(cols, rows)
-  }
-
-  const addBatch = () => {
-    editor.addBatch()
-  }
-
   const setCurrentObject = (id: string) => {
     const obj = editor.setCurrentObject(id)
     if (!obj) return
     state.value.currentObject = obj.toDisplay()
   }
 
-  const downloadCombinedImage = () => {
-    editor.downloadCombinedImage()
-  }
-
-
   return {
     createViewer,
     createImageCombiner,
     createSpriteSheet,
     setZoom,
-    setCellDim,
-    addBatch,
     setCurrentObject,
-    downloadCombinedImage,
-    state,
-    imageFile
+    state
   }
 })
 

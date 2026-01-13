@@ -1,16 +1,8 @@
 <script setup lang="ts">
-import { DropDownList, FormControl, ItemList, PushButton, TextBox } from 'vue3-universal-components';
-import { useSpriteEditorStore } from '../../../store';
-import { ref } from 'vue';
+import { FormControl, PushButton } from 'vue3-universal-components'
+import { useImagesCombinerStore} from '../../../store'
 
-const store = useSpriteEditorStore()
-
-const obj = () => {
-  if (store.state.currentObject && store.state.currentObject.type === 'image-combiner-object') return store.state.currentObject
-  throw new Error('is not image-combiner-object')
-}
-
-
+const store = useImagesCombinerStore()
 </script>
 
 <template>
@@ -29,11 +21,4 @@ const obj = () => {
 .image-list-panel
   .combine-mode-settings
     margin: 4px 8px
-    
-    
-
-  // .images-combine-settings
-  //   display: flex
-  //   flex-direction: column
-  //   gap: 16px
 </style>

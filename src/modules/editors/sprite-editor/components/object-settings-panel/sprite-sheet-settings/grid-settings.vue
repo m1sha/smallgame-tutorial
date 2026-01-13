@@ -1,16 +1,13 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue';
 import { FormControl, PushButton, TextBox } from 'vue3-universal-components'
-import { useSpriteEditorStore } from '../../../store';
+import { useSpriteSheetStore } from '../../../store';
 
-const obj = () => {
-  if (store.state.currentObject && store.state.currentObject.type === 'sprite-sheet-object') return store.state.currentObject
-  throw new Error('is not sprite-sheet-object')
-}
 
-const store = useSpriteEditorStore()
-const rows = ref(obj().rows)
-const cols = ref(obj().cols)
+
+const store = useSpriteSheetStore()
+const rows = ref(store.currentObject?.rows || 0)
+const cols = ref(store.currentObject?.cols || 0)
 const offestX = ref(0)
 const offestY = ref(0)
 
@@ -18,10 +15,10 @@ const onApplyClick = () => {
   store.setCellDim(+cols.value, +rows.value)
 }
 
-watch(() => store.state.currentObject, () => { 
-  if (!store.state.currentObject) return
-  rows.value = obj().rows
-  cols.value = obj().cols
+watch(() => store.currentObject, () => { 
+  if (!store.currentObject) return
+  rows.value = store.currentObject.rows
+  cols.value = store.currentObject.cols
 }, { deep: true })
 
 </script>

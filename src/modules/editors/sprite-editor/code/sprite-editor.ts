@@ -85,6 +85,7 @@ export class SpriteEditor {
 
   private zoom = 1
   private handleInput(ev: GameEvent): void {
+    if (!(this.currentObject instanceof SpriteSheetObject)) return
     const obj = this.currentObject as SpriteSheetObject
     if (!obj) return
 

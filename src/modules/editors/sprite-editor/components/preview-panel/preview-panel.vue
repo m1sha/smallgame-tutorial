@@ -1,19 +1,19 @@
 <script setup lang="ts">
 import { computed, nextTick, onMounted, ref, watch } from 'vue';
 import { DropDownList, FormControl, PushButton, Tracker } from 'vue3-universal-components';
-import { useSpriteEditorStore } from '../../store';
+import { useSpriteEditorStore, useSpriteSheetStore } from '../../store';
 import { AnimatedSprite, Game, gameloop, loadBlob, Rect, setSize, SpriteSheet, Surface, TSize } from 'smallgame';
 const zoom = ref(4)
 const rate = ref(6)
 const playing = ref(true)
 const container = ref<HTMLDivElement>()
 
-const store = useSpriteEditorStore()
+const store = useSpriteSheetStore() //useSpriteEditorStore()
 let sprite: AnimatedSprite | null = null
 let image: Surface | null = null
 
 const obj = () => {
-  if (store.state.currentObject && store.state.currentObject.type === 'sprite-sheet-object') return store.state.currentObject
+  if (store.currentObject) return store.currentObject
   return null
 }
 
@@ -59,7 +59,7 @@ watch(() => store.imageFile, () => {
   load(store.imageFile)
 })
 
-watch(() => store.state.currentObject, () => {
+watch(() => store.currentObject, () => {
   if (!image) {
     load(store.imageFile)
   }

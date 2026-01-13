@@ -1,14 +1,9 @@
 <script setup lang="ts">
 import { FormControl, ItemList, PushButton, TextBox } from 'vue3-universal-components';
-import { useSpriteEditorStore } from '../../../store';
+import { useImagesCombinerStore} from '../../../store'
 import { ref } from 'vue';
 
-const store = useSpriteEditorStore()
-
-const obj = () => {
-  if (store.state.currentObject && store.state.currentObject.type === 'image-combiner-object') return store.state.currentObject
-  throw new Error('is not image-combiner-object')
-}
+const store = useImagesCombinerStore()
 
 const cols = ref(0)
 const rows = ref(0)

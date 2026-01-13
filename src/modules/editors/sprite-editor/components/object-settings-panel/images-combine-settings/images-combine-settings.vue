@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import CombineMode from './combine-mode.vue';
-import GridSettings from './grid-settings.vue';
+import CombineMode from './combine-mode.vue'
+import GridSettings from './grid-settings.vue'
 import ImageList from './image-list.vue'
-import OutputImage from './output-image.vue';
+import OutputImage from './output-image.vue'
 </script>
 
 <template>

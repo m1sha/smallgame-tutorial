@@ -1,21 +1,16 @@
 <script setup lang="ts">
-import { FormControl, ItemList } from 'vue3-universal-components';
-import { useSpriteEditorStore } from '../../../store';
+import { FormControl, ItemList } from 'vue3-universal-components'
+import { useImagesCombinerStore} from '../../../store'
 
-const store = useSpriteEditorStore()
-
-const obj = () => {
-  if (store.state.currentObject && store.state.currentObject.type === 'image-combiner-object') return store.state.currentObject
-  throw new Error('is not image-combiner-object')
-}
+const store = useImagesCombinerStore()
 
 </script>
 
 <template>
   
-<FormControl caption="Image List" class="image-list-panel">
+<FormControl caption="Image List" class="image-list-panel" v-if="store.currentObject">
   <div class="image-list-wrapper">
-    <ItemList :items="obj().images">
+    <ItemList :items="store.currentObject.images">
       <template #list-item-title="{ item }">
         <span>{{ item.name }}</span>
         <span>{{ item.size.width }}x{{ item.size.height }}</span>

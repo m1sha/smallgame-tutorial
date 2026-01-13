@@ -1,23 +1,25 @@
 <script setup lang="ts">
 import { FormControl, ItemList, PushButton, TextBox } from 'vue3-universal-components'
-import { useSpriteEditorStore } from '../../../store'
+import { useSpriteSheetStore } from '../../../store'
 import { computed, ref } from 'vue'
 
-const store = useSpriteEditorStore()
+const store = useSpriteSheetStore()
 const outputObject = ref('')
 
-const obj = () => {
-  if (store.state.currentObject && store.state.currentObject.type === 'sprite-sheet-object') return store.state.currentObject
-  throw new Error('is not sprite-sheet-object')
-}
+// const obj = () => {
+//   if (store.state.currentObject && store.state.currentObject.type === 'sprite-sheet-object') return store.state.currentObject
+//   throw new Error('is not sprite-sheet-object')
+// }
 
 const canSave = computed(() => {
-  const batch = obj().batch
+  if (!store.currentObject) return false
+  const batch = store.currentObject.batch
   return Boolean(batch.name) && batch.start > -1
 })
 
 const downloadSpriteSheetBatches = () => {
-  const batches = obj().batches
+  if (!store.currentObject) return false
+  const batches = store.currentObject.batches
   if (!batches) return
   outputObject.value = ''
   let result = '{\n'
@@ -31,22 +33,22 @@ const downloadSpriteSheetBatches = () => {
 
 </script>
 <template>
-  <FormControl caption="Clips" class="batches-form">
+  <FormControl caption="Clips" class="batches-form" v-if="store.currentObject">
     <div class="batches-form-content" style="padding: 4px">
       <div class="current-batch">
         <p>Frame Range </p>
         <div class="batch-range">
-          <span>Start</span><span>{{ obj().batch.start }}</span>
-          <span>Count</span><span>{{ obj().batch.count + 1 }}</span>
+          <span>Start</span><span>{{ store.currentObject.batch.start }}</span>
+          <span>Count</span><span>{{ store.currentObject.batch.count + 1 }}</span>
         </div>
       </div>
       <div class="batch-input">
-        <TextBox caption="Clip Name" v-model="obj().batch.name" /> 
-        <PushButton @click="store.addBatch()" :disabled="!canSave">Add Clip</PushButton>
+        <TextBox caption="Clip Name" v-model="store.currentObject.batch.name" /> 
+        <PushButton @click="store.addClip()" :disabled="!canSave">Add Clip</PushButton>
       </div>
 
       <div class="batch-list-wrapper">
-      <ItemList :items="obj().batches.map(p => ({ id: p.name, ...p}))">
+      <ItemList :items="store.currentObject.batches.map(p => ({ id: p.name, ...p}))">
         <template #list-item-title="{item}">
           <div class="batch-row-template">
             <span>{{ item.name }}</span>

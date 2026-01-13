@@ -70,7 +70,7 @@ export class SpriteSheetObject extends DrawableObject {
         const pos = Rect.size(this.tileSize).moveSelf(rect)
         const r = pos.shiftSelf(point)
         const c = Color.from('#11882239').lerp(Color.from('#08461169'), 0.5).toString('rgba')
-        console.dir(r)
+        
         Sketch
           .new()
           .rect({ fill: c }, r)
