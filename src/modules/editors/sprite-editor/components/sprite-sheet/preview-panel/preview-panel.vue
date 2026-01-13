@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, nextTick, onMounted, ref, watch } from 'vue';
 import { DropDownList, FormControl, PushButton, Tracker } from 'vue3-universal-components';
-import { useSpriteEditorStore, useSpriteSheetStore } from '../../store';
+import { useSpriteEditorStore, useSpriteSheetStore } from '../../../store';
 import { AnimatedSprite, Game, gameloop, loadBlob, Rect, setSize, SpriteSheet, Surface, TSize } from 'smallgame';
 const zoom = ref(4)
 const rate = ref(6)

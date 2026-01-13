@@ -1,9 +1,9 @@
 import { defineStore } from "pinia"
 import { useSpriteEditorStore } from "./editor-store"
 import { ref, watch } from "vue"
-import { DisplaySpriteSheetObject } from "../code/display-object/sprite-sheet-object"
+import { DisplaySpriteSheetObject } from "../code/sprite-sheet/sprite-sheet-display-object"
 import editor from "../code"
-import { SpriteSheetObject } from "../code/drawable-object"
+import { SpriteSheetObject } from "../code/images-combine"
 
 const useSpriteSheetStore = defineStore('SpriteSheetStore', () => {
   const store = useSpriteEditorStore()

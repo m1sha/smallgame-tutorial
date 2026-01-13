@@ -1,6 +1,8 @@
-import { GameEvent, GMath, loadBlob, Rect, Size, Surface, TSize } from "smallgame"
+import { GameEvent, GMath, loadBlob, Size, Surface, TSize } from "smallgame"
 import { Viewer } from "../../../shared"
-import { DrawableObject, drawSelectedObjects, ImageCombineObject, SpriteSheetObject } from "./drawable-object"
+import { ImageCombineObject } from "./images-combine"
+import { DrawableObject, drawSelectedObjects } from "./core"
+import { SpriteSheetObject } from "./sprite-sheet"
 
 export class SpriteEditor {
   private _viewer: Viewer | null = null

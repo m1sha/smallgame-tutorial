@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { UploadManyButton, UploadButton, DropDownList, Tracker } from 'vue3-universal-components'
-import { useSpriteEditorStore } from '../../store'
+import { useSpriteEditorStore } from '../../../store'
 import { ref, watch } from 'vue'
 const store = useSpriteEditorStore()
 const onCombineImage = async (files: File[]) => {

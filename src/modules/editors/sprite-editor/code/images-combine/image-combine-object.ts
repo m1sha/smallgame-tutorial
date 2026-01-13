@@ -1,6 +1,6 @@
 import { MemSurface, Rect, setSize, Surface, TSize } from "smallgame"
-import { DrawableObject } from "./drawable-object"
-import { DisplayImagesCombinerObject } from "../display-object/images-combiner-object"
+import { DrawableObject } from "../core/drawable-object"
+import { DisplayImagesCombinerObject } from "./images-combiner-display-object"
 
 export class ImageCombineObject extends DrawableObject {
   grid: { cols: number, rows: number } = { cols: 0, rows: 0 }

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { FormControl, ItemList } from 'vue3-universal-components'
-import { useSpriteEditorStore } from '../../store'
+import { useSpriteEditorStore } from '../../../store'
 import { computed } from 'vue'
 
 const store = useSpriteEditorStore()

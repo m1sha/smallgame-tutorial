@@ -1,5 +1,5 @@
 import { Rect, Surface } from "smallgame"
-import { DisplayObject } from "../display-object"
+import { DisplayObject } from "../display-objects"
 import { uuidv4 } from "../../../../games/old-tv/games/stock-boy/box"
 
 export abstract class DrawableObject {

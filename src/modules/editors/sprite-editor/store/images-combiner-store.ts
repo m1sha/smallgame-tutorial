@@ -1,9 +1,9 @@
 import { defineStore } from "pinia"
-import { DisplayImagesCombinerObject } from "../code/display-object/images-combiner-object"
+import { DisplayImagesCombinerObject } from "../code/images-combine/images-combiner-display-object"
 import { useSpriteEditorStore } from "./editor-store"
 import { ref, watch } from "vue"
 import editor from "../code"
-import { ImageCombineObject } from "../code/drawable-object"
+import { ImageCombineObject } from "../code/images-combine"
 
 const useImagesCombinerStore = defineStore('ImagesCombinerStore', () => {
   const store = useSpriteEditorStore()
