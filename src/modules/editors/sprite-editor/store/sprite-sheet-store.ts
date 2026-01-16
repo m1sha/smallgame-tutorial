@@ -3,7 +3,7 @@ import { useSpriteEditorStore } from "./editor-store"
 import { ref, watch } from "vue"
 import { DisplaySpriteSheetObject } from "../code/sprite-sheet/sprite-sheet-display-object"
 import editor from "../code"
-import { SpriteSheetObject } from "../code/images-combine"
+import { SpriteSheetObject } from "../code/sprite-sheet"
 
 const useSpriteSheetStore = defineStore('SpriteSheetStore', () => {
   const store = useSpriteEditorStore()
@@ -32,13 +32,22 @@ const useSpriteSheetStore = defineStore('SpriteSheetStore', () => {
     obj?.setGrid(cols, rows)
     editor.markForUpdate(obj)
   }
+  
+  function setClipRate (clipId: string, rate: number) {
+    if (!store.state.currentObject) return
+    const obj = editor.getObject<SpriteSheetObject>(store.state.currentObject.id)
+    const clip = obj.batches.find(p=>p.name === clipId)
+    if (clip) clip.rate = rate
+    editor.markForUpdate(obj)
+  }
 
   return {
     currentObject,
     imageFile,
     setImageFile,
     addClip,
-    setCellDim
+    setCellDim,
+    setClipRate
   }
 })
 

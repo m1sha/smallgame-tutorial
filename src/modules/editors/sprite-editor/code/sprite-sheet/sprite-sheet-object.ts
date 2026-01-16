@@ -1,8 +1,8 @@
 import { Color, MemSurface, Point, Rect, setSize, Sketch, Surface, TSize } from "smallgame"
 import { DrawableObject } from "../core/drawable-object"
 import { DisplaySpriteSheetObject } from "./sprite-sheet-display-object"
-export type Batch = { name: string, start: number, count: number }
-const emptyBatch  = (): Batch => ({ name: '', start: -1, count: 0 })
+export type Batch = { name: string, start: number, count: number, rate: number }
+const emptyBatch  = (): Batch => ({ name: '', start: -1, count: 0, rate: -1 })
 export class SpriteSheetObject extends DrawableObject {
   cols: number = 0
   rows: number = 0

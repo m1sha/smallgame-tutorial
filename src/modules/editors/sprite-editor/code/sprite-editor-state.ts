@@ -1,4 +1,4 @@
-import { DisplayObject } from "./display-object"
+import { DisplayObject } from "./display-objects"
 
 export interface ISpriteEditorState {
   currentObject: DisplayObject | null

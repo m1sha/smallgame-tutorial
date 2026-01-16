@@ -1,24 +1,22 @@
 <script setup lang="ts">
-import { computed, nextTick, onMounted, ref, watch } from 'vue';
-import { DropDownList, FormControl, PushButton, Tracker } from 'vue3-universal-components';
-import { useSpriteEditorStore, useSpriteSheetStore } from '../../../store';
-import { AnimatedSprite, Game, gameloop, loadBlob, Rect, setSize, SpriteSheet, Surface, TSize } from 'smallgame';
+import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
+import { DropDownList, FormControl, PushButton, Tracker } from 'vue3-universal-components'
+import { useSpriteSheetStore } from '../../../store'
+import { AnimatedSprite, Game, gameloop, loadBlob, Rect, setSize, SpriteSheet, Surface, TSize } from 'smallgame'
+
+const defaultRate = 6
 const zoom = ref(4)
-const rate = ref(6)
+const rate = ref(defaultRate)
 const playing = ref(true)
 const container = ref<HTMLDivElement>()
-
-const store = useSpriteSheetStore() //useSpriteEditorStore()
+const store = useSpriteSheetStore()
 let sprite: AnimatedSprite | null = null
 let image: Surface | null = null
-
-const obj = () => {
-  if (store.currentObject) return store.currentObject
-  return null
-}
+let gameObject: Game | null = null
 
 onMounted (() => {
-  const { screen } = Game.create(300, 300, container.value!)
+  const { screen, game } = Game.create(300, 300, container.value!)
+  gameObject = game
 
   gameloop(() => {
     screen.clear()
@@ -27,6 +25,8 @@ onMounted (() => {
   })
 })
 
+onUnmounted(() => gameObject?.kill())
+
 async function load (file: File) {
   image = await loadBlob(file)
   image.imageRendering = 'pixelated'
@@ -34,15 +34,15 @@ async function load (file: File) {
 }
 
 function update () {
-  const current = obj()
+  const current = store.currentObject
   createSH (current.batch.start, current.batch.count, current.tileSize)
 }
 
-function createSH (s: number, c: number, size: TSize) {
-  if (s < 0) return
+function createSH (startFrame: number, frameCount: number, size: TSize) {
+  if (startFrame < 0) return
   if (!image) return
   const sh = new SpriteSheet(image, size, rate.value)
-  sh.addBatch('idle', s, c + 1)
+  sh.addBatch('Clip', startFrame, frameCount + 1)
   
   sprite = new AnimatedSprite(sh, setSize(size.width * zoom.value, size.height * zoom.value))
   sprite.rect.absCenter = Rect.size(300, 300).center
@@ -63,11 +63,9 @@ watch(() => store.currentObject, () => {
   if (!image) {
     load(store.imageFile)
   }
-  const current = obj()
-  //const obj = store.state.currentObject
+  const current = store.currentObject
   if (!current) {
     sprite = null
-    
     return
   }
   update()
@@ -76,26 +74,30 @@ watch(() => store.currentObject, () => {
 
 const clipId = ref('')
 const clips = computed(() => {
-  const current = obj()
+  const current = store.currentObject
   if (!current) return []
 
   if (current.batch.start > -1) {
     const arr = current.batches.map(cl => ({ id: cl.name, ...cl }))
-    return [ {id: 'current', name: 'current', start: current.batch.start, count: current.batch.count }, ...arr]
+    return [ {id: 'current', name: 'current', start: current.batch.start, count: current.batch.count, rate: defaultRate }, ...arr]
   }
   
   return current.batches.map(cl => ({ id: cl.name, ...cl }))
 })
 
 watch(() => clipId.value, () => {
-  const current = obj()
+  const current = store.currentObject
   if (!current) return 
   const clip = current.batches.find( p => p.name === clipId.value)
   if (!clip) return
 
+  rate.value = clip.rate > -1 ? clip.rate : defaultRate
   createSH (clip.start, clip.count, current.tileSize)
 })
 
+function setClipRate () {
+  store.setClipRate(clipId.value, rate.value)
+}
 
 </script>
 <template>
@@ -121,13 +123,11 @@ watch(() => clipId.value, () => {
             <Tracker caption="Rate" :min="1" :max="30" :step="1" v-model="rate" @update:model-value="update()" />
           </div>
           <div>
-            <PushButton :disabled="!clipId || clipId === 'current'" title="Set the rate value to the clip">
+            <PushButton :disabled="!clipId || clipId === 'current'" title="Set the rate value to the clip" @click="setClipRate()">
               <span class="nf set-rate nf-md-set_split"></span>
             </PushButton>
           </div>
         </div>
-        
-        
         
       </div>
     </FormControl>

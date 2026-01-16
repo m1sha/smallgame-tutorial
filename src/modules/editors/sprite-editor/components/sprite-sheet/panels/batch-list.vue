@@ -55,6 +55,7 @@ const downloadSpriteSheetBatches = () => {
             <div class="batch-range">
               <span>Start</span><span>{{ item.start }}</span>
               <span>Count</span><span>{{ item.count + 1 }}</span>
+              <span v-if="item.rate > -1">Rate</span><span v-if="item.rate > -1">{{ item.rate }}</span>
             </div>
             
           </div>
