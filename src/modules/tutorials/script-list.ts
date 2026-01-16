@@ -34,6 +34,8 @@ const scriptList: ScriptDef[] = [
   { name: 'Rect Move + Pivote', category: cat1, module: async (state: any) => (await import('./examples/code/rect-shift-pivote')).default(state)  },
   { name: 'Rect Scale + Pivote', category: cat1, module: async (state: any) => (await import('./examples/code/rect-scale-pivote')).default(state)  },
   { name: 'Rect Scale to Cursor', category: cat1, module: async (state: any) => (await import('./examples/code/rect-scale-to-cursor')).default(state)  },
+  { name: 'Movement To Cursor', category: cat1, module: async (state: any) => (await import('./examples/code/movement-to-cursor')).default(state)  },
+  { name: 'Zoom Pan', category: cat1, module: async (state: any) => (await import('./examples/code/zoom-pan')).default(state)  },
 
   { name: 'Blit', category: cat2, module: async (state: any) => (await import('./surfaces/code/rectangle')).default(state)  },
   { name: 'Math Coords', category: cat2, module: async (state: any) => (await import('./surfaces/code/math-coords')).default(state)  },
