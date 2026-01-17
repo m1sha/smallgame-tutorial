@@ -113,6 +113,7 @@ export class SpriteSheetObject extends DrawableObject {
   toDisplay (): DisplaySpriteSheetObject {
     return {
       type: 'sprite-sheet-object',
+      hidden: false,
       id: this.id,
       name: this.name,
       rect: this.rect.clone(),

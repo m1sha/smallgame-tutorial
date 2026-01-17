@@ -10,8 +10,8 @@ const useSpriteSheetStore = defineStore('SpriteSheetStore', () => {
   const currentObject = ref<DisplaySpriteSheetObject>(null)
   const imageFile = ref<File | null>(null)
 
-  watch(() => store.state.currentObject, () => {
-    const obj = store.state.currentObject
+  watch(() => store.state.selectedObjects, () => {
+    const obj = store.state.selectedObjects[0]
     currentObject.value = obj && obj.type === 'sprite-sheet-object' ? obj : null
   }, { deep: true })
 
@@ -20,25 +20,30 @@ const useSpriteSheetStore = defineStore('SpriteSheetStore', () => {
   }
 
   function addClip () {
-    if (!store.state.currentObject) return
-    const obj = editor.getObject<SpriteSheetObject>(store.state.currentObject.id)
+    const selected = store.state.selectedObjects[0]
+    if (!selected) return
+    const obj = editor.getObject<SpriteSheetObject>(selected.id)
     obj?.addBatch()
     editor.markForUpdate(obj)
   }
 
   function setCellDim (cols: number, rows: number) {
-    if (!store.state.currentObject) return
-    const obj = editor.getObject<SpriteSheetObject>(store.state.currentObject.id)
+    const selected = store.state.selectedObjects[0]
+    const obj = editor.getObject<SpriteSheetObject>(selected.id)
     obj?.setGrid(cols, rows)
     editor.markForUpdate(obj)
   }
   
   function setClipRate (clipId: string, rate: number) {
-    if (!store.state.currentObject) return
-    const obj = editor.getObject<SpriteSheetObject>(store.state.currentObject.id)
-    const clip = obj.batches.find(p=>p.name === clipId)
+    const selected = store.state.selectedObjects[0]
+    const obj = editor.getObject<SpriteSheetObject>(selected.id)
+    const clip = obj.batches.find(p => p.name === clipId)
     if (clip) clip.rate = rate
     editor.markForUpdate(obj)
+  }
+
+  function convertToTilemap () {
+    editor.convertCurrentObjectToTilemap()
   }
 
   return {
@@ -47,7 +52,8 @@ const useSpriteSheetStore = defineStore('SpriteSheetStore', () => {
     setImageFile,
     addClip,
     setCellDim,
-    setClipRate
+    setClipRate,
+    convertToTilemap
   }
 })
 

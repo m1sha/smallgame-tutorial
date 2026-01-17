@@ -1,21 +1,27 @@
 <script setup lang="ts">
-import { FormControl, ItemList } from 'vue3-universal-components'
+import { FormControl, ItemList, UploadFile, UploadFileTrigger } from 'vue3-universal-components'
 import { useSpriteEditorStore } from '../../../store'
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 
 const store = useSpriteEditorStore()
+const trigger = ref<UploadFileTrigger>()
 
 const itemId = computed({
-  get: () => store.state.currentObject?.id ?? '',
-  set: id => { store.setCurrentObject(id) }
+  get: () => store.state.selectedObjects.map(p => p.id),
+  set: ids => { store.selectObject(ids) }
 })
+
+const uploadFiles = files => {
+  store.importImages(files)
+}
 
 </script>
 
 <template>
   <div class="object-list-panel">
-    <FormControl caption="Objects">
-      <ItemList v-model="itemId" :items="store.state.objects"></ItemList>
+    <FormControl caption="Objects" :buttons="[{ name: 'add', icon: 'fa fa-plus', title: 'Add Image(s)'}]" @header-button-click="trigger.open()">
+      <ItemList v-model="itemId" multiselect :items="store.state.objects"></ItemList>
+      <UploadFile multiple @change="uploadFiles" ref="trigger" />
     </FormControl>
   </div>
 </template>

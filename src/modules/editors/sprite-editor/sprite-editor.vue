@@ -2,14 +2,18 @@
 import { onMounted, ref } from 'vue'
 import { ObjectListPanel, ObjectSettingsPanel, PreviewPanel, Toolbar } from './components'
 import { useSpriteEditorStore } from './store'
+//import { API } from './api'
 
 const container = ref<HTMLDivElement>()
 const store = useSpriteEditorStore()
 
-onMounted(() => {
+onMounted(async () => {
   const width = container.value!.clientWidth 
   const height = container.value!.clientHeight
   store.createViewer({ width, height }, container.value!)
+
+  //const x = await API.getProjects()
+  //console.log(x)
 })
 </script>
 <template>
@@ -18,7 +22,7 @@ onMounted(() => {
     <div class="container-wrapper">
       <div ref="container" class="container"></div>
       <ObjectSettingsPanel />
-      <PreviewPanel v-if="store.state.currentObject && store.state.currentObject.type === 'sprite-sheet-object'" />
+      <PreviewPanel v-if="store.state.selectedObjects.length > 0 && store.state.selectedObjects[0].type === 'sprite-sheet-object'" />
       <ObjectListPanel />
     </div>
 </div>

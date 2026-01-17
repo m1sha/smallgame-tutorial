@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import { FormControl, ItemList } from 'vue3-universal-components'
 import { useImagesCombinerStore} from '../../../store'
+import { ref } from 'vue';
 
 const store = useImagesCombinerStore()
+const selected = ref<string[]>([])
 
 </script>
 
@@ -10,7 +12,7 @@ const store = useImagesCombinerStore()
   
 <FormControl caption="Image List" class="image-list-panel" v-if="store.currentObject">
   <div class="image-list-wrapper">
-    <ItemList :items="store.currentObject.images">
+    <ItemList v-model="selected" :items="store.currentObject.images" multiselect>
       <template #list-item-title="{ item }">
         <span>{{ item.name }}</span>
         <span>{{ item.size.width }}x{{ item.size.height }}</span>

@@ -1,4 +1,5 @@
 import { TSize } from "smallgame"
+import { DisplayObjectBase } from "../core"
 
 export type DiplayImage = {
   id: string
@@ -6,9 +7,7 @@ export type DiplayImage = {
   size: TSize
 }
 
-export type DisplayImagesCombinerObject = {
+export type DisplayImagesCombinerObject = DisplayObjectBase & {
   type: 'image-combiner-object'
-  id: string
-  name: string
   images: DiplayImage[]
 }

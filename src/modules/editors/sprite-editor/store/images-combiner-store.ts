@@ -9,14 +9,15 @@ const useImagesCombinerStore = defineStore('ImagesCombinerStore', () => {
   const store = useSpriteEditorStore()
   const currentObject = ref<DisplayImagesCombinerObject>(null)
 
-  watch(() => store.state.currentObject, () => {
-    const obj = store.state.currentObject
+  watch(() => store.state.selectedObjects, () => {
+    const obj = store.state.selectedObjects[0]
     currentObject.value = obj && obj.type === 'image-combiner-object' ? obj : null
   }, { deep: true })
 
   const downloadCombinedImage = () => {
-    if (!store.state.currentObject) return
-    const obj = editor.getObject<ImageCombineObject>(store.state.currentObject.id)
+    const selected = store.state.selectedObjects[0]
+    if (!selected || selected.type !== 'image-combiner-object') return
+    const obj = editor.getObject<ImageCombineObject>(selected.id)
     obj?.download()
   }
 

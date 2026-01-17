@@ -1,10 +1,14 @@
 <script setup lang="ts">
 import { FormControl, PushButton } from 'vue3-universal-components'
+import { useSpriteSheetStore } from '../../../store'
+
+const store = useSpriteSheetStore()
+
 </script>
 <template>
   <FormControl caption="Tile Map" class="tilemap-convert-panel">
     
-    <PushButton>Convert To Tile Map</PushButton>
+    <PushButton @click="store.convertToTilemap()">Convert To Tile Map</PushButton>
     
   </FormControl>
 </template>

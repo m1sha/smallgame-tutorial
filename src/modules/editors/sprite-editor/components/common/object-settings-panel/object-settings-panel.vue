@@ -6,9 +6,9 @@ import { SpriteSheetSettings } from '../..//sprite-sheet'
 const store = useSpriteEditorStore()
 </script>
 <template>
-  <div class="object-settings-panel" v-if="store.state.currentObject">
-    <SpriteSheetSettings v-if="store.state.currentObject.type === 'sprite-sheet-object'" /> 
-    <ImagesCombineSettings v-if="store.state.currentObject.type === 'image-combiner-object'" />
+  <div class="object-settings-panel" v-if="store.state.selectedObjects.length === 1">
+    <SpriteSheetSettings v-if="store.state.selectedObjects.length > 0 && store.state.selectedObjects[0].type === 'sprite-sheet-object'" /> 
+    <ImagesCombineSettings v-if="store.state.selectedObjects.length > 0 && store.state.selectedObjects[0].type === 'image-combiner-object'" />
   </div>
 </template>
 

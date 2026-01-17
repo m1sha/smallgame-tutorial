@@ -4,16 +4,29 @@ import editor, { ISpriteEditorState, } from "../code"
 import { ref } from "vue"
 import { useSpriteSheetStore } from "./sprite-sheet-store"
 import { useImagesCombinerStore } from "./images-combiner-store"
+import { removeItem } from "smallgame/src/utils"
+
+class StateController {
+
+}
 
 const useSpriteEditorStore = defineStore('SpriteEditorStore', () => {
-  const state = ref<ISpriteEditorState>({ currentObject: null, objects: [] })
+  const state = ref<ISpriteEditorState>({ objects: [], selectedObjects: [] })
 
   editor.onCurrentObjectChanged = obj => { 
-    state.value.currentObject = obj.toDisplay()
+    removeItem(state.value.selectedObjects, p => p.id === obj.id)
+    state.value.selectedObjects.push(obj.toDisplay())
   }
   
   const createViewer = (viewportSize: TSize, container: HTMLDivElement) => {
     editor.createViewer(viewportSize, container)
+  }
+
+  const importImages  = async (files: File[]) => {
+    const objs = await editor.createImageObjects(files)
+    for (const obj of objs) {
+      state.value.objects.push(obj.toDisplay())
+    }
   }
 
   const createImageCombiner = async (files: File[]) => {
@@ -32,18 +45,29 @@ const useSpriteEditorStore = defineStore('SpriteEditorStore', () => {
     editor.setZoom(index)
   }
 
-  const setCurrentObject = (id: string) => {
-    const obj = editor.setCurrentObject(id)
-    if (!obj) return
-    state.value.currentObject = obj.toDisplay()
+  const selectObject = (ids: string[]) => {
+    ids.forEach(id => {
+      const exists = state.value.selectedObjects.some(p => p.id === id)
+      if (exists) {
+        removeItem(state.value.selectedObjects, p => p.id === id)
+        editor.removeFromSelectObjects(id)
+      } else {
+        const obj = editor.addToSelectObjects(id)
+        removeItem(state.value.selectedObjects, p => p.id === id)
+        state.value.selectedObjects.push(obj.toDisplay())
+      }
+      
+    })
   }
 
   return {
     createViewer,
+    importImages,
     createImageCombiner,
     createSpriteSheet,
     setZoom,
-    setCurrentObject,
+    selectObject,
+    //setCurrentObject,
     state
   }
 })

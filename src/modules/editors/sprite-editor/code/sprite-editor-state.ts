@@ -1,6 +1,6 @@
 import { DisplayObject } from "./display-objects"
 
 export interface ISpriteEditorState {
-  currentObject: DisplayObject | null
+  selectedObjects: DisplayObject[]
   objects: DisplayObject[]
 }
