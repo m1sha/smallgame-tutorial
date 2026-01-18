@@ -1,12 +1,13 @@
 import { MemSurface, Rect, setSize, Surface, TSize } from "smallgame"
 import { DrawableObject } from "../core/drawable-object"
 import { DisplayImagesCombinerObject } from "./images-combiner-display-object"
+import { Viewport } from "../viewport"
 
 export class ImageCombineObject extends DrawableObject {
   grid: { cols: number, rows: number } = { cols: 0, rows: 0 }
   
-  constructor (private imgs: { name: string, surface: Surface }[], viewportSize: TSize) {
-    super()
+  constructor (private imgs: { name: string, surface: Surface }[], viewportSize: TSize, viewport: Viewport) {
+    super(viewport)
     let w = 0
     let h = 0
     let maxH = 0
@@ -33,8 +34,13 @@ export class ImageCombineObject extends DrawableObject {
     screen.blit(this.surface, this.surface.rect)
   }
 
+  update (): void {
+    
+  }
+
   toDisplay(): DisplayImagesCombinerObject {
     return {
+      hidden: false,
       type: 'image-combiner-object',
       id: this.id,
       name: 'Images Combiner',

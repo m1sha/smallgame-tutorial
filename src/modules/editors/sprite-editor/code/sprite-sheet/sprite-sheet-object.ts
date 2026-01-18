@@ -1,6 +1,7 @@
 import { Color, MemSurface, Point, Rect, setSize, Sketch, Surface, TSize } from "smallgame"
 import { DrawableObject } from "../core/drawable-object"
 import { DisplaySpriteSheetObject } from "./sprite-sheet-display-object"
+import { Viewport } from "../viewport"
 export type Batch = { name: string, start: number, count: number, rate: number }
 const emptyBatch  = (): Batch => ({ name: '', start: -1, count: 0, rate: -1 })
 export class SpriteSheetObject extends DrawableObject {
@@ -9,8 +10,8 @@ export class SpriteSheetObject extends DrawableObject {
   batch: Batch = emptyBatch()
   batches: Batch[] = []
 
-  constructor (private image: Surface, viewportSize: TSize, private name: string) {
-    super ()
+  constructor (private image: Surface, viewportSize: TSize, private name: string, viewport: Viewport) {
+    super (viewport)
     this.surface = new MemSurface(image.rect.size)
     this.rect = this.surface.rect
     this.rect.absCenter = Rect.size(viewportSize).center
@@ -21,12 +22,12 @@ export class SpriteSheetObject extends DrawableObject {
   }
 
   get tileSize (): TSize {
-    const rect = this.rect.scale(this.zoom, 'center-center')
+    const rect = this.rect.scale(this.viewport.zoom, 'center-center')
     return setSize(0 | (rect.width / this.cols), 0 | (rect.height / this.rows))
   }
 
   selectCell (pos: Point) {
-    const point = pos.shift(this.rect.scale(this.zoom, 'center-center').topLeft.neg()).scale(1 / this.tileSize.width, 1 / this.tileSize.height).int()
+    const point = pos.shift(this.rect.scale(this.viewport.zoom, 'center-center').topLeft.neg()).scale(1 / this.tileSize.width, 1 / this.tileSize.height).int()
     if (point.x < 0 || point.x >= this.cols || point.y < 0 || point.y >= this.rows) return
 
     const index = this.cols * point.y + point.x
@@ -52,7 +53,7 @@ export class SpriteSheetObject extends DrawableObject {
   }
 
   draw (screen: Surface) {
-    const rect = this.rect.scale(this.zoom, 'center-center')
+    const rect = this.rect.scale(this.viewport.zoom, 'center-center')
     screen.blit(this.image, rect)
 
      if (this.cols && this.rows)
@@ -108,6 +109,10 @@ export class SpriteSheetObject extends DrawableObject {
                  .rect({ stroke: '#dda147ff', lineWidth: 1 }, Rect.merge(rects).shift(rect))
                  .draw(screen)
       }
+  }
+
+  update (): void {
+     
   }
 
   toDisplay (): DisplaySpriteSheetObject {

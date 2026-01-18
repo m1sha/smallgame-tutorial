@@ -1,4 +1,4 @@
-import { GameEvent, GMath, loadBlob, Size, Surface, TSize } from "smallgame"
+import { GameEvent, GMath, loadBlob, Point, Size, Surface, TSize } from "smallgame"
 import { Viewer } from "../../../shared"
 import { ImageCombineObject } from "./images-combine"
 import { DrawableObject, drawSelectedObjects } from "./core"
@@ -6,6 +6,7 @@ import { SpriteSheetObject } from "./sprite-sheet"
 import { TilemapObject } from "./tilemap"
 import { ImageObject } from "./image"
 import { removeItem } from "smallgame/src/utils"
+import { Viewport } from "./viewport"
 
 export class SpriteEditor {
   private _viewer: Viewer | null = null
@@ -13,6 +14,7 @@ export class SpriteEditor {
   private objects: DrawableObject[] = []
   private selectedObjects: DrawableObject[] = []
   private viewportSize: Size = Size.zero
+  private viewport = new Viewport()
 
   onCurrentObjectChanged: ((obj: DrawableObject) => void) | null = null
   
@@ -25,16 +27,11 @@ export class SpriteEditor {
     this._viewer.onFrameChanged = surface => this.frameChanged(surface)
   }
 
-  setZoom (index: number) {
-    this.objects.forEach(o => o.setZoom(index))
-    this.selectedObjects.forEach(obj => this.onCurrentObjectChanged?.(obj))
-  }
-
   async createImageObjects (files: File[]) {
     const result: ImageObject[] = []
     for (const file of files)  {
       const img = await loadBlob(file)
-      const obj = new ImageObject(file.name, img)
+      const obj = new ImageObject(file.name, img, this.viewport)
       result.push(obj)
     }
     this.afterObjectCreated(result)
@@ -44,7 +41,7 @@ export class SpriteEditor {
   async createImageCombiner (files: File[]) {
     const imgs: { name: string, surface: Surface }[] = [] 
     for (const file of files) imgs.push({ name: file.name, surface: await loadBlob(file) })
-    const obj = new ImageCombineObject(imgs, this.viewportSize)
+    const obj = new ImageCombineObject(imgs, this.viewportSize, this.viewport)
     
     this.afterObjectCreated([obj])
     return obj
@@ -52,7 +49,7 @@ export class SpriteEditor {
 
   async createSpriteSheet (file: File) {
     const img = await loadBlob(file)
-    const obj = new SpriteSheetObject(img, this.viewportSize, file.name)
+    const obj = new SpriteSheetObject(img, this.viewportSize, file.name, this.viewport)
     obj.setGrid(1, 1)
     
     this.afterObjectCreated([obj])
@@ -98,7 +95,7 @@ export class SpriteEditor {
     drawSelectedObjects(this.selectedObjects, surface)
   }
 
-  private zoom = 1
+  
   private handleInput(ev: GameEvent): void {
     const objs = this.selectedObjects
     for (const obj of objs) {
@@ -119,16 +116,15 @@ export class SpriteEditor {
       }
 
       if (ev.type === 'WHEEL') {
-        //this.zoom -= Math.sign(ev.deltaY) * 0.1
-        this.zoom -= Math.sign(ev.deltaY)
-        if (this.zoom < 1) this.zoom = 1
-        this.setZoom(GMath.logZoom(this.zoom, 10, 1, 2))
+        this.viewport.zoom -= Math.sign(ev.deltaY)
+        if (this.viewport.zoom < 1) this.viewport.zoom = 1
+        GMath.logZoom(this.viewport.zoom, 10, 1, 2)
+        this.selectedObjects.forEach(obj => this.onCurrentObjectChanged?.(obj))
       }
     }
   }
 
   private afterObjectCreated (objs: DrawableObject[]) {
-    //this.currentObject = obj
     this.objects.push(...objs)
     this.selectedObjects = objs
     objs.forEach(obj => this.onCurrentObjectChanged?.(obj))
