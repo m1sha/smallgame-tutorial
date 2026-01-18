@@ -5,9 +5,9 @@ export function drawSelectedObjects (objects: DrawableObject[], screen: Surface)
   const sketch = Sketch.new()
   
   objects.forEach(obj => {
-    const rect = obj.rect.scale(obj.viewport.zoom, 'center-center').outline(-4)
+    const rect = obj.rect.scale(obj.viewport.zoom, 'center-center')//.outline(-4)
     const mkSize = setSize(6, 6)
-    const color = '#aaa'
+    const color = '#777'
     sketch
       .rect({ stroke: color, lineDash:  [5, 3] }, rect)
       .rect({ fill: color }, Rect.size(mkSize).move(rect.topLeft, 'center-center'))

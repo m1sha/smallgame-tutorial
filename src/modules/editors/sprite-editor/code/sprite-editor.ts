@@ -1,4 +1,4 @@
-import { GameEvent, GMath, loadBlob, Point, Size, Surface, TSize } from "smallgame"
+import { GameEvent, GMath, loadBlob, MemSurface, Point, Rect, Size, Surface, TSize } from "smallgame"
 import { Viewer } from "../../../shared"
 import { ImageCombineObject } from "./images-combine"
 import { DrawableObject, drawSelectedObjects } from "./core"
@@ -31,7 +31,7 @@ export class SpriteEditor {
     const result: ImageObject[] = []
     for (const file of files)  {
       const img = await loadBlob(file)
-      const obj = new ImageObject(file.name, img, this.viewport)
+      const obj = new ImageObject(file.name, img, this.viewportSize, this.viewport)
       result.push(obj)
     }
     this.afterObjectCreated(result)
@@ -85,6 +85,53 @@ export class SpriteEditor {
     removeItem(this.selectedObjects, p => p.id === id)
   }
 
+  alignImagesByGrid (rows: number, cols: number) {
+    if (this.selectedObjects.length < 1) return
+    const { x, y, width, height } =  this.selectedObjects[0].rect
+    const nW = cols * width
+    const nH = rows * height
+    const nx = x - nW / 2
+    const ny = y - nH / 2
+
+    for (let i = 0; i < rows; i++) {
+      for (let j = 0; j < cols; j++) {
+        const index = i * cols + j
+        if (index > this.selectedObjects.length - 1) break
+        const rect = this.selectedObjects[index].rect
+        rect.x = nx + width * j
+        rect.y = ny + height * i
+      } 
+    }
+  }
+
+  mergeSelected () {
+    const rect = Rect.merge(this.selectedObjects.map(p=> p.rect))
+    const surface = new MemSurface(rect.size)
+    this.selectedObjects.forEach(sel => surface.blit(sel.surface, sel.rect.shift(rect.topLeft.neg())))
+    const obj = new ImageObject('Merged', surface, this.viewportSize, this.viewport)
+    this.selectedObjects = []
+    this.objects = []
+    this.afterObjectCreated([obj])
+    return obj
+  }
+
+  async download() {
+    const sel = this.selectedObjects[0]
+    if (!sel) return
+    
+    const s = new Surface(sel.surface.width, sel.surface.height)
+    s.blit(sel.surface, s.rect)
+    const blob = await s.save('image/png')
+    const a = document.createElement('a')
+    const url = URL.createObjectURL(blob)
+    a.href = url
+    a.download = 'image.png'
+    //a.target = '_blank'
+    a.click()
+    a.remove()
+    URL.revokeObjectURL(url)
+  }
+
   destroyViewer () {
     this.viewer.remove()
   }
@@ -129,4 +176,5 @@ export class SpriteEditor {
     this.selectedObjects = objs
     objs.forEach(obj => this.onCurrentObjectChanged?.(obj))
   }
+
 }

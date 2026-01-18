@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue';
-import { FormControl, PushButton, TextBox } from 'vue3-universal-components'
+import { FormControl, FormControlContent, PushButton, TextBox } from 'vue3-universal-components'
 import { useSpriteSheetStore } from '../../../store';
 
 
@@ -24,6 +24,7 @@ watch(() => store.currentObject, () => {
 </script>
 <template>
   <FormControl caption="Grid Settings" class="object-settings-panel__grid-settings">
+    <FormControlContent>
     <table>
       <tbody>
       <tr>
@@ -63,7 +64,7 @@ watch(() => store.currentObject, () => {
     <div class="button-block">
       <PushButton @click="onApplyClick">Apply</PushButton>
     </div>
-    
+    </FormControlContent>
   </FormControl>
 </template>
 

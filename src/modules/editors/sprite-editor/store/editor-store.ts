@@ -41,10 +41,6 @@ const useSpriteEditorStore = defineStore('SpriteEditorStore', () => {
     state.value.objects.push(obj.toDisplay())
   }
 
-  const setZoom = (index: number) => {
-    editor.setZoom(index)
-  }
-
   const selectObject = (ids: string[]) => {
     ids.forEach(id => {
       const exists = state.value.selectedObjects.some(p => p.id === id)
@@ -56,8 +52,22 @@ const useSpriteEditorStore = defineStore('SpriteEditorStore', () => {
         removeItem(state.value.selectedObjects, p => p.id === id)
         state.value.selectedObjects.push(obj.toDisplay())
       }
-      
     })
+  }
+
+  const alignImages = ({ rows, cols }: { rows: number, cols: number }) => {
+    editor.alignImagesByGrid(rows, cols)
+  }
+
+  const mergeSelected = () => {
+    const obj = editor.mergeSelected()
+    state.value.selectedObjects = []
+    state.value.objects = []
+    state.value.objects.push(obj.toDisplay())
+  }
+
+  const download = () => {
+    editor.download()
   }
 
   return {
@@ -65,8 +75,10 @@ const useSpriteEditorStore = defineStore('SpriteEditorStore', () => {
     importImages,
     createImageCombiner,
     createSpriteSheet,
-    setZoom,
     selectObject,
+    alignImages,
+    mergeSelected,
+    download,
     //setCurrentObject,
     state
   }

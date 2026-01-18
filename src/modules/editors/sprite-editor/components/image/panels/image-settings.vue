@@ -1,8 +1,11 @@
 <script setup lang="ts">
-import { FormControl, PushButton } from 'vue3-universal-components';
+import { FormControl, FormControlContent, PushButton } from 'vue3-universal-components'
 import { useSpriteEditorStore } from '../../../store'
 
 const store = useSpriteEditorStore()
+
+
+
 </script>
 
 <template>
@@ -14,9 +17,10 @@ const store = useSpriteEditorStore()
   </FormControl>
 
   <FormControl caption="Operations">
-    <div class="panel-content">
-    <PushButton>Convert to SpriteSheet</PushButton>
-    </div>
+    <FormControlContent>
+      <PushButton>Convert to SpriteSheet</PushButton>
+      <PushButton @click="store.download()">Download</PushButton>
+    </FormControlContent>
   </FormControl>
 
 </div>

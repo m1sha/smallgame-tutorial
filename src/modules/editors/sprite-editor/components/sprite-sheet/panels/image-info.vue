@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { FormControl, GridTable } from 'vue3-universal-components'
+import { FormControl, FormControlContent, GridTable } from 'vue3-universal-components'
 import { useSpriteSheetStore } from '../../../store'
 
 const store = useSpriteSheetStore()
@@ -7,6 +7,7 @@ const store = useSpriteSheetStore()
 <template>
 
   <FormControl caption="Image Info" v-if="store.currentObject">
+    <FormControlContent>
     <GridTable :rows="[{ id: '1' }, { id: '2' }]" :column-count="2" :no-headers="true" class="object-settings-panel__image-info">
       <template #row="{ columnIndex, rowIndex }">
         <p v-if="columnIndex === 0 && rowIndex === 0">Image Size</p>
@@ -18,6 +19,7 @@ const store = useSpriteSheetStore()
         <p v-if="columnIndex === 1 && rowIndex === 1">{{ store.currentObject.tileSize.width }} x {{ store.currentObject.tileSize.height }} px</p>
       </template>
     </GridTable>
+    </FormControlContent>
   </FormControl>
   
 </template>
