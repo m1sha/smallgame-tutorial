@@ -1,69 +1,77 @@
 import { Viewer } from "../../../../shared"
 import { displayFps } from "../../../../../utils/display-fps"
-import { type ScriptModule, type ScriptSettings, UIBuilder } from "../../../../../components/example"
-import { Point, Random, Rect, Sketch, TPoint, TSize } from "smallgame"
+import { type ScriptModule, type ScriptSettings, TelemetryBuilder, UIBuilder } from "../../../../../components/example"
+import { GMath, Point, Rect, Sketch, TPoint } from "smallgame"
 
 export default async ({ container, width, height, fps }: ScriptSettings): Promise<ScriptModule> => {
-  const viewer = new Viewer({ width, height }, container, { disableContextMenu: true })
+  const telemetry  = new TelemetryBuilder().open().noLegend()
+  const topleftParam = telemetry.def('Screen Zero Shift', Point.zero)
+  const worldOffsetParam = telemetry.def('World Offset', Point.zero)
+  const worldZoomParam = telemetry.def('World Zoom', 1)
+  const cursorParam = telemetry.def('Cursor', Point.zero)
+  const worldCursorParam = telemetry.def('World Cursor', Point.zero)
   
-  const rect = Rect.size(1600, 1600, { absCenter: viewer.viewportRect.center })
-  //const tl = Rect.size(100, 100, { absCenter: rect.topLeft })
-
-  const points = createPoints(80, rect)
-
-  let zoom = 1
-
+  const viewer = new Viewer({ width, height }, container, { disableContextMenu: true })
+  viewer.ui.setCellSize(24, 24)
+  const viewport = viewer.viewport
+  
+  let step = 1
   viewer.onInput = ev => {
-    if (ev.type === 'WHEEL') {
-      debugger
-      zoom += -Math.sign(ev.deltaY) * 0.1
-      //if (zoom === 0) zoom = 0.1 * Math.sign(ev.deltaY)
+    if (ev.type === 'MOUSEMOVE') {
+      if (ev.lbc) {
+        viewport.panBy(ev.shift)
+      }
 
-     
-      const xxx = (point: TPoint) =>  new DOMMatrix()
-      //.translate(-ev.pos.x, -ev.pos.y)
-      .scale(zoom, zoom)
-      //.translate(ev.pos.x, ev.pos.y)
-      .transformPoint(point)
-
-      points.forEach(point => point.moveSelf(xxx(point)))
+      cursorParam.value = ev.pos
+      worldCursorParam.value = ev.pos.shift(viewer.offset.neg())
     }
-    
+
+    if (ev.type === 'WHEEL') {
+      step -= Math.sign(ev.deltaY)
+      GMath.clamp(step, 0, 9)
+      let zoom = GMath.logZoom(step, 4, 1, 2)
+      zoom = GMath.clamp(zoom, 0.1, 8)
+      
+      viewport.zoomTo(zoom, ev.pos)
+      
+      worldOffsetParam.value = Point.from(viewport.offset)
+      worldZoomParam.value = viewport.zoom
+    }
   }
 
+  const rect = new Rect(0, 0,  500, 500)
+  const dot = new Point(500, 500)
+  const dot2 = new Point(0, 0)
+  const dot3 = rect.absCenter
 
   viewer.onFrameChanged = surface => {
     surface.clear()
 
+    const r = rect.scale(viewport.zoom).shift(viewport.offset)
+    const p = dot.scale(viewport.zoom).shift(viewport.offset)
+    const p2 = dot2.scale(viewport.zoom).shift(viewport.offset)
+    const p3 = dot3.scale(viewport.zoom).shift(viewport.offset)
+    
+    topleftParam.value = r.topLeft
+    
     Sketch
       .new()
-      .rect({ fill: '#252257c9' }, rect)
-      .dots({ fill: '#2f6e39' }, points, 4)
+      .rect({ fill: '#78889918' }, r)
+      .circle({ fill: '#667797' }, p, 10 * viewport.zoom)
+      .circle({ fill: '#466d36' }, p2, 20 * viewport.zoom)
+      .circle({ fill: '#91172b' }, p3, 20 * viewport.zoom)
+      .circle({ stroke: '#6b1423', lineWidth: viewport.zoom  }, p3, 30 * viewport.zoom)
       .draw(surface)
-
-    const s = Sketch.new()
-    points.forEach(point => s.roundedrect({ stroke: '#5a775e' }, Rect.fromCenter(point, 20, 20), 2))
-    s.draw(surface)
-
+      
     displayFps(fps)
   }
 
   const ui = new UIBuilder()
   return {
     ui: ui.build(),
+    telemetry: telemetry.build(),
     dispose () { 
       viewer.remove() 
     }
   }
-}
-
-
-function createPoints (count: number, placeRect: Rect) {
-  const points: Point[] = []
-  for (let i = 0; i < count - 1; i++) {
-    const x = Random.betweeni(placeRect.x, placeRect.width)
-    const y = Random.betweeni(placeRect.y, placeRect.height)
-    points.push(new Point(x, y))
-  }
-  return points
 }

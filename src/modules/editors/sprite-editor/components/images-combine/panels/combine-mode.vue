@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { DropDownList, FormControl } from 'vue3-universal-components'
-import { useImagesCombinerStore} from '../../../store'
+//import { useImagesCombinerStore} from '../../../store'
 import { ref } from 'vue'
 
-const store = useImagesCombinerStore()
+//const store = useImagesCombinerStore()
 const selectedId = ref('1')
 </script>
 

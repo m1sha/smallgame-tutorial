@@ -46,7 +46,7 @@ const uploadFiles = files => {
 
     .vue3-uui__form-control-content
       min-width: 300px
-      height: 300px
+      height: 260px
       display: flex
       flex-direction: column
 

@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { FormControl, ItemList, PushButton, TextBox } from 'vue3-universal-components';
-import { useImagesCombinerStore} from '../../../store'
+//import { useImagesCombinerStore} from '../../../store'
 import { ref } from 'vue';
 
-const store = useImagesCombinerStore()
+//const store = useImagesCombinerStore()
 
 const cols = ref(0)
 const rows = ref(0)

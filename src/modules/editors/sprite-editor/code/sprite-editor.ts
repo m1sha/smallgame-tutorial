@@ -115,6 +115,18 @@ export class SpriteEditor {
     return obj
   }
 
+  createSpriteSheetFromSelected () {
+    const rect = Rect.merge(this.selectedObjects.map(p=> p.rect))
+    const surface = new MemSurface(rect.size)
+    this.selectedObjects.forEach(sel => surface.blit(sel.surface, sel.rect.shift(rect.topLeft.neg())))
+    const obj = new SpriteSheetObject(surface, this.viewportSize, 'Sprite Sheet', this.viewport)
+    obj.setGrid(1, 1)
+    this.selectedObjects = []
+    this.objects = []
+    this.afterObjectCreated([obj])
+    return obj
+  }
+
   async download() {
     const sel = this.selectedObjects[0]
     if (!sel) return

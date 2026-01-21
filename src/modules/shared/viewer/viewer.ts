@@ -3,6 +3,7 @@ import { Background } from "./background"
 import { SelectRegion } from "./select-region"
 import { SelectedObjects } from "./selected-objects"
 import { ViewerUI } from "./ui"
+import { Viewport } from "./viewport"
 
 export class Viewer {
   private background: Background
@@ -12,6 +13,7 @@ export class Viewer {
   private game: Game
   readonly surface: Surface
   readonly ui: ViewerUI
+  readonly viewport: Viewport
 
   #offset: Point = Point.zero
   mousePosition: Point = Point.zero
@@ -25,6 +27,7 @@ export class Viewer {
 
   constructor (viewportSize: TSize, container: HTMLDivElement, options?: { disableContextMenu?: boolean }) {
     const { game, screen } = Game.create(viewportSize.width, viewportSize.height, container)
+    this.viewport = new Viewport(viewportSize, this)
     this.game = game
     this.screen = screen
     this.surface = new MemSurface(viewportSize)
@@ -112,6 +115,14 @@ export class Viewer {
     this.background.offest = value
     this.background.render()
     this.onViewportChanged?.(old, 1)
+  }
+
+  get zoom () {
+    return this.background.zoom
+  }
+
+  set zoom (value: number) {
+    this.background.zoom = value
   }
 
   get viewportRect () {

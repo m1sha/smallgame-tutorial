@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { FormControl, PushButton } from 'vue3-universal-components'
-import { useImagesCombinerStore} from '../../../store'
+//import { useImagesCombinerStore} from '../../../store'
 
-const store = useImagesCombinerStore()
+//const store = useImagesCombinerStore()
 </script>
 
 <template>
@@ -10,7 +10,7 @@ const store = useImagesCombinerStore()
 <FormControl caption="Output image" class="image-list-panel">
   <div class="combine-mode-settings">
     <p>Image Size: </p>
-    <PushButton @click="store.downloadCombinedImage()">Dowload</PushButton>
+    <!-- <PushButton @click="store.downloadCombinedImage()">Dowload</PushButton> -->
   </div>
   
 </FormControl>

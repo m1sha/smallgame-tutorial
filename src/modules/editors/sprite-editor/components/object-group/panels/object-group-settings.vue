@@ -30,6 +30,10 @@ function onMerge () {
   store.mergeSelected()
 }
 
+function onCreateSpriteSheet () {
+  store.createSpriteSheetFromSelected()
+}
+
 </script>
 
 <template>
@@ -49,6 +53,7 @@ function onMerge () {
       <FormControl caption="Combine Settings">
         <FormControlContent>
           <PushButton @click="onMerge">Merge Images</PushButton>
+          <PushButton @click="onCreateSpriteSheet">Create SpriteSheet</PushButton>
         </FormControlContent>
       </FormControl>
     </FormControl>

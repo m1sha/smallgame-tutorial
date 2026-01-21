@@ -3,7 +3,7 @@ import { TSize } from "smallgame"
 import editor, { ISpriteEditorState, } from "../code"
 import { ref } from "vue"
 import { useSpriteSheetStore } from "./sprite-sheet-store"
-import { useImagesCombinerStore } from "./images-combiner-store"
+import { useImagesStore } from "./image-store"
 import { removeItem } from "smallgame/src/utils"
 
 class StateController {
@@ -29,11 +29,6 @@ const useSpriteEditorStore = defineStore('SpriteEditorStore', () => {
     }
   }
 
-  const createImageCombiner = async (files: File[]) => {
-    useImagesCombinerStore()
-    const obj = await editor.createImageCombiner(files)
-    state.value.objects.push(obj.toDisplay())
-  }
 
   const createSpriteSheet  = async (file: File) => {
     useSpriteSheetStore().setImageFile(file)
@@ -66,6 +61,13 @@ const useSpriteEditorStore = defineStore('SpriteEditorStore', () => {
     state.value.objects.push(obj.toDisplay())
   }
 
+  const createSpriteSheetFromSelected = () => {
+    const obj = editor.createSpriteSheetFromSelected()
+    state.value.selectedObjects = []
+    state.value.objects = []
+    state.value.objects.push(obj.toDisplay())
+  }
+
   const download = () => {
     editor.download()
   }
@@ -73,11 +75,11 @@ const useSpriteEditorStore = defineStore('SpriteEditorStore', () => {
   return {
     createViewer,
     importImages,
-    createImageCombiner,
     createSpriteSheet,
     selectObject,
     alignImages,
     mergeSelected,
+    createSpriteSheetFromSelected,
     download,
     //setCurrentObject,
     state

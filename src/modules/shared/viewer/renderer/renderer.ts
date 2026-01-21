@@ -8,6 +8,7 @@ export class Renderer {
   private uMouse: u_vec4
   private uOffest: u_vec2
   private uTime: u_float
+  private uZoom: u_float
 
   constructor (viewportSize: TSize, vss: string, fss: string) {
     this.ctx = new GL(viewportSize, true)
@@ -19,6 +20,8 @@ export class Renderer {
     this.uMouse.value = [0, 0, 0, 0]
     this.uOffest = this.ctx.uniform('uOffest', 'vec2')
     this.uOffest.value = [0, 0]
+    this.uZoom = this.ctx.uniform('uZoom', 'float')
+    this.uZoom.value = 1
     this.uTime = this.ctx.uniform('uTime', 'float')
     this.uTime.value = 0
   }
@@ -57,6 +60,14 @@ export class Renderer {
 
   set offest (point: TPoint) {
     this.uOffest.value = [point.x, point.y]
+  }
+
+  get zoom () {
+    return this.uZoom.value
+  }
+
+  set zoom (value: number) {
+    this.uZoom.value = value
   }
 
   get surface () {

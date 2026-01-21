@@ -9,7 +9,7 @@ export class Background {
 
   constructor (viewportSize: TSize) {
     this.renderers.push(new ChessBackground(viewportSize))
-    this.renderers.push(new GridBackground(viewportSize))
+    //this.renderers.push(new GridBackground(viewportSize))
     this.surface = new MemSurface(viewportSize)
   }
 
@@ -45,6 +45,12 @@ export class Background {
 
   set offest (point: TPoint) { 
     this.renderers.forEach(r => r.offest = point)
+  }
+
+  get zoom () { return this.renderers.length ? this.renderers[0].zoom : 1 }
+
+  set zoom (value: number) { 
+    this.renderers.forEach(r => r.zoom = value)
   }
 
   get mousePos () {
