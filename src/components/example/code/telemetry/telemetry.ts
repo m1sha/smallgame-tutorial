@@ -8,4 +8,5 @@ export interface ITelemetry {
   openned: boolean
   wide: boolean
   opennedChart: boolean
+  showLegend: boolean
 }

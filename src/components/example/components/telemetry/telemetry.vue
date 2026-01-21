@@ -22,7 +22,7 @@ watch(() => props.telemetry.opennedChart, () => openChart.value = props.telemetr
       <div v-for="parameter, i in telemetry.parameters" class="telemetry-parameter">
         
         <span class="telemetry-parameter-key">
-          <i :style="{ backgroundColor: ParameterColors[i]}"></i>
+          <i v-show="telemetry.showLegend" :style="{ backgroundColor: ParameterColors[i]}"></i>
           <span>{{ parameter.name }}</span>  
         </span>
         <span class="telemetry-parameter-value" v-html="parameter.value"></span>

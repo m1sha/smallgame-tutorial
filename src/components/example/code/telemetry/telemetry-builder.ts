@@ -15,6 +15,7 @@ export class TelemetryBuilder {
   private openned = ref(false)
   private opennedChart = ref(false)
   private wide = ref(false)
+  private showLegend = ref(true)
 
   private autoStartTrigger: (() => boolean) | null = null
   private autoStopTrigger: (() => boolean) | null = null
@@ -24,6 +25,11 @@ export class TelemetryBuilder {
   open (size?: 'nornal' | 'wide') {
     this.openned.value = true
     if (size === 'wide') this.wide.value = true
+    return this
+  }
+
+  noLegend () {
+    this.showLegend.value = false
     return this
   }
 
@@ -91,7 +97,8 @@ export class TelemetryBuilder {
       claerData: () => this.data.clear(),
       openned: this.openned as any as boolean,
       wide: this.wide as any as boolean,
-      opennedChart: this.opennedChart as any as boolean
+      opennedChart: this.opennedChart as any as boolean,
+      showLegend: this.showLegend as any as boolean,
     }
   }
 }
