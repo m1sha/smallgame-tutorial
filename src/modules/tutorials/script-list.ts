@@ -6,9 +6,18 @@ const cat2 = 'Surfaces'
 const cat3 = 'Raw GLSL'
 const cat4 = 'WebGL'
 const cat5 = 'AI'
+const cat6 = 'Orientation'
 
 
 const scriptList: ScriptDef[] = [
+  { name: 'Viewer Navigations', category: cat6, module: async (state: any) => (await import('./orientation/viewer-navigations')).default(state)  },
+  { name: 'Rect Move + Pivote', category: cat6, module: async (state: any) => (await import('./orientation/rect-shift-pivote')).default(state)  },
+  { name: 'Rect Scale + Pivote', category: cat6, module: async (state: any) => (await import('./orientation/rect-scale-pivote')).default(state)  },
+  { name: 'Rect Scale to Cursor', category: cat6, module: async (state: any) => (await import('./orientation/rect-scale-to-cursor')).default(state)  },
+  { name: 'Movement To Cursor', category: cat6, module: async (state: any) => (await import('./orientation/movement-to-cursor')).default(state)  },
+  { name: 'Zoom Pan', category: cat6, module: async (state: any) => (await import('./orientation/zoom-pan')).default(state)  },
+  { name: 'Camera 2D', category: cat6, module: async (state: any) => (await import('./orientation/camera')).default(state)  },
+
   { name: 'Linear Movement', category: cat0, module: async (state: any) => (await import('./examples/code/linear-movement')).default(state)  },
   { name: 'Movements', category: cat0, module: async (state: any) => (await import('./examples/code/movements')).default(state)  },
   { name: 'Move & Rotate', category: cat0, module: async (state: any) => (await import('./examples/code/rotate-move')).default(state)  },
@@ -30,12 +39,7 @@ const scriptList: ScriptDef[] = [
   { name: 'Bezier Lines', category: cat1, module: async (state: any) => (await import('./examples/code/bezier-lines')).default(state)  },
   { name: 'Bezier Interpolation', category: cat1, module: async (state: any) => (await import('./examples/code/bezier-interpolation')).default(state)  },
   { name: 'Path Interpolation', category: cat1, module: async (state: any) => (await import('./examples/code/path-interpolation')).default(state)  },
-  { name: 'Viewer Navigations', category: cat1, module: async (state: any) => (await import('./examples/code/viewer-navigations')).default(state)  },
-  { name: 'Rect Move + Pivote', category: cat1, module: async (state: any) => (await import('./examples/code/rect-shift-pivote')).default(state)  },
-  { name: 'Rect Scale + Pivote', category: cat1, module: async (state: any) => (await import('./examples/code/rect-scale-pivote')).default(state)  },
-  { name: 'Rect Scale to Cursor', category: cat1, module: async (state: any) => (await import('./examples/code/rect-scale-to-cursor')).default(state)  },
-  { name: 'Movement To Cursor', category: cat1, module: async (state: any) => (await import('./examples/code/movement-to-cursor')).default(state)  },
-  { name: 'Zoom Pan', category: cat1, module: async (state: any) => (await import('./examples/code/zoom-pan')).default(state)  },
+  
 
   { name: 'Blit', category: cat2, module: async (state: any) => (await import('./surfaces/code/rectangle')).default(state)  },
   { name: 'Math Coords', category: cat2, module: async (state: any) => (await import('./surfaces/code/math-coords')).default(state)  },

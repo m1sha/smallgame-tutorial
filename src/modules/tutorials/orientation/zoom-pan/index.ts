@@ -1,6 +1,6 @@
-import { Viewer } from "../../../../shared"
-import { displayFps } from "../../../../../utils/display-fps"
-import { type ScriptModule, type ScriptSettings, TelemetryBuilder, UIBuilder } from "../../../../../components/example"
+import { Viewer } from "../../../shared"
+import { displayFps } from "../../../../utils/display-fps"
+import { type ScriptModule, type ScriptSettings, TelemetryBuilder, UIBuilder } from "../../../../components/example"
 import { GMath, Point, Rect, Sketch, TPoint } from "smallgame"
 
 export default async ({ container, width, height, fps }: ScriptSettings): Promise<ScriptModule> => {
@@ -13,10 +13,19 @@ export default async ({ container, width, height, fps }: ScriptSettings): Promis
   
   const viewer = new Viewer({ width, height }, container, { disableContextMenu: true })
   viewer.ui.setCellSize(24, 24)
+  
   const viewport = viewer.viewport
+  const objects: Rect[] = []
   
   let step = 1
+  let createObjectMode = false
   viewer.onInput = ev => {
+    if (ev.type === 'MOUSEDOWN') {
+      if (ev.lbc && createObjectMode) {
+        objects.push(Rect.fromCenter(ev.pos, 100, 100))
+        createObjectMode = false
+      }
+    }
     if (ev.type === 'MOUSEMOVE') {
       if (ev.lbc) {
         viewport.panBy(ev.shift)
@@ -62,11 +71,18 @@ export default async ({ container, width, height, fps }: ScriptSettings): Promis
       .circle({ fill: '#91172b' }, p3, 20 * viewport.zoom)
       .circle({ stroke: '#6b1423', lineWidth: viewport.zoom  }, p3, 30 * viewport.zoom)
       .draw(surface)
+
+    const s = Sketch.new()
+    for (const obj of objects) {
+      s.rect({ fill: '#34ce8eef' }, obj.scale(viewport.zoom).shift(viewport.offset))
+    }
+    s.draw(surface)
       
     displayFps(fps)
   }
 
   const ui = new UIBuilder()
+  ui.button('Add Object', () => createObjectMode = true )
   return {
     ui: ui.build(),
     telemetry: telemetry.build(),

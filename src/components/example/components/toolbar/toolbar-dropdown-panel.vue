@@ -1,20 +1,20 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 
-defineProps<{ caption: string }>()
-const open = ref(true)
+const { open } = defineProps<{ caption: string, open: boolean }>()
+const isOpen = ref(open)
 </script>
 
 <template>
 <div class="toolbar-dropdown-panel">
-  <div class="toolbar-button" role="button" @click="open = !open">
+  <div class="toolbar-button" role="button" @click="isOpen = !isOpen">
     <div class="caption" >
-      <i class="fa" :class="{ 'fa-chevron-down': open, 'fa-chevron-right': !open }"></i>
+      <i class="fa" :class="{ 'fa-chevron-down': isOpen, 'fa-chevron-right': !isOpen }"></i>
       <span>{{ caption }}</span>
     </div>
     
   </div>
-  <div v-if="open" class="toolbar-dropdown-panel__content">
+  <div v-if="isOpen" class="toolbar-dropdown-panel__content">
     <slot name="content"></slot>
   </div>
 </div>

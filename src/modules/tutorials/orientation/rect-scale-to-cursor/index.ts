@@ -1,6 +1,6 @@
-import { Viewer } from "../../../../shared"
-import { displayFps } from "../../../../../utils/display-fps"
-import { Icons, type ScriptModule, type ScriptSettings, TelemetryBuilder, UIBuilder } from "../../../../../components/example"
+import { Viewer } from "../../../shared"
+import { displayFps } from "../../../../utils/display-fps"
+import { Icons, type ScriptModule, type ScriptSettings, TelemetryBuilder, UIBuilder } from "../../../../components/example"
 import { GMath, Point, Rect, Sketch } from "smallgame"
 
 export default async ({ container, width, height, fps }: ScriptSettings): Promise<ScriptModule> => {

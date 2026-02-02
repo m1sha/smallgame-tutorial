@@ -57,8 +57,16 @@ export class Background {
     return this.renderers.length ? this.renderers[0].mousePos : setPoint(0, 0)
   }
 
-   set mousePos (point: TPoint) { 
+  set mousePos (point: TPoint) { 
     this.renderers.forEach(r => r.mousePos = point)
+  }
+
+  get mouseShift () {
+    return this.renderers.length ? this.renderers[0].mouseShift : setPoint(0, 0)
+  }
+
+  set mouseShift (point: TPoint) { 
+    this.renderers.forEach(r => r.mouseShift = point)
   }
 
 

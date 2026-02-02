@@ -6,7 +6,7 @@ import { SpriteSheetObject } from "./sprite-sheet"
 import { TilemapObject } from "./tilemap"
 import { ImageObject } from "./image"
 import { removeItem } from "smallgame/src/utils"
-import { Viewport } from "./viewport"
+//import { Viewport } from "./viewport"
 
 export class SpriteEditor {
   private _viewer: Viewer | null = null
@@ -14,7 +14,7 @@ export class SpriteEditor {
   private objects: DrawableObject[] = []
   private selectedObjects: DrawableObject[] = []
   private viewportSize: Size = Size.zero
-  private viewport = new Viewport()
+  //private viewport = new Viewport()
 
   onCurrentObjectChanged: ((obj: DrawableObject) => void) | null = null
   
@@ -31,7 +31,7 @@ export class SpriteEditor {
     const result: ImageObject[] = []
     for (const file of files)  {
       const img = await loadBlob(file)
-      const obj = new ImageObject(file.name, img, this.viewportSize, this.viewport)
+      const obj = new ImageObject(file.name, img, this.viewportSize, this._viewer.viewport)
       result.push(obj)
     }
     this.afterObjectCreated(result)
@@ -41,7 +41,7 @@ export class SpriteEditor {
   async createImageCombiner (files: File[]) {
     const imgs: { name: string, surface: Surface }[] = [] 
     for (const file of files) imgs.push({ name: file.name, surface: await loadBlob(file) })
-    const obj = new ImageCombineObject(imgs, this.viewportSize, this.viewport)
+    const obj = new ImageCombineObject(imgs, this.viewportSize, this._viewer.viewport)
     
     this.afterObjectCreated([obj])
     return obj
@@ -49,7 +49,7 @@ export class SpriteEditor {
 
   async createSpriteSheet (file: File) {
     const img = await loadBlob(file)
-    const obj = new SpriteSheetObject(img, this.viewportSize, file.name, this.viewport)
+    const obj = new SpriteSheetObject(img, this.viewportSize, file.name, this._viewer.viewport)
     obj.setGrid(1, 1)
     
     this.afterObjectCreated([obj])
@@ -108,7 +108,7 @@ export class SpriteEditor {
     const rect = Rect.merge(this.selectedObjects.map(p=> p.rect))
     const surface = new MemSurface(rect.size)
     this.selectedObjects.forEach(sel => surface.blit(sel.surface, sel.rect.shift(rect.topLeft.neg())))
-    const obj = new ImageObject('Merged', surface, this.viewportSize, this.viewport)
+    const obj = new ImageObject('Merged', surface, this.viewportSize, this._viewer.viewport)
     this.selectedObjects = []
     this.objects = []
     this.afterObjectCreated([obj])
@@ -119,7 +119,7 @@ export class SpriteEditor {
     const rect = Rect.merge(this.selectedObjects.map(p=> p.rect))
     const surface = new MemSurface(rect.size)
     this.selectedObjects.forEach(sel => surface.blit(sel.surface, sel.rect.shift(rect.topLeft.neg())))
-    const obj = new SpriteSheetObject(surface, this.viewportSize, 'Sprite Sheet', this.viewport)
+    const obj = new SpriteSheetObject(surface, this.viewportSize, 'Sprite Sheet', this._viewer.viewport)
     obj.setGrid(1, 1)
     this.selectedObjects = []
     this.objects = []
@@ -154,33 +154,47 @@ export class SpriteEditor {
     drawSelectedObjects(this.selectedObjects, surface)
   }
 
-  
+  private step = 1
   private handleInput(ev: GameEvent): void {
-    const objs = this.selectedObjects
-    for (const obj of objs) {
+    //const objs = this.selectedObjects
+    //for (const obj of objs) {
 
       if (ev.type === 'MOUSEDOWN'){
-        if (ev.lbc && obj instanceof SpriteSheetObject) {
-          obj.selectCell(ev.pos)
-          this.onCurrentObjectChanged?.(obj)
+        if (ev.lbc) {
+          this.selectedObjects.forEach(obj => {
+            if (obj instanceof SpriteSheetObject) obj.selectCell(ev.pos)
+            this.onCurrentObjectChanged?.(obj)
+          })
           return
         }
       }
 
       if (ev.type === 'MOUSEMOVE') {
         if (ev.rbc) {
-          obj.rect.shiftSelf(ev.shift)
-          this.onCurrentObjectChanged?.(obj)
+          this.selectedObjects.forEach(obj => {
+            obj.rect.shiftSelf(ev.shift)
+            this.onCurrentObjectChanged?.(obj)
+          })
+        }
+        if (ev.lbc) {
+          this._viewer.viewport.panBy(ev.shift)
         }
       }
 
       if (ev.type === 'WHEEL') {
-        this.viewport.zoom -= Math.sign(ev.deltaY)
-        if (this.viewport.zoom < 1) this.viewport.zoom = 1
-        GMath.logZoom(this.viewport.zoom, 10, 1, 2)
+        this.step -= Math.sign(ev.deltaY)
+        GMath.clamp(this.step, 0, 9)
+        let zoom = GMath.logZoom(this.step, 4, 1, 2)
+        zoom = GMath.clamp(zoom, 0.1, 8)
+        this._viewer.viewport.zoomTo(zoom, ev.pos)
+
+        //this.viewport.zoom -= Math.sign(ev.deltaY)
+        //if (this.viewport.zoom < 1) this.viewport.zoom = 1
+        //GMath.logZoom(this.viewport.zoom, 10, 1, 2)
+        
         this.selectedObjects.forEach(obj => this.onCurrentObjectChanged?.(obj))
       }
-    }
+    //}
   }
 
   private afterObjectCreated (objs: DrawableObject[]) {

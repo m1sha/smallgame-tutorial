@@ -63,6 +63,7 @@ export class Viewer {
           this.mousePosition.moveSelf(ev.pos)
           if (ev.lbc && ev.ctrlKey) {
             this.background.mousePos = ev.pos
+            this.background.mouseShift = ev.shift
             this.#offset.shiftSelf(ev.shift)
             this.background.offest = this.#offset
             this.background.render()

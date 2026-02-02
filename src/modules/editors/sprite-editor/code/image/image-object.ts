@@ -13,7 +13,7 @@ export class ImageObject extends DrawableObject {
   }
 
   draw (screen: Surface) {
-    const rect = this.rect.scale(this.viewport.zoom, 'center-center')
+    const rect = this.rect.scale(this.viewport.zoom).shift(this.viewport.offset)
     screen.blit(this.surface, rect)
   }
 

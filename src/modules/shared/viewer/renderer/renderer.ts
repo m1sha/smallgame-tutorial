@@ -6,6 +6,7 @@ export class Renderer {
   private prog: GlProgram
   private uResolution: u_vec2
   private uMouse: u_vec4
+  private uMouseShift: u_vec2
   private uOffest: u_vec2
   private uTime: u_float
   private uZoom: u_float
@@ -18,6 +19,8 @@ export class Renderer {
     this.uResolution.value = [viewportSize.width * 1.0, viewportSize.height * 1.0]
     this.uMouse = this.ctx.uniform('uMouse', 'vec4')
     this.uMouse.value = [0, 0, 0, 0]
+    this.uMouseShift = this.ctx.uniform('uMouseShift', 'vec2')
+    this.uMouseShift.value = [0, 0]
     this.uOffest = this.ctx.uniform('uOffest', 'vec2')
     this.uOffest.value = [0, 0]
     this.uZoom = this.ctx.uniform('uZoom', 'float')
@@ -43,6 +46,15 @@ export class Renderer {
   set mousePos (point: TPoint) {
     const [_, __, z, w] = this.uMouse.value
     this.uMouse.value = [point.x, point.y, z, w]
+  }
+
+  get mouseShift () {
+    const [x, y] = this.uMouseShift.value
+    return { x, y }
+  }
+
+  set mouseShift (point: TPoint) {
+    this.uMouseShift.value = [point.x, point.y]
   }
 
   set mouseButton (button: number) {

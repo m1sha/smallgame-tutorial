@@ -64,7 +64,7 @@ function clearPrevious () {
 <template>
   <Toolbar>
     <template #project>
-      <ToolbarDropdownPanel caption="Projects">
+      <ToolbarDropdownPanel caption="Projects" :open="false">
         <template #content>
           <ScriptList :items="scriptListItems" :selected-id="scriptId" @click="changeScript" />
         </template>
@@ -73,7 +73,7 @@ function clearPrevious () {
     </template>
 
     <template #common-space>
-      <ToolbarDropdownPanel caption="Telemetry">
+      <ToolbarDropdownPanel caption="Telemetry" :open="true">
         <template #content>
           <Telemetry  v-if="currentModule && currentModule.telemetry" :telemetry="currentModule.telemetry" />
         </template>
@@ -81,21 +81,21 @@ function clearPrevious () {
     </template>
 
     <template #viewer-settings>
-      <ToolbarDropdownPanel caption="Viewer">
+      <ToolbarDropdownPanel caption="Viewer" :open="false">
         <template #content>
         </template>
       </ToolbarDropdownPanel>
     </template>
 
     <template #entity-list>
-      <ToolbarDropdownPanel caption="Objects">
+      <ToolbarDropdownPanel caption="Objects" :open="false">
         <template #content>
         </template>
       </ToolbarDropdownPanel>
     </template>
 
     <template #command-panel>
-      <ToolbarDropdownPanel caption="Parameters">
+      <ToolbarDropdownPanel caption="Parameters" :open="true">
         <template #content>
           <ParameterList v-if="currentModule" :parameters="currentModule.parameters ?? []" :ui="currentModule.ui ?? { controls: [] }" />  
         </template>

@@ -11,8 +11,10 @@ export default async ({ container, width, height, fps }: ScriptSettings): Promis
   const overlapRect = telemetry.def('Overlap Rect', Rect.zero)
   const frigateRect = telemetry.def('Frigate Rect', Rect.zero)
   const alienRect = telemetry.def('Alien Rect', Rect.zero)
-  const mousePos = telemetry.def('Positon', Point.zero)
+  const mousePos = telemetry.def('Cursor', Point.zero)
   const hittest = telemetry.def('Collided', false)
+
+  const clipRectP = telemetry.def('clip Rect', Rect.zero)
 
   const frigate = await loadImage('space-striker/ships/Frigate_1.png')
   const frigateMask = frigate.createMask()
@@ -85,15 +87,19 @@ export default async ({ container, width, height, fps }: ScriptSettings): Promis
       surface.blit(alien, alien.rect)
     }
 
-    if (overlapRect.value) {
+    //if (overlapRect.value) {
       preview.clear()
-      preview.blit(surface, surface.rect.move(mousePos.value.shift(-preview.width / 6).neg()).scale(3))
+      const clipRect = surface.rect.clone() //.move(mousePos.value.shift(-preview.width / 6).neg(), 'center-center')
+      
+      clipRect.shiftSelf(mousePos.value.neg().shift(preview.width / 2, preview.height / 2)) // preview.rect.center
+      clipRectP.value = clipRect
+      preview.blit(surface, clipRect.scale(2, 'center-center'))
       surface.blit(preview, preview.rect.move(300, 450))
       Sketch
         .new()
         .rect({ stroke: '#999' }, preview.rect.move(300, 450))
         .draw(surface)
-    }
+//    }
     
     displayFps(fps)
     telemetry.tick()
