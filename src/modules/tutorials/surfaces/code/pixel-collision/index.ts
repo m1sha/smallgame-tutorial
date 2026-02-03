@@ -1,4 +1,4 @@
-import { Color, Game, gameloop, loadImage, Point, Rect, Sketch, Surface, TPoint } from "smallgame"
+import { Color, GMath, loadImage, Point, Rect, Sketch, Surface } from "smallgame"
 import { displayFps } from "../../../../../utils/display-fps"
 import { type ScriptModule, type ScriptSettings } from "../../../../../components/example"
 import { UIBuilder } from "../../../../../components/example/code/ui"
@@ -13,9 +13,6 @@ export default async ({ container, width, height, fps }: ScriptSettings): Promis
   const alienRect = telemetry.def('Alien Rect', Rect.zero)
   const mousePos = telemetry.def('Cursor', Point.zero)
   const hittest = telemetry.def('Collided', false)
-
-  const clipRectP = telemetry.def('clip Rect', Rect.zero)
-
   const frigate = await loadImage('space-striker/ships/Frigate_1.png')
   const frigateMask = frigate.createMask()
   const alien = await loadImage('space-striker/ships/Alien_4.png')
@@ -23,55 +20,51 @@ export default async ({ container, width, height, fps }: ScriptSettings): Promis
   frigate.rect.absCenter = viewer.surface.rect.center
   frigateRect.value = frigate.rect
   alienRect.value = alien.rect
-
   const frigateMaskImg = await frigateMask.toSurface()
   const frigateMaskImgSelected = await frigateMask.toSurface(Color.green)
   const alienMaskImg = await alienMask.toSurface()
   const alienMaskImgSelected = await alienMask.toSurface(Color.green)
-
   let showMask = false
   let showFrame = true
-
   const preview = new Surface(400, 400)
+  preview.imageRendering = 'pixelated'
+  let step = 1
+  let zoom = 1
 
   viewer.onInput = ev => {
     if (ev.type === 'MOUSEMOVE') {
       alien.rect.absCenter = ev.pos
       alienRect.value = alien.rect
       mousePos.value = Point.from(ev.pos)
+
+      overlapRect.value = frigate.rect.getOverlapRect(alien.rect)
+      hittest.value = overlapRect.value && frigateMask.overlaps(alienMask)
+    }
+    if (ev.type === 'WHEEL') {
+      step -= Math.sign(ev.deltaY)
+      GMath.clamp(step, 0, 9)
+      zoom = GMath.logZoom(step, 14, 1, 2)
     }
   }
 
   viewer.onFrameChanged = surface => {
     surface.clear()
-    overlapRect.value = frigate.rect.getOverlapRect(alien.rect)
-    let color = overlapRect ? '#a33' : 'transparent'
-
-    if (overlapRect.value) {
-      const frigateOffesetRect = overlapRect.value.shift(frigate.rect.topLeft.neg())
-      const alienOffesetRect = overlapRect.value.shift(alien.rect.topLeft.neg())
-
-      const viewPoint0 = new Point(300, 150)
-      const viewPoint1 = new Point(300, 350)
-      Sketch
-        .new()
-        //.rect({ fill: '#188' }, overlapRect.value)
-        .rect({ stroke: '#188' }, frigateOffesetRect.shift(viewPoint0))
-        .rect({ stroke: '#ddd' }, frigate.rect.move(0,0).shift(viewPoint0))
-        .rect({ stroke: '#188' }, alienOffesetRect.shift(viewPoint1))
-        .rect({ stroke: '#ddd' }, alien.rect.move(0,0).shift(viewPoint1))
-        .draw(surface)
-      
-        hittest.value = frigateMask.overlaps(alienMask)
-
-      if (hittest.value) {
-        color = '#271'
-      }
-    }
+    
+    const frigateOffesetRect = overlapRect.value ? overlapRect.value.shift(frigate.rect.topLeft.neg()) : Rect.zero
+    const alienOffesetRect = overlapRect.value ? overlapRect.value.shift(alien.rect.topLeft.neg()) : Rect.zero
+    const viewPoint0 = new Point(300, 190)
+    const viewPoint1 = new Point(300, 390)
+    Sketch
+      .new()
+      .rect({ stroke: '#188', fill: hittest.value ? '#155' : 'transparent' }, frigateOffesetRect.shift(viewPoint0))
+      .rect({ stroke: '#ddd' }, frigate.rect.move(0,0).shift(viewPoint0))
+      .rect({ stroke: '#188', fill: hittest.value ? '#155' : 'transparent' }, alienOffesetRect.shift(viewPoint1))
+      .rect({ stroke: '#ddd' }, alien.rect.move(0,0).shift(viewPoint1))
+      .draw(surface)
     
     if (showFrame) Sketch.new()
-      .rect({ stroke: color }, frigate.rect)
-      .rect({ stroke: color }, alien.rect)
+      .rect({ stroke: hittest.value ? '#271' : '#a33' }, frigate.rect)
+      .rect({ stroke: hittest.value ? '#271' : '#a33' }, alien.rect)
       .draw(surface)
     
     if (showMask) {
@@ -87,24 +80,21 @@ export default async ({ container, width, height, fps }: ScriptSettings): Promis
       surface.blit(alien, alien.rect)
     }
 
-    //if (overlapRect.value) {
-      preview.clear()
-      const clipRect = surface.rect.clone() //.move(mousePos.value.shift(-preview.width / 6).neg(), 'center-center')
+    preview.clear()
+    const clipRect = surface.rect.clone()
+    clipRect.scaleSelf(zoom)
+    clipRect.shiftSelf(mousePos.value.neg().scale(zoom).shift(preview.rect.center))
       
-      clipRect.shiftSelf(mousePos.value.neg().shift(preview.width / 2, preview.height / 2)) // preview.rect.center
-      clipRectP.value = clipRect
-      preview.blit(surface, clipRect.scale(2, 'center-center'))
-      surface.blit(preview, preview.rect.move(300, 450))
-      Sketch
-        .new()
-        .rect({ stroke: '#999' }, preview.rect.move(300, 450))
-        .draw(surface)
-//    }
+    preview.blit(surface, clipRect)
+    surface.blit(preview, preview.rect.move(300, 450))
+    Sketch
+      .new()
+      .rect({ stroke: '#999' }, preview.rect.move(300, 450))
+      .draw(surface)
     
     displayFps(fps)
     telemetry.tick()
   }
-  
   
   const ui = new UIBuilder()
   ui.group('Settings', group => group.open()
