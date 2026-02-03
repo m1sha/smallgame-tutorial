@@ -1,6 +1,6 @@
-import { Viewer } from "../../../../shared"
-import { displayFps } from "../../../../../utils/display-fps"
-import { TelemetryBuilder, type ScriptModule, type ScriptSettings, Icons, UIBuilder } from "../../../../../components/example"
+import { Viewer } from "../../../shared"
+import { displayFps } from "../../../../utils/display-fps"
+import { TelemetryBuilder, type ScriptModule, type ScriptSettings, Icons, UIBuilder } from "../../../../components/example"
 import { Rect, Sketch } from "smallgame"
 import { Pivote } from "smallgame/src/pivote"
 
