@@ -61,10 +61,12 @@ export abstract class Contariner  {
 
   info (text: string, title?: string) {
     this.controls.push(new InfoPanel(text, title ?? ''))
+    return this
   }
 
   switch (caption: string, callback: (value: boolean) => void, defaultValue?: boolean) {
     this.controls.push(new Switch(caption, callback, defaultValue ?? false))
+    return this
   }
 
   input (caption: string, callback: (value: string) => void, defaultValue?: string) {

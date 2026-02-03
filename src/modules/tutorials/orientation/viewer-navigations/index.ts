@@ -1,8 +1,8 @@
-import { Viewer } from "../../../../shared"
-import { displayFps } from "../../../../../utils/display-fps"
-import { type ScriptModule, type ScriptSettings } from "../../../../../components/example"
-import { UIBuilder } from "../../../../../components/example/code/ui"
-import { TelemetryBuilder } from "../../../../../components/example/code/telemetry"
+import { Viewer } from "../../../shared"
+import { displayFps } from "../../../../utils/display-fps"
+import { type ScriptModule, type ScriptSettings } from "../../../../components/example"
+import { UIBuilder } from "../../../../components/example/code/ui"
+import { TelemetryBuilder } from "../../../../components/example/code/telemetry"
 import { Point, Rect, setPoint, Sketch } from "smallgame"
 
 export default async ({ container, width, height, fps }: ScriptSettings): Promise<ScriptModule> => {
