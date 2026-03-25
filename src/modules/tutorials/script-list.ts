@@ -80,6 +80,7 @@ const scriptList: ScriptDef[] = [
   { name: 'Uniform Attribute', category: cat4, module: async (state: any) => (await import('./gl/code/uniform-attribute')).default(state)  },
   { name: 'Vertex Buffer', category: cat4, module: async (state: any) => (await import('./gl/code/vertex-buffer')).default(state)  },
   { name: 'Vertex Buffer2', category: cat4, module: async (state: any) => (await import('./gl/code/vertex-buffer2')).default(state)  },
+  { name: 'Array Instanced', category: cat4, module: async (state: any) => (await import('./gl/code/array-instanced')).default(state)  },
 ]
 
 export { scriptList }
