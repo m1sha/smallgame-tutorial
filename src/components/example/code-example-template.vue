@@ -3,6 +3,7 @@ import { computed, onMounted, ref } from "vue"
 import { useRoute, useRouter } from "vue-router"
 import { ScriptDef, ScriptModule } from "./code"
 import { ParameterList, ScriptList, Telemetry, Toolbar, ToolbarDropdownPanel, ContextMenu } from './components'
+import { Size } from "smallgame";
 
 const props = defineProps<{ scriptList: ScriptDef[] }>()
 const route = useRoute()
@@ -35,8 +36,9 @@ async function main() {
 
   const width = container.value!.clientWidth 
   const height = container.value!.clientHeight
+  const containerSize = new Size(width, height)
 
-  currentModule.value = await script.module({ container: container.value!, fps: fps.value!, width, height })
+  currentModule.value = await script.module({ container: container.value!, fps: fps.value!, width, height, containerSize })
 }
 
 function changeScript (id: string) {
