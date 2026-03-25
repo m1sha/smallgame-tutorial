@@ -18,9 +18,10 @@ class Camera {
   
   capture (screen: SurfaceBase, target: Point) {
     const rect = this.preview.rect
-    this.clipRect = screen.rect
-      .scale(this.zoom, target)
-      .shift(rect.center)
+    this.clipRect = screen.rect.dup()
+      .scaleSelf(this.zoom)
+      .shiftSelf(target.scale(this.zoom))
+      .shiftSelf(rect.center)
     this.preview.clear()
     this.preview.blit(screen, this.clipRect)
 
@@ -38,7 +39,7 @@ class Camera {
 }
 
 export default async ({ container, width, height, fps }: ScriptSettings): Promise<ScriptModule> => {
-  const telemetry = new TelemetryBuilder().open()
+  const telemetry = new TelemetryBuilder().open().noLegend()
   const viewer = new Viewer({ width, height }, container, { disableContextMenu: true })
   const mousePos = telemetry.def('Cursor', Point.zero)
   const zoom = telemetry.def('Zoom', 1)

@@ -6,6 +6,7 @@ import { GMath, Point, Rect, Sketch } from "smallgame"
 export default async ({ container, width, height, fps }: ScriptSettings): Promise<ScriptModule> => {
   const telemetry = new TelemetryBuilder().open()
   const curPos = telemetry.def('Cursor Position', Point.zero)
+  const zoom = telemetry.def('Zoom', 1)
   const viewer = new Viewer({ width, height }, container, { disableContextMenu: true })
 
   const rect = Rect.size(300, 300)
@@ -19,26 +20,29 @@ export default async ({ container, width, height, fps }: ScriptSettings): Promis
   rect2.absCenter = rect.topRight
   rect3.absCenter = rect.bottomLeft
   rect4.absCenter = rect.bottomRight
-  let rectWork = rect.clone()
-  let rectWork1 = rect1.clone()
-  let rectWork2 = rect2.clone()
-  let rectWork3 = rect3.clone()
-  let rectWork4 = rect4.clone()
+  let rectWork = rect.dup()
+  let rectWork1 = rect1.dup()
+  let rectWork2 = rect2.dup()
+  let rectWork3 = rect3.dup()
+  let rectWork4 = rect4.dup()
 
-  let zoom = 1
+  zoom.value = 1
+  let step = 1
+
+  const scale = (r: Rect, pos: Point) => r.scale(zoom.value, zoom.value, pos)
 
   viewer.onInput = ev => {
     if (ev.type === 'WHEEL') {
-      const dz = Math.sign(ev.deltaY) * 0.1
-      zoom -= dz
-      zoom = GMath.clamp(zoom, .1252, 6)
-      if (zoom === 0) zoom = 1
+      step -= Math.sign(ev.deltaY)
+      GMath.clamp(step, 0, 14)
+      zoom.value = GMath.logZoom(step, 14, 1, 2)
+      
       //console.log('a')
-      rectWork = rect.scale(zoom, zoom, ev.pos)
-      rectWork1 = rect1.scale(zoom, zoom, ev.pos)
-      rectWork2 = rect2.scale(zoom, zoom, ev.pos)
-      rectWork3 = rect3.scale(zoom, zoom, ev.pos)
-      rectWork4 = rect4.scale(zoom, zoom, ev.pos)
+      rectWork =  scale(rect, ev.pos)
+      rectWork1 = scale(rect1, ev.pos)
+      rectWork2 = scale(rect2, ev.pos)
+      rectWork3 = scale(rect3, ev.pos)
+      rectWork4 = scale(rect4, ev.pos)
     }
 
     if (ev.type === 'MOUSEMOVE') curPos.value = ev.pos

@@ -49,27 +49,36 @@ export default async ({ container, width, height, fps }: ScriptSettings): Promis
   }
 
   const rect = new Rect(0, 0,  500, 500)
+  const rect2 = new Rect(0, 800,  400, 400)
   const dot = new Point(500, 500)
   const dot2 = new Point(0, 0)
   const dot3 = rect.absCenter
+
+  const dot4 =  new Point(1200, 500)
 
   viewer.onFrameChanged = surface => {
     surface.clear()
 
     const r = rect.scale(viewport.zoom).shift(viewport.offset)
+    const r2 = rect2.scale(viewport.zoom).shift(viewport.offset)
     const p = dot.scale(viewport.zoom).shift(viewport.offset)
     const p2 = dot2.scale(viewport.zoom).shift(viewport.offset)
     const p3 = dot3.scale(viewport.zoom).shift(viewport.offset)
+
+    //const p4 = dot4.scale(viewport.zoom).shift(viewport.offset)
     
     topleftParam.value = r.topLeft
     
     Sketch
       .new()
       .rect({ fill: '#78889918' }, r)
+      .rect({ fill: '#ac0a4dce' }, r2)
       .circle({ fill: '#667797' }, p, 10 * viewport.zoom)
       .circle({ fill: '#466d36' }, p2, 20 * viewport.zoom)
       .circle({ fill: '#91172b' }, p3, 20 * viewport.zoom)
       .circle({ stroke: '#6b1423', lineWidth: viewport.zoom  }, p3, 30 * viewport.zoom)
+
+      .circle({ fill: '#826faf' }, dot4.scale(viewport.zoom).shift(viewport.offset), 40 * viewport.zoom)
       .draw(surface)
 
     const s = Sketch.new()
