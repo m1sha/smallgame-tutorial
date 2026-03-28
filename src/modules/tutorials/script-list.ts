@@ -39,6 +39,7 @@ const scriptList: ScriptDef[] = [
   { name: 'Bezier Lines', category: cat1, module: async (state: any) => (await import('./examples/code/bezier-lines')).default(state)  },
   { name: 'Bezier Interpolation', category: cat1, module: async (state: any) => (await import('./examples/code/bezier-interpolation')).default(state)  },
   { name: 'Path Interpolation', category: cat1, module: async (state: any) => (await import('./examples/code/path-interpolation')).default(state)  },
+  { name: 'Numeric Table', category: cat1, module: async (state: any) => (await import('./examples/code/table')).default(state)  },
   
 
   { name: 'Blit', category: cat2, module: async (state: any) => (await import('./surfaces/code/rectangle')).default(state)  },
