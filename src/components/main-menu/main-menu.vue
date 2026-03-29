@@ -30,6 +30,11 @@ const editorsMenu = ref<HTMLElement>()
         
         <div id="EditorsMenu" popover class="submenu" ref="editorsMenu">
           <div class="nav-link">
+            <a href="#/editors/tile-editor" :class="{ 'router-link-active': route.name === 'TileEditor' }">Tile Editor</a>
+            <div class="border"></div>
+          </div>
+
+          <div class="nav-link">
             <a href="#/editors/raster-filers" :class="{ 'router-link-active': route.name === 'RasterFilers' }">Raster Filers</a>
             <div class="border"></div>
           </div>
