@@ -1,4 +1,4 @@
-import { Game, TSize, Screen, gameloop, GameEvent, Surface, MemSurface, Rect, Point, Size, Keys, TPoint } from "smallgame"
+import { Game, TSize, Screen, gameloop, GameEvent, Surface, MemSurface, Rect, Point, Size, Keys, TPoint, killgameloop } from "smallgame"
 import { Background } from "./background"
 import { SelectRegion } from "./select-region"
 import { SelectedObjects } from "./selected-objects"
@@ -6,6 +6,7 @@ import { ViewerUI } from "./ui"
 import { Viewport } from "./viewport"
 
 export class Viewer {
+  private gameloopId: number
   private background: Background
   private selectRegion: SelectRegion
   private selectedObjects: SelectedObjects
@@ -46,7 +47,7 @@ export class Viewer {
     const selectRect = Rect.zero
     let startSelectRect = false
     let moved = false
-    gameloop(() => {
+    this.gameloopId = gameloop(() => {
       
       for (const ev of game.event.get()) {
         if (ev.type === 'MOUSEDOWN') {
@@ -140,5 +141,6 @@ export class Viewer {
 
   remove () {
     this.game.kill()
+    killgameloop(this.gameloopId)
   }
 }
