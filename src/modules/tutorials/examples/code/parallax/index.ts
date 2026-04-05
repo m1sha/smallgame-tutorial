@@ -41,7 +41,7 @@ export default async ({ container, width, height, fps }: ScriptSettings): Promis
   let t = 0
   let func = Ease.get('easeInOutBounce')
   
-  gameloop(() => {
+  const gameloopId = gameloop(() => {
     screen.clear()
     parallax.draw(screen as any)
     if (t < 1) t += Time.deltaTime * speed
@@ -78,7 +78,7 @@ export default async ({ container, width, height, fps }: ScriptSettings): Promis
   return {
     parameters: [ variantParam, dirParam, speedParam, funcParam, resetBtn ],
     dispose () {
-      killgameloop()
+      killgameloop(gameloopId)
     }
   }
 }
