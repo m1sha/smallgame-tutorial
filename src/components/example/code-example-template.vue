@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from "vue"
 import { useRoute, useRouter } from "vue-router"
-import { ScriptDef, ScriptModule } from "./code"
+import { ScriptDef, ScriptModule, Settings } from "./code"
 import { ParameterList, ScriptList, Telemetry, Toolbar, ToolbarDropdownPanel, ContextMenu } from './components'
 import { Size } from "smallgame";
 
@@ -13,6 +13,7 @@ const fps = ref<HTMLDivElement>()
 const scriptId = computed(() => route.params.name as string)
 const currentModule = ref<ScriptModule | null>()
 const scriptListItems = computed(() => props.scriptList.map((p, i) => ({ id: p.name.replaceAll(' ', '_').toLocaleLowerCase(), name: p.name, category: p.category })) )
+const settings = new Settings()
 
 onMounted(async () => {
   await main()
@@ -66,7 +67,7 @@ function clearPrevious () {
 <template>
   <Toolbar>
     <template #project>
-      <ToolbarDropdownPanel caption="Projects" :open="false">
+      <ToolbarDropdownPanel caption="Projects" :open="settings.showScriptPanel" @toggle="isOpen => settings.showScriptPanel = isOpen">
         <template #content>
           <ScriptList :items="scriptListItems" :selected-id="scriptId" @click="changeScript" />
         </template>
@@ -75,7 +76,7 @@ function clearPrevious () {
     </template>
 
     <template #common-space>
-      <ToolbarDropdownPanel caption="Telemetry" :open="true">
+      <ToolbarDropdownPanel caption="Telemetry" :open="settings.showTelemetryPanel" @toggle="isOpen => settings.showTelemetryPanel = isOpen">
         <template #content>
           <Telemetry  v-if="currentModule && currentModule.telemetry" :telemetry="currentModule.telemetry" />
         </template>
@@ -83,21 +84,21 @@ function clearPrevious () {
     </template>
 
     <template #viewer-settings>
-      <ToolbarDropdownPanel caption="Viewer" :open="false">
+      <ToolbarDropdownPanel caption="Viewer" :open="settings.showViewerSettingsPanel" @toggle="isOpen => settings.showViewerSettingsPanel = isOpen">
         <template #content>
         </template>
       </ToolbarDropdownPanel>
     </template>
 
     <template #entity-list>
-      <ToolbarDropdownPanel caption="Objects" :open="false">
+      <ToolbarDropdownPanel caption="Objects" :open="settings.showObjectsPanel" @toggle="isOpen => settings.showObjectsPanel = isOpen">
         <template #content>
         </template>
       </ToolbarDropdownPanel>
     </template>
 
     <template #command-panel>
-      <ToolbarDropdownPanel caption="Parameters" :open="true">
+      <ToolbarDropdownPanel caption="Parameters" :open="settings.showParametersPanel" @toggle="isOpen => settings.showParametersPanel = isOpen">
         <template #content>
           <ParameterList v-if="currentModule" :parameters="currentModule.parameters ?? []" :ui="currentModule.ui ?? { controls: [] }" />  
         </template>
