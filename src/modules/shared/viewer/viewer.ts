@@ -4,6 +4,7 @@ import { SelectRegion } from "./select-region"
 import { SelectedObjects } from "./selected-objects"
 import { ViewerUI } from "./ui"
 import { Viewport } from "./viewport"
+import { setDebounce } from "smallgame/src/time"
 
 export class Viewer {
   private gameloopId: number
@@ -18,8 +19,10 @@ export class Viewer {
 
   #offset: Point = Point.zero
   mousePosition: Point = Point.zero
+  fixedUpdateTimeout: number = 50
 
   onFrameChanged: ((surface: Surface) => void) | null = null
+  onFixedUpdate: (() => void) | null = null
   onInput: ((event: GameEvent) => void) | null = null
   onKeyPressed: ((key: Keys) => void) | null = null
   onSelectedRect: ((rect: Rect) => void) | null = null
@@ -47,8 +50,10 @@ export class Viewer {
     const selectRect = Rect.zero
     let startSelectRect = false
     let moved = false
+
+    const fixedUpdate = setDebounce(() => this.onFixedUpdate?.(), this.fixedUpdateTimeout)
+
     this.gameloopId = gameloop(() => {
-      
       for (const ev of game.event.get()) {
         if (ev.type === 'MOUSEDOWN') {
           if (ev.lbc && ev.altKey) {
@@ -97,6 +102,7 @@ export class Viewer {
       }
       
       this.onKeyPressed?.(game.key)
+      fixedUpdate()
       this.onFrameChanged?.(this.surface)
 
       this.screen.clear()
