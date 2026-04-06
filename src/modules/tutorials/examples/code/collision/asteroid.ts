@@ -31,6 +31,7 @@ export class Asteroid {
     if (this.rect.absWidth >= this.fieldSize.width) this.rect.x = this.fieldSize.width - this.rect.width - 1
     if (this.rect.absHeight >= this.fieldSize.height) this.rect.y = this.fieldSize.height - this.rect.height - 1
 
-    surface.blit(this.sprite.image, this.rect, { angle: this.a, pivote: 'center-center', pivoteOwner: 'self' })
+    // surface.blit(this.sprite.image, this.rect, { angle: this.a, pivote: 'center-center', pivoteOwner: 'self' })
+    surface.blit(this.sprite.image, this.rect)
   }
 }

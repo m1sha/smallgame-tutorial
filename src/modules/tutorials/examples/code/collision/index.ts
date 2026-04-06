@@ -11,9 +11,12 @@ export default async ({ container, width, height, fps }: ScriptSettings): Promis
   const asteroids = new Asteroids({ width, height })
   asteroids.add(20)
 
+  viewer.onFixedUpdate = () => {
+    asteroids.calcCollision()
+  }
+
   viewer.onFrameChanged = surface => {
     surface.clear()
-    asteroids.calcCollision()
     asteroids.draw(surface)
     displayFps(fps)
   }
