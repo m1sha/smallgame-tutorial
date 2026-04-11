@@ -83,6 +83,8 @@ const scriptList: ScriptDef[] = [
   { name: 'Vertex Buffer', category: cat4, module: async (state: any) => (await import('./gl/code/vertex-buffer')).default(state)  },
   { name: 'Vertex Buffer2', category: cat4, module: async (state: any) => (await import('./gl/code/vertex-buffer2')).default(state)  },
   { name: 'Array Instanced', category: cat4, module: async (state: any) => (await import('./gl/code/array-instanced')).default(state)  },
+  { name: 'Array Instanced Animation', category: cat4, module: async (state: any) => (await import('./gl/code/array-instanced-animation')).default(state)  },
+  { name: 'Array Instanced Tiles', category: cat4, module: async (state: any) => (await import('./gl/code/array-instanced-tiles')).default(state)  },
 ]
 
 export { scriptList }
