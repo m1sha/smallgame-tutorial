@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ColorPicker, DropDownList, PushButton, Tracker, UploadButton } from 'vue3-universal-components'
+import { ColorPicker, DropDownList, PushButton, Tracker, UploadButton, UploadManyButton } from 'vue3-universal-components'
 import { AnyParameter, TOption } from '../../code'
 import { IUI } from '../../code/ui';
 import UI from './ui/ui.vue';
@@ -33,6 +33,7 @@ const getGroup = (parameters: AnyParameter[]): string[] => {
         <ColorPicker v-if="parameter.type === 'color' && !parameter.group" v-model="parameter.defaultColor" :caption="parameter.caption" @update:model-value="value => parameter.callback(value ?? '')" />
         <Tracker v-if="parameter.type === 'tracker' && !parameter.group" v-model="parameter.defaultValue" :caption="parameter.caption" :min="parameter.min" :max="parameter.max" :step="parameter.step" @update:model-value="value => parameter.callback(value ?? 0)" />
         <UploadButton v-if="parameter.type === 'upload-file' && !parameter.group" @change="file => parameter.callback(file, parameter)">{{ parameter.caption }}</UploadButton>
+        <UploadManyButton v-if="parameter.type === 'upload-many-files' && !parameter.group" @change="files => parameter.callback(files, parameter)">{{ parameter.caption }}</UploadManyButton>
       </template>
 
       <details v-for="group in getGroup(parameters)">
@@ -42,6 +43,8 @@ const getGroup = (parameters: AnyParameter[]): string[] => {
           <PushButton v-if="parameter.type === 'button'" @click="parameter.callback(parameter)">{{ parameter.caption }}</PushButton>
           <ColorPicker v-if="parameter.type === 'color'" v-model="parameter.defaultColor" :caption="parameter.caption" @update:model-value="value => parameter.callback(value ?? '')" />
           <Tracker v-if="parameter.type === 'tracker'" v-model="parameter.defaultValue" :caption="parameter.caption" :min="parameter.min" :max="parameter.max" :step="parameter.step" @update:model-value="value => parameter.callback(value ?? 0)" />
+          <UploadButton v-if="parameter.type === 'upload-file' && !parameter.group" @change="file => parameter.callback(file, parameter)">{{ parameter.caption }}</UploadButton>
+          <UploadManyButton v-if="parameter.type === 'upload-many-files' && !parameter.group" @change="files => parameter.callback(files, parameter)">{{ parameter.caption }}</UploadManyButton>
         </template>
 
       </details>

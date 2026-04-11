@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ColorPicker, DropDownList, PushButton, Switch, TextBox, Tracker, UploadButton } from 'vue3-universal-components'
+import { ColorPicker, DropDownList, PushButton, Switch, TextBox, Tracker, UploadButton, UploadManyButton } from 'vue3-universal-components'
 import { Button, IControl } from '../../../code/ui/controls'
 import Group from './group.vue'
 import Toolbar from './toolbar.vue'
@@ -61,6 +61,14 @@ function isSelected (control: any)  {
         <template v-if="!isToolbar">{{ cast<Button>(control).caption }}</template>
         <i v-if="isToolbar" :class="'fa fa-' + cast<Button>(control).options!.icon"></i>
       </UploadButton> 
+      </div>
+
+      <div v-if="control.type === 'upload-many'">
+        <!--@vue-ignore-->
+      <UploadManyButton  @change="files => control.callback(files, control)" :title="control.caption">
+        <template v-if="!isToolbar">{{ cast<Button>(control).caption }}</template>
+        <i v-if="isToolbar" :class="'fa fa-' + cast<Button>(control).options!.icon"></i>
+      </UploadManyButton> 
       </div>
 
       <!--@vue-ignore-->

@@ -1,6 +1,6 @@
 import { reactive } from "vue"
 import { TOption } from "../parameters"
-import { Button, ControlMap, Group, IControl, Panel, Switch, Toolbar, Tracker, UploadFile } from "./controls"
+import { Button, ControlMap, Group, IControl, Panel, Switch, Toolbar, Tracker, UploadFile, UploadManyFiles } from "./controls"
 import { Color } from "./controls/color"
 import { InfoPanel } from "./controls/info-panel"
 import { Select } from "./controls/select"
@@ -46,6 +46,11 @@ export abstract class Contariner  {
 
   upload (caption: string, callback: (file: File) => void, options?: any) {
     this.controls.push(new UploadFile(caption, callback, options))
+    return this
+  }
+
+  uploadMany (caption: string, callback: (files: File[]) => void, options?: any) {
+    this.controls.push(new UploadManyFiles(caption, callback, options))
     return this
   }
 

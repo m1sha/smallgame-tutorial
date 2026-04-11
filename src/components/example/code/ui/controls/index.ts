@@ -1,6 +1,7 @@
 export * from './control'
 export * from './control-map'
 export * from './upload-file'
+export * from './upload-many-files'
 export * from './button'
 export * from './tracker'
 export * from './group'

@@ -42,6 +42,13 @@ export type UploadFileParameter = {
   group: string
 }
 
+export type UploadManyFilesParameter = {
+  type: 'upload-many-files'
+  caption: string
+  callback: (files: File[], sender: UploadManyFilesParameter) => void
+  group: string
+}
+
 
 export function createSelect (caption: string, items: string[] | TOption[], callback: (index: string) => void, defaultValue?: string, group?: string): SelectParameter {
   return { type: 'select',  caption, items, callback, defaultValue: defaultValue ?? '', group: group ?? '' }
@@ -63,5 +70,10 @@ export function createUploadFile (caption: string, callback: (file: File, sender
   return { type: 'upload-file', caption, callback, group: group ?? '' }
 }
 
+export function createUploadManyFiles (caption: string, callback: (files: File[], sender: UploadManyFilesParameter) => void, group?: string): UploadManyFilesParameter {
+  return { type: 'upload-many-files', caption, callback, group: group ?? '' }
+}
 
-export type AnyParameter = SelectParameter | ButtonParameter | ColorParameter | TrackerParameter | UploadFileParameter
+
+
+export type AnyParameter = SelectParameter | ButtonParameter | ColorParameter | TrackerParameter | UploadFileParameter | UploadManyFilesParameter
