@@ -3,7 +3,7 @@ import { type ScriptModule, type ScriptSettings } from "../../../../../component
 import { displayFps } from "../../../../../utils/display-fps"
 
 export default async ({ container, width, height, fps }: ScriptSettings): Promise<ScriptModule> => {
-  const img = await loadImage('beautiful-fall-nature-scenery-picjumbo-com.jpeg')
+  const img = await loadImage('istockphoto-517188688-612x612.jpg')
   
   console.time('Simple Text (GL)')
   

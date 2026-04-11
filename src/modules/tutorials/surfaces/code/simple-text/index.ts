@@ -3,7 +3,8 @@ import { type ScriptModule, type ScriptSettings } from "../../../../../component
 import { displayFps } from "../../../../../utils/display-fps"
 
 export default async ({ container, width, height, fps }: ScriptSettings): Promise<ScriptModule> => {
-  const img = await loadImage('beautiful-fall-nature-scenery-picjumbo-com.jpeg')
+  const img = await loadImage('istockphoto-517188688-612x612.jpg')
+  img.zoomSelf(4)
   
   console.time('Simple Text')
   
@@ -20,15 +21,15 @@ export default async ({ container, width, height, fps }: ScriptSettings): Promis
     outlineWidth: 6
   })
 
-  const fgText = text.toSurface(new Rect(6, -35, 450, 220))
+  const fgText = text.toSurface(new Rect(6, -5, 750, 220))
 
   const textCopy = text.clone()
   textCopy.style.color = 'transparent'
   textCopy.style.outlineColor = '#fafdffff'
 
-  const bgText = textCopy.toSurface(new Rect(6, -35, 450, 220))
+  const bgText = textCopy.toSurface(new Rect(6, -5, 750, 220))
 
-  const bg = img.zoom(0.2).flip('x')
+  const bg = img.zoom(0.5).flip('x')
   fgText.rect.center = bg.rect.center
   
   const result = Surface.mix('destination-in', bg, fgText, fgText.rect).clip(fgText.rect)  

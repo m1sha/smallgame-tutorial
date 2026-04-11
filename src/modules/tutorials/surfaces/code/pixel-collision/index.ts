@@ -1,7 +1,7 @@
 import { Color, GMath, loadImage, Point, Rect, Sketch, Surface } from "smallgame"
 import { displayFps } from "../../../../../utils/display-fps"
 import { type ScriptModule, type ScriptSettings } from "../../../../../components/example"
-import { UIBuilder } from "../../../../../components/example/code/ui"
+import { Icons, UIBuilder } from "../../../../../components/example/code/ui"
 import { TelemetryBuilder } from "../../../../../components/example/code/telemetry"
 import { Viewer } from "../../../../shared"
 
@@ -97,6 +97,7 @@ export default async ({ container, width, height, fps }: ScriptSettings): Promis
   }
   
   const ui = new UIBuilder()
+  ui.info(Icons.computerMouse + 'Use Mouse Wheel for zoom')
   ui.group('Settings', group => group.open()
     .switch('Show Mask', val => showMask = val, false)
     .switch('Show Frames', val => showFrame = val, true)

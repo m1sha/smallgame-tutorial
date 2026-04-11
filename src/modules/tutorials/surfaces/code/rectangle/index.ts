@@ -1,17 +1,30 @@
-import { loadImage, Surface } from "smallgame"
-import { type ScriptModule, type ScriptSettings } from "../../../../../components/example"
+import { loadImage } from "smallgame"
+import { UIBuilder, type ScriptModule, type ScriptSettings } from "../../../../../components/example"
+import { Viewer } from "../../../../shared"
+import { displayFps } from "../../../../../utils/display-fps"
 
-export default async ({ container, width, height }: ScriptSettings): Promise<ScriptModule> => {
-  const s = new Surface(width, height)
-  s.fill(0x118845)
+export default async ({ container, containerSize, fps }: ScriptSettings): Promise<ScriptModule> => {
+  const ui = new UIBuilder()
+  const viewer = new Viewer(containerSize, container)
 
-  const img = await loadImage('image.png')
-  img.rect.center = s.rect.center
-  img.rotateSelf(45)
+  let a = 18
 
-  s.blit(img, img.rect)
+  const img = await loadImage('istockphoto-517188688-612x612.jpg')
+  img.rect.center = viewer.viewportRect.center
 
-  container.append(s.draw.origin.canvas)
+  viewer.onFrameChanged = surface => {
+    surface.clear()
+    surface.blit(img, img.rect, { angle: a, pivote: 'center-center' })
+    displayFps(fps)
+  }
 
-  return {}
+  ui.info('Bliting image')
+  ui.tracker('Rotate', 0, 359, 1, val => a = val, a)
+
+  return {
+    ui: ui.build(),
+    dispose() {
+      viewer.remove()
+    },
+  }
 }
