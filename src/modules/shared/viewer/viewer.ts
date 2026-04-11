@@ -19,7 +19,7 @@ export class Viewer {
 
   #offset: Point = Point.zero
   mousePosition: Point = Point.zero
-  fixedUpdateTimeout: number = 50
+  fixedUpdateTimeout: number = 25
 
   onFrameChanged: ((surface: Surface) => void) | null = null
   onFixedUpdate: (() => void) | null = null
