@@ -14,8 +14,8 @@ async function main (container: HTMLDivElement, width: number, height: number) {
   const ctx = glSurface.context
   ctx.createProgram(vertex, fragmnet, 'assemble-and-use')
 
-  const img = await loadImage('workflow.png')
-  const tv = await loadImage('tv.png')
+  const img = await loadImage('bedstead-20-df.png')
+  const tv = await loadImage('istockphoto-517188688-612x612.jpg')
 
   const tex = ctx.createTexture('u_sampler2D', img)
   
