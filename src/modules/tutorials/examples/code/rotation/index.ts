@@ -23,50 +23,47 @@ export default async ({ container, width, height, fps }: ScriptSettings): Promis
     .addBatch('attack', 6, 4)
     .addBatch('move', 12, 5)
     
-  const sprite = new AnimatedSprite(spriteSheet, spriteSheet.size.scale(2))
-  const sprite2 = new AnimatedSprite(spriteSheet2, spriteSheet2.size.scale(2))
-  const sprite3 = new AnimatedSprite(spriteSheet3, spriteSheet3.size.scale(2))
+  const sprite = new AnimatedSprite(spriteSheet, spriteSheet.size.scale(1.2))
+  const sprite2 = new AnimatedSprite(spriteSheet2, spriteSheet2.size.scale(1.2))
+  const sprite3 = new AnimatedSprite(spriteSheet3, spriteSheet3.size.scale(1.2))
 
   //sprite.playBatch('attack')
   //sprite2.playBatch('attack')
   //sprite3.playBatch('attack')
-   
-    
   
-
-  
-  const centerPointImg = new Sketch().circle({ fill: '#419b66ff', stroke: '#204122ff', lineWidth: 2 }, Rect.size(16, 16).center, 6).toSurface()
-  centerPointImg.rect.center = viewer.surface.rect.center
-  
-  sprite.rect.center = centerPointImg.rect.absCenter.shiftX(-240)
-  sprite2.rect.center = sprite.rect.absCenter.shiftX(240)
-  sprite3.rect.center = sprite2.rect.absCenter.shiftX(100)
-
-
+  const centerPointImg = new Sketch().circle({ fill: '#d8d8d8', stroke: '#204122ff', lineWidth: 2 }, Rect.size(16, 16).center, 6).toSurface()
+  centerPointImg.rect.center = viewer.surface.rect.center.shiftXSelf(-200)
+  sprite.rect.center = centerPointImg.rect.absCenter.shiftX(-40)
+  sprite2.rect.center = sprite.rect.absCenter.shiftX(80)
+  sprite3.rect.center = sprite2.rect.absCenter.shiftX(50)
 
   let a = -0.2
   let b = -0.3
   let c = 4.1
   let center = centerPointImg.rect.absCenter //Rect.size(width, height).center
   sprite.rotationAngle = 180
-  debugger
   sprite2.rotationAngle = 90
   sprite3.rotationAngle = -90
 
   let ca = 0
+  let caa = 4.85
+  let clearScreen = true
+  let showSprite1 = true
+  let showSprite2 = true
+  let showSprite3 = true
+  let showBall = true
 
   viewer.onFrameChanged = surface => {
-    //screen.fill('#888')
-    ca += 4.85
+    ca += caa
     console.log(Math.sin(rad(ca % 360)))
     centerPointImg.rect.x +=  Math.sin(rad(ca)) * 16
 
     center = centerPointImg.rect.absCenter
-
-    surface.blit(centerPointImg, centerPointImg.rect)
-    //sprite.draw(screen)
-    sprite2.draw(surface)
-    sprite3.draw(surface)
+    if (clearScreen) surface.clear()
+    if (showBall) surface.blit(centerPointImg, centerPointImg.rect)
+    if (showSprite1) sprite.draw(surface)
+    if (showSprite2) sprite2.draw(surface)
+    if (showSprite3) sprite3.draw(surface)
 
 
     const m = M33.rotate(a, center)
@@ -87,14 +84,34 @@ export default async ({ container, width, height, fps }: ScriptSettings): Promis
     const point3 = x.applyToPoint(sprite3.rect.absCenter)
     sprite3.rect.absCenter = point3
     sprite3.rotationAngle = c
-      
-
-
 
     displayFps(fps)
   }
 
   const ui = new UIBuilder()
+  ui.group('Visible', gr => gr.open()
+    .switch('Clear Screen', val => clearScreen = val, clearScreen)
+    .switch('Show Green Ship', val => showSprite1 = val, showSprite1)
+    .switch('Show Red Ship', val => showSprite2 = val, showSprite2)
+    .switch('Show Blue Ship', val => showSprite3 = val, showSprite3)
+    .switch('Show Ball', val => showBall = val, showBall)
+  )
+  
+  ui.group('Parameters', gr => gr.open()
+    .tracker('A', -1, 1, 0.01, v => a = v, a)
+    .tracker('B', -1, 1, 0.01, v => b = v, b)
+    .tracker('C', -1, 1, 0.01, v => c = v, c)
+    .tracker('caa', 2, 8, 0.01, v => caa = v, caa)
+  )
+
+  ui.button('Reset', () => {
+    ca = 0
+    centerPointImg.rect.center = viewer.surface.rect.center.shiftXSelf(-200)
+    sprite.rect.center = centerPointImg.rect.absCenter.shiftX(-40)
+    sprite2.rect.center = sprite.rect.absCenter.shiftX(80)
+    sprite3.rect.center = sprite2.rect.absCenter.shiftX(50)
+  })
+
   return {
     ui: ui.build(),
     dispose () { 
