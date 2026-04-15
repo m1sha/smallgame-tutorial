@@ -1,4 +1,4 @@
-import { Color, GL, GMath, Point, Rect, Time, vec2, vec3 } from 'smallgame'
+import { Color, GL, GMath, MemSurface, Rect, Time, vec2, vec3 } from 'smallgame'
 import vertex from './shaders/vert'
 import fragmnet from './shaders/frag'
 import { UIBuilder, type ScriptModule, type ScriptSettings } from "../../../../../components/example"
@@ -58,7 +58,8 @@ export default async ({ container, containerSize, fps }: ScriptSettings): Promis
 
   const viewer = new Viewer(containerSize, container, { disableContextMenu: true })
 
-  viewer.onFrameChanged = surface => {
+  const tempSurface = new MemSurface(glSurface)
+  viewer.onFixedUpdate = () => {
     programm.use(() => {
       vao.use(() => {
         gl.clear(0x0)
@@ -66,7 +67,12 @@ export default async ({ container, containerSize, fps }: ScriptSettings): Promis
       })
     })
 
-    surface.blit(glSurface, glSurface.rect)
+    tempSurface.blit(glSurface, glSurface.rect)
+  }
+
+ 
+  viewer.onFrameChanged = surface => {
+    surface.blit(tempSurface, tempSurface.rect)
     displayFps(fps, Time.fps)
   }
   

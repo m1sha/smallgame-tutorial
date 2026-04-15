@@ -1,4 +1,4 @@
-import { float, GL, GlPointerArrayBufferObject, GMath, loadImage, Rect, Time, vec2 } from 'smallgame'
+import { float, GL, GlPointerArrayBufferObject, GMath, loadImage, MemSurface, Rect, Time, vec2 } from 'smallgame'
 import vertex from './shaders/vert'
 import fragmnet from './shaders/frag'
 import { UIBuilder, type ScriptModule, type ScriptSettings } from "../../../../../components/example"
@@ -53,6 +53,7 @@ export default async ({ container, containerSize, fps }: ScriptSettings): Promis
   const viewer = new Viewer(containerSize, container, { disableContextMenu: true })
 
   let a = 0
+  const tempSurface = new MemSurface(glSurface)
   viewer.onFixedUpdate = () => {
     a += 2.5
 
@@ -60,10 +61,10 @@ export default async ({ container, containerSize, fps }: ScriptSettings): Promis
       (90 - a) * GMath.rad,
     ])
 
-    rotBuffer.set([
-      (45 + a) * GMath.rad,
-      (270  + a) * GMath.rad,
-    ], Float32Array.BYTES_PER_ELEMENT )
+   rotBuffer.set([
+     (45 + a) * GMath.rad,
+     (270  + a) * GMath.rad,
+   ], Float32Array.BYTES_PER_ELEMENT )
 
     programm.use(() => {
       vao.use(() => {
@@ -71,11 +72,14 @@ export default async ({ container, containerSize, fps }: ScriptSettings): Promis
          gl.drawArraysInstanced('triangle-strip', 0, vertexCount, instanceCount)
       })
     })
+
+    tempSurface.clear()
+    tempSurface.blit(glSurface, glSurface.rect)
   }
 
   viewer.onFrameChanged = surface => {
     surface.clear()
-    surface.blit(glSurface, glSurface.rect)
+    surface.blit(tempSurface, tempSurface.rect)
     displayFps(fps, Time.fps)
   }
  

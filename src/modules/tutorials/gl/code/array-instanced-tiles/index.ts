@@ -1,4 +1,4 @@
-import { GL, loadImage, MatrixUtils, Point, Rect, Time, vec2 } from 'smallgame'
+import { GL, loadImage, MatrixUtils, MemSurface, Point, Rect, Time, vec2 } from 'smallgame'
 import vertex from './shaders/vert'
 import fragmnet from './shaders/frag'
 import { UIBuilder, type ScriptModule, type ScriptSettings } from "../../../../../components/example"
@@ -53,16 +53,18 @@ export default async ({ container, containerSize, fps }: ScriptSettings): Promis
 
   const viewer = new Viewer(containerSize, container, { disableContextMenu: true })
 
+  const tempSurface = new MemSurface(glSurface)
   programm.use(() => {
     vao.use(() => {
       gl.clear(0x0)
       gl.drawArraysInstanced('triangle-strip', 0, vertexCount, instanceCount)
     })
   })
+  tempSurface.blit(glSurface, glSurface.rect)
 
   viewer.onFrameChanged = surface => {
     surface.clear()
-    surface.blit(glSurface, glSurface.rect)
+    surface.blit(tempSurface, tempSurface.rect)
     displayFps(fps, Time.fps)
   }
  
