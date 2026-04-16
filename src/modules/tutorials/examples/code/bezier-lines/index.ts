@@ -51,16 +51,20 @@ export default async ({ container, width, height, fps }: ScriptSettings): Promis
   }
   
   let t = 0
+  let isStarted = false
   viewer.onFrameChanged = (surface => {
     const ind = 0 | t
     const seg = curve.segments[ind]
     const c = Splines.cubicBezier(seg.a, seg.b, seg.cp1, seg.cp2, (t - ind))
     
-    if (t < curve.segments.length) {
-      t += 0.4 * Time.deltaTime
-    } else {
-      
+    if (isStarted) {
+      if (t < curve.segments.length) {
+        t += 0.4 * Time.deltaTime
+      } else {
+
+      }
     }
+    
 
     if (t >= curve.segments.length) t = 0
 
@@ -90,6 +94,11 @@ export default async ({ container, width, height, fps }: ScriptSettings): Promis
   })
 
   const ui = new UIBuilder()
+  ui.info('1. Use Start/Stop button to play <br/>2. Use Restart button move to the ball on the start position')
+  ui.button('Start', sender => { 
+    isStarted = !isStarted
+    sender.caption = isStarted ? 'Stop' : 'Start'
+  })
   ui.button('Restart', () => t = 0)
   return {
     ui: ui.build(),
