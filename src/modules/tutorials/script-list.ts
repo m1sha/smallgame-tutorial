@@ -52,6 +52,7 @@ const scriptList: ScriptDef[] = [
   { name: 'Pixel Mask', category: cat2, module: async (state: any) => (await import('./surfaces/code/pixel-mask')).default(state)  },
   { name: 'Pixel Collision', category: cat2, module: async (state: any) => (await import('./surfaces/code/pixel-collision')).default(state)  },
   { name: 'Mask', category: cat2, module: async (state: any) => (await import('./surfaces/code/mask')).default(state)  },
+  { name: 'Combine Sufaces', category: cat2, module: async (state: any) => (await import('./surfaces/code/combine-sufaces')).default(state)  },
 
   { name: 'Hello World (GLSL)', category: cat3, module: async (state: any) => (await import('./gl-effects/code/hello-world')).default(state)  },
   { name: 'Abstracion', category: cat3, module: async (state: any) => (await import('./gl-effects/code/effect1')).default(state)  },
