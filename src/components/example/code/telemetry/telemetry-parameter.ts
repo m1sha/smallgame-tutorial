@@ -1,11 +1,12 @@
 export interface ITelemetryParameter {
   name: string
   value: string
+  displayFormat?: (value: any) => string
 }
 
 export class TelemetryParameter<T> {
   constructor (private origin: ITelemetryParameter, private _value: any) {
-
+    
   }
 
   set value (value: T) {
@@ -17,6 +18,7 @@ export class TelemetryParameter<T> {
     return this._value
   }
 
+  protected displayFormat: ((value: T) => T) | null = null
 
   static convertToString (obj: any) {
     const keyval = (key: string, val: string) => `<span style="color: #888">${key}:</span><span style="padding-left: 1px; padding-right: 2px;">${val}</span>`

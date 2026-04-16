@@ -1,36 +1,37 @@
 import { AnimatedSprite, deg, Game, gameloop, loadImage, M33, Point, rad, Rect, Size, Sketch, SpriteSheet } from "smallgame"
 import { displayFps } from "../../../../../utils/display-fps"
-import { type ScriptModule, type ScriptSettings } from "../../../../../components/example"
+import { TelemetryBuilder, type ScriptModule, type ScriptSettings } from "../../../../../components/example"
 import { UIBuilder } from "../../../../../components/example/code/ui"
 import { Viewer } from "../../../../shared"
 
 export default async ({ container, width, height, fps }: ScriptSettings): Promise<ScriptModule> => {
   const ui = new UIBuilder()
+  const telemetry = new TelemetryBuilder()
   const viewer = new Viewer({ width, height}, container)
+
+  const ca = telemetry.def('ca', 0, val => (val % 360).toFixed(0) + '°')
 
   const img = await loadImage('space-striker/tiny-ships/tinyShip1.png')
   const img2 = await loadImage('space-striker/tiny-ships/tinyShip2.png')
   const img3 = await loadImage('space-striker/tiny-ships/tinyShip3.png')
   const spriteSheet = new SpriteSheet(img, new Size(24, 27), 12, new Point(1, 0))
-      .addBatch('idle', 0, 5)
-      .addBatch('attack', 6, 4)
-      .addBatch('move', 12, 5)
+    .addBatch('idle', 0, 5)
+    .addBatch('attack', 6, 4)
+    .addBatch('move', 12, 5)
   const spriteSheet2 = new SpriteSheet(img2, new Size(34, 36), 30, new Point(1, 0))
-    .addBatch('idle', 0, 5)
-    .addBatch('attack', 6, 4)
-    .addBatch('move', 12, 5)
+    .addBatch('idle', 0, 6)
+    .addBatch('attack', 7, 4)
+    .addBatch('move', 9, 3)
   const spriteSheet3 = new SpriteSheet(img3, new Size(26, 27), 6, new Point(1, 0))
-    .addBatch('idle', 0, 5)
-    .addBatch('attack', 6, 4)
-    .addBatch('move', 12, 5)
+    .addBatch('move', 0, 5)
+    .addBatch('idle', 6, 4)
     
-  const sprite = new AnimatedSprite(spriteSheet, spriteSheet.size.scale(1.2))
-  const sprite2 = new AnimatedSprite(spriteSheet2, spriteSheet2.size.scale(1.2))
-  const sprite3 = new AnimatedSprite(spriteSheet3, spriteSheet3.size.scale(1.2))
+  const sprite = new AnimatedSprite(spriteSheet, spriteSheet.size.scale(1.3))
+  const sprite2 = new AnimatedSprite(spriteSheet2, spriteSheet2.size.scale(1.3))
+  const sprite3 = new AnimatedSprite(spriteSheet3, spriteSheet3.size.scale(1.3))
 
-  //sprite.playBatch('attack')
+  sprite.playBatch('move')
   //sprite2.playBatch('attack')
-  //sprite3.playBatch('attack')
   
   const centerPointImg = new Sketch().circle({ fill: '#d8d8d8', stroke: '#204122ff', lineWidth: 2 }, Rect.size(16, 16).center, 6).toSurface()
   centerPointImg.rect.center = viewer.surface.rect.center.shiftXSelf(-200)
@@ -47,7 +48,7 @@ export default async ({ container, width, height, fps }: ScriptSettings): Promis
   sprite2.rotationAngle = 90
   sprite3.rotationAngle = -90
 
-  let ca = 0
+  //let ca = 0
   let caa = ui.var(4.85)
   let clearScreen = true
   let showSprite1 = true
@@ -56,9 +57,9 @@ export default async ({ container, width, height, fps }: ScriptSettings): Promis
   let showBall = true
 
   viewer.onFrameChanged = surface => {
-    ca += caa.value
-    console.log(Math.sin(rad(ca % 360)))
-    centerPointImg.rect.x +=  Math.sin(rad(ca)) * 16
+    ca.value += caa.value
+    //console.log(Math.sin(rad(ca % 360)))
+    centerPointImg.rect.x +=  Math.sin(rad(ca.value)) * 16
 
     center = centerPointImg.rect.absCenter
     if (clearScreen) surface.clear()
@@ -100,10 +101,10 @@ export default async ({ container, width, height, fps }: ScriptSettings): Promis
   )
   
   ui.group('Parameters', gr => gr.open()
-    .tracker('A', -4, 4, 0.01, v => a.value = v, a)
-    .tracker('B', -4, 4, 0.01, v => b.value = v, b)
-    .tracker('C', -8, 8, 0.1, v => c.value = v, c)
-    .tracker('caa', 2, 8, 0.01, v => caa.value = v, caa)
+    .tracker('a (Green Ship Speed)', -4, 4, 0.01, v => a.value = v, a)
+    .tracker('b (Red Ship Speed)', -4, 4, 0.01, v => b.value = v, b)
+    .tracker('c (Blue Ship Speed)', -8, 8, 0.1, v => c.value = v, c)
+    .tracker('caa (Ball Acceleration Rate)', 2, 8, 0.01, v => caa.value = v, caa)
   )
 
   ui.button('Reset Parameters', () => {
@@ -113,7 +114,7 @@ export default async ({ container, width, height, fps }: ScriptSettings): Promis
     caa.value = 4.85
   })
   ui.button('Reset Sprites Position', () => {
-    ca = 0
+    ca.value = 0
     centerPointImg.rect.center = viewer.surface.rect.center.shiftXSelf(-200)
     sprite.rect.center = centerPointImg.rect.absCenter.shiftX(-40)
     sprite2.rect.center = sprite.rect.absCenter.shiftX(80)
@@ -125,6 +126,7 @@ export default async ({ container, width, height, fps }: ScriptSettings): Promis
 
   return {
     ui: ui.build(),
+    telemetry: telemetry.build(),
     dispose () { 
       viewer.remove() 
     }

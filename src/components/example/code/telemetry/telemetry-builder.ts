@@ -38,8 +38,8 @@ export class TelemetryBuilder {
     return this
   }
 
-  def <C>(caption: string, value?: C) {
-    this.parameters.push({ name: caption, value: TelemetryParameter.convertToString(value) ?? '' })
+  def <C>(caption: string, value?: C, displayFormat?: (value: C) => string) {
+    this.parameters.push({ name: caption, value: TelemetryParameter.convertToString(value) ?? '', displayFormat: displayFormat })
     this.callbacks.push(undefined)
     return new TelemetryParameter<C>(this.parameters[this.parameters.length -1], value)
   }

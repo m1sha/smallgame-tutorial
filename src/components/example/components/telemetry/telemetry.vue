@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue';
-import { ITelemetry } from '../../code/telemetry'
+import { ITelemetry, ITelemetryParameter } from '../../code/telemetry'
 import TelemetryChart from './telemetry-chart.vue'
 import { ParameterColors } from './param-colors';
 const props = defineProps<{telemetry: ITelemetry}>()
@@ -9,6 +9,10 @@ const openChart = ref(props.telemetry.opennedChart)
 
 watch(() => props.telemetry.openned, () => toggle.value = props.telemetry.openned)
 watch(() => props.telemetry.opennedChart, () => openChart.value = props.telemetry.opennedChart)
+
+function getValue (parameter: ITelemetryParameter) {
+  return parameter.displayFormat ? parameter.displayFormat(parameter.value) : parameter.value
+}
 
 </script>
 
@@ -25,7 +29,7 @@ watch(() => props.telemetry.opennedChart, () => openChart.value = props.telemetr
           <i v-show="telemetry.showLegend" :style="{ backgroundColor: ParameterColors[i]}"></i>
           <span>{{ parameter.name }}</span>  
         </span>
-        <span class="telemetry-parameter-value" v-html="parameter.value"></span>
+        <span class="telemetry-parameter-value" v-html="getValue(parameter)"></span>
       </div>
     </div>
   </div>
