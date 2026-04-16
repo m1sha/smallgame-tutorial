@@ -61,6 +61,7 @@ const getGroup = (parameters: AnyParameter[]): string[] => {
   right: 0
   padding: 8px 16px 
   background-color: rgba(55, 55, 55, 0.4941176471)
+  backdrop-filter: blur(2px)
   border: 1px solid var(--panel-border)
   height: calc( 100vh -  116px)
   width: 10vw

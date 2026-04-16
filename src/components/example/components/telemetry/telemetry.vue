@@ -69,6 +69,8 @@ watch(() => props.telemetry.opennedChart, () => openChart.value = props.telemetr
     min-width: 8vw
 
     padding: 8px
+    box-shadow: 0px 0px 10px #292929
+    backdrop-filter: blur(6px)
     border: 1px solid var(--panel-border)
     border-top: 0
     background-color: #3737377e

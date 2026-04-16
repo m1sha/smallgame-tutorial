@@ -41,6 +41,7 @@ watch(() => props.selectedId, () => selected.value = props.selectedId)
   top: 0
   padding: 8px 16px 
   background-color: rgba(55, 55, 55, 0.4941176471)
+  backdrop-filter: blur(2px)
   border: 1px solid var(--panel-border)
   width: 10vw
   box-shadow: inset -16px 0px 60px #4444444e, 16px 0px 20px #3636364e
