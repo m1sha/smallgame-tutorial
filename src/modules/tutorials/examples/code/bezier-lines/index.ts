@@ -1,6 +1,6 @@
 import { MouseButton, Point, Sketch, Splines, Time, TPoint } from "smallgame"
 import { displayFps } from "../../../../../utils/display-fps"
-import { type ScriptModule, type ScriptSettings } from "../../../../../components/example"
+import { EntityListBuilder, type ScriptModule, type ScriptSettings } from "../../../../../components/example"
 import { UIBuilder } from "../../../../../components/example/code/ui"
 // import { easeInOutQuad, easeInQuad, easeOutBounce } from "../movements/func"
 import { Viewer } from "../../../../shared"
@@ -35,6 +35,7 @@ class BezierLine {
 }
 
 export default async ({ container, width, height, fps }: ScriptSettings): Promise<ScriptModule> => {
+  const entities = new EntityListBuilder()
   const viewer = new Viewer({ width, height}, container)
   const curve = new BezierLine()
   curve.firstSegemnt(new Point(400, 100), new Point(800, 400), new Point(500, 500), new Point(1300, 700))
@@ -43,6 +44,10 @@ export default async ({ container, width, height, fps }: ScriptSettings): Promis
   curve.nextSegemnt(new Point(400, 200), new Point(300, 200), new Point(300, 100))
   curve.nextSegemnt(new Point(900, 800), new Point(1200, 200), new Point(1000, 800))
   curve.nextSegemnt(new Point(400, 100), new Point(1100, 500), new Point(1000, 700))
+
+  entities.addClass<Point>('point', point => `x: ${point.x} y: ${point.y}`)
+  const p = entities.new<Point>('point')
+  p.value = new Point(400, 100)
 
   viewer.onInput = ev => {
     if (ev.type === 'MOUSEMOVE' && ev.button === MouseButton.LEFT) {
@@ -102,6 +107,7 @@ export default async ({ container, width, height, fps }: ScriptSettings): Promis
   ui.button('Restart', () => t = 0)
   return {
     ui: ui.build(),
+    entities: entities.build(),
     dispose () { 
       viewer.remove() 
     }

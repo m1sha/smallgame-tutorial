@@ -2,7 +2,7 @@
 import { computed, onMounted, ref } from "vue"
 import { useRoute, useRouter } from "vue-router"
 import { ScriptDef, ScriptModule, Settings } from "./code"
-import { ParameterList, ScriptList, Telemetry, Toolbar, ToolbarDropdownPanel, ContextMenu } from './components'
+import { ParameterList, ScriptList, Telemetry, Toolbar, ToolbarDropdownPanel, ContextMenu, EntityList } from './components'
 import { Size } from "smallgame";
 
 const props = defineProps<{ scriptList: ScriptDef[] }>()
@@ -93,6 +93,7 @@ function clearPrevious () {
     <template #entity-list>
       <ToolbarDropdownPanel caption="Objects" :open="settings.showObjectsPanel" @toggle="isOpen => settings.showObjectsPanel = isOpen">
         <template #content>
+          <EntityList v-if="currentModule && currentModule.entities" :entities="currentModule.entities" />
         </template>
       </ToolbarDropdownPanel>
     </template>
