@@ -1,5 +1,6 @@
 
 import { TOption } from "../../parameters"
+import { RefObj } from "../ref-obj"
 import { Button } from "./button"
 import { Color } from "./color"
 import { IControl } from "./control"
@@ -49,7 +50,7 @@ export class Group implements IControl {
     return control
   }
 
-  tracker (name: string, min: number, max: number, step: number,  callback: (val: number) => void, defaultValue?: number, options?: any) {
+  tracker (name: string, min: number, max: number, step: number,  callback: (val: number) => void, defaultValue?: number | RefObj<number>, options?: any) {
     this.controls.push(new Tracker(name, min, max, step, callback, defaultValue, options))
     return this
   }

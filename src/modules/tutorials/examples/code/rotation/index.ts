@@ -5,6 +5,7 @@ import { UIBuilder } from "../../../../../components/example/code/ui"
 import { Viewer } from "../../../../shared"
 
 export default async ({ container, width, height, fps }: ScriptSettings): Promise<ScriptModule> => {
+  const ui = new UIBuilder()
   const viewer = new Viewer({ width, height}, container)
 
   const img = await loadImage('space-striker/tiny-ships/tinyShip1.png')
@@ -37,16 +38,17 @@ export default async ({ container, width, height, fps }: ScriptSettings): Promis
   sprite2.rect.center = sprite.rect.absCenter.shiftX(80)
   sprite3.rect.center = sprite2.rect.absCenter.shiftX(50)
 
-  let a = -0.2
-  let b = -0.3
-  let c = 4.1
+  const a = ui.var(-0.2)
+  const b = ui.var(-0.3)
+  const c = ui.var(4.1)
+ 
   let center = centerPointImg.rect.absCenter //Rect.size(width, height).center
   sprite.rotationAngle = 180
   sprite2.rotationAngle = 90
   sprite3.rotationAngle = -90
 
   let ca = 0
-  let caa = 4.85
+  let caa = ui.var(4.85)
   let clearScreen = true
   let showSprite1 = true
   let showSprite2 = true
@@ -54,7 +56,7 @@ export default async ({ container, width, height, fps }: ScriptSettings): Promis
   let showBall = true
 
   viewer.onFrameChanged = surface => {
-    ca += caa
+    ca += caa.value
     console.log(Math.sin(rad(ca % 360)))
     centerPointImg.rect.x +=  Math.sin(rad(ca)) * 16
 
@@ -66,29 +68,29 @@ export default async ({ container, width, height, fps }: ScriptSettings): Promis
     if (showSprite3) sprite3.draw(surface)
 
 
-    const m = M33.rotate(a, center)
+    const m = M33.rotate(a.value, center)
     const point = m.applyToPoint(sprite.rect.absCenter)
     sprite.rect.absCenter = point
-    sprite.rotationAngle += a
+    sprite.rotationAngle += a.value
 
-    const m2 = M33.rotate(b, sprite.rect.absCenter).mul(m)
+    const m2 = M33.rotate(b.value, sprite.rect.absCenter).mul(m)
     
     const point2 = m2.applyToPoint(sprite2.rect.absCenter)
     sprite2.rect.absCenter = point2
-    sprite2.rotationAngle += b
+    sprite2.rotationAngle += b.value
 
-    const m3 = M33.rotate(c, sprite2.rect.absCenter)
+    const m3 = M33.rotate(c.value, sprite2.rect.absCenter)
 
     const x =  M33.mul(M33.mul(m, m2), m3)
     
     const point3 = x.applyToPoint(sprite3.rect.absCenter)
     sprite3.rect.absCenter = point3
-    sprite3.rotationAngle = c
+    sprite3.rotationAngle = c.value
 
     displayFps(fps)
   }
 
-  const ui = new UIBuilder()
+  
   ui.group('Visible', gr => gr.open()
     .switch('Clear Screen', val => clearScreen = val, clearScreen)
     .switch('Show Green Ship', val => showSprite1 = val, showSprite1)
@@ -98,18 +100,27 @@ export default async ({ container, width, height, fps }: ScriptSettings): Promis
   )
   
   ui.group('Parameters', gr => gr.open()
-    .tracker('A', -1, 1, 0.01, v => a = v, a)
-    .tracker('B', -1, 1, 0.01, v => b = v, b)
-    .tracker('C', -1, 1, 0.01, v => c = v, c)
-    .tracker('caa', 2, 8, 0.01, v => caa = v, caa)
+    .tracker('A', -4, 4, 0.01, v => a.value = v, a)
+    .tracker('B', -4, 4, 0.01, v => b.value = v, b)
+    .tracker('C', -8, 8, 0.1, v => c.value = v, c)
+    .tracker('caa', 2, 8, 0.01, v => caa.value = v, caa)
   )
 
-  ui.button('Reset', () => {
+  ui.button('Reset Parameters', () => {
+    a.value = -0.2
+    b.value = -0.3
+    c.value = 4.1
+    caa.value = 4.85
+  })
+  ui.button('Reset Sprites Position', () => {
     ca = 0
     centerPointImg.rect.center = viewer.surface.rect.center.shiftXSelf(-200)
     sprite.rect.center = centerPointImg.rect.absCenter.shiftX(-40)
     sprite2.rect.center = sprite.rect.absCenter.shiftX(80)
     sprite3.rect.center = sprite2.rect.absCenter.shiftX(50)
+    sprite.rotationAngle = 180
+    sprite2.rotationAngle = 90
+    sprite3.rotationAngle = -90
   })
 
   return {

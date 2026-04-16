@@ -5,6 +5,7 @@ import { Color } from "./controls/color"
 import { InfoPanel } from "./controls/info-panel"
 import { Select } from "./controls/select"
 import { Input } from "./controls/input"
+import { RefObj } from "./ref-obj"
 
 export abstract class Contariner  {
   controls: IControl[]
@@ -34,7 +35,7 @@ export abstract class Contariner  {
     return control
   }
 
-  tracker (name: string, min: number, max: number, step: number,  callback: (val: number) => void, defaultValue?: number, options?: any) {
+  tracker (name: string, min: number, max: number, step: number,  callback: (val: number) => void, defaultValue?: number | RefObj<number>, options?: any) {
     this.controls.push(new Tracker(name, min, max, step, callback, defaultValue, options))
     return this
   }
