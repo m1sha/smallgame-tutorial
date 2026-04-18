@@ -1,8 +1,8 @@
-import { gl_normalize, MemSurface, SurfaceGL, type TPoint } from 'smallgame'
+import { Color, gl_normalize, MemSurface, Rect, setSize, Sketch, SurfaceGL, type TPoint } from 'smallgame'
 
 import vertex from './shaders/vert'
 import fragmnet from './shaders/frag'
-import { Icons, UIBuilder, type ScriptModule, type ScriptSettings } from "../../../../../components/example"
+import { EntityListBuilder, Icons, UIBuilder, type ScriptModule, type ScriptSettings } from "../../../../../components/example"
 import { Viewer } from '../../../../shared'
 import { displayFps } from '../../../../../utils/display-fps'
 
@@ -12,8 +12,14 @@ export default async ({ container, containerSize, width, height, fps }: ScriptSe
   ctx.createProgram(vertex, fragmnet, 'assemble-and-use')
   const tempSurface = new MemSurface(glSurface)
 
-  const color = ctx.uniform('u_FragColor', 'vec2')
-  color.value = [0.1, 0.9]
+  const colors = [
+    '#612233', '#282261', '#22612c', '#5f5f5f',
+    '#750d6d', '#1e2692', '#d4879c', '#463000',
+    '#f5f0f1', '#b0e03e', '#cff154', '#019e89',
+    '#b511d6', '#b80937', '#03a152', '#010050',
+  ]
+  const color = ctx.uniform('u_FragColor', 'vec3')
+  color.value = Color.from(colors[0]).toArray('rgb') as any
 
   const aPosition = ctx.attribute('aPosition', 'vec3')
   const points: TPoint[] = []
@@ -45,8 +51,23 @@ export default async ({ container, containerSize, width, height, fps }: ScriptSe
     .info(Icons.computerMouse + ' Use LMB to set a point on the screen')
     .button('Reset', () => { while(points.pop()); })
 
+  const entities = new EntityListBuilder()
+  const entityGrid = entities.addGrid<string>(color => ({
+    icon: Sketch.new().rect({ fill: color }, Rect.size(24, 24)).toSurface().toDataURL(),
+    title: color
+  }))
+  colors.forEach(color => entityGrid.add(color))
+  entityGrid.iconSize = setSize(24, 24)
+  entityGrid.selected = colors[0]
+  entityGrid.columnCount = 6
+  entityGrid.onSelect = value => {
+    color.value = Color.from(value).toArray('rgb') as any
+  }
+  
+
   return {
     ui: ui.build(),
+    entities: entities.build(),
     dispose() {
       viewer.remove()
     }

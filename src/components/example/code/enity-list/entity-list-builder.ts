@@ -1,35 +1,24 @@
-import { ref } from "vue"
-import { IEnity, IEnityClass, IEnityList } from "./enity-list"
+import { IEnityList } from "./enity-list"
+import { GridEntityListCollection, IEntityCollection, IGridCellEntity, IListItemEntity, ListEntityCollection } from "./collections"
 
 export class EntityListBuilder {
-  private items: IEnity[] = []
-  private enityClasses: IEnityClass[] = []
+  private items: IEntityCollection[] = []
 
-  addClass<T> (name: string, displayFormat: (value: T) => string) {
-    this.enityClasses.push({ name, displayFormat })
-    return this
+  addList<TEntity>(map: (obj: TEntity) => IListItemEntity) {
+    const collection = new ListEntityCollection<TEntity>(map)
+    this.items.push(collection)
+    return collection
   }
 
-  //add<T> (className: string, obj: T) {
-  //  this.items.push({ className, obj })
-  //  return this
-  //}
-
-  new<T> (className: string) {
-    const obj = ref<T>()
-    this.items.push({ className, obj })
-    return obj
+  addGrid<TEntity> (map: (obj: TEntity) => IGridCellEntity) {
+    const collection = new GridEntityListCollection<TEntity>(map)
+    this.items.push(collection)
+    return collection
   }
-
-  onRemoveEnity: ((obj: any) => void) | null
 
   build (): IEnityList {
     return {
-      items: this.items,
-      enityClasses: this.enityClasses,
-      onRemoveEnity: (value) => {
-        this.onRemoveEnity?.(value.obj)
-      }
+      items: this.items
     }
   }
 }

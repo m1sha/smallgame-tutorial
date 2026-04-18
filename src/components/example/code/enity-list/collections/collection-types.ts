@@ -1,0 +1,1 @@
+export type EntityCollectionTypes = 'list' | 'cards' | 'grid'

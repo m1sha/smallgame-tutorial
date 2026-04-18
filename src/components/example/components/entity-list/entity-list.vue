@@ -1,28 +1,21 @@
 <script setup lang="ts">
-import { IEnity, IEnityList } from '../../code'
+import { IEnityList } from '../../code'
+import GridEntityCollection from './grid-entity-collection.vue';
+import ListEntityCollection from './list-entity-collection.vue';
 
 const { entities } = defineProps<{ entities: IEnityList }>()
-
-const display = (item: IEnity) => {
-  const cls = entities.enityClasses.find( p => p.name === item.className)
-  if (!cls && item.obj) {
-    return item.obj.value ? item.obj.value : item.obj
-  }
-
-  if (cls && item.obj) {
-    return item.obj.value ? cls.displayFormat(item.obj.value) : cls.displayFormat(item.obj)
-  }
-
-  return 'undefine value'
-}
 
 </script>
 <template>
   <div class="entity-list-wrapper">
     <div v-for="item in entities.items" class="entity">
-      <div v-html="display(item)"></div>
-      <div>
-        <button @click="entities.onRemoveEnity(item)"><i class="fa fa-trash"></i></button>
+      <div v-if="item.type === 'list'">
+        <!--@vue-ignore-->
+        <ListEntityCollection :collection="item" />
+      </div>
+      <div v-if="item.type === 'grid'">
+        <!--@vue-ignore-->
+        <GridEntityCollection :collection="item" />
       </div>
     </div>
   </div>
@@ -33,11 +26,11 @@ const display = (item: IEnity) => {
   position: absolute
   z-index: 1
   top: 0
-  padding: 8px 16px 
+  padding: 8px 8px 
   background-color: rgba(55, 55, 55, 0.4941176471)
   backdrop-filter: blur(2px)
   border: 1px solid var(--panel-border)
-  width: 8.2vw
+  width: 9vw
 
   .entity
     display: flex

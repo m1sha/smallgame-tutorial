@@ -45,9 +45,15 @@ export default async ({ container, width, height, fps }: ScriptSettings): Promis
   curve.nextSegemnt(new Point(900, 800), new Point(1200, 200), new Point(1000, 800))
   curve.nextSegemnt(new Point(400, 100), new Point(1100, 500), new Point(1000, 700))
 
-  entities.addClass<Point>('point', point => `x: ${point.x} y: ${point.y}`)
-  const p = entities.new<Point>('point')
-  p.value = new Point(400, 100)
+  const entityList = entities.addList<Point>(point => ({ caption: `x: ${point.x} y: ${point.y}` }))
+  
+  entityList.add(new Point(400, 100))
+  entityList.add(new Point(300, 400))
+  
+
+  //entities.addClass<Point>('point', point => `x: ${point.x} y: ${point.y}`)
+  //const p = entities.new<Point>('point')
+  //p.value = new Point(400, 100)
 
   viewer.onInput = ev => {
     if (ev.type === 'MOUSEMOVE' && ev.button === MouseButton.LEFT) {
