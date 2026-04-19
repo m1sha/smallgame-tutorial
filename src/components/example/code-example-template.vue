@@ -12,7 +12,7 @@ const container = ref<HTMLDivElement>()
 const fps = ref<HTMLDivElement>()
 const scriptId = computed(() => route.params.name as string)
 const currentModule = ref<ScriptModule | null>()
-const scriptListItems = computed(() => props.scriptList.map((p, i) => ({ id: p.name.replaceAll(' ', '_').toLocaleLowerCase(), name: p.name, category: p.category })) )
+const scriptListItems = computed(() => props.scriptList.map((p, i) => ({ id: p.name.replaceAll(' ', '_').toLocaleLowerCase(), name: p.name, category: p.category, codeDir: p.codeDir })) )
 const settings = new Settings()
 
 onMounted(async () => {

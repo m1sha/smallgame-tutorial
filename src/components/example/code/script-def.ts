@@ -4,4 +4,5 @@ export interface ScriptDef {
   name: string
   category: string
   module: (state: any) => Promise<ScriptModule>
+  codeDir: string
 }

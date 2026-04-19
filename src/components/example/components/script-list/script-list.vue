@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue';
-import { ItemList, TextBox } from 'vue3-universal-components'
+import { computed, ref, watch } from 'vue'
+import { ItemList, TDropMenu, TextBox } from 'vue3-universal-components'
+import { Client, OkResult } from '../../../../api'
 
-const props = defineProps<{ items: {id: string, name: string, category: string }[], selectedId: string}>()
+const props = defineProps<{ items: {id: string, name: string, category: string, codeDir: string }[], selectedId: string}>()
 const emit = defineEmits<{click: [id: string]}>()
 const filtredItems = computed(() => {
   if (!search.value) return props.items
@@ -14,6 +15,24 @@ const search = ref('')
 
 watch(() => props.selectedId, () => selected.value = props.selectedId)
 
+const itemMenu = ref<TDropMenu>({ items: [ { name: 'open',  text: 'Open in VS Code'}]})
+
+const onMenuOpen = async (id: string, menuName) => {
+  const item = filtredItems.value.find(p => p.id === id)
+  if (!item) {
+    console.error('Item is not foound. Id ' + id)
+    return
+  }
+
+  if (menuName === 'open') {
+    const response = await Client.get<OkResult>(`openInCode/?path=${item.codeDir}`)
+    if (response instanceof Error) return
+    if (!response.ok) {
+      alert('Response in not ok')
+    } 
+  }
+}
+
 </script>
 <template>
   <div class="script-list-wrapper" style="">
@@ -24,7 +43,14 @@ watch(() => props.selectedId, () => selected.value = props.selectedId)
       
     <template v-for="cat in categories">
       <p class="category">{{ cat }}</p>
-      <ItemList :items="filtredItems.filter(p => p.category === cat)" v-model="selected" @click="({ id }) => emit('click', id )" />
+      <ItemList 
+        :items="filtredItems.filter(p => p.category === cat)" 
+        :menu="itemMenu"
+        v-model="selected" 
+        @click="({ id }) => emit('click', id )"
+        @menu-click="onMenuOpen"
+        >
+      </ItemList>
     </template>
 
     <p v-if="!filtredItems.length && search">Empty Result</p>
