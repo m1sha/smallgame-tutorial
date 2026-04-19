@@ -35,7 +35,7 @@ export abstract class Contariner  {
     return control
   }
 
-  tracker (name: string, min: number, max: number, step: number,  callback: (val: number) => void, defaultValue?: number | RefObj<number>, options?: any) {
+  tracker (name: string, min: number, max: number, step: number,  callback: ((val: number) => void) | undefined, defaultValue?: number | RefObj<number>, options?: any) {
     this.controls.push(new Tracker(name, min, max, step, callback, defaultValue, options))
     return this
   }

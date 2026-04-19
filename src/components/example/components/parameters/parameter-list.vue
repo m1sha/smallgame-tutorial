@@ -31,7 +31,7 @@ const getGroup = (parameters: AnyParameter[]): string[] => {
         <DropDownList v-if="parameter.type === 'select' && !parameter.group" v-model="parameter.defaultValue" :items="getItems(parameter.items)" :caption="parameter.caption" @update:model-value="value => parameter.callback(value ?? '')" />
         <PushButton v-if="parameter.type === 'button' && !parameter.group" @click="parameter.callback(parameter)">{{ parameter.caption }}</PushButton>
         <ColorPicker v-if="parameter.type === 'color' && !parameter.group" v-model="parameter.defaultColor" :caption="parameter.caption" @update:model-value="value => parameter.callback(value ?? '')" />
-        <Tracker v-if="parameter.type === 'tracker' && !parameter.group" v-model="parameter.defaultValue" :caption="parameter.caption" :min="parameter.min" :max="parameter.max" :step="parameter.step" @update:model-value="value => parameter.callback(value ?? 0)" />
+        <Tracker v-if="parameter.type === 'tracker' && !parameter.group" v-model="parameter.defaultValue" :caption="parameter.caption" :min="parameter.min" :max="parameter.max" :step="parameter.step" @update:model-value="value => parameter.callback?.(value ?? 0)" />
         <UploadButton v-if="parameter.type === 'upload-file' && !parameter.group" @change="file => parameter.callback(file, parameter)">{{ parameter.caption }}</UploadButton>
         <UploadManyButton v-if="parameter.type === 'upload-many-files' && !parameter.group" @change="files => parameter.callback(files, parameter)">{{ parameter.caption }}</UploadManyButton>
       </template>
@@ -42,7 +42,7 @@ const getGroup = (parameters: AnyParameter[]): string[] => {
           <DropDownList v-if="parameter.type === 'select'" v-model="parameter.defaultValue" :items="getItems(parameter.items)" :caption="parameter.caption" @update:model-value="value => parameter.callback(value ?? '')" />
           <PushButton v-if="parameter.type === 'button'" @click="parameter.callback(parameter)">{{ parameter.caption }}</PushButton>
           <ColorPicker v-if="parameter.type === 'color'" v-model="parameter.defaultColor" :caption="parameter.caption" @update:model-value="value => parameter.callback(value ?? '')" />
-          <Tracker v-if="parameter.type === 'tracker'" v-model="parameter.defaultValue" :caption="parameter.caption" :min="parameter.min" :max="parameter.max" :step="parameter.step" @update:model-value="value => parameter.callback(value ?? 0)" />
+          <Tracker v-if="parameter.type === 'tracker'" v-model="parameter.defaultValue" :caption="parameter.caption" :min="parameter.min" :max="parameter.max" :step="parameter.step" @update:model-value="value => parameter.callback?.(value ?? 0)" />
           <UploadButton v-if="parameter.type === 'upload-file' && !parameter.group" @change="file => parameter.callback(file, parameter)">{{ parameter.caption }}</UploadButton>
           <UploadManyButton v-if="parameter.type === 'upload-many-files' && !parameter.group" @change="files => parameter.callback(files, parameter)">{{ parameter.caption }}</UploadManyButton>
         </template>
