@@ -1,4 +1,5 @@
 import { Size } from "smallgame"
+import { Builders } from "./builders"
 
 export interface ScriptSettings {
   container: HTMLDivElement
@@ -6,4 +7,5 @@ export interface ScriptSettings {
   height: number
   fps: HTMLDivElement
   containerSize: Size
+  builders: Builders
 }
