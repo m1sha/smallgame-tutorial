@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue'
+import { computed, nextTick, onMounted, ref, watch } from 'vue'
 import { ItemList, TDropMenu, TextBox } from 'vue3-universal-components'
 import { Client, OkResult } from '../../../../api'
 
@@ -32,6 +32,16 @@ const onMenuOpen = async (id: string, menuName) => {
     } 
   }
 }
+
+onMounted(async () => {
+  await nextTick()
+  
+  const items = document.querySelectorAll('.list-item')
+  items.forEach(item => {
+    if (!item.classList.contains('selected')) return
+    item.scrollIntoView({ behavior: 'instant', block: 'center' })
+  })
+})
 
 </script>
 <template>
