@@ -1,10 +1,10 @@
 import { Viewer } from "../../../shared"
 import { displayFps } from "../../../../utils/display-fps"
-import { type ScriptModule, type ScriptSettings, UIBuilder } from "../../../../components/example"
+import { type ScriptModule, type ScriptSettings } from "../../../../components/example"
 import { GMath, Point, Random, Rect, Sketch } from "smallgame"
 
-export default async ({ container, width, height, fps }: ScriptSettings): Promise<ScriptModule> => {
-  const viewer = new Viewer({ width, height }, container, { disableContextMenu: true })
+export default async ({ container, containerSize, fps, builders }: ScriptSettings): Promise<ScriptModule> => {
+  const viewer = new Viewer(containerSize, container, { disableContextMenu: true })
   const rect = Rect.size(700, 700, { absCenter: viewer.viewportRect.center })
   //const tl = Rect.size(100, 100, { absCenter: rect.topLeft })
   const points = createPoints(80, rect)
@@ -39,7 +39,7 @@ export default async ({ container, width, height, fps }: ScriptSettings): Promis
     displayFps(fps)
   }
 
-  const ui = new UIBuilder()
+  const ui = builders.ui()
   return {
     ui: ui.build(),
     dispose () { 

@@ -3,7 +3,6 @@ import vertex from './shaders/vert'
 import fragment from './shaders/frag'
 import { type ScriptModule, type ScriptSettings } from "../../../../../components/example"
 import { displayFps } from '../../../../../utils/display-fps'
-import { UIBuilder } from '../../../../../components/example/code/ui'
 import { removeItem } from 'smallgame/src/utils'
 
 type TDot = {
@@ -34,8 +33,8 @@ class GeometryBuilder {
   }
 }
 
-export default async ({ container, width, height, fps }: ScriptSettings): Promise<ScriptModule> => {
-  const ctx = new GL({ width, height })
+export default async ({ container, containerSize, fps, builders }: ScriptSettings): Promise<ScriptModule> => {
+  const ctx = new GL(containerSize)
   const prog = ctx.createProgram(vertex, fragment, 'assemble-and-use')
   const texImage = await loadImage('platformer/Terrain_(16x16).png')
   const texture = ctx.createTexture('uSampler', texImage, { minMag: 'nearest' })
@@ -59,7 +58,7 @@ export default async ({ container, width, height, fps }: ScriptSettings): Promis
   const indexies: number[] = [1, 1, 1,1]
   
   
-  const { geometry, colors } = builder.build({ width, height }, texImage)
+  const { geometry, colors } = builder.build(containerSize, texImage)
   const vao = ctx.vao('dynamic', 'float', { aPosition: vec2, aTexCoord: vec2, aColor: float }, geometry, colors, indexies)
   debugger
   const draw = () =>
@@ -71,7 +70,7 @@ export default async ({ container, width, height, fps }: ScriptSettings): Promis
   draw()
   
   const glSurface = ctx.toSurface()
-  const { game, screen } = Game.create(width, height, container)
+  const { game, screen } = Game.create(containerSize.width, containerSize.height, container)
   gameloop(() => {
     for (const ev of game.event.get()) {
       if (ev.type === 'MOUSEDOWN') {
@@ -86,7 +85,7 @@ export default async ({ container, width, height, fps }: ScriptSettings): Promis
           indexies.pop()
         }
         
-        const { geometry, colors } = builder.build({ width, height }, texImage)
+        const { geometry, colors } = builder.build(containerSize, texImage)
         vao.update(geometry, colors, indexies)
         draw()
       }
@@ -97,7 +96,7 @@ export default async ({ container, width, height, fps }: ScriptSettings): Promis
     displayFps(fps, Time.fps)
   }) 
   
-  const ui = new UIBuilder()
+  const ui = builders.ui()
   ui.info('1. LBC on the screen to create a point.<br><br>2. RBC on the point to delete it')
   screen.disableContextMenu()
   return {

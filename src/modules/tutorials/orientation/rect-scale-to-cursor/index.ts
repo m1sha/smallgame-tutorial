@@ -1,13 +1,13 @@
 import { Viewer } from "../../../shared"
 import { displayFps } from "../../../../utils/display-fps"
-import { Icons, type ScriptModule, type ScriptSettings, TelemetryBuilder, UIBuilder } from "../../../../components/example"
+import { Icons, type ScriptModule, type ScriptSettings } from "../../../../components/example"
 import { GMath, Point, Rect, Sketch } from "smallgame"
 
-export default async ({ container, width, height, fps }: ScriptSettings): Promise<ScriptModule> => {
-  const telemetry = new TelemetryBuilder().open()
+export default async ({ container, containerSize, fps, builders }: ScriptSettings): Promise<ScriptModule> => {
+  const telemetry = builders.telemetry().open()
   const curPos = telemetry.def('Cursor Position', Point.zero)
   const zoom = telemetry.def('Zoom', 1)
-  const viewer = new Viewer({ width, height }, container, { disableContextMenu: true })
+  const viewer = new Viewer(containerSize, container, { disableContextMenu: true })
 
   const rect = Rect.size(300, 300)
   const rect1 = Rect.size(50, 50)
@@ -66,7 +66,7 @@ export default async ({ container, width, height, fps }: ScriptSettings): Promis
     displayFps(fps)
   }
 
-  const ui = new UIBuilder()
+  const ui = builders.ui()
   ui.info(Icons.computerMouse + ' Use the mouse wheel to scale the object')
   return {
     ui: ui.build(),

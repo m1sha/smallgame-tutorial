@@ -1,12 +1,11 @@
 import { Point, Sketch, Splines, Time } from "smallgame"
 import { displayFps } from "../../../../../utils/display-fps"
 import { type ScriptModule, type ScriptSettings } from "../../../../../components/example"
-import { UIBuilder } from "../../../../../components/example/code/ui"
 import { easeOutBounce } from "../movements/func"
 import { Viewer } from "../../../../shared"
 
-export default async ({ container, width, height, fps }: ScriptSettings): Promise<ScriptModule> => {
-  const viewer = new Viewer({ width, height}, container)
+export default async ({ container, containerSize, fps, builders }: ScriptSettings): Promise<ScriptModule> => {
+  const viewer = new Viewer(containerSize, container)
   const a = new Point(400, 100)
   const b = new Point(800, 400)
   const cp1 = new Point(500, 500)
@@ -40,7 +39,7 @@ export default async ({ container, width, height, fps }: ScriptSettings): Promis
     displayFps(fps)
   })
 
-  const ui = new UIBuilder()
+  const ui = builders.ui()
   ui.button('Restart', () => t = 0)
   return {
     ui: ui.build(),

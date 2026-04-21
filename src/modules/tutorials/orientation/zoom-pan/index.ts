@@ -1,17 +1,17 @@
 import { Viewer } from "../../../shared"
 import { displayFps } from "../../../../utils/display-fps"
-import { type ScriptModule, type ScriptSettings, TelemetryBuilder, UIBuilder } from "../../../../components/example"
-import { GMath, Point, Rect, Sketch, TPoint } from "smallgame"
+import { type ScriptModule, type ScriptSettings } from "../../../../components/example"
+import { GMath, Point, Rect, Sketch } from "smallgame"
 
-export default async ({ container, width, height, fps }: ScriptSettings): Promise<ScriptModule> => {
-  const telemetry  = new TelemetryBuilder().open().noLegend()
+export default async ({ container, containerSize, fps, builders }: ScriptSettings): Promise<ScriptModule> => {
+  const telemetry  = builders.telemetry().open().noLegend()
   const topleftParam = telemetry.def('Screen Zero Shift', Point.zero)
   const worldOffsetParam = telemetry.def('World Offset', Point.zero)
   const worldZoomParam = telemetry.def('World Zoom', 1)
   const cursorParam = telemetry.def('Cursor', Point.zero)
   const worldCursorParam = telemetry.def('World Cursor', Point.zero)
   
-  const viewer = new Viewer({ width, height }, container, { disableContextMenu: true })
+  const viewer = new Viewer(containerSize, container, { disableContextMenu: true })
   viewer.ui.setCellSize(24, 24)
   
   const viewport = viewer.viewport
@@ -90,7 +90,7 @@ export default async ({ container, width, height, fps }: ScriptSettings): Promis
     displayFps(fps)
   }
 
-  const ui = new UIBuilder()
+  const ui = builders.ui()
   ui.button('Add Object', () => createObjectMode = true )
   return {
     ui: ui.build(),

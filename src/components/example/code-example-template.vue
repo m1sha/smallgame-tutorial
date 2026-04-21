@@ -101,7 +101,7 @@ function clearPrevious () {
     <template #command-panel>
       <ToolbarDropdownPanel caption="Parameters" :open="settings.showParametersPanel" @toggle="isOpen => settings.showParametersPanel = isOpen">
         <template #content>
-          <ParameterList v-if="currentModule" :parameters="currentModule.parameters ?? []" :ui="currentModule.ui ?? { controls: [] }" />  
+          <ParameterList v-if="currentModule"  :ui="currentModule.ui ?? { controls: [] }" />  
         </template>
       </ToolbarDropdownPanel>
     </template>

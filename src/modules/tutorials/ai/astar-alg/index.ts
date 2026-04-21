@@ -1,18 +1,16 @@
 import { MouseButton, setSize } from "smallgame"
 import { displayFps } from "../../../../utils/display-fps"
 import { type ScriptModule, type ScriptSettings } from "../../../../components/example"
-import { UIBuilder } from "../../../../components/example/code/ui"
 import { MapSource } from "./astar/game-map"
 import { mapArray1 } from "./maps/map1"
 import { MapObject as GameMap } from "./objects/map-object"
 import { Zoom } from "./zoom"
-import { TelemetryBuilder } from "../../../../components/example/code/telemetry"
 import { Viewer } from "../../../shared"
 
-export default async ({ container, width, height, fps }: ScriptSettings): Promise<ScriptModule> => {
-  const telemetry = new TelemetryBuilder()
+export default async ({ container, containerSize, fps, builders }: ScriptSettings): Promise<ScriptModule> => {
+  const telemetry = builders.telemetry()
   let findPathTime = 0
-  const viewer = new Viewer({ width, height}, container, { disableContextMenu: true })
+  const viewer = new Viewer(containerSize, container, { disableContextMenu: true })
   let isEditMode = false
   let toolNum = 0
   let constPath = false
@@ -65,7 +63,7 @@ export default async ({ container, width, height, fps }: ScriptSettings): Promis
     telemetry.tick()
   })
 
-  const ui = new UIBuilder()
+  const ui = builders.ui()
 
   ui.select('Mode', ['Test Path', 'Edit Map'], val => { isEditMode = (val === 'Edit Map')  }, 'Test Path')
 

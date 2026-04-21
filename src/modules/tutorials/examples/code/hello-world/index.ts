@@ -2,10 +2,9 @@ import { loadImage, Point, Time, GMath, Surface } from "smallgame"
 import { displayFps } from "../../../../../utils/display-fps"
 import { type ScriptModule, type ScriptSettings } from "../../../../../components/example"
 import { Viewer } from "../../../../shared"
-import { UIBuilder } from "../../../../../components/example/code/ui"
 
-export default async ({ container, width, height, fps }: ScriptSettings): Promise<ScriptModule> => {
-  const viewer = new Viewer({ width, height }, container)
+export default async ({ container, containerSize, fps, builders }: ScriptSettings): Promise<ScriptModule> => {
+  const viewer = new Viewer(containerSize, container)
   const car = await loadImage('car-top-view/car.png')
   const road = await loadImage('car-top-view/roadNS.png')
   car.rect.center = viewer.surface.rect.center
@@ -43,7 +42,7 @@ export default async ({ container, width, height, fps }: ScriptSettings): Promis
     displayFps(fps)
   }
 
-  const ui = new UIBuilder()
+  const ui = builders.ui()
   ui.tracker('Speed', 0.01, 3, 0.01, val => speed = val, speed)
   ui.tracker('Accel', 0.1, 15, 0.1, val => accel = val, accel)
 

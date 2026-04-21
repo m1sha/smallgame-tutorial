@@ -1,13 +1,13 @@
 import { Game, gameloop, Parallax, Rect, loadImage, killgameloop, Time, GMath } from "smallgame"
 import { backgroundImageListV4, backgroundImageListV5, backgroundImageListV3 } from "./img-list"
 import { displayFps } from "../../../../../utils/display-fps"
-import { createButton, createSelect, type ScriptModule, type ScriptSettings } from "../../../../../components/example"
-import { Ease, easeInOutBounce } from "../movements/func"
+import { type ScriptModule, type ScriptSettings } from "../../../../../components/example"
+import { Ease } from "../movements/func"
 
 const SCREEN_WIDTH = 570 * 2
 const SCREEN_HEIGHT = 324 * 2
 
-export default async ({ container, width, height, fps }: ScriptSettings): Promise<ScriptModule> => {
+export default async ({ container, width, height, fps, builders }: ScriptSettings): Promise<ScriptModule> => {
   const { screen } = Game.create(width, height, container)
   //const list = backgroundImageListV4
 
@@ -50,20 +50,21 @@ export default async ({ container, width, height, fps }: ScriptSettings): Promis
     displayFps(fps)
   })
 
+  const ui = builders.ui()
   const varNames = ['City V4', 'City V5', 'City V3']
-  const variantParam = createSelect('Variant', varNames, value => {
+  ui.select('Variant', varNames, value => {
     parallax.clearLayers()
     if (value === 'City V4') { loadImages(backgroundImageListV4) }
     if (value === 'City V5') { loadImages(backgroundImageListV5) }
     if (value === 'City V3') { loadImages(backgroundImageListV3) }
   }, 'City V4')
 
-  const dirParam = createSelect('Direction', ['Forward', 'Backward'], value => {
+   ui.select('Direction', ['Forward', 'Backward'], value => {
     if (value === 'Forward') directionX = -1
     if (value === 'Backward') directionX = 1
   }, 'Forward')
 
-  const speedParam = createSelect('Speed', ['Slow', 'Normal', 'Fast'], value => {
+   ui.select('Speed', ['Slow', 'Normal', 'Fast'], value => {
 
     if (value === 'Slow') speed = 0.05
     if (value === 'Normal') speed = 0.1
@@ -71,12 +72,12 @@ export default async ({ container, width, height, fps }: ScriptSettings): Promis
 
   }, 'Slow')
 
-  const funcParam = createSelect('Func', Ease.names(), v => func = Ease.get(v), 'easeInOutBounce' )
+  ui.select('Func', Ease.names(), v => func = Ease.get(v), 'easeInOutBounce' )
 
-  const resetBtn = createButton('Restart', () => t = 0)
+  ui.button('Restart', () => t = 0)
 
   return {
-    parameters: [ variantParam, dirParam, speedParam, funcParam, resetBtn ],
+    ui: ui.build(),
     dispose () {
       killgameloop(gameloopId)
     }

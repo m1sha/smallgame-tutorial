@@ -1,20 +1,20 @@
-import { loadImage, Point, Game, gameloop, Time, Sketch, Rect, Text, Key, setSize, GMath } from "smallgame"
+import { Key, setSize, GMath } from "smallgame"
 import { displayFps } from "../../../../../utils/display-fps"
-import { createSelect, createTracker, type ScriptModule, type ScriptSettings } from "../../../../../components/example"
+import { type ScriptModule, type ScriptSettings } from "../../../../../components/example"
 import { setDebounce } from "smallgame/src/time"
 import { easeInElastic, easeInQuad, easeInBounce } from "../movements/func"
 import { Bar } from "./bar"
 import { Viewer } from "../../../../shared"
-import { Icons, UIBuilder } from "../../../../../components/example/code/ui"
+import { Icons } from "../../../../../components/example/code/ui"
 
 
 const lerp = (a: number, b: number, t: number) => a + (b - a) * t
 
 const linear = (t: number) => t
 
-export default async ({ container, width, height, fps }: ScriptSettings): Promise<ScriptModule> => {
+export default async ({ container, containerSize, fps, builders }: ScriptSettings): Promise<ScriptModule> => {
   //const { game, screen } = Game.create(width, height, container)
-  const viewer = new Viewer({ width, height}, container)
+  const viewer = new Viewer(containerSize, container)
 
   const bar = new Bar(setSize(0,0))
   const bar2 = new Bar(setSize(0,0))
@@ -79,7 +79,7 @@ export default async ({ container, width, height, fps }: ScriptSettings): Promis
 
 //  const speedParam = createTracker('Speed', 0.01, 4, 0.001, v => speed = v, 1)
 
-  const ui = new UIBuilder()
+  const ui = builders.ui()
   ui.info(Icons.keyboard + ' Press Space key to take force for bars')
   ui.select('function', [ 'linear', 'easeInElastic', 'easeInBounce', 'easeInQuad' ], v => {
     if (v === 'linear') func = linear

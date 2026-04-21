@@ -1,14 +1,13 @@
 import { displayFps } from "../../../../../utils/display-fps"
 import { type ScriptModule, type ScriptSettings } from "../../../../../components/example"
-import { UIBuilder } from "../../../../../components/example/code/ui"
 import { AssetStore } from "./asset-store"
 import { Asteroids } from "./asteroids"
 import { Viewer } from "../../../../shared"
 
-export default async ({ container, width, height, fps }: ScriptSettings): Promise<ScriptModule> => {
-  const viewer = new Viewer({ width, height}, container)
+export default async ({ container, containerSize, fps, builders }: ScriptSettings): Promise<ScriptModule> => {
+  const viewer = new Viewer(containerSize, container)
   await new AssetStore().load()
-  const asteroids = new Asteroids({ width, height })
+  const asteroids = new Asteroids(containerSize)
   asteroids.add(20)
 
   viewer.onFixedUpdate = () => {
@@ -21,7 +20,7 @@ export default async ({ container, width, height, fps }: ScriptSettings): Promis
     displayFps(fps)
   }
 
-  const ui = new UIBuilder()
+  const ui = builders.ui()
   return {
     ui: ui.build(),
     dispose () { 

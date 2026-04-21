@@ -1,6 +1,6 @@
 import { PolyRect, Rect, setPoint, Sketch, Surface } from "smallgame"
 import { displayFps } from "../../../../../utils/display-fps"
-import { createSelect, type ScriptSettings, type ScriptModule, createColor, createButton, ButtonParameter, createTracker } from "../../../../../components/example"
+import { type ScriptSettings, type ScriptModule } from "../../../../../components/example"
 import { Viewer } from "../../../../shared"
 
 const funcName = 'Rectangle'
@@ -11,14 +11,16 @@ let fillColor = '#052441ff'
 let strokeWidth = 1
 
 
-export default async ({ container, width, height, fps }: ScriptSettings): Promise<ScriptModule> => {
+export default async ({ container, containerSize, fps, builders }: ScriptSettings): Promise<ScriptModule> => {
   displayFps(fps)
   
-  const viewer = new Viewer({ width, height }, container)
+  const viewer = new Viewer(containerSize, container)
   
   func(viewer.surface)
 
-  const shapeParam = createSelect('Shape', ['Rectangle', 'Polyrectangle', 'Polygon', 'Dots', 'Circle', 'Arrows' ], value => {
+  const ui = builders.ui()
+
+  ui.select('Shape', ['Rectangle', 'Polyrectangle', 'Polygon', 'Dots', 'Circle', 'Arrows' ], value => {
     if (value == 'Polyrectangle') func = polyRect
     if (value == 'Polygon') func =polygon
     if (value == 'Circle') func = circle
@@ -34,17 +36,17 @@ export default async ({ container, width, height, fps }: ScriptSettings): Promis
   //   func(viewer.surface)
   // }, bgColor)
 
-  const strokeParam = createColor('Stroke Color', color => { 
+  ui.color('Stroke Color', color => { 
     strokeColor = color 
     func(viewer.surface)
   }, strokeColor)
 
-  const fillParam = createColor('Fill Color', color => { 
+  ui.color('Fill Color', color => { 
     fillColor = color
     func(viewer.surface)
   }, fillColor)
 
-  const sizeParam = createTracker('Stroke Size', 1, 50, 1, v => { strokeWidth = v; func(viewer.surface) }, 1)
+  ui.tracker('Stroke Size', 1, 50, 1, v => { strokeWidth = v; func(viewer.surface) }, 1)
   // const size2Param = createTracker('Size', 0, 100, 10, v => {}, 50)
 
 
@@ -53,7 +55,7 @@ export default async ({ container, width, height, fps }: ScriptSettings): Promis
   // })
 
   return {
-    parameters: [shapeParam, /*bgParam, */ strokeParam, fillParam, sizeParam],
+    ui: ui.build(),
     dispose () {
       viewer.remove()
     }

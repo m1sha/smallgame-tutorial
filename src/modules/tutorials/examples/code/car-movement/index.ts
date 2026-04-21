@@ -1,13 +1,11 @@
 import { Viewer } from "../../../../shared"
 import { displayFps } from "../../../../../utils/display-fps"
 import { type ScriptModule, type ScriptSettings } from "../../../../../components/example"
-import { UIBuilder } from "../../../../../components/example/code/ui"
 import { GMath, loadImage, Point, RigidBody2D, SmoothDampVelocity, Time } from "smallgame"
-import { TelemetryBuilder } from "../../../../../components/example/code/telemetry"
 
-export default async ({ container, width, height, fps }: ScriptSettings): Promise<ScriptModule> => {
-  const viewer = new Viewer({ width, height }, container, { disableContextMenu: true })
-  const telemetry = new TelemetryBuilder().open()
+export default async ({ container, containerSize, fps, builders }: ScriptSettings): Promise<ScriptModule> => {
+  const viewer = new Viewer(containerSize, container, { disableContextMenu: true })
+  const telemetry = builders.telemetry().open()
   const goal = telemetry.def('Goal', Point.zero)
   const angle = telemetry.def('Angle', 0)
   const car = await loadImage('car-top-view/car.png')
@@ -36,7 +34,7 @@ export default async ({ container, width, height, fps }: ScriptSettings): Promis
     angle.value = rb.angle
   }
 
-  const ui = new UIBuilder()
+  const ui = builders.ui()
   return {
     ui: ui.build(),
     telemetry: telemetry.build(),

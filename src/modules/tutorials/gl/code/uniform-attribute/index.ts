@@ -2,11 +2,11 @@ import { Color, gl_normalize, MemSurface, Rect, setSize, Sketch, SurfaceGL, type
 
 import vertex from './shaders/vert'
 import fragmnet from './shaders/frag'
-import { EntityListBuilder, Icons, UIBuilder, type ScriptModule, type ScriptSettings } from "../../../../../components/example"
+import { EntityListBuilder, Icons, type ScriptModule, type ScriptSettings } from "../../../../../components/example"
 import { Viewer } from '../../../../shared'
 import { displayFps } from '../../../../../utils/display-fps'
 
-export default async ({ container, containerSize, width, height, fps }: ScriptSettings): Promise<ScriptModule> => {
+export default async ({ container, containerSize, width, height, fps, builders }: ScriptSettings): Promise<ScriptModule> => {
   const glSurface = new SurfaceGL(width, height, { useOffscreen: true })
   const ctx = glSurface.context
   ctx.createProgram(vertex, fragmnet, 'assemble-and-use')
@@ -46,7 +46,7 @@ export default async ({ container, containerSize, width, height, fps }: ScriptSe
     displayFps(fps)
   }
 
-  const ui = new UIBuilder()
+  const ui = builders.ui()
   ui
     .info(Icons.computerMouse + ' Use LMB to set a point on the screen')
     .button('Reset', () => { while(points.pop()); })

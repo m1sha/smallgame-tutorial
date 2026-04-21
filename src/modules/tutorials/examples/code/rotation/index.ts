@@ -1,13 +1,12 @@
-import { AnimatedSprite, deg, Game, gameloop, loadImage, M33, Point, rad, Rect, Size, Sketch, SpriteSheet } from "smallgame"
+import { AnimatedSprite, loadImage, M33, Point, rad, Rect, Size, Sketch, SpriteSheet } from "smallgame"
 import { displayFps } from "../../../../../utils/display-fps"
-import { TelemetryBuilder, type ScriptModule, type ScriptSettings } from "../../../../../components/example"
-import { UIBuilder } from "../../../../../components/example/code/ui"
+import { type ScriptModule, type ScriptSettings } from "../../../../../components/example"
 import { Viewer } from "../../../../shared"
 
-export default async ({ container, width, height, fps }: ScriptSettings): Promise<ScriptModule> => {
-  const ui = new UIBuilder()
-  const telemetry = new TelemetryBuilder()
-  const viewer = new Viewer({ width, height}, container)
+export default async ({ container, containerSize, fps, builders }: ScriptSettings): Promise<ScriptModule> => {
+  const ui = builders.ui()
+  const telemetry = builders.telemetry()
+  const viewer = new Viewer(containerSize, container)
 
   const ca = telemetry.def('ca', 0, val => (val % 360).toFixed(0) + '°')
 

@@ -1,17 +1,15 @@
 import { GMath, Point, Rect, Sketch, Time } from "smallgame"
 import { displayFps } from "../../../../../utils/display-fps"
-import { createButton, type ScriptModule, type ScriptSettings } from "../../../../../components/example"
+import { type ScriptModule, type ScriptSettings } from "../../../../../components/example"
 import { Car } from "./car"
-import { UIBuilder } from "../../../../../components/example/code/ui"
-import { easeInBounce, easeInOutBounce, easeInOutElastic, easeInSine, easeOutBounce, easeInOutCirc, easeInOutQuad } from "../movements/func"
-import { TelemetryBuilder } from "../../../../../components/example/code/telemetry"
+import { easeInOutQuad } from "../movements/func"
 import { Flag } from "./flag"
-import { ParallaxBG } from "./parallax-bg"
+// import { ParallaxBG } from "./parallax-bg"
 import { Viewer } from "../../../../shared"
 
-export default async ({ container, width, height, fps }: ScriptSettings): Promise<ScriptModule> => {
-  const telemetry = new TelemetryBuilder()
-  const viewer = new Viewer({ width, height}, container)
+export default async ({ container, containerSize, fps, builders }: ScriptSettings): Promise<ScriptModule> => {
+  const telemetry = builders.telemetry()
+  const viewer = new Viewer(containerSize, container)
   viewer.ui.setCellSize(120, 120)
   const car              = new Car()
   await car.create()
@@ -32,7 +30,7 @@ export default async ({ container, width, height, fps }: ScriptSettings): Promis
   let speed = 0.1
 
   const ground = new Sketch()
-    .rect({ fill: '#2a2a2a' }, new Rect(0, car.rect.absHeight - 20, width, 200))
+    .rect({ fill: '#2a2a2a' }, new Rect(0, car.rect.absHeight - 20, containerSize.width, 200))
     
     .toSurface()
 
@@ -75,7 +73,7 @@ export default async ({ container, width, height, fps }: ScriptSettings): Promis
 
   }
 
-  const ui = new UIBuilder()
+  const ui = builders.ui()
   ui.group('Common', group => group
     .open()
     .tracker('Speed', 0.001, 3, 0.001, val => { speed = val }, speed)

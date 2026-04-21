@@ -1,11 +1,11 @@
-import { AnimatedSprite, loadImage, Point, Size, SpriteSheet } from "smallgame"
+import { AnimatedSprite, loadImage, Point, Size, SpriteSheet, Surface } from "smallgame"
 import { displayFps } from "../../../../../utils/display-fps"
-import { type ScriptModule, type ScriptSettings, EntityListBuilder, UIBuilder } from "../../../../../components/example"
+import { type ScriptModule, type ScriptSettings } from "../../../../../components/example"
 import { Viewer } from "../../../../shared"
 
-export default async ({ container, width, height, fps }: ScriptSettings): Promise<ScriptModule> => {
-  const entities = new EntityListBuilder()
-  const viewer = new Viewer({ width, height }, container, { disableContextMenu: true })
+export default async ({ container, containerSize, fps, builders }: ScriptSettings): Promise<ScriptModule> => {
+  const entities = builders.entities()
+  const viewer = new Viewer(containerSize, container, { disableContextMenu: true })
   
   const img1 = await loadImage('space-striker/tiny-ships/tinyShip1.png')
   const img2 = await loadImage('space-striker/tiny-ships/tinyShip2.png')
@@ -36,7 +36,10 @@ export default async ({ container, width, height, fps }: ScriptSettings): Promis
   const sprite3 = new AnimatedSprite(spriteSheet3, spriteSheet3.size.scale(2))
   const sprite4 = new AnimatedSprite(spriteSheet4, spriteSheet4.size.scale(2))
 
-  entities.add('sprite1')
+  
+  //const entityGrid = entities.addGrid<Surface>(obj => ({ icon: obj.toDataURL() }))
+  //entityGrid.add(img1)
+  //entityGrid.add(img2)
 
   //sprite1.playBatch('move')
   sprite2.playBatch('attack')
@@ -68,7 +71,7 @@ export default async ({ container, width, height, fps }: ScriptSettings): Promis
 
  
 
-  const ui = new UIBuilder()
+  const ui = builders.ui()
   ui.upload('Load Sprite Sheet', file => {})
   
   return {

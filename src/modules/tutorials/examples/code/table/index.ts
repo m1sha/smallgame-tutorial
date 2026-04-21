@@ -1,10 +1,10 @@
 import { Viewer } from "../../../../shared"
 import { displayFps } from "../../../../../utils/display-fps"
-import { type ScriptModule, type ScriptSettings, UIBuilder } from "../../../../../components/example"
+import { type ScriptModule, type ScriptSettings } from "../../../../../components/example"
 import { NumericTable } from "smallgame/src/utils"
 import { MemSurface, Point, Rect, Size, Sketch, Text } from "smallgame"
 
-export default async ({ container, containerSize, fps }: ScriptSettings): Promise<ScriptModule> => {
+export default async ({ container, containerSize, fps, builders }: ScriptSettings): Promise<ScriptModule> => {
   const viewer = new Viewer(containerSize, container, { disableContextMenu: true })
 
   let columnCount = 8
@@ -102,7 +102,7 @@ export default async ({ container, containerSize, fps }: ScriptSettings): Promis
   }
 
   //----------- UI
-  const ui = new UIBuilder()
+  const ui = builders.ui()
   let val = 0
   let col = 0
   let row = 0

@@ -1,10 +1,8 @@
 import { Point, setPoint, Sketch, Splines, TPoint } from "smallgame"
 import { displayFps } from "../../../../../utils/display-fps"
 import { type ScriptModule, type ScriptSettings } from "../../../../../components/example"
-import { UIBuilder } from "../../../../../components/example/code/ui"
 import { Viewer } from "../../../../shared"
 import { ContextMenuBuilder } from "../../../../../components/example/code/context-menu"
-import { TelemetryBuilder } from "../../../../../components/example/code/telemetry"
 
 class SmoothFunc {
   funcName = 'Chaikin'
@@ -47,10 +45,10 @@ class Path {
   }
 }
 
-export default async ({ container, width, height, fps }: ScriptSettings): Promise<ScriptModule> => {
-  const telemetry = new TelemetryBuilder()
+export default async ({ container, containerSize, fps, builders }: ScriptSettings): Promise<ScriptModule> => {
+  const telemetry = builders.telemetry()
   const contextMenu = new ContextMenuBuilder()
-  const viewer = new Viewer({ width, height }, container, { disableContextMenu: true })
+  const viewer = new Viewer(containerSize, container, { disableContextMenu: true })
   const func = new SmoothFunc()
   const path = new Path(func)
 
@@ -87,7 +85,7 @@ export default async ({ container, width, height, fps }: ScriptSettings): Promis
     displayFps(fps)
   }
  
-  const ui = new UIBuilder()
+  const ui = builders.ui()
   const panels: Map<string, { hidden: boolean }> = new Map()
   ui.select('Smooth method', ['Chaikin', 'CatmullRom', 'B-Spline', 'Gaussian Smooth'], val => { 
     [...panels.values()].forEach(p => p.hidden = true)

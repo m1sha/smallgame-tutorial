@@ -1,6 +1,6 @@
 import { Viewer } from "../../../../shared"
 import { displayFps } from "../../../../../utils/display-fps"
-import { type ScriptModule, type ScriptSettings, UIBuilder, TelemetryBuilder, TelemetryParameter } from "../../../../../components/example"
+import { type ScriptModule, type ScriptSettings, TelemetryBuilder, TelemetryParameter } from "../../../../../components/example"
 import { Color, loadBlob, loadImage, Point, Rect, setSize, Sketch, Surface, TPoint, TSize } from "smallgame"
 
 type Batch = {
@@ -139,8 +139,8 @@ class Editor {
 }
 
 
-export default async ({ container, width, height, fps }: ScriptSettings): Promise<ScriptModule> => {
-  const viewer = new Viewer({ width, height }, container, { disableContextMenu: true })
+export default async ({ container, containerSize, fps, builders }: ScriptSettings): Promise<ScriptModule> => {
+  const viewer = new Viewer(containerSize, container, { disableContextMenu: true })
   viewer.ui.setCellSize(64, 64)
   const displayParams = new DisplayParams()
   const editor = new Editor(viewer, displayParams)
@@ -189,7 +189,7 @@ export default async ({ container, width, height, fps }: ScriptSettings): Promis
     displayFps(fps)
   }
 
-  const ui = new UIBuilder()
+  const ui = builders.ui()
   ui.upload('Upload Sprite Image', async file => editor.loadImage(file))
   const panels = ui.controlMap()
   ui.select('Cut Tiles', ['Width & Height', 'Cols & Rows'], name => panels.show(name), 'Cols & Rows')

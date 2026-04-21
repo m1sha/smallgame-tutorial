@@ -5,12 +5,12 @@ import { Bird } from "./bird"
 import { Pillars } from "./pillars"
 import { Viewer } from "../../../../shared"
 
-export default async ({ container, width, height, fps }: ScriptSettings): Promise<ScriptModule> => {
-  const viewer = new Viewer({ width, height}, container)
-  const bird = new Bird({width, height})
-  const pillars = new Pillars({width, height})
+export default async ({ container, containerSize, fps }: ScriptSettings): Promise<ScriptModule> => {
+  const viewer = new Viewer(containerSize, container)
+  const bird = new Bird(containerSize)
+  const pillars = new Pillars(containerSize)
 
-  bird.rect.moveSelf(300, height / 2)
+  bird.rect.moveSelf(300, containerSize.height / 2)
 
   viewer.onKeyPressed = key => {
     if (key.getPressed()[Key.SPACE]){
@@ -29,7 +29,6 @@ export default async ({ container, width, height, fps }: ScriptSettings): Promis
   })
 
   return {
-    parameters: [],
     dispose () { 
       viewer.remove() 
     }

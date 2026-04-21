@@ -1,13 +1,13 @@
 import { Color, GL, GMath, MemSurface, Rect, Time, vec2, vec3 } from 'smallgame'
 import vertex from './shaders/vert'
 import fragmnet from './shaders/frag'
-import { UIBuilder, type ScriptModule, type ScriptSettings } from "../../../../../components/example"
+import { type ScriptModule, type ScriptSettings } from "../../../../../components/example"
 import { displayFps } from '../../../../../utils/display-fps'
 import { Viewer } from '../../../../shared'
 
 
-export default async ({ container, containerSize, fps }: ScriptSettings): Promise<ScriptModule> => {
-  const ui = new UIBuilder()
+export default async ({ container, containerSize, fps, builders }: ScriptSettings): Promise<ScriptModule> => {
+  const ui = builders.ui()
   const gl = new GL(containerSize, true)
   const glSurface = gl.toSurface()
   using programm = gl.createProgram(vertex, fragmnet, 'assemble-and-use')

@@ -1,7 +1,6 @@
 import { MouseButton, Point, Sketch, Splines, Time, TPoint } from "smallgame"
 import { displayFps } from "../../../../../utils/display-fps"
 import { EntityListBuilder, type ScriptModule, type ScriptSettings } from "../../../../../components/example"
-import { UIBuilder } from "../../../../../components/example/code/ui"
 // import { easeInOutQuad, easeInQuad, easeOutBounce } from "../movements/func"
 import { Viewer } from "../../../../shared"
 
@@ -34,9 +33,9 @@ class BezierLine {
   }
 }
 
-export default async ({ container, width, height, fps }: ScriptSettings): Promise<ScriptModule> => {
+export default async ({ container, containerSize, fps, builders }: ScriptSettings): Promise<ScriptModule> => {
   const entities = new EntityListBuilder()
-  const viewer = new Viewer({ width, height}, container)
+  const viewer = new Viewer(containerSize, container)
   const curve = new BezierLine()
   curve.firstSegemnt(new Point(400, 100), new Point(800, 400), new Point(500, 500), new Point(1300, 700))
   curve.nextSegemnt(new Point(1000, 800), new Point(1300, 100), new Point(900, 800))
@@ -104,7 +103,7 @@ export default async ({ container, width, height, fps }: ScriptSettings): Promis
     displayFps(fps)
   })
 
-  const ui = new UIBuilder()
+  const ui = builders.ui()
   ui.info('1. Use Start/Stop button to play <br/>2. Use Restart button move to the ball on the start position')
   ui.button('Start', sender => { 
     isStarted = !isStarted

@@ -1,14 +1,13 @@
 import { displayFps } from "../../../../../utils/display-fps"
 import { Time } from "smallgame"
 import { easeOutBounce, funcMap } from "./func"
-import { createSelect, type ScriptSettings, type ScriptModule, createButton } from "../../../../../components/example"
+import { type ScriptSettings, type ScriptModule } from "../../../../../components/example"
 import { Ball, Markers, Path } from './objects'
-import { TelemetryBuilder } from "../../../../../components/example/code/telemetry"
 import { Viewer } from "../../../../shared"
 
-export default async ({ container, width, height, fps }: ScriptSettings): Promise<ScriptModule> => {
-  const telemetry = new TelemetryBuilder()
-  const viewer = new Viewer({ width, height}, container)
+export default async ({ container, containerSize, fps, builders }: ScriptSettings): Promise<ScriptModule> => {
+  const telemetry = builders.telemetry()
+  const viewer = new Viewer(containerSize, container)
   let t  = 0
   let speed = 0.2
   let func = easeOutBounce
@@ -57,30 +56,23 @@ export default async ({ container, width, height, fps }: ScriptSettings): Promis
     if (isNaN(currSpeed)) currSpeed = 0
   }
 
- 
-  
-  const curveTypeParam = createSelect(
-    'Curve Type', 
-    [...funcMap.keys()], 
-    name => {
-      t = 0
-      func = funcMap.get(name)!
-      telemetry.resetAuto() 
-    }, 
-    'easeOutBounce'
-  )
+  const ui = builders.ui()
+  ui.select('Curve Type', [...funcMap.keys()], val => {
+    t = 0
+    func = funcMap.get(val)!
+    telemetry.resetAuto() 
+  }, 'easeOutBounce')
 
-  const speedParam = createSelect('Speed', ['Slow', 'Noraml', 'Fast'], v => {
-    if (v === 'Slow') speed = 0.05
-    if (v === 'Noraml') speed = 0.2
-    if (v === 'Fast') speed = 0.5
+  ui.select('Speed', ['Slow', 'Noraml', 'Fast'], val => {
+    if (val === 'Slow') speed = 0.05
+    if (val === 'Noraml') speed = 0.2
+    if (val === 'Fast') speed = 0.5
   }, 'Noraml')
 
-  const resetButtonParam = createButton('Reset', () => { 
+  ui.button('Reset', () => { 
     t = 0; 
     telemetry.resetAuto() 
   })
-
   
   telemetry.open()
   telemetry.openChart()
@@ -89,12 +81,8 @@ export default async ({ container, width, height, fps }: ScriptSettings): Promis
   telemetry.auto(() => t > 0, () => t > 1)
 
   return {
+    ui: ui.build(),
     telemetry: telemetry.build(),
-    parameters: [
-      curveTypeParam,
-      speedParam,
-      resetButtonParam
-    ],
     dispose () {
       viewer.remove()
     }

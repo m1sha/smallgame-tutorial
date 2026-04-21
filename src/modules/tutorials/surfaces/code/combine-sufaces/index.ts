@@ -1,10 +1,10 @@
 import { Viewer } from "../../../../shared"
 import { displayFps } from "../../../../../utils/display-fps"
-import { type ScriptModule, type ScriptSettings, UIBuilder } from "../../../../../components/example"
-import { loadBlob, MemSurface, setSize, Surface } from "smallgame"
+import { type ScriptModule, type ScriptSettings } from "../../../../../components/example"
+import { loadBlob, MemSurface, setSize } from "smallgame"
 import { TexturePacker } from "smallgame/src/utils/pack"
 
-export default async ({ container, containerSize, fps }: ScriptSettings): Promise<ScriptModule> => {
+export default async ({ container, containerSize, fps, builders }: ScriptSettings): Promise<ScriptModule> => {
   const viewer = new Viewer(containerSize, container, { disableContextMenu: true })
 
   const texPack = new TexturePacker(512, 512)
@@ -21,7 +21,7 @@ export default async ({ container, containerSize, fps }: ScriptSettings): Promis
     displayFps(fps)
   }
 
-  const ui = new UIBuilder()
+  const ui = builders.ui()
   ui.uploadMany('Upload Tilesheets', async files => {
     for (const file of files) {
       const sprite = await loadBlob(file)

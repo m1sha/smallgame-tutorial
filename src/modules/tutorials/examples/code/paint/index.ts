@@ -1,13 +1,13 @@
 import { Viewer } from "../../../../shared"
 import { displayFps } from "../../../../../utils/display-fps"
-import { type ScriptModule, type ScriptSettings, UIBuilder } from "../../../../../components/example"
+import { type ScriptModule, type ScriptSettings } from "../../../../../components/example"
 import { MemSurface, Point, Sketch, Splines } from "smallgame"
 
-export default async ({ container, width, height, fps }: ScriptSettings): Promise<ScriptModule> => {
-  const viewer = new Viewer({ width, height }, container, { disableContextMenu: true })
+export default async ({ container, containerSize, fps, builders }: ScriptSettings): Promise<ScriptModule> => {
+  const viewer = new Viewer(containerSize, container, { disableContextMenu: true })
   viewer.surface.imageRendering = 'pixelated'
-  const canvasSurface = new MemSurface({ width, height })
-  const activeSurface = new MemSurface({ width, height })
+  const canvasSurface = new MemSurface(containerSize)
+  const activeSurface = new MemSurface(containerSize)
   canvasSurface.imageRendering = 'pixelated'
   activeSurface.imageRendering = 'pixelated'
   let points: Point[] = []
@@ -62,7 +62,7 @@ export default async ({ container, width, height, fps }: ScriptSettings): Promis
     displayFps(fps)
   }
 
-  const ui = new UIBuilder()
+  const ui = builders.ui()
   return {
     ui: ui.build(),
     dispose () { 

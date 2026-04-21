@@ -1,11 +1,10 @@
 import { Game, gameloop, GMath, loadImage, Rect, Size, Sketch, Surface } from "smallgame"
 import { displayFps } from "../../../../../utils/display-fps"
 import { type ScriptModule, type ScriptSettings } from "../../../../../components/example"
-import { UIBuilder } from "../../../../../components/example/code/ui"
 import { Grid } from "smallgame/src/utils"
 
-export default async ({ container, width, height, fps }: ScriptSettings): Promise<ScriptModule> => {
-  const { game, screen } = Game.create(width, height, container)
+export default async ({ container, containerSize, fps, builders }: ScriptSettings): Promise<ScriptModule> => {
+  const { game, screen } = Game.create(containerSize.width, containerSize.height, container)
 
   const imgs: Surface[] = []
   imgs.push(await loadImage('space-striker/ships/Alien_4.png'))
@@ -40,7 +39,7 @@ export default async ({ container, width, height, fps }: ScriptSettings): Promis
     displayFps(fps)
   })
 
-  const ui = new UIBuilder()
+  const ui = builders.ui()
   return {
     ui: ui.build(),
     dispose () { 

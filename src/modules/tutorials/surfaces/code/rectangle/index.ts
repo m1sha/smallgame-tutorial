@@ -1,10 +1,10 @@
 import { loadImage } from "smallgame"
-import { UIBuilder, type ScriptModule, type ScriptSettings } from "../../../../../components/example"
+import { type ScriptModule, type ScriptSettings } from "../../../../../components/example"
 import { Viewer } from "../../../../shared"
 import { displayFps } from "../../../../../utils/display-fps"
 
-export default async ({ container, containerSize, fps }: ScriptSettings): Promise<ScriptModule> => {
-  const ui = new UIBuilder()
+export default async ({ container, containerSize, fps, builders }: ScriptSettings): Promise<ScriptModule> => {
+  const ui = builders.ui()
   const viewer = new Viewer(containerSize, container)
 
   let a = 18

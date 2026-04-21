@@ -1,6 +1,6 @@
 import { Viewer } from "../../../shared"
 import { displayFps } from "../../../../utils/display-fps"
-import { Icons, type ScriptModule, type ScriptSettings, TelemetryBuilder, UIBuilder } from "../../../../components/example"
+import { Icons, type ScriptModule, type ScriptSettings } from "../../../../components/example"
 import { GMath, loadImage, MemSurface, Point, Rect, setSize, Sketch, Surface, SurfaceBase, TSize } from "smallgame"
 
 class Camera {
@@ -38,19 +38,19 @@ class Camera {
   }
 }
 
-export default async ({ container, width, height, fps }: ScriptSettings): Promise<ScriptModule> => {
-  const telemetry = new TelemetryBuilder().open().noLegend()
-  const viewer = new Viewer({ width, height }, container, { disableContextMenu: true })
+export default async ({ container, containerSize, fps, builders }: ScriptSettings): Promise<ScriptModule> => {
+  const telemetry = builders.telemetry().open().noLegend()
+  const viewer = new Viewer(containerSize, container, { disableContextMenu: true })
   const mousePos = telemetry.def('Cursor', Point.zero)
   const zoom = telemetry.def('Zoom', 1)
   const clipRect = telemetry.def('Clip Rect', Rect.zero)
 
   const img = await loadImage('istockphoto-517188688-612x612.jpg')
-  img.rect.absCenter = viewer.surface.rect.absCenter
+  img.rect.absCenter = viewer.surface.rect.absCenter.shiftX(200)
 
  
   const cam = new Camera(setSize(400, 300))
-  cam.position = new Point(200, 110)
+  cam.position = new Point(400, 110)
   let step = 1
   
   viewer.onInput = ev => {
@@ -77,7 +77,7 @@ export default async ({ container, width, height, fps }: ScriptSettings): Promis
     displayFps(fps)
   }
 
-  const ui = new UIBuilder().info(Icons.computerMouse + ' Use mouse wheel to zoom the picture')
+  const ui = builders.ui().info(Icons.computerMouse + ' Use mouse wheel to zoom the picture')
   return {
     ui: ui.build(),
     telemetry: telemetry.build(),

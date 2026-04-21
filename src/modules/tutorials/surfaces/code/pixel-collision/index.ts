@@ -1,12 +1,12 @@
 import { Color, GMath, loadImage, Point, Rect, Sketch, Surface } from "smallgame"
 import { displayFps } from "../../../../../utils/display-fps"
 import { type ScriptModule, type ScriptSettings } from "../../../../../components/example"
-import { Icons, UIBuilder } from "../../../../../components/example/code/ui"
+import { Icons } from "../../../../../components/example/code/ui"
 import { TelemetryBuilder } from "../../../../../components/example/code/telemetry"
 import { Viewer } from "../../../../shared"
 
-export default async ({ container, width, height, fps }: ScriptSettings): Promise<ScriptModule> => {
-  const viewer = new Viewer({ width, height}, container)
+export default async ({ container, containerSize, fps, builders }: ScriptSettings): Promise<ScriptModule> => {
+  const viewer = new Viewer(containerSize, container)
   const telemetry = new TelemetryBuilder().open('wide')
   const overlapRect = telemetry.def('Overlap Rect', Rect.zero)
   const frigateRect = telemetry.def('Frigate Rect', Rect.zero)
@@ -96,7 +96,7 @@ export default async ({ container, width, height, fps }: ScriptSettings): Promis
     telemetry.tick()
   }
   
-  const ui = new UIBuilder()
+  const ui = builders.ui()
   ui.info(Icons.computerMouse + 'Use Mouse Wheel for zoom')
   ui.group('Settings', group => group.open()
     .switch('Show Mask', val => showMask = val, false)
