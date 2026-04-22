@@ -30,7 +30,7 @@ const { entities } = defineProps<{ entities: IEnityList }>()
   background-color: rgba(55, 55, 55, 0.4941176471)
   backdrop-filter: blur(2px)
   border: 1px solid var(--panel-border)
-  width: 9vw
+  width: 17vw
 
   .entity
     display: flex

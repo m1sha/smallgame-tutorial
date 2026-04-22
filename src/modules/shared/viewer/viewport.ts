@@ -1,12 +1,13 @@
-import { Point, TPoint, TSize } from "smallgame"
+import { Point, setPoint, TPoint, TSize } from "smallgame"
 import { Viewer } from "./viewer"
+import { IViewport } from "../../../components/example"
 
 export class Viewport {
  
   private _offset = Point.zero
   private _zoom = 1
 
-  constructor (private viewportSize: TSize, private viewer: Viewer) {
+  constructor (private viewportSize: TSize, private viewer: Viewer, private vwp: IViewport) {
 
   }
   
@@ -20,22 +21,28 @@ export class Viewport {
 
     this.viewer.zoom = zoom
     this.viewer.offset = this._offset.clone()
+    this.vwp.offset = setPoint(this._offset.x, this._offset.y)
+    this.vwp.zoom = this._zoom
   }
   
   panTo (point: TPoint): void {
     this._offset.x = point.x
     this._offset.y = point.y
     this.viewer.offset = this.viewer.offset.move(-point.x, -point.y)
+    this.vwp.offset = setPoint(this._offset.x, this._offset.y)
   }
 
   panBy (shift: Point) {
     this._offset.shiftSelf(shift)
     this.viewer.offset = this.viewer.offset.shift(shift.negX())
+    this.vwp.offset = setPoint(this._offset.x, this._offset.y)
   }
   
-  reset(): void {
+  reset (): void {
     this._zoom = 1
     this._offset.x = 0
     this._offset.y = 0
+    this.vwp.offset = setPoint(this._offset.x, this._offset.y)
+    this.vwp.zoom = this._zoom
   }
 }

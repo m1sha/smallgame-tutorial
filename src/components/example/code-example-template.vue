@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from "vue"
 import { useRoute, useRouter } from "vue-router"
-import { Builders, ScriptDef, ScriptModule, Settings } from "./code"
-import { ParameterList, ScriptList, Telemetry, Toolbar, ToolbarDropdownPanel, ContextMenu, EntityList } from './components'
+import { Builders, ScriptDef, ScriptModule, Settings, initViewport, IViewport } from "./code"
+import { ParameterList, ScriptList, Telemetry, Toolbar, ToolbarDropdownPanel, ContextMenu, EntityList, Viewport } from './components'
 import { Size } from "smallgame";
+import { BottomBar } from "./components/bottom-bar";
+
 
 const props = defineProps<{ scriptList: ScriptDef[] }>()
 const route = useRoute()
@@ -14,6 +16,7 @@ const scriptId = computed(() => route.params.name as string)
 const currentModule = ref<ScriptModule | null>()
 const scriptListItems = computed(() => props.scriptList.map((p, i) => ({ id: p.name.replaceAll(' ', '_').toLocaleLowerCase(), name: p.name, category: p.category, codeDir: p.codeDir })) )
 const settings = new Settings()
+const viewport = ref<IViewport>(initViewport())
 
 onMounted(async () => {
   await main()
@@ -39,7 +42,15 @@ async function main() {
   const height = container.value!.clientHeight
   const containerSize = new Size(width, height)
 
-  currentModule.value = await script.module({ container: container.value!, fps: fps.value!, width, height, containerSize, builders: new Builders() })
+  currentModule.value = await script.module({ 
+    container: container.value!, 
+    fps: fps.value!, 
+    width, 
+    height, 
+    containerSize, 
+    builders: new Builders(),
+    viewerSettings: { viewport: viewport.value }
+  })
 }
 
 function changeScript (id: string) {
@@ -50,6 +61,7 @@ router.beforeEach(() => { clearPrevious() })
 router.afterEach(() => { main() })
 
 function clearPrevious () {
+  viewport.value = initViewport()
   if (container.value)
   while(true) {
     const child = container.value.children[0]
@@ -65,6 +77,7 @@ function clearPrevious () {
 
 </script>
 <template>
+  <div class="code-example-template-grid">
   <Toolbar>
     <template #project>
       <ToolbarDropdownPanel caption="Projects" :open="settings.showScriptPanel" @toggle="isOpen => settings.showScriptPanel = isOpen">
@@ -112,9 +125,26 @@ function clearPrevious () {
     <ContextMenu v-if="currentModule && currentModule.contextMenu" :context="currentModule.contextMenu" />
     <div class="fps" ref="fps"></div>
   </div>
+
+  <BottomBar>
+    <template #telemetry-chart>
+      <ToolbarDropdownPanel caption="Charts" :open="false"></ToolbarDropdownPanel>
+    </template>
+    <template #viewer-settings>
+      <ToolbarDropdownPanel caption="Viewer" :open="false"></ToolbarDropdownPanel>
+    </template>
+    <template #viewport>
+      <Viewport :viewport="viewport" />
+    </template>
+  </BottomBar>
+  </div>
 </template>
 
 <style lang="sass">
+
+.code-example-template-grid
+  display: grid
+  grid-template-rows: 26px 1fr 26px
 
 .example-page
   position: relative

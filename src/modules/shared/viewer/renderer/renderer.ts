@@ -44,8 +44,8 @@ export class Renderer {
   }
 
   set mousePos (point: TPoint) {
-    const [_, __, z, w] = this.uMouse.value
-    this.uMouse.value = [point.x, point.y, z, w]
+    //const [_, __, z, w] = this.uMouse.value
+    //this.uMouse.value = [point.x, point.y, z, w]
   }
 
   get mouseShift () {

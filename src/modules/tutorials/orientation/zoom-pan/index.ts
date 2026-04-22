@@ -3,7 +3,7 @@ import { displayFps } from "../../../../utils/display-fps"
 import { type ScriptModule, type ScriptSettings } from "../../../../components/example"
 import { GMath, Point, Rect, Sketch } from "smallgame"
 
-export default async ({ container, containerSize, fps, builders }: ScriptSettings): Promise<ScriptModule> => {
+export default async ({ container, containerSize, fps, builders, viewerSettings }: ScriptSettings): Promise<ScriptModule> => {
   const telemetry  = builders.telemetry().open().noLegend()
   const topleftParam = telemetry.def('Screen Zero Shift', Point.zero)
   const worldOffsetParam = telemetry.def('World Offset', Point.zero)
@@ -11,7 +11,7 @@ export default async ({ container, containerSize, fps, builders }: ScriptSetting
   const cursorParam = telemetry.def('Cursor', Point.zero)
   const worldCursorParam = telemetry.def('World Cursor', Point.zero)
   
-  const viewer = new Viewer(containerSize, container, { disableContextMenu: true })
+  const viewer = new Viewer(containerSize, container, { disableContextMenu: true, viewerSettings })
   viewer.ui.setCellSize(24, 24)
   
   const viewport = viewer.viewport
@@ -22,7 +22,7 @@ export default async ({ container, containerSize, fps, builders }: ScriptSetting
   viewer.onInput = ev => {
     if (ev.type === 'MOUSEDOWN') {
       if (ev.lbc && createObjectMode) {
-        objects.push(Rect.fromCenter(ev.pos, 100, 100))
+        objects.push(Rect.fromCenter(ev.pos.shift(viewport.offset.neg()), 100, 100))
         createObjectMode = false
       }
     }

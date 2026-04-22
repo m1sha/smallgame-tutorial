@@ -10,9 +10,7 @@
     <div class="common-space">
       <slot name="common-space"></slot>
     </div>
-    <div class="viewer-settings">
-      <slot name="viewer-settings"></slot>
-    </div>
+    
      <div class="entity-list">
       <slot name="entity-list"></slot>
     </div>
@@ -29,7 +27,7 @@
   width: 100%
 
   display: grid
-  grid-template-columns: 12vw 1fr 8vw 10vw 12vw
+  grid-template-columns: 12vw 1fr 18vw 12vw
 
   
 </style>

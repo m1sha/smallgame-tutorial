@@ -4,7 +4,5 @@ import { scriptList } from '../../modules/tutorials/script-list'
 
 </script>
 <template>
-  <div>
-    <CodeExampleTemplate :script-list="scriptList" />
-  </div>
+  <CodeExampleTemplate :script-list="scriptList" />
 </template>

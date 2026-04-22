@@ -1,10 +1,11 @@
-import { Game, TSize, Screen, gameloop, GameEvent, Surface, MemSurface, Rect, Point, Size, Keys, TPoint, killgameloop } from "smallgame"
+import { Game, TSize, Screen, gameloop, GameEvent, Surface, MemSurface, Rect, Point, Size, Keys, TPoint, killgameloop, setPoint } from "smallgame"
 import { Background } from "./background"
 import { SelectRegion } from "./select-region"
 import { SelectedObjects } from "./selected-objects"
 import { ViewerUI } from "./ui"
 import { Viewport } from "./viewport"
 import { setDebounce } from "smallgame/src/time"
+import { IViewerSettings } from "../../../components/example"
 
 export class Viewer {
   private gameloopId: number
@@ -29,9 +30,13 @@ export class Viewer {
   onContextMenuClick: ((pos: TPoint) => void) | null = null
   onViewportChanged: ((pos: Point, zoom: number) => void) | null = null
 
-  constructor (viewportSize: TSize, container: HTMLDivElement, options?: { disableContextMenu?: boolean }) {
+  constructor (viewportSize: TSize, container: HTMLDivElement, options?: { disableContextMenu?: boolean, viewerSettings?: IViewerSettings }) {
     const { game, screen } = Game.create(viewportSize.width, viewportSize.height, container)
-    this.viewport = new Viewport(viewportSize, this)
+
+    const viewerSettings = options && options.viewerSettings ? options.viewerSettings : { viewport: { cursor: Point.zero, offset: Point.zero, zoom: 1 }} as IViewerSettings
+    
+
+    this.viewport = new Viewport(viewportSize, this, viewerSettings.viewport)
     this.game = game
     this.screen = screen
     this.surface = new MemSurface(viewportSize)
@@ -67,6 +72,7 @@ export class Viewer {
         }
         if (ev.type === 'MOUSEMOVE') {
           this.mousePosition.moveSelf(ev.pos)
+          viewerSettings.viewport.cursor = setPoint(ev.pos.x, ev.pos.y)
           if (ev.lbc && ev.ctrlKey) {
             this.background.mousePos = ev.pos
             this.background.mouseShift = ev.shift

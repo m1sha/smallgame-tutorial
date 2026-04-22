@@ -1,8 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue';
-
 const { open } = defineProps<{ caption: string, open: boolean }>()
-//const isOpen = ref(open)
 const emits = defineEmits<{ toggle: [isOpen: boolean] }>()
 </script>
 
