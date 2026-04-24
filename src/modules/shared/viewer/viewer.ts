@@ -2,10 +2,9 @@ import { Game, TSize, Screen, gameloop, GameEvent, Surface, MemSurface, Rect, Po
 import { Background } from "./background"
 import { SelectRegion } from "./select-region"
 import { SelectedObjects } from "./selected-objects"
-import { ViewerUI } from "./ui"
+import { initViewerControls, IViewerControls, ViewerUI } from "./ui"
 import { Viewport } from "./viewport"
 import { setDebounce } from "smallgame/src/time"
-import { IViewerSettings } from "../../../components/example"
 
 export class Viewer {
   private gameloopId: number
@@ -30,10 +29,13 @@ export class Viewer {
   onContextMenuClick: ((pos: TPoint) => void) | null = null
   onViewportChanged: ((pos: Point, zoom: number) => void) | null = null
 
-  constructor (viewportSize: TSize, container: HTMLDivElement, options?: { disableContextMenu?: boolean, viewerSettings?: IViewerSettings }) {
+  constructor (viewportSize: TSize, container: HTMLDivElement, options?: { disableContextMenu?: boolean, viewerControls?: IViewerControls }) {
     const { game, screen } = Game.create(viewportSize.width, viewportSize.height, container)
 
-    const viewerSettings = options && options.viewerSettings ? options.viewerSettings : { viewport: { cursor: Point.zero, offset: Point.zero, zoom: 1 }} as IViewerSettings
+    const viewerSettings = options && options.viewerControls ? options.viewerControls : initViewerControls()
+    viewerSettings.updateChanges = () => {
+      // update viewerSettings
+    }
     
 
     this.viewport = new Viewport(viewportSize, this, viewerSettings.viewport)

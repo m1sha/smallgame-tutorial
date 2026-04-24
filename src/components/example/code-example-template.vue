@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from "vue"
 import { useRoute, useRouter } from "vue-router"
-import { Builders, ScriptDef, ScriptModule, Settings, initViewport, IViewport } from "./code"
+import { Builders, ScriptDef, ScriptModule, Settings } from "./code"
 import { ParameterList, ScriptList, Telemetry, Toolbar, ToolbarDropdownPanel, ContextMenu, EntityList, Viewport } from './components'
 import { Size } from "smallgame";
 import { BottomBar } from "./components/bottom-bar";
+import { initViewerControls, IViewerControls } from "../../modules/shared"
 
 
 const props = defineProps<{ scriptList: ScriptDef[] }>()
@@ -16,7 +17,7 @@ const scriptId = computed(() => route.params.name as string)
 const currentModule = ref<ScriptModule | null>()
 const scriptListItems = computed(() => props.scriptList.map((p, i) => ({ id: p.name.replaceAll(' ', '_').toLocaleLowerCase(), name: p.name, category: p.category, codeDir: p.codeDir })) )
 const settings = new Settings()
-const viewport = ref<IViewport>(initViewport())
+const viewerControls = ref<IViewerControls>(initViewerControls())
 
 onMounted(async () => {
   await main()
@@ -49,7 +50,7 @@ async function main() {
     height, 
     containerSize, 
     builders: new Builders(),
-    viewerSettings: { viewport: viewport.value }
+    viewerControls: viewerControls.value
   })
 }
 
@@ -61,7 +62,7 @@ router.beforeEach(() => { clearPrevious() })
 router.afterEach(() => { main() })
 
 function clearPrevious () {
-  viewport.value = initViewport()
+  viewerControls.value = initViewerControls()
   if (container.value)
   while(true) {
     const child = container.value.children[0]
@@ -134,7 +135,7 @@ function clearPrevious () {
       <ToolbarDropdownPanel caption="Viewer" :open="false"></ToolbarDropdownPanel>
     </template>
     <template #viewport>
-      <Viewport :viewport="viewport" />
+      <Viewport :viewport="viewerControls.viewport" />
     </template>
   </BottomBar>
   </div>

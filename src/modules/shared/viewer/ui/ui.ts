@@ -1,5 +1,4 @@
 import { setSize, TSize } from "smallgame"
-import { IViewer } from "../../../../components/example/code/viewer"
 import { Background } from "../background"
 
 export class ViewerUI {
@@ -14,10 +13,5 @@ export class ViewerUI {
   setCellSize(width: number, height: number) {
     this.background.cellSize = { width, height }
   }
-
-
-
-  build (): IViewer {
-    return {}
-  }
+  
 }

@@ -77,7 +77,6 @@ export default async ({ container, containerSize, fps, builders }: ScriptSetting
   return {
     ui: ui.build(),
     entities: entities.build(),
-    viewer: viewer.ui.build(),
     dispose () { 
       viewer.remove() 
     }

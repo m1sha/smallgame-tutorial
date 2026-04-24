@@ -3,7 +3,7 @@ import { displayFps } from "../../../../utils/display-fps"
 import { type ScriptModule, type ScriptSettings } from "../../../../components/example"
 import { GMath, Point, Rect, Sketch } from "smallgame"
 
-export default async ({ container, containerSize, fps, builders, viewerSettings }: ScriptSettings): Promise<ScriptModule> => {
+export default async ({ container, containerSize, fps, builders, viewerControls }: ScriptSettings): Promise<ScriptModule> => {
   const telemetry  = builders.telemetry().open().noLegend()
   const topleftParam = telemetry.def('Screen Zero Shift', Point.zero)
   const worldOffsetParam = telemetry.def('World Offset', Point.zero)
@@ -11,7 +11,7 @@ export default async ({ container, containerSize, fps, builders, viewerSettings 
   const cursorParam = telemetry.def('Cursor', Point.zero)
   const worldCursorParam = telemetry.def('World Cursor', Point.zero)
   
-  const viewer = new Viewer(containerSize, container, { disableContextMenu: true, viewerSettings })
+  const viewer = new Viewer(containerSize, container, { disableContextMenu: true, viewerControls })
   viewer.ui.setCellSize(24, 24)
   
   const viewport = viewer.viewport

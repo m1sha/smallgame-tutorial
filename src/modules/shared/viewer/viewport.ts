@@ -1,6 +1,7 @@
 import { Point, setPoint, TPoint, TSize } from "smallgame"
 import { Viewer } from "./viewer"
-import { IViewport } from "../../../components/example"
+import { IViewport } from "./ui/viewport"
+
 
 export class Viewport {
  
@@ -20,7 +21,7 @@ export class Viewport {
     this._offset = point.shift(wpos.scale(this._zoom))
 
     this.viewer.zoom = zoom
-    this.viewer.offset = this._offset.clone()
+    this.viewer.offset = this._offset.dup()
     this.vwp.offset = setPoint(this._offset.x, this._offset.y)
     this.vwp.zoom = this._zoom
   }

@@ -1,6 +1,6 @@
 import { Size } from "smallgame"
 import { Builders } from "./builders"
-import { IViewerSettings } from "./viewer"
+import { IViewerControls } from "../../../modules/shared"
 
 export interface ScriptSettings {
   container: HTMLDivElement
@@ -9,5 +9,5 @@ export interface ScriptSettings {
   fps: HTMLDivElement
   containerSize: Size
   builders: Builders
-  viewerSettings: IViewerSettings
+  viewerControls: IViewerControls
 }
