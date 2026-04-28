@@ -8,14 +8,15 @@ const { entities } = defineProps<{ entities: IEnityList }>()
 </script>
 <template>
   <div class="entity-list-wrapper">
-    <div v-for="item in entities.items" class="entity">
-      <div v-if="item.type === 'list'">
+    <div class="entity-list">
+      <div v-for="item in entities.items" class="entity-panel">
+      
         <!--@vue-ignore-->
-        <ListEntityCollection :collection="item" />
-      </div>
-      <div v-if="item.type === 'grid'">
+        <ListEntityCollection v-if="item.type === 'list'" :collection="item" />
+      
         <!--@vue-ignore-->
-        <GridEntityCollection :collection="item" />
+        <GridEntityCollection v-if="item.type === 'grid'" :collection="item" />
+      
       </div>
     </div>
   </div>
@@ -32,8 +33,9 @@ const { entities } = defineProps<{ entities: IEnityList }>()
   border: 1px solid var(--panel-border)
   width: 17vw
 
-  .entity
+  .entity-list
     display: flex
-    justify-content: space-between
-    align-items: center
+    flex-direction: column
+    gap: 8px
+
 </style>

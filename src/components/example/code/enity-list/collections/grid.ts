@@ -1,6 +1,7 @@
 import { setSize, TSize } from "smallgame"
 import { EntityCollectionTypes } from "./collection-types"
 import { EntityCollectionBase } from "./entity-collection-base"
+import { CollectionOptions } from "./collection-options"
 
 export interface IGridCellEntity  {
   icon: string
@@ -15,6 +16,7 @@ export interface IGridEntityCollection {
   iconSize: TSize
   columnCount: number
   selectable: boolean
+  options: CollectionOptions
 }
 
 export class GridEntityListCollection<TEntity> extends EntityCollectionBase<TEntity> {

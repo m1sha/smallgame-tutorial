@@ -1,6 +1,7 @@
 import { ref } from "vue"
 import { EntityCollectionTypes } from "./collection-types"
 import { EntityCollectionBase } from "./entity-collection-base"
+import { CollectionOptions } from "./collection-options"
 
 export interface IListItemEntity {
   icon?: string
@@ -10,6 +11,7 @@ export interface IListItemEntity {
 export interface IListEntityCollection {
   objs: any[]
   map: (obj: any) => IListItemEntity
+  options: CollectionOptions
 }
 
 export class ListEntityCollection<TEntity> extends EntityCollectionBase<TEntity> {
