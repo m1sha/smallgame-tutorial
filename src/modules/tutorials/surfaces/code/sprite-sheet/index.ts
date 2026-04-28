@@ -1,4 +1,4 @@
-import { AnimatedSprite, loadImage, Point, Size, SpriteSheet, Surface } from "smallgame"
+import { AnimatedSprite, loadImage, Point, setSize, Size, SpriteSheet, Surface } from "smallgame"
 import { displayFps } from "../../../../../utils/display-fps"
 import { type ScriptModule, type ScriptSettings } from "../../../../../components/example"
 import { Viewer } from "../../../../shared"
@@ -11,6 +11,8 @@ export default async ({ container, containerSize, fps, builders }: ScriptSetting
   const img2 = await loadImage('space-striker/tiny-ships/tinyShip2.png')
   const img3 = await loadImage('space-striker/tiny-ships/tinyShip3.png')
   const img4 = await loadImage('characters/raza/raza54bbig1.png')
+
+  const knight = await loadImage('topdown/CharacterKnight/Run.png')
   
 
   const spriteSheet1 = new SpriteSheet(img1, new Size(24, 27), 30, new Point(1, 0), { idle: 5, attack: 6, move: 5 })
@@ -28,6 +30,14 @@ export default async ({ container, containerSize, fps, builders }: ScriptSetting
   const spriteSheet4 = new SpriteSheet(img4, new Size(48, 56), 12, new Point(0, 0))
     .addBatch('move', 6, 9)
     .addBatch('idle', 5)
+
+  const knightSpriteSheet = new SpriteSheet(knight, new Size(128, 128), 18, new Point(0, 0))
+    //.addBatchList([{"start":0,"count":14,"name":"up"},{"start":30,"count":14,"name":"down"},{"start":60,"count":14,"name":"left"},{"start":105,"count":14,"name":"right"}])
+    .addBatchList([{"start":0,"count":14,"name":"right"},{"start":30,"count":14,"name":"down"},{"start":60,"count":14,"name":"left"},{"start":90,"count":14,"name":"up"}])
+    
+
+
+  
     
   
   
@@ -37,19 +47,38 @@ export default async ({ container, containerSize, fps, builders }: ScriptSetting
   const sprite4 = new AnimatedSprite(spriteSheet4, spriteSheet4.size.scale(2))
 
   
-  //const entityGrid = entities.addGrid<Surface>(obj => ({ icon: obj.toDataURL() }))
-  //entityGrid.add(img1)
-  //entityGrid.add(img2)
+  sprite4.update()
+
+  const knightSprite = new AnimatedSprite(knightSpriteSheet, knightSpriteSheet.size.scale(1.5))
+  knightSprite.playBatch('left')
+  
+  
+ 
+  const entityGrid = entities.addGrid<AnimatedSprite>(obj => { 
+    let frame = obj.getFrame(0)
+    frame = frame.resize(64, 64)
+    return { icon: frame.toDataURL() } }
+  )
+  entityGrid.iconSize = setSize(64, 64)
+  entityGrid.add(sprite1)
+  entityGrid.add(sprite2)
+  entityGrid.add(sprite3)
+  entityGrid.add(sprite4)
+  entityGrid.add(knightSprite)
 
   //sprite1.playBatch('move')
   sprite2.playBatch('attack')
   sprite3.playBatch('idle')
+
+  
   
   sprite2.rect.center = viewer.surface.rect.center
   sprite1.rect.center = viewer.surface.rect.center.shiftX(200)
   sprite3.rect.center = viewer.surface.rect.center.shiftX(-200)
 
   sprite4.rect.center = viewer.surface.rect.center.shiftX(-300)
+
+  knightSprite.rect.center = viewer.surface.rect.center.shiftX(400)
 
   
 
@@ -63,6 +92,7 @@ export default async ({ container, containerSize, fps, builders }: ScriptSetting
     sprite2.draw(surface)
     sprite3.draw(surface)
     sprite4.draw(surface)
+    knightSprite.draw(surface)
     sprite1.update()
 
     surface.blit(sprite1.image, sprite1.rect)
@@ -73,6 +103,8 @@ export default async ({ container, containerSize, fps, builders }: ScriptSetting
 
   const ui = builders.ui()
   ui.upload('Load Sprite Sheet', file => {})
+
+  ui.select('Knight Position', ['Up', 'Down', 'Left', 'Right'], val => { knightSprite.playBatch(val.toLowerCase()) }, 'Left')
   
   return {
     ui: ui.build(),

@@ -2,6 +2,8 @@ import { Viewer } from "../../../../shared"
 import { displayFps } from "../../../../../utils/display-fps"
 import { type ScriptModule, type ScriptSettings, TelemetryBuilder, TelemetryParameter } from "../../../../../components/example"
 import { Color, loadBlob, loadImage, Point, Rect, setSize, Sketch, Surface, TPoint, TSize } from "smallgame"
+import { ListEntityCollection } from "../../../../../components/example/code/enity-list/collections"
+import { download } from "../../../../../utils"
 
 type Batch = {
   start: number
@@ -28,7 +30,6 @@ class DisplayParams {
 }
 
 class Editor {
-  batches: Batch[] = []
   batch: Batch = this.newBatch()
   rows: number = 0
   cols: number = 0
@@ -36,10 +37,10 @@ class Editor {
   imageSize: TSize = setSize(0, 0)
   image: Surface | null = null
 
-  constructor (private viewer: Viewer, private displayParams: DisplayParams) {}
+  constructor (private viewer: Viewer, private displayParams: DisplayParams, private batchList: ListEntityCollection<Batch>) {}
 
   addBatch () {
-    this.batches.push(this.batch)
+    this.batchList.add(this.batch)
     this.batch = this.newBatch()
   }
 
@@ -116,14 +117,17 @@ class Editor {
   }
 
   async loadImage (file?: File) {
-    this.image = file ? await loadBlob(file) : await loadImage('sunny/Spritesheet.png')
-    this.image.rect.scalesizeSelf(2)
+    this.image = file ? await loadBlob(file) : await loadImage('topdown/CharacterKnight/Run.png') //await loadImage('sunny/Spritesheet.png')
+    //this.image.rect.scalesizeSelf(2)
+    this.image.rect.scalesizeSelf(0.5)
     this.image.rect.absCenter = this.viewer.viewportRect.center
     this.imageSize = this.image.rect.size
 
     this.displayParams.imageSize.value = this.imageSize
-    this.setCols(6)
-    this.setRows(12)
+    //this.setCols(6)
+    //this.setRows(12)
+    this.setCols(15)
+    this.setRows(8)
     this.displayParams.tileSize.value = this.tileSize
   }
 
@@ -139,11 +143,17 @@ class Editor {
 }
 
 
-export default async ({ container, containerSize, fps, builders }: ScriptSettings): Promise<ScriptModule> => {
-  const viewer = new Viewer(containerSize, container, { disableContextMenu: true })
+export default async ({ container, containerSize, fps, builders, viewerControls }: ScriptSettings): Promise<ScriptModule> => {
+  const viewer = new Viewer(containerSize, container, { disableContextMenu: true, viewerControls })
   viewer.ui.setCellSize(64, 64)
+
+  const entities = builders.entities()
+  const batchList = entities.addList<Batch>(batch => ({ caption: `${batch.name} [${batch.start}:${batch.count}]` }))
+  batchList.options.caption = 'Batch List'
+  
+
   const displayParams = new DisplayParams()
-  const editor = new Editor(viewer, displayParams)
+  const editor = new Editor(viewer, displayParams, batchList)
   await editor.loadImage()
 
   viewer.onInput = ev => {
@@ -207,8 +217,13 @@ export default async ({ container, containerSize, fps, builders }: ScriptSetting
     .input('name', val => editor.setBatchName(val))
     .button('Add', () => editor.addBatch())
   )
+  ui.button('Download Batch List', () => {
+    download('batch-list.json', batchList.items)
+  })
+
   return {
     ui: ui.build(),
+    entities: entities.build(),
     telemetry: displayParams.build(),
     dispose () { 
       viewer.remove() 
