@@ -1,68 +1,69 @@
-import { Viewer } from "../../../shared"
+import { Magnifier, Viewer } from "../../../shared"
 import { displayFps } from "../../../../utils/display-fps"
 import { Icons, type ScriptModule, type ScriptSettings } from "../../../../components/example"
-import { GMath, Point, Rect, Sketch } from "smallgame"
+import { Point, Rect, Sketch } from "smallgame"
 
-export default async ({ container, containerSize, fps, builders }: ScriptSettings): Promise<ScriptModule> => {
+export default async ({ container, containerSize, fps, builders, viewerControls }: ScriptSettings): Promise<ScriptModule> => {
   const telemetry = builders.telemetry().open()
-  const curPos = telemetry.def('Cursor Position', Point.zero)
   const zoom = telemetry.def('Zoom', 1)
-  const viewer = new Viewer(containerSize, container, { disableContextMenu: true })
+  const magnifier = new Magnifier()
+  const viewer = new Viewer(containerSize, container, { disableContextMenu: true, viewerControls })
 
-  const rect = Rect.size(300, 300)
-  const rect1 = Rect.size(50, 50)
-  const rect2 = Rect.size(50, 50)
-  const rect3 = Rect.size(50, 50)
-  const rect4 = Rect.size(50, 50)
+  const rects = [
+    Rect.size(300, 300),
+    Rect.size(50, 50),
+    Rect.size(50, 50),
+    Rect.size(50, 50),
+    Rect.size(50, 50),
+    Rect.size(30, 30),
+    Rect.size(30, 30),
+    Rect.size(30, 30),
+    Rect.size(30, 30),
+    //new Rect(300, 400, 100, 100)
+  ]
   
-  rect.absCenter = viewer.surface.rect.center
-  rect1.absCenter = rect.topLeft
-  rect2.absCenter = rect.topRight
-  rect3.absCenter = rect.bottomLeft
-  rect4.absCenter = rect.bottomRight
-  let rectWork = rect.dup()
-  let rectWork1 = rect1.dup()
-  let rectWork2 = rect2.dup()
-  let rectWork3 = rect3.dup()
-  let rectWork4 = rect4.dup()
+  rects[0].absCenter = viewer.surface.rect.center
+  rects[1].absCenter = rects[0].topLeft
+  rects[2].absCenter = rects[0].topRight
+  rects[3].absCenter = rects[0].bottomLeft
+  rects[4].absCenter = rects[0].bottomRight
+  rects[5].absCenter = rects[0].midTop
+  rects[6].absCenter = rects[0].midBottom
+  rects[7].absCenter = rects[0].midLeft
+  rects[8].absCenter = rects[0].midRight
 
-  zoom.value = 1
-  let step = 1
+  const workRects = rects.map(rect => rect.dup())
 
-  const scale = (r: Rect, pos: Point) => r.scale(zoom.value, zoom.value, pos)
+  const scaleAndShift = (current: Rect, origin: Rect, pos: Point) => {
+    const p = pos
+      .shift(current.topLeft.neg())
+      .scale(current.size.inverse().toPoint())
+      .scale(origin.size.toPoint())
+      .shift(origin.topLeft)
+    return origin
+      .scale(zoom.value, zoom.value, p)
+      .shift(pos.shift(p.neg()))
+  }
 
   viewer.onInput = ev => {
     if (ev.type === 'WHEEL') {
-      step -= Math.sign(ev.deltaY)
-      GMath.clamp(step, 0, 14)
-      zoom.value = GMath.logZoom(step, 14, 1, 2)
-      
-      //console.log('a')
-      rectWork =  scale(rect, ev.pos)
-      rectWork1 = scale(rect1, ev.pos)
-      rectWork2 = scale(rect2, ev.pos)
-      rectWork3 = scale(rect3, ev.pos)
-      rectWork4 = scale(rect4, ev.pos)
+      magnifier.byDelta(ev.deltaY)
+      zoom.value = magnifier.zoom
+
+      workRects.forEach((rect, index) => rect.set(scaleAndShift(rect, rects[index], ev.pos)))
     }
 
-    if (ev.type === 'MOUSEMOVE') curPos.value = ev.pos
+    if (ev.type === 'MOUSEMOVE' && ev.lbc) {
+      workRects.forEach(rect => rect.shiftSelf(ev.shift))
+    }
   }
 
   viewer.onFrameChanged = surface => {
     surface.clear()
-    Sketch
-      .new()
-      .rect({ fill: '#3b4ba7' }, rectWork)
-      .rect({ fill: '#0065c4' }, rectWork1)
-      .rect({ fill: '#0065c4' }, rectWork2)
-      .rect({ fill: '#0065c4' }, rectWork3)
-      .rect({ fill: '#0065c4' }, rectWork4)
-      .rect({ fill: '#b8781733' }, rect)
-      .rect({ fill: '#bb400f33' }, rect1)
-      .rect({ fill: '#bb400f33' }, rect2)
-      .rect({ fill: '#bb400f33' }, rect3)
-      .rect({ fill: '#bb400f33' }, rect4)
-      .draw(surface)
+    const sketch = Sketch.new()
+    workRects.forEach(rect => sketch.rect({ fill: '#3b4ba7' }, rect))
+    rects.forEach(rect => sketch.rect({ fill: '#b8781733' }, rect))
+    sketch.draw(surface)
     displayFps(fps)
   }
 
