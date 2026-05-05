@@ -12,7 +12,7 @@ const router = createRouter({
 })
 
 router.beforeEach((to, _, next) => {
-  const title = to.meta.title ? 'Smallgame - ' + to.meta.title as string : 'Smallgame'
+  const title = to.meta.title ? 'Xkeez - ' + to.meta.title as string : 'Xkeez'
   document.title =  title
   next()
 })
