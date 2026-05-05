@@ -18,6 +18,8 @@ const scriptList: ScriptDef[] = [
   { name: 'Zoom Pan', category: cat6, codeDir: 'orientation/zoom-pan', module: async (state: any) => (await import('./orientation/zoom-pan')).default(state)  },
   { name: 'Camera 2D', category: cat6, codeDir: 'orientation/camera', module: async (state: any) => (await import('./orientation/camera')).default(state)  },
   { name: 'Objects In Space', category: cat6, codeDir: 'orientation/objects', module: async (state: any) => (await import('./orientation/objects')).default(state)  },
+  { name: 'Scaling', category: cat6, codeDir: 'orientation/scaling', module: async (state: any) => (await import('./orientation/scaling')).default(state)  },
+  { name: 'Zoom To Cursor (Image)', category: cat6, codeDir: 'orientation/scaling', module: async (state: any) => (await import('./orientation/zoom-to-cursor-image')).default(state)  },
 
   { name: 'Linear Movement', category: cat0, codeDir: 'examples/code/linear-movement', module: async (state: any) => (await import('./examples/code/linear-movement')).default(state)  },
   { name: 'Movements', category: cat0, codeDir: 'examples/code/movements', module: async (state: any) => (await import('./examples/code/movements')).default(state)  },

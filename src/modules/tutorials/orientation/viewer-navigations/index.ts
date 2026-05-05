@@ -3,9 +3,9 @@ import { displayFps } from "../../../../utils/display-fps"
 import { type ScriptModule, type ScriptSettings } from "../../../../components/example"
 import { Rect, setPoint, Sketch } from "smallgame"
 
-export default async ({ container, containerSize, fps, builders, viewerSettings }: ScriptSettings): Promise<ScriptModule> => {
+export default async ({ container, containerSize, fps, builders, viewerControls }: ScriptSettings): Promise<ScriptModule> => {
   const telemetry = builders.telemetry()
-  const viewer = new Viewer(containerSize, container, { disableContextMenu: true, viewerSettings })
+  const viewer = new Viewer(containerSize, container, { disableContextMenu: true, viewerControls })
   const globalPos = telemetry.open().def('Global Cursor', setPoint(0,0))
   const localPos = telemetry.open().def('Local Cursor', setPoint(0,0))
   const targetPos = telemetry.open().def('Offset', setPoint(0,0))
