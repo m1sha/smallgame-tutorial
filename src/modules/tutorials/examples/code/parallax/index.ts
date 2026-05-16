@@ -1,13 +1,13 @@
-import { Game, gameloop, Parallax, Rect, loadImage, killgameloop, Time, GMath } from "smallgame"
+import { Game, gameloop, Parallax, Rect, loadImage, killgameloop, Time, GMath, MemSurface, Size } from "smallgame"
 import { backgroundImageListV4, backgroundImageListV5, backgroundImageListV3 } from "./img-list"
 import { displayFps } from "../../../../../utils/display-fps"
 import { type ScriptModule, type ScriptSettings } from "../../../../../components/example"
 import { Ease } from "../movements/func"
 
-const SCREEN_WIDTH = 570 * 2
-const SCREEN_HEIGHT = 324 * 2
+const SCREEN_WIDTH = 1980
+const SCREEN_HEIGHT = 1080
 
-export default async ({ container, width, height, fps, builders }: ScriptSettings): Promise<ScriptModule> => {
+export default async ({ container, width, height, containerSize, fps, builders }: ScriptSettings): Promise<ScriptModule> => {
   const { screen } = Game.create(width, height, container)
   //const list = backgroundImageListV4
 
@@ -21,7 +21,7 @@ export default async ({ container, width, height, fps, builders }: ScriptSetting
   let directionX = -1
 
   const loadImages = async (list: string[]) => {
-    const rates = [0.02, 0.1, 0.2, 0.5, 0.9,    0.1, 0.2,0.3,0.9]
+    const rates = [1, 0.95, 0.9, 0.85, 0.8,  0.75, 0.7]
     const names = list
       .map(url => url.split('/').at(-1)?.replace('.png', '') ?? 'some-name')
     const images = await Promise.all(list.map(url => loadImage(url)))
@@ -29,7 +29,7 @@ export default async ({ container, width, height, fps, builders }: ScriptSetting
     for (let i = 0; i < list.length; i++) {
       const name = names[i]
       const image = images[i]
-      image.zoomSelf(2)
+      image.zoomSelf(.5)
       parallax.addLayer(name, image, rates[i])
     }
   }
@@ -40,10 +40,15 @@ export default async ({ container, width, height, fps, builders }: ScriptSetting
 
   let t = 0
   let func = Ease.get('easeInOutBounce')
+
+  const sur = new MemSurface(new Size(1200, 540))
+  sur.fill('#787890')
+  sur.rect.absCenter = containerSize.toPoint().scale(.5)
   
   const gameloopId = gameloop(() => {
     screen.clear()
-    parallax.draw(screen as any)
+    parallax.draw(sur)
+    screen.blit(sur, sur.rect)
     if (t < 1) t += Time.deltaTime * speed
     
     parallax.pos.x = -GMath.lerp(-8000, 8000, func(t))  //.shiftXSelf(speed * Time.deltaTime * directionX)

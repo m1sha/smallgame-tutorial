@@ -25,6 +25,7 @@ export default async ({ container, containerSize, fps, builders, viewerControls 
     { center: scrCenter.shiftX(100), radius: 10 },
     { center: scrCenter.shiftY(300), radius: 10 },
     { center: scrCenter.shiftY(200), radius: 10 },
+    { center: new Point(400, 300), radius: 10 },
   ]
 
   viewer.onInput = ev => {

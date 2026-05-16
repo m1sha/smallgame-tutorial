@@ -9,8 +9,8 @@ export default async ({ container, width, height, fps }: ScriptSettings): Promis
   const ctx = glSurface.context
   ctx.createProgram(vertex, fragmnet, 'assemble-and-use')
 
-  const img1 = await loadImage('workflow.png')
-  const img2 = await loadImage('terrain.png')
+  const img1 = await loadImage('parallax/v4/1.png')
+  const img2 = await loadImage('parallax/v4/2.png')
   
   ctx.createTextureArray('u_sampler2D_1', [img1, img2])
 

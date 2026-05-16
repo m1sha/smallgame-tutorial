@@ -89,6 +89,7 @@ const scriptList: ScriptDef[] = [
   { name: 'Array Instanced', category: cat4, codeDir: 'gl/code/array-instanced', module: async (state: any) => (await import('./gl/code/array-instanced')).default(state)  },
   { name: 'Array Instanced Animation', category: cat4, codeDir: 'gl/code/array-instanced-animation', module: async (state: any) => (await import('./gl/code/array-instanced-animation')).default(state)  },
   { name: 'Array Instanced Tiles', category: cat4, codeDir: 'gl/code/array-instanced-tiles', module: async (state: any) => (await import('./gl/code/array-instanced-tiles')).default(state)  },
+  { name: 'Parallax (GL)', category: cat4, codeDir: 'gl/code/parallax-gl', module: async (state: any) => (await import('./gl/code/parallax-gl')).default(state)  },
 ]
 
 export { scriptList }

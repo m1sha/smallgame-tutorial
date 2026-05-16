@@ -30,10 +30,12 @@ export { backgroundImageListV3 }
 
 const backgroundImageListV4 = [
   '/parallax/v4/1.png',
-  '/parallax/v4/2.png',
-  '/parallax/v4/3.png',
-  '/parallax/v4/4.png',
-  '/parallax/v4/5.png'
+  //'/parallax/v4/2.png',
+  //'/parallax/v4/3.png',
+  //'/parallax/v4/4.png',
+  //'/parallax/v4/5.png',
+  //'/parallax/v4/6.png',
+  '/parallax/v4/7.png'
 ]
 
 export { backgroundImageListV4 }
