@@ -28,7 +28,7 @@ export default async ({ container, containerSize, fps, builders }: ScriptSetting
   const asteroids = new Asteroids(viewer.surface.rect, asteroidsSettings)
   
   viewer.onKeyPressed = key => {
-    shooter.move(key.horizontalAxis)
+    shooter.move(key.horizontalAxisRaw)
     if (key.getPressed()[Key.SPACE]) {
       fireTrigger()
     }

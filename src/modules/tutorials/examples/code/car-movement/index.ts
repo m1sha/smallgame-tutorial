@@ -18,10 +18,10 @@ export default async ({ container, containerSize, fps, builders }: ScriptSetting
   rb.angle = 0
 
   viewer.onKeyPressed = key => {
-    rb.addTorque(key.horizontalAxis * Math.min(currentVelocity.point.length, 100))
+    rb.addTorque(key.horizontalAxisRaw * Math.min(currentVelocity.point.length, 100))
     const pos = Point
       .fromAngle((rb.angle + 90) * GMath.rad)
-      .scaleSelf(key.verticalAxis * 4)
+      .scaleSelf(key.verticalAxisRaw * 4)
     goal.value.shiftSelf(pos)
   }
 

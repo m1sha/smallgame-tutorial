@@ -26,7 +26,7 @@ export default async ({ container, containerSize, fps, builders }: ScriptSetting
   viewer.onKeyPressed = key => {
     viewer.offset = viewer.offset.shift(
       GMath.moveTowardsAccum(
-        key.axises.negY().scale(accel), 
+        key.axisesRaw.negY().scale(accel), 
         velocity, 
         speed * Time.deltaTime
       )
