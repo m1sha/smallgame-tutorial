@@ -61,7 +61,7 @@ export default async ({ container, containerSize, fps, builders }: ScriptSetting
     }
     if (ev.type === 'MOUSEDOWN') {
       for (const point of path.points) {
-        if (Point.from(point).inRadius(ev.pos, 8)) {
+        if (Point.from(point).inRadius(ev.pos, 8) && ev.rbc) {
           contextMenu.open(ev.pos)
           return
         }
