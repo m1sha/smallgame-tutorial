@@ -7,6 +7,9 @@ const cat3 = 'Raw GLSL'
 const cat4 = 'WebGL'
 const cat5 = 'AI'
 const cat6 = 'Orientation'
+const isometricCat = 'Isometric'
+const player = 'Player'
+const platformer = 'Platformer'
 
 
 const scriptList: ScriptDef[] = [
@@ -32,6 +35,9 @@ const scriptList: ScriptDef[] = [
   
   { name: 'A* Alogorithm', category: cat5, codeDir: 'ai/astar-alg', module: async (state: any) => (await import('./ai/astar-alg')).default(state)  },
   { name: 'Concentration Places', category: cat5, codeDir: 'ai/concentration-places', module: async (state: any) => (await import('./ai/concentration-places')).default(state)  },
+  { name: 'Persecution By Emeny', category: cat5, subCategory: platformer, codeDir: 'ai/concentration-places', module: async (state: any) => (await import('./ai/persecution-by-enemy')).default(state)  },
+
+  { name: 'Movement', category: player, subCategory: platformer, codeDir: 'player/platformer-movement', module: async (state: any) => (await import('./player/platformer-movement')).default(state)  },
   
 
   { name: 'Hello World', category: cat1, codeDir: 'examples/code/hello-world', module: async (state: any) => (await import('./examples/code/hello-world')).default(state)  },
@@ -56,6 +62,8 @@ const scriptList: ScriptDef[] = [
   { name: 'Pixel Collision', category: cat2, codeDir: 'surfaces/code/pixel-collision', module: async (state: any) => (await import('./surfaces/code/pixel-collision')).default(state)  },
   { name: 'Mask', category: cat2, codeDir: 'surfaces/code/mask', module: async (state: any) => (await import('./surfaces/code/mask')).default(state)  },
   { name: 'Combine Sufaces', category: cat2, codeDir: 'surfaces/code/combine-sufaces', module: async (state: any) => (await import('./surfaces/code/combine-sufaces')).default(state)  },
+
+  { name: 'Isometric Projection', category: isometricCat, codeDir: 'isometric/iso-projection', module: async (state: any) => (await import('./isometric/iso-projection')).default(state)  },
 
   { name: 'Hello World (GLSL)', category: cat3, codeDir: 'gl-effects/code/hello-world', module: async (state: any) => (await import('./gl-effects/code/hello-world')).default(state)  },
   { name: 'Abstracion', category: cat3, codeDir: 'gl-effects/code/effect1', module: async (state: any) => (await import('./gl-effects/code/effect1')).default(state)  },
