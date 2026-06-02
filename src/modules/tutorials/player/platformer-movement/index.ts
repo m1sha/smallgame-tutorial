@@ -8,19 +8,23 @@ import { Player } from "./player"
 export default async ({ container, containerSize, fps, builders }: ScriptSettings): Promise<ScriptModule> => {
   const viewer = new Viewer(containerSize, container, { disableContextMenu: true })
 
+  const telemetry = builders.telemetry()
+  const ui = builders.ui()
+
   const scrCenter = containerSize.half().toPoint()
   const groundRect = Rect.fromCenter(scrCenter, 900, 10).shiftSelf(0, 80)
   const backgroundRect = Rect.size(900, 200).moveSelf(groundRect, 'top-right')
   const heroRect = Rect.size(28, 72)
     .moveSelf(groundRect.topLeft, 'top-right').shiftSelf(0, -9)
-  const enemyRect = Rect.size(32, 96)
-    .moveSelf(groundRect.topRight, 'top-left').shiftSelf(0, -5)
+  
 
 
   const player = new Player()
   await player.load()
 
- 
+  const force_recover = telemetry.def('force_recover', 14)
+  let force_i = 0
+  
 
   viewer.onKeyPressed = keys => {
     keys.sensitivityX = 0.8
@@ -33,34 +37,43 @@ export default async ({ container, containerSize, fps, builders }: ScriptSetting
 
     const pressed = keys.getPressed()
 
-    if (pressed[Key.SPACE] && !player.jumping) {
+    if (pressed[Key.SPACE] && !player.jumping && force_recover.value >= 14) {
       player.jumping = true
+      force_i = force_recover.value
+      force_recover.value = 0
     }
     
     heroRect.shiftSelf(keys.horizontalAxis, 0)
     //console.log(keys.horizontalAxis)
   }
 
-  let enMoveDir = -1
-
-  let jy = 0
+  
  
   const hy = heroRect.y
-  const g = 1
+  let a = 0.2
   viewer.onFrameChanged = surface => {
     surface.clear()
 
-    if (heroRect.y < hy) heroRect.shiftSelf(0, g)
+    if (force_i > 0) {
+      force_i -= 80.5 * Time.deltaTime
+      
+     
+     
+      heroRect.shiftSelf(0, -force_i )
+    }
 
-    if (player.jumping) {
-      if (jy < 5) jy += 0.5
-      else {
-        jy = 0
-        player.jumping = false
-      }
-     
-     
-      heroRect.shiftSelf(0, -jy)
+    if (heroRect.y < hy) {
+      a += a * Time.deltaTime
+      console.log(a)
+      heroRect.shiftSelf(0, a)
+    }
+    else {
+      a = 3
+      player.jumping = false
+    }
+
+    if (force_recover.value < 14 && !player.jumping) {
+      force_recover.value += 40.5 * Time.deltaTime
     }
 
     Sketch.new()
@@ -76,9 +89,10 @@ export default async ({ container, containerSize, fps, builders }: ScriptSetting
     displayFps(fps)
   }
 
-  const ui = builders.ui()
+ 
   return {
     ui: ui.build(),
+    telemetry: telemetry.build(),
     dispose () { 
       viewer.remove() 
     }
