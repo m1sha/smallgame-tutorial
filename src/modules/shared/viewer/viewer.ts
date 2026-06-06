@@ -25,6 +25,7 @@ export class Viewer {
   onFixedUpdate: (() => void) | null = null
   onInput: ((event: GameEvent) => void) | null = null
   onKeyPressed: ((key: Keys) => void) | null = null
+  onGamepad: ((gamepads: Gamepad[]) => void) | null = null
   onSelectedRect: ((rect: Rect) => void) | null = null
   onContextMenuClick: ((pos: TPoint) => void) | null = null
   onViewportChanged: ((pos: Point, zoom: number) => void) | null = null
@@ -110,6 +111,7 @@ export class Viewer {
       }
       
       this.onKeyPressed?.(game.key)
+      this.onGamepad?.(game.gamepads)
       fixedUpdate()
       this.onFrameChanged?.(this.surface)
 

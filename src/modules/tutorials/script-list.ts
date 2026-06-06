@@ -50,13 +50,14 @@ const scriptList: ScriptDef[] = [
   { name: 'Bezier Interpolation', category: cat1, codeDir: 'examples/code/bezier-interpolation', module: async (state: any) => (await import('./examples/code/bezier-interpolation')).default(state)  },
   { name: 'Path Interpolation', category: cat1, codeDir: 'examples/code/path-interpolation', module: async (state: any) => (await import('./examples/code/path-interpolation')).default(state)  },
   { name: 'Numeric Table', category: cat1, codeDir: 'examples/code/table', module: async (state: any) => (await import('./examples/code/table')).default(state)  },
+  { name: 'Vector Editor', category: cat1, codeDir: 'examples/code/vector-editor-test', module: async (state: any) => (await import('./examples/code/vector-editor-test')).default(state)  },
   
 
   { name: 'Blit', category: cat2, codeDir: 'surfaces/code/rectangle', module: async (state: any) => (await import('./surfaces/code/rectangle')).default(state)  },
   { name: 'Math Coords', category: cat2, codeDir: 'surfaces/code/math-coords', module: async (state: any) => (await import('./surfaces/code/math-coords')).default(state)  },
   { name: 'Textured Text', category: cat2, codeDir: 'surfaces/code/simple-text', module: async (state: any) => (await import('./surfaces/code/simple-text')).default(state)  },
   { name: 'Textured Text (GL)', category: cat2, codeDir: 'surfaces/code/surface-gl', module: async (state: any) => (await import('./surfaces/code/surface-gl')).default(state)  },
-  { name: 'Surface Combiner', category: cat2, codeDir: 'surfaces/code/surface-combiner', module: async (state: any) => (await import('./examples/code/surface-combiner')).default(state)  },
+  { name: 'Surface Combiner', category: cat2, codeDir: 'examples/code/surface-combiner', module: async (state: any) => (await import('./examples/code/surface-combiner')).default(state)  },
   { name: 'Sprite Sheet', category: cat2, codeDir: 'surfaces/code/sprite-sheet', module: async (state: any) => (await import('./surfaces/code/sprite-sheet')).default(state)  },
   { name: 'Sprite Sheet Editor', category: cat2, codeDir: 'surfaces/code/sprite-sheet-editor', module: async (state: any) => (await import('./surfaces/code/sprite-sheet-editor')).default(state)  },
   { name: 'Pixel Mask', category: cat2, codeDir: 'surfaces/code/pixel-mask', module: async (state: any) => (await import('./surfaces/code/pixel-mask')).default(state)  },
