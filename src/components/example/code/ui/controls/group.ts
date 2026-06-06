@@ -31,9 +31,9 @@ export class Group extends UIControl  {
   }
 
 
- toolbar (settings: (group: Toolbar) => void) {
+ toolbar (settings?: (group: Toolbar) => void) {
     const control = new Toolbar()
-    settings(control)
+    settings?.(control)
     this.controls.push(control)
     return control
   }
@@ -45,9 +45,9 @@ export class Group extends UIControl  {
     return control
   }
   
-  group (name: string, settings: (group: Group) => void) {
+  group (name: string, settings?: (group: Group) => void) {
     const control = new Group(name)
-    settings(control)
+    settings?.(control)
     this.controls.push(control)
     return control
   }

@@ -30,9 +30,9 @@ export abstract class Contariner  {
     return control
   }
   
-  group (name: string, settings: (group: Group) => void) {
+  group (name: string, settings?: (group: Group) => void) {
     const control = new Group(name)
-    settings(control)
+    settings?.(control)
     this.controls.push(control)
     return control
   }
