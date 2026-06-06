@@ -201,17 +201,18 @@ export default async ({ container, containerSize, fps, builders, viewerControls 
 
   const ui = builders.ui()
   ui.upload('Upload Sprite Image', async file => editor.loadImage(file))
-  const panels = ui.controlMap()
-  ui.select('Cut Tiles', ['Width & Height', 'Cols & Rows'], name => panels.show(name), 'Cols & Rows')
-  panels.set('Width & Height', ui.panel(panel => panel
+  const panelName = ui.var('Cols & Rows')
+  ui.select('Cut Tiles', ['Width & Height', 'Cols & Rows'], name => panelName.value = name, 'Cols & Rows')
+  ui.panel(panel => panel
     .hide()
     .input('Width',  val => { editor.setTileW(+val) }, '0')
     .input('Height', val => { editor.setTileH(+val) }, '0')
-  ))
-  panels.set('Cols & Rows', ui.panel(panel => panel
+  ).hiddenif(() => panelName.value !== 'Width & Height')
+  ui.panel(panel => panel
     .input('Cols', val => {  editor.setCols(+val) }, '0')
     .input('Rows', val => {  editor.setRows(+val) }, '0')
-  ))
+  )
+  .hiddenif(() => panelName.value !== 'Cols & Rows')
   ui.group('New Batch', group => group
     .open()
     .input('name', val => editor.setBatchName(val))

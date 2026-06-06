@@ -86,30 +86,31 @@ export default async ({ container, containerSize, fps, builders }: ScriptSetting
   }
  
   const ui = builders.ui()
-  const panels: Map<string, { hidden: boolean }> = new Map()
+  const fn = ui.var('Chaikin')
+
   ui.select('Smooth method', ['Chaikin', 'CatmullRom', 'B-Spline', 'Gaussian Smooth'], val => { 
-    [...panels.values()].forEach(p => p.hidden = true)
-    panels.get(val).hidden = false
     func.funcName = val
+    fn.value = val
   }, 'Chaikin')
-  panels.set('Chaikin', ui.panel(panel => panel
+  
+  ui.panel(panel => panel
     .tracker('k', 1, 6, 1, val => func.k = val, func.k)
     .tracker('alpha', 0, 1, 0.05, val => func.alpha = val, func.alpha)
-  ))
-  panels.set('CatmullRom', ui.panel(panel => panel
+  ).hiddenif(() => fn.value !== 'Chaikin')
+  ui.panel(panel => panel
     .tracker('samplesPerSegment', 1, 6, 1, val => func.samplesPerSegment = val, func.samplesPerSegment)
     .tracker('tension', -1, 1, 0.1, val => func.tension = val, func.tension)
-    .hide()
-  ))
-  panels.set('B-Spline', ui.panel(panel => panel
+    .hiddenif(() => fn.value !== 'CatmullRom')
+  )
+  ui.panel(panel => panel
     .tracker('samples', 1, 6, 1, val => func.samples = val, func.samples)
     .tracker('degree', 1, 6, 1, val => func.degree = val, func.degree)
-    .hide()
-  ))
-  panels.set('Gaussian Smooth', ui.panel(panel => panel
+    .hiddenif(() => fn.value !== 'B-Spline')
+  )
+  ui.panel(panel => panel
     .tracker('sigma', 0.1, 6, 0.1, val => func.sigma = val, func.sigma)
-    .hide()
-  ))
+    .hiddenif(() => fn.value !== 'Gaussian Smooth')
+  )
   ui.button('Smooth Line', () => path.setSmooth())
   ui.button('Remove Smooth', () => path.cleanSmoothPoint())
   ui.info('Use Mouse for draw line. LBC start new segment. RBC to delete the last line segment.')
