@@ -1,11 +1,12 @@
-import { IControl } from "./control"
+import { UIControl } from "./ui-control"
 import { ControlType } from "./control-type"
 import { Toolbar } from "./toolbar"
 
-export class Button implements IControl {
+export class Button extends UIControl {
   readonly type: ControlType = 'button'
   parent: Toolbar | null = null
   private _selected: boolean = false
+  readonly name: string = ''
   get selected() { return this._selected }
   set selected (value: boolean) { 
     if (this.parent) {
@@ -15,9 +16,11 @@ export class Button implements IControl {
     }
     this._selected = value
   }
-  hidden: boolean = false
+  
   
   constructor (public caption: string, public callback: (sender: Button) => void, public options?: any) {
+    super()
     this._selected = options && options.selected
+    this.name = options && options.name
   }
 }

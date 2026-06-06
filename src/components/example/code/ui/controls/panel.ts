@@ -1,8 +1,8 @@
 
-import { TOption } from "../../parameters"
+import { TOption } from "../option"
 import { Button } from "./button"
 import { Color } from "./color"
-import { IControl } from "./control"
+import { UIControl } from "./ui-control"
 import { ControlType } from "./control-type"
 import { Group } from "./group"
 import { Input } from "./input"
@@ -12,22 +12,13 @@ import { Toolbar } from "./toolbar"
 import { Tracker } from "./tracker"
 import { UploadFile } from "./upload-file"
 
-export class Panel implements IControl {
+export class Panel extends UIControl {
   readonly type: ControlType = 'panel'
-  controls: IControl[] = []
-  hidden: boolean = false
-  constructor (...controls: IControl[]) {
+  controls: UIControl[] = []
+  
+  constructor (...controls: UIControl[]) {
+    super()
     this.controls.push(...controls)
-  }
-
-  hide () {
-    this.hidden = true
-    return this
-  }
-
-  show () {
-    this.hidden = false
-    return this
   }
 
 

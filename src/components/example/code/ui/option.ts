@@ -1,0 +1,1 @@
+export type TOption = { id: string, name: string }

@@ -1,10 +1,10 @@
-import { IControl } from "./control"
 import { ControlType } from "./control-type"
+import { UIControl } from "./ui-control"
 
-export class Color implements IControl {
+export class Color extends UIControl {
   readonly type: ControlType = 'color'
-  hidden: boolean = false
-  constructor (public caption: string, public callback: (color: string) => void, public defaultColor?: string) {
 
+  constructor (public caption: string, public callback: (color: string) => void, public defaultColor?: string) {
+    super()
   }
 }

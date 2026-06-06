@@ -12,19 +12,20 @@ export class UIBuilder extends Contariner {
   
   build (): IUI {
     const { controls } = this
-    return { controls }
+    return { controls: controls as any as IControl[] }
   }
 
   filter (path: string): IControl[] {
     const item = path.split('.')
     for (const c of this.controls) {
+      const control = c as any as IControl
       const typeName = item[0].split('|')
-      if (c.type !== typeName[0]) continue
+      if (control.type !== typeName[0]) continue
 
       const contr = c as any
       if (contr.name !== typeName[1]) continue
 
-      for (const c1 of c.controls ?? []) {
+      for (const c1 of control.controls ?? []) {
         if (c1.type === item[1])
           return c1.controls ?? []
       }

@@ -94,6 +94,7 @@ function isSelected (control: any)  {
   display: flex
   flex-direction: column
   gap: 8px
+  flex-wrap: wrap
 
   & > button
     margin: 0

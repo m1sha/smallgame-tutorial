@@ -1,10 +1,10 @@
-import { IControl } from "./control"
+import { UIControl } from "./ui-control"
 import { ControlType } from "./control-type"
 
-export class InfoPanel implements IControl {
+export class InfoPanel extends UIControl {
   type: ControlType = 'info-panel'
-  hidden: boolean = false
+  
   constructor (public text: string, public title: string) {
-
+    super()
   }
 }

@@ -1,9 +1,9 @@
 import { ControlType } from "./control-type"
-
-export class UploadFile {
+import { UIControl } from "./ui-control"
+export class UploadFile extends UIControl {
   readonly type: ControlType = 'upload'
-  hidden: boolean = false
+  
   constructor (public caption: string, public callback: (file: File) => void, public options?: any) {
-
+    super()
   }
 }

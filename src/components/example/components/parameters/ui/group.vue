@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { Group } from '../../../code/ui/controls'
+import { Group, IControl } from '../../../code/ui/controls'
 import ControlList from './control-list.vue'
 
-defineProps<{group: Group}> ()
+defineProps<{group: Group & IControl}> ()
 </script>
 <template>
   <details class="control-group" :open="group.openned" v-show="!group.hidden">

@@ -13,10 +13,10 @@ export class ControlMap {
 
   show (name: string) {
     this.hideAll()
-    this.get(name)!.hidden = false
+    this.get(name)!.hidden.value = false
   }
 
   hideAll () {
-    this.map.values().forEach(p => p.hidden = true)
+    this.map.values().forEach(p => p.hidden.value = true)
   }
 }

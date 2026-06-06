@@ -1,5 +1,5 @@
 
-import { TOption } from "../../parameters"
+import { TOption } from "../option"
 import { RefObj } from "../ref-obj"
 import { Button } from "./button"
 import { Color } from "./color"
@@ -12,14 +12,16 @@ import { Switch } from "./switch"
 import { Toolbar } from "./toolbar"
 import { Tracker } from "./tracker"
 import { UploadFile } from "./upload-file"
+import { UIControl } from "./ui-control"
 
-export class Group implements IControl {
+export class Group extends UIControl  {
   readonly type: ControlType = 'group'
-  controls: IControl[] = []
+  controls: UIControl[] = []
   openned: boolean = false
-  hidden: boolean = false
-  constructor (public name: string, ...controls: IControl[]) {
-    
+  
+
+  constructor (public name: string, ...controls: UIControl[]) {
+    super()
     this.controls.push(...controls)
   }
 

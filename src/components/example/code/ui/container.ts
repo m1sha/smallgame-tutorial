@@ -1,14 +1,16 @@
 import { reactive } from "vue"
-import { TOption } from "../parameters"
+
 import { Button, ControlMap, Group, IControl, Panel, Switch, Toolbar, Tracker, UploadFile, UploadManyFiles } from "./controls"
 import { Color } from "./controls/color"
 import { InfoPanel } from "./controls/info-panel"
 import { Select } from "./controls/select"
 import { Input } from "./controls/input"
 import { RefObj } from "./ref-obj"
+import { UIControl } from "./controls/ui-control"
+import { TOption } from "./option"
 
 export abstract class Contariner  {
-  controls: IControl[]
+  controls: UIControl[]
 
   constructor () {
     this.controls = reactive([])
@@ -22,14 +24,14 @@ export abstract class Contariner  {
   }
 
   panel (settings: (group: Panel) => void) {
-    const control = reactive(new Panel())
+    const control = new Panel()
     settings(control)
     this.controls.push(control)
     return control
   }
   
   group (name: string, settings: (group: Group) => void) {
-    const control = reactive(new Group(name))
+    const control = new Group(name)
     settings(control)
     this.controls.push(control)
     return control
@@ -78,26 +80,5 @@ export abstract class Contariner  {
   input (caption: string, callback: (value: string) => void, defaultValue?: string) {
     this.controls.push(new Input(caption, callback, defaultValue ?? ''))
     return this
-  }
-
-  controlMap (name?: string) {
-    return new ControlMap()
-  }
-
-  show (caption: string) {
-    this.setVisible(caption, true)
-  }
-
-  hide (caption: string) {
-    this.setVisible(caption, false)
-  }
-
-  private setVisible (caption: string, value: boolean) {
-    const visible = (controls: IControl[]) =>
-      this.controls.forEach(p => {
-        p.hidden = !value
-        if (p.controls) visible(p.controls)
-      })
-    visible(this.controls)
   }
 }

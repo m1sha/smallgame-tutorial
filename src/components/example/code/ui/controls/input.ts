@@ -1,8 +1,8 @@
-import { IControl } from "./control";
+import { UIControl } from "./ui-control"
 import { ControlType } from "./control-type";
 
-export class Input implements IControl {
-  constructor (public caption: string, public callback: (value: string) => void, public defaultValue: string) {}
+export class Input extends UIControl {
+  constructor (public caption: string, public callback: (value: string) => void, public defaultValue: string) { super() }
   type: ControlType = 'input'
-  hidden: boolean = false
+  
 }

@@ -1,19 +1,19 @@
-import { TOption } from "../../parameters"
+import { TOption } from "../option"
 import { Button } from "./button"
 import { Color } from "./color"
-import { IControl } from "./control"
+import { UIControl } from "./ui-control"
 import { ControlType } from "./control-type"
 import { Group } from "./group"
 import { Select } from "./select"
 import { Tracker } from "./tracker"
 import { UploadFile } from "./upload-file"
 
-export class Toolbar  implements IControl {
+export class Toolbar  extends UIControl {
   readonly type: ControlType = 'toolbar'
-  hidden: boolean = false
-  controls: IControl[]
+  controls: UIControl[]
   
-  constructor (...controls: IControl[]) {
+  constructor (...controls: UIControl[]) {
+    super()
     this.controls = controls
     controls.forEach(p=> {
       if (p instanceof Button) p.parent = this

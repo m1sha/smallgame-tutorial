@@ -1,11 +1,11 @@
-import { TOption } from "../../parameters"
-import { IControl } from "./control"
+import { TOption } from "../option"
+import { UIControl } from "./ui-control"
 import { ControlType } from "./control-type"
 
-export class Select implements IControl {
+export class Select extends UIControl {
   readonly type: ControlType = 'select'
-  hidden: boolean = false
+  
   constructor (public caption: string, public items: string[] | TOption[], public callback: (value: string) => void, public defaultValue?: string, public options?: any) {
-
+    super()
   }
 }
