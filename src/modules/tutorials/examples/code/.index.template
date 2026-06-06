@@ -5,8 +5,8 @@ import { type ScriptModule, type ScriptSettings } from "../../../../../component
 export default async ({ container, containerSize, fps, builders }: ScriptSettings): Promise<ScriptModule> => {
   const viewer = new Viewer(containerSize, container, { disableContextMenu: true })
 
-  viewer.onFrameChanged = surface => {
-    surface.clear()
+  viewer.onFrameChanged = frame => {
+    frame.clear()
     displayFps(fps)
   }
 
