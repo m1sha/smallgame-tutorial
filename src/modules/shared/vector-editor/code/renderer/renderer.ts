@@ -16,6 +16,9 @@ export class Renderer {
       if (shape.type === 'rectangle') {
         sketch.rect(shape.style, shape.rect)
       }
+      if (shape.type === 'polygon') {
+        sketch.polygon(shape.style, shape.points)
+      }
     }
     sketch.draw(frame)
   }
@@ -25,6 +28,10 @@ export class Renderer {
 
     if (this.state.drawingShape && this.state.drawingShape.type === 'rectangle') {
       sketch.rect(this.state.shapeDrawStyle, this.state.drawingShape.rect)
+    }
+
+    if (this.state.drawingShape && this.state.drawingShape.type === 'polygon') {
+      sketch.polygon(this.state.shapeDrawStyle, this.state.drawingShape.points)
     }
 
     sketch.draw(frame)
