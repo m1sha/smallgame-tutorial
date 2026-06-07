@@ -13,7 +13,7 @@ export class EditorState {
   selectedShapes: SelectedShapes = new SelectedShapes(this)
   shapeDrawStyle: ShapeStyle = new ShapeStyle({ stroke: '#ddd' })
 
-  
+  onStateChanged:  (() => void) | null = null
   onToolChanged:  (() => void) | null = null
 
   get onSelectedShapes () { return this.selectedShapes.onSelectedShapes }
@@ -41,8 +41,11 @@ export class EditorState {
 
   changeTool (name: VectorEditorTools) {
     this.currentTool = this.toolFactory.create(name)
+    this.onToolChanged?.()
   }
 
-  
+  stateChanged () {
+    this.onStateChanged?.()
+  }
   
 }

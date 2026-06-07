@@ -1,8 +1,10 @@
 import { GameEvent, Point, Rect } from "smallgame"
 import { Tool } from "./tool"
 import { RectangleShape } from "../editor-state/shapes"
+import { VectorEditorTools } from "./tool-types"
 
 export class DrawRectangleTool extends Tool {
+  readonly name: VectorEditorTools = 'draw-rectangle'
   private shape: RectangleShape | null = null
   private sp = Point.zero
   input (ev: GameEvent) {

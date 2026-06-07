@@ -17,11 +17,15 @@ export class VectorEditor {
     this.renderer = new Renderer(this.state)
 
     this.state.onSelectedShapes = () => {
-      this._ui?.updateSelectedShapes()
+      this._ui?.update()
     }
 
     this.state.onToolChanged = () => {
-      this._ui?.updateCurrentTool()
+      this._ui?.update()
+    }
+
+    this.state.onStateChanged = () => {
+      this._ui?.update()
     }
   }
 

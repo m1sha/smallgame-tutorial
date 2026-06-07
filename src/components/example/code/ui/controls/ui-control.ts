@@ -3,13 +3,15 @@ import { RefObj } from "../ref-obj"
 
 export class UIControl {
   private visible: RefObj<boolean>
-  private onVisible: () => boolean | null
+  private onHidden: () => boolean | null
+  private onShown: () => boolean | null
   protected hidden:  ComputedRef<boolean>
 
   constructor () {
     this.visible = ref(true)
     this.hidden = computed(() => {
-      if (this.onVisible) return this.onVisible()
+      if (this.onHidden) return this.onHidden()
+      if (this.onShown) return !this.onShown()
       return !this.visible.value
     })
   }
@@ -25,7 +27,12 @@ export class UIControl {
   }
 
   hiddenif (callback: (() => boolean) | null) {
-    this.onVisible = callback
+    this.onHidden = callback
+    return this
+  }
+
+  shownif (callback: (() => boolean) | null) {
+    this.onShown = callback
     return this
   }
 }

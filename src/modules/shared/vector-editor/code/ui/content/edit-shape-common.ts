@@ -1,0 +1,41 @@
+import { Group } from "../../../../../../components/example/code/ui/controls"
+import { createRefObj, RefObj } from "../../../../../../components/example/code/ui/ref-obj"
+import { EditorState } from "../../editor-state"
+import { IContent } from "./content"
+
+export class EditShapeCommon implements IContent  {
+  private shapeStyleFill: RefObj<string>
+  private shapeStyleStroke: RefObj<string>
+  
+  constructor (private panel: Group, private state: EditorState) {
+    this.shapeStyleFill = createRefObj('#333')
+    this.shapeStyleStroke = createRefObj('#333')
+
+    panel.expand()
+    panel.color('Fill',  val => { this.shapeStyleFill.value = val }, this.shapeStyleFill )
+    panel.color('Stroke', val => { this.shapeStyleStroke.value = val }, this.shapeStyleStroke )
+    panel.hide()
+  }
+  
+  update () {
+    this.checkPanelVisible()
+  }
+  
+  updateSelectedShapes () {
+    this.checkPanelVisible()
+  }
+
+  private checkPanelVisible () {
+    if (this.state.currentTool.name === 'select') {
+      if (this.state.selectedShapes.count > 0) {
+        const style = this.state.selectedShapes.items[0].style
+        this.shapeStyleStroke.value = style.stroke.toString()
+        this.shapeStyleFill.value = style.fill.toString()
+        this.panel.show()
+        return
+      }
+    }
+
+    this.panel.hide()
+  }
+}

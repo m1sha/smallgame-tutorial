@@ -1,8 +1,10 @@
 import { GameEvent, Point, Rect } from "smallgame"
 import { Tool } from "./tool"
 import { PolygonShape } from "../editor-state/shapes"
+import { VectorEditorTools } from "./tool-types"
 
 export class DrawPolygonTool extends Tool {
+  readonly name: VectorEditorTools = 'draw-polygon'
   private shape: PolygonShape | null = null
   private sp = Point.zero
   input (ev: GameEvent) {

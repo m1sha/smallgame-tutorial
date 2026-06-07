@@ -1,7 +1,9 @@
 import { GameEvent } from "smallgame";
 import { Tool } from "./tool";
+import { VectorEditorTools } from "./tool-types";
 
 export class MoveShapesTool extends Tool {
+  readonly name: VectorEditorTools = 'move-shapes'
   private canMove: boolean = false
 
   input (ev: GameEvent) {
@@ -27,6 +29,7 @@ export class MoveShapesTool extends Tool {
             shape.rect.shiftSelf(ev.shift)
           }
         })
+        this.state.stateChanged()
       }
     }
 
