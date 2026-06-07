@@ -1,30 +1,24 @@
-import { Point, Rect, ShapeStyle } from "smallgame"
+import { Point, ShapeStyle } from "smallgame"
 import { PolygonShape, RectangleShape, Shape } from "./shapes"
-import { removeItem } from "../../../../games/old-tv/utils"
 import { SelectedShapes } from "./selected-shapes"
-import { Tool, ToolFactory } from "../tools"
+import { Tool, ToolFactory, VectorEditorTools } from "../tools"
+import { Shapes } from "./shapes/shapes"
 
 export class EditorState {
   
   currentTool: Tool
   private toolFactory: ToolFactory = new ToolFactory(this)
-  shapes: Shape[] = []
+  shapes: Shapes = new Shapes()
   drawingShape: Shape | null = null
   selectedShapes: SelectedShapes = new SelectedShapes(this)
-
   shapeDrawStyle: ShapeStyle = new ShapeStyle({ stroke: '#ddd' })
- 
-  getByHittest (pos: Point, onlyOne: boolean = false): Shape[] {
-    const result = []
-    for (const shape of this.shapes) {
-      if (shape.type === 'rectangle') {
-        if (shape.rect.containsPoint(pos)) {
-          result.push(shape)
-          if (onlyOne) break
-        }
-      }
-    }
-    return result
+
+  
+  onToolChanged:  (() => void) | null = null
+
+  get onSelectedShapes () { return this.selectedShapes.onSelectedShapes }
+  set onSelectedShapes (value: (() => void) | null) { 
+    this.selectedShapes.onSelectedShapes = value 
   }
 
   createDrawingRectangle (pos: Point) {
@@ -41,17 +35,14 @@ export class EditorState {
 
   applyDrawingShape () {
     if (!this.drawingShape) return
-    this.shapes.push(this.drawingShape)
+    this.shapes.add(this.drawingShape)
     this.drawingShape = null
   }
 
-  changeTool (name: string) {
+  changeTool (name: VectorEditorTools) {
     this.currentTool = this.toolFactory.create(name)
   }
 
-  // shiftSelectedShapes (shift: Point) {
-
-  // }
-
+  
   
 }

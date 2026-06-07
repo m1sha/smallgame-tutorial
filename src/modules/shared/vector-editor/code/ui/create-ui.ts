@@ -3,6 +3,7 @@ import { Button, Group } from "../../../../../components/example/code/ui/control
 import { RefObj } from "../../../../../components/example/code/ui/ref-obj"
 import { download } from "../../../../../utils"
 import { EditorState } from "../editor-state"
+import { VectorEditorTools } from "../tools"
 
 export function createUI (uiBuilder: UIBuilder, state: EditorState, editor: { useEditor: boolean }) {
   return new UI(uiBuilder, state, editor)
@@ -12,7 +13,7 @@ export class UI {
   private selectedTool: RefObj<string>
   private editorGroup: Group
 
-  constructor (uiBuilder: UIBuilder, private state: EditorState, private editor: { useEditor: boolean }) {
+  constructor (uiBuilder: UIBuilder, private state: EditorState, editor: { useEditor: boolean }) {
     this.selectedTool = uiBuilder.var('select')
     this.editorGroup = uiBuilder.group('Editor')
     this.editorGroup.open()
@@ -24,15 +25,25 @@ export class UI {
     this.createSavePorjectControls()
   }
 
-  changeTool (name: string) {
+  updateCurrentTool () {
+
+  }
+
+  updateSelectedShapes () {
+    
+  }
+
+  private changeTool (name: VectorEditorTools) {
     this.state.changeTool(name)
     this.selectedTool.value = name 
   }
 
+
+
   private createToolbar () {
     const onToolChoose = (btn: Button) => {
       btn.selected = true
-      this.changeTool(btn.name)
+      this.changeTool(btn.name as VectorEditorTools)
     }
 
     const tools = this.editorGroup.group('Tools')
@@ -62,7 +73,7 @@ export class UI {
   private createSavePorjectControls () {
     this.editorGroup.button('Save Project', () => {
       let data = '@ve_1.0\n'
-      for (const shape of this.state.shapes) {
+      for (const shape of this.state.shapes.items) {
         if (shape.type === 'rectangle') {
           data += `Rect(${Math.round(shape.rect.x)}, ${Math.round(shape.rect.y)}, ${Math.round(shape.rect.width)}, ${Math.round(shape.rect.height)})\n`
         }

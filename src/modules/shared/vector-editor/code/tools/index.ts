@@ -1,3 +1,3 @@
 export * from './tool'
-export * from './tools'
+export * from './tool-types'
 export * from './tool-factory'

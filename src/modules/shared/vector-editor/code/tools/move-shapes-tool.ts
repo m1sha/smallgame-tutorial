@@ -6,10 +6,10 @@ export class MoveShapesTool extends Tool {
 
   input (ev: GameEvent) {
     if (ev.type === 'MOUSEDOWN') {
-      const shapes = this.state.getByHittest(ev.pos, true)
+      const shapes = this.state.shapes.getByHittest(ev.pos, true)
 
-      if (ev.ctrlKey && shapes.length > 0) {
-        this.state.selectedShapes.attachToSelected(shapes[0], true)
+      if (  shapes.length > 0) {
+        this.state.selectedShapes.attachToSelected(shapes[0], ev.ctrlKey)
       }
 
       this.state.selectedShapes.forEach(shape => {

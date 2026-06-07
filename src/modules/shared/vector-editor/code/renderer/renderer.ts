@@ -12,7 +12,7 @@ export class Renderer {
 
   private drawShapes (frame: Surface) {
     const sketch = new Sketch()
-    for (const shape of this.state.shapes) {
+    for (const shape of this.state.shapes.items) {
       if (shape.type === 'rectangle') {
         sketch.rect(shape.style, shape.rect)
       }

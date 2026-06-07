@@ -1,11 +1,14 @@
 import { Point } from "smallgame"
 import { Shape } from "../shapes"
 import { removeItem } from "../../../../../games/old-tv/utils"
+import { Shapes } from "../shapes/shapes"
 
 export class SelectedShapes {
   items: Shape[] = []
 
-  constructor (private state: { shapes: Shape[] }) {
+  onSelectedShapes: (() => void) | null = null
+
+  constructor (private state: { shapes: Shapes }) {
 
   }
 
@@ -13,8 +16,8 @@ export class SelectedShapes {
 
   select (pos: Point, accumulate = false) {
     if (!accumulate) this.items = []
-    for (let i = this.state.shapes.length - 1; i >= 0; i--) {
-      const shape = this.state.shapes[i]
+    for (let i = this.state.shapes.count - 1; i >= 0; i--) {
+      const shape = this.state.shapes.items[i]
       if (shape.type === 'rectangle' && shape.rect.containsPoint(pos)) {
         if (this.items.some(p => p === shape)) {
           if (accumulate) {
@@ -25,6 +28,8 @@ export class SelectedShapes {
         this.items.push(shape)
       }
     }
+
+    this.onSelectedShapes()
   }
 
   attachToSelected (shape: Shape, removeExist: boolean = false) {
@@ -33,6 +38,7 @@ export class SelectedShapes {
       return
     }
     this.items.push(shape)
+    this.onSelectedShapes()
   }
 
   forEach (callback: (shape: Shape, index: number, array: Shape[]) => boolean | void) {

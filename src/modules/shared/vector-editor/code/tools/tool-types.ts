@@ -1,0 +1,1 @@
+export type VectorEditorTools = 'select' | 'move-shapes' | 'draw-rectangle' | 'draw-polygon'

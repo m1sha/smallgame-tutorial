@@ -15,6 +15,14 @@ export class VectorEditor {
    
     this.state.changeTool('select')
     this.renderer = new Renderer(this.state)
+
+    this.state.onSelectedShapes = () => {
+      this._ui?.updateSelectedShapes()
+    }
+
+    this.state.onToolChanged = () => {
+      this._ui?.updateCurrentTool()
+    }
   }
 
   input (ev: GameEvent) {

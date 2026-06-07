@@ -4,11 +4,12 @@ import { DrawRectangleTool } from "./draw-rectangle-tool"
 import { MoveShapesTool } from "./move-shapes-tool"
 import { SelectTool } from "./select-tool"
 import { Tool } from "./tool"
+import { VectorEditorTools } from "./tool-types"
 
 export class ToolFactory {
   constructor (private state: EditorState) {}
 
-  create (name: string): Tool {
+  create (name: VectorEditorTools): Tool {
     switch (name) {
       case 'select': return new SelectTool(this.state)
       case 'draw-rectangle': return new DrawRectangleTool(this.state)
