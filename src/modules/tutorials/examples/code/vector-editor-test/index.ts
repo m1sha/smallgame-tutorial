@@ -20,6 +20,7 @@ export default async ({ container, containerSize, fps, builders }: ScriptSetting
   }
 
   const ui = builders.ui()
+  
   editor.ui(ui)
   return {
     ui: ui.build(),

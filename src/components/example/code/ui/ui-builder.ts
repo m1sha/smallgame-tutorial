@@ -1,10 +1,9 @@
 import { ref } from "vue"
-import { Contariner } from "./container"
-import { IControl, Button } from "./controls"
+import { IControl, Button, UIContariner } from "./controls"
 import { IUI } from "./ui"
 import { RefObj } from "./ref-obj"
 
-export class UIBuilder extends Contariner {
+export class UIBuilder extends UIContariner {
 
   var<T> (value: T) {
     return ref<T>(value) as RefObj<T>

@@ -1,24 +1,25 @@
 import { reactive } from "vue"
 
-import { Button, ControlMap, Group, IControl, Panel, Switch, Toolbar, Tracker, UploadFile, UploadManyFiles } from "./controls"
-import { Color } from "./controls/color"
-import { InfoPanel } from "./controls/info-panel"
-import { Select } from "./controls/select"
-import { Input } from "./controls/input"
-import { RefObj } from "./ref-obj"
-import { UIControl } from "./controls/ui-control"
-import { TOption } from "./option"
+import { Button, ControlMap, Group, IControl, Panel, Switch, Toolbar, Tracker, UploadFile, UploadManyFiles } from "."
+import { Color } from "./color"
+import { InfoPanel } from "./info-panel"
+import { Select } from "./select"
+import { Input } from "./input"
+import { RefObj } from "../ref-obj"
+import { UIControl } from "./ui-control"
+import { TOption } from "../option"
 
-export abstract class Contariner  {
+export class UIContariner extends UIControl  {
   controls: UIControl[]
 
   constructor () {
+    super()
     this.controls = reactive([])
   }
 
-  toolbar (settings: (group: Toolbar) => void) {
+  toolbar (settings?: (group: Toolbar) => void) {
     const control = new Toolbar()
-    settings(control)
+    settings?.(control)
     this.controls.push(control)
     return control
   }
@@ -57,7 +58,7 @@ export abstract class Contariner  {
     return this
   }
 
-  color (caption: string,  callback: (color: string) => void, defaultColor?: string) {
+  color (caption: string,  callback: (color: string) => void, defaultColor?: string | RefObj<string>) {
     this.controls.push(new Color(caption, callback, defaultColor))
     return this
   }
@@ -72,12 +73,12 @@ export abstract class Contariner  {
     return this
   }
 
-  switch (caption: string, callback: (value: boolean) => void, defaultValue?: boolean) {
+  switch (caption: string, callback: (value: boolean) => void, defaultValue?: boolean | RefObj<boolean>) {
     this.controls.push(new Switch(caption, callback, defaultValue ?? false))
     return this
   }
 
-  input (caption: string, callback: (value: string) => void, defaultValue?: string) {
+  input (caption: string, callback: (value: string) => void, defaultValue?: string | RefObj<string>) {
     this.controls.push(new Input(caption, callback, defaultValue ?? ''))
     return this
   }

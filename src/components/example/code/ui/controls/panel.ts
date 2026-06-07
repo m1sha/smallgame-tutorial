@@ -1,79 +1,14 @@
 
-import { TOption } from "../option"
-import { Button } from "./button"
-import { Color } from "./color"
 import { UIControl } from "./ui-control"
 import { ControlType } from "./control-type"
-import { Group } from "./group"
-import { Input } from "./input"
-import { Select } from "./select"
-import { Switch } from "./switch"
-import { Toolbar } from "./toolbar"
-import { Tracker } from "./tracker"
-import { UploadFile } from "./upload-file"
+import { UIContariner } from "./container"
 
-export class Panel extends UIControl {
+export class Panel extends UIContariner {
   readonly type: ControlType = 'panel'
-  controls: UIControl[] = []
   
   constructor (...controls: UIControl[]) {
     super()
     this.controls.push(...controls)
   }
 
-
- toolbar (settings: (group: Toolbar) => void) {
-    const control = new Toolbar()
-    settings(control)
-    this.controls.push(control)
-    return control
-  }
-
-  panel (settings: (group: Panel) => void) {
-    const control = new Panel()
-    settings(control)
-    this.controls.push(control)
-    return control
-  }
-  
-  group (name: string, settings: (group: Group) => void) {
-    const control = new Group(name)
-    settings(control)
-    this.controls.push(control)
-    return control
-  }
-
-  tracker (name: string, min: number, max: number, step: number,  callback: (val: number) => void, defaultValue?: number, options?: any) {
-    this.controls.push(new Tracker(name, min, max, step, callback, defaultValue, options))
-    return this
-  }
-
-  button (name: string, callback: (sender: Button) => void, options?: any) {
-    this.controls.push(new Button(name, callback, options))
-    return this
-  }
-
-  upload (caption: string, callback: (file: File) => void, options?: any) {
-      this.controls.push(new UploadFile(caption, callback, options))
-      return this
-    }
-
-    color (caption: string,  callback: (color: string) => void, defaultColor?: string) {
-        this.controls.push(new Color(caption, callback, defaultColor))
-        return this
-      }
-
-      select (caption: string, items: string[] | TOption[], callback: (value: string) => void, defaultValue?: string | undefined, options?: any) {
-        this.controls.push(new Select(caption, items, callback, defaultValue, options))
-        return this
-      }
-
-  switch (caption: string, callback: (value: boolean) => void, defaultValue?: boolean) {
-    this.controls.push(new Switch(caption, callback, defaultValue ?? false))
-  }
-
-  input (caption: string, callback: (value: string) => void, defaultValue?: string) {
-    this.controls.push(new Input(caption, callback, defaultValue ?? ''))
-    return this
-  }
 }
