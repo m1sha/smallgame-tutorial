@@ -1,1 +1,1 @@
-export type VectorEditorTools = 'select' | 'move-shapes' | 'draw-rectangle' | 'draw-polygon'
+export type VectorEditorTools = 'select' | 'move-shapes' | 'draw-rectangle' | 'draw-polygon' | 'edit-polygon-points'

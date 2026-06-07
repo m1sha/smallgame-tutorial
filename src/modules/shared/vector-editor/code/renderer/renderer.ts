@@ -44,6 +44,8 @@ export class Renderer {
     
     this.state.selectedShapes.forEach(shape => {
       if (shape.type === 'polygon' && shape.editPoints) { 
+
+        sketch.dots({ fill: '#900' }, shape.points, 3)
         return 
       }
 
