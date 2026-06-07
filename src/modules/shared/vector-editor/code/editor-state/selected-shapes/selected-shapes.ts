@@ -18,7 +18,7 @@ export class SelectedShapes {
     if (!accumulate) this.items = []
     for (let i = this.state.shapes.count - 1; i >= 0; i--) {
       const shape = this.state.shapes.items[i]
-      if (shape.type === 'rectangle' && shape.rect.containsPoint(pos)) {
+      if (shape.pointIn(pos)) {
         if (this.items.some(p => p === shape)) {
           if (accumulate) {
             removeItem(this.items, p => p === shape)

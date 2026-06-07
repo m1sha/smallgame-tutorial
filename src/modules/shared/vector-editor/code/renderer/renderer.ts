@@ -43,17 +43,20 @@ export class Renderer {
     sketch.defineStyle('dotcolor', { stroke: '#eee' })
     
     this.state.selectedShapes.forEach(shape => {
-      if (shape.type === 'rectangle') {
-        sketch.rect({ stroke: '#4d9c75', lineDash: [3,5] }, shape.rect)
-        sketch.rect('dotcolor', Rect.fromCenter(shape.rect.topLeft, size, size))
-        sketch.rect('dotcolor', Rect.fromCenter(shape.rect.midTop, size, size))
-        sketch.rect('dotcolor', Rect.fromCenter(shape.rect.topRight, size, size))
-        sketch.rect('dotcolor', Rect.fromCenter(shape.rect.midLeft, size, size))
-        sketch.rect('dotcolor', Rect.fromCenter(shape.rect.midRight, size, size))
-        sketch.rect('dotcolor', Rect.fromCenter(shape.rect.bottomLeft, size, size))
-        sketch.rect('dotcolor', Rect.fromCenter(shape.rect.midBottom, size, size))
-        sketch.rect('dotcolor', Rect.fromCenter(shape.rect.bottomRight, size, size))
+      if (shape.type === 'polygon' && shape.editPoints) { 
+        return 
       }
+
+      const rect = shape.bounds
+      sketch.rect({ stroke: '#4d9c75', lineDash: [3,5] }, rect)
+      sketch.rect('dotcolor', Rect.fromCenter(rect.topLeft, size, size))
+      sketch.rect('dotcolor', Rect.fromCenter(rect.midTop, size, size))
+      sketch.rect('dotcolor', Rect.fromCenter(rect.topRight, size, size))
+      sketch.rect('dotcolor', Rect.fromCenter(rect.midLeft, size, size))
+      sketch.rect('dotcolor', Rect.fromCenter(rect.midRight, size, size))
+      sketch.rect('dotcolor', Rect.fromCenter(rect.bottomLeft, size, size))
+      sketch.rect('dotcolor', Rect.fromCenter(rect.midBottom, size, size))
+      sketch.rect('dotcolor', Rect.fromCenter(rect.bottomRight, size, size))
     })
     sketch.draw(frame)
   }

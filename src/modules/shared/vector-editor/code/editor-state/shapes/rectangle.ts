@@ -10,4 +10,12 @@ export class RectangleShape extends ShapeBase  {
     this.rect = Rect.zero
     this.rect.moveSelf(startPoint)
   }
+
+  get bounds () {
+    return this.rect
+  }
+
+  pointIn (point: Point): boolean { 
+    return this.rect.containsPoint(point)
+  }
 }
