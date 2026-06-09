@@ -1,24 +1,27 @@
-import { Button, Group } from "../../../../../../components/example/code/ui/controls"
+import { RadioGroup, Group } from "../../../../../../components/example/code/ui/controls"
 import { EditorState } from "../../editor-state"
 import { VectorEditorTools } from "../../tools"
 import { IContent } from "./content"
 
 export class Toolbar implements IContent {
+  private radioGroup: RadioGroup | null = null
+  private selectedTool: string
+  
   constructor (panel: Group, private state: EditorState) {
-    const onToolChoose = (btn: Button) => {
-      btn.selected = true
-      this.state.changeTool(btn.name as VectorEditorTools)
-    }
-
+    this.selectedTool = state.currentTool.name
+    
+    panel.radioGroup([
+      { icon: 'fa fa-arrow-pointer', title: 'Select', name: 'select' },
+      { icon: 'fa fa-arrows-up-down-left-right', title: 'Select', name: 'move-shapes' },
+      { icon: 'fa fa-square', title: 'Select', name: 'draw-rectangle' },
+      { icon: 'fa fa-draw-polygon', title: 'Select', name: 'draw-polygon' },
+    ], this.selectedTool, name => this.state.changeTool(name as VectorEditorTools))
     
     panel.expand()
-    const toolbar = panel.toolbar()
-    toolbar.button('Select', btn => onToolChoose(btn), { icon: 'arrow-pointer', selected: true, name: 'select' })
-    toolbar.button('Move', btn => onToolChoose(btn), { icon: 'arrows-up-down-left-right', name: 'move-shapes' })
-    toolbar.button('Rect', btn => onToolChoose(btn), { icon: 'square' , name: 'draw-rectangle'  })
-    toolbar.button('Rect', btn => onToolChoose(btn), { icon: 'draw-polygon', name: 'draw-polygon'  })
+    this.radioGroup = panel.getControlByType(RadioGroup)[0]
   }
 
-  update () {}
-  updateSelectedShapes () {}
+  update () {
+    this.radioGroup.defaultValue = this.state.currentTool.name
+  }
 }

@@ -12,6 +12,10 @@ export default async ({ container, containerSize, fps, builders }: ScriptSetting
     editor.input(ev)
   }
 
+  viewer.onKeyPressed = keys => {
+    editor.keyPressed(keys)
+  }
+
   viewer.onFrameChanged = frame => {
     frame.clear()
 

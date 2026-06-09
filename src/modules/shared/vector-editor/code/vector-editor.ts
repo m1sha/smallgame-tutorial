@@ -1,4 +1,4 @@
-import { GameEvent, Surface } from "smallgame"
+import { GameEvent, Key, Keys, Surface } from "smallgame"
 import { UIBuilder } from "../../../../components/example"
 import { EditorState } from "./editor-state"
 import { Renderer } from "./renderer"
@@ -31,6 +31,29 @@ export class VectorEditor {
 
   input (ev: GameEvent) {
     this.state.currentTool.input(ev)
+  }
+  
+  keyPressed (keys: Keys) {
+    
+    if (this.state.currentTool.keyPressed(keys) === false) {
+      return
+    }
+
+    const pressed = keys.getPressed()
+    
+    if (pressed[Key.K_1]) {
+      this.state.changeTool('select')
+    }
+    if (pressed[Key.K_2]) {
+      this.state.changeTool('move-shapes')
+    }
+    if (pressed[Key.K_3]) {
+      debugger
+      this.state.changeTool('draw-rectangle')
+    }
+    if (pressed[Key.K_4]) {
+      this.state.changeTool('draw-polygon')
+    }
   }
 
   draw (frame: Surface) {
