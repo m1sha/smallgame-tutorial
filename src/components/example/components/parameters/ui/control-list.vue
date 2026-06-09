@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ColorPicker, DropDownList, PushButton, Switch, TextBox, Tracker, UploadButton, UploadManyButton } from 'vue3-universal-components'
+import { ColorPicker, DropDownList, PushButton, RadioGroup, Switch, TextBox, Tracker, UploadButton, UploadManyButton } from 'vue3-universal-components'
 import { Button, IControl } from '../../../code/ui/controls'
 import Group from './group.vue'
 import Toolbar from './toolbar.vue'
@@ -49,6 +49,9 @@ function isSelected (control: any)  {
         <i v-if="isToolbar" :class="'fa fa-' + cast<Button>(control).options!.icon"></i>
       </PushButton>
 
+       <!--@vue-ignore-->
+      <RadioGroup v-if="control.type === 'radio-group'" v-model="control.defaultValue" :buttons="control.buttons" @click="name => control.callback?.(name)"></RadioGroup>
+
       <!--@vue-ignore-->
       <ColorPicker v-if="control.type === 'color'" v-model="control.defaultColor" :caption="control.caption" @update:model-value="value => control.callback(value ?? '')" />
 
@@ -96,14 +99,14 @@ function isSelected (control: any)  {
   gap: 8px
   flex-wrap: wrap
 
-  & > button
-    margin: 0
-
-    &.selected
-      background-color: var(--data-accident-color)
-      &:hover
+  .vue3-uui__radio-group
+    & > button
+      margin: 0
+      &.selected
         background-color: var(--data-accident-color)
-
+        &:hover
+          background-color: var(--data-accident-color)
+  
   .ui-info-panel
     padding: 8px 12px
     background-color: var(--panel-color)

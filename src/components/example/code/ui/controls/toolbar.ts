@@ -20,6 +20,10 @@ export class Toolbar  extends UIControl {
     })
   }
 
+  getControlByType <T>(type: new (...args: any[]) => T): T[] {
+    return this.controls.filter(p => p instanceof type) as T[]
+  }
+
   toolbar (settings: (group: Toolbar) => void) {
       const control = new Toolbar()
       settings(control)

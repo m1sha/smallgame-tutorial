@@ -8,6 +8,7 @@ import { Input } from "./input"
 import { RefObj } from "../ref-obj"
 import { UIControl } from "./ui-control"
 import { TOption } from "../option"
+import { RadioGroup } from "./radio-group"
 
 export class UIContariner extends UIControl  {
   controls: UIControl[]
@@ -15,6 +16,16 @@ export class UIContariner extends UIControl  {
   constructor () {
     super()
     this.controls = reactive([])
+  }
+
+  getControlByType <T>(type: new (...args: any[]) => T): T[] {
+    return this.controls.filter(p => p instanceof type) as T[]
+  }
+
+  radioGroup (buttons: { name: string, title: string, icon?: string } [], defaultValue: string, callback?: (name: string) => void) {
+    const control = new RadioGroup(buttons, defaultValue, callback)
+    this.controls.push(control)
+    return control
   }
 
   toolbar (settings?: (group: Toolbar) => void) {
