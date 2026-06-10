@@ -1,10 +1,12 @@
 import { GMath, Point, Rect, ShapeStyle } from "smallgame"
 import { ShapeBase } from "./shape-base"
+import { removeItem } from "../../../../../games/old-tv/utils"
 
 export class PolygonShape extends ShapeBase  {
   #rect: Rect
   type: 'polygon' = 'polygon'
   points: Point[]
+  selectedPoints: Point[]
   editPoints: boolean = false
 
   constructor (start: Point, end: Point, style: ShapeStyle) {
@@ -13,6 +15,7 @@ export class PolygonShape extends ShapeBase  {
     this.#rect = Rect.fromTwoPoints(start, end)
     this.points = this.#rect.points.map(p => Point.from(p))
     this.points.push(this.points[0])
+    this.selectedPoints = []
   }
 
   pointIn (point: Point): boolean {
@@ -21,8 +24,37 @@ export class PolygonShape extends ShapeBase  {
 
   get bounds () { return this.#rect }
 
-  movePoint (shift: Point, point: Point) {
-    point.shiftSelf(shift)
+  getHittestPoint (pos: Point, radius: number = 5) {
+    return this.points.find(p => p.inRadius(pos, radius))
+  }
+
+  selectPoint (point?: Point, accumulate: boolean = false) {
+    if (!accumulate) this.selectedPoints = []
+    if (!point) return
+    const origin = this.selectedPoints.find(p => p === point)
+    if (origin) {
+      if (accumulate) removeItem(this.selectedPoints, p => p === origin)
+      return
+    }
+    this.selectedPoints.push(point)
+  }
+
+  unselectPoints () {
+    this.selectedPoints = []
+  }
+
+  movePoints (shift: Point) {
+    this.selectedPoints.forEach(p => p.shiftSelf(shift))
+    this.calcBounds()
+  }
+
+  shift (point: Point): void {
+    for (let i = 0; i< this.points.length -1; i++)
+      this.points[i].shiftSelf(point)
+    this.calcBounds()
+  }
+
+  private calcBounds () {
     const x = GMath.minX(this.points)
     const w = GMath.maxX(this.points) - x
     const y = GMath.minY(this.points)

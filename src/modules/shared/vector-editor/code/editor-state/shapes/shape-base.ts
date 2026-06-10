@@ -5,5 +5,6 @@ export abstract class ShapeBase  {
   }
 
   abstract pointIn (point: Point): boolean 
+  abstract shift (point: Point): void
   abstract get bounds (): Rect
 }

@@ -15,19 +15,15 @@ export class MoveShapesTool extends Tool {
       }
 
       this.state.selectedShapes.forEach(shape => {
-        if (shape.type === 'rectangle') {
-          this.canMove = shape.rect.containsPoint(ev.pos)
-          if (this.canMove) return false
-        }
+        this.canMove = shape.pointIn(ev.pos)
+        if (this.canMove) return false
       })
     }
 
     if (ev.type === 'MOUSEMOVE') { 
       if (this.canMove && ev.lbc) {
         this.state.selectedShapes.forEach(shape => {
-          if (shape.type === 'rectangle') {
-            shape.rect.shiftSelf(ev.shift)
-          }
+          shape.shift(ev.shift)
         })
         this.state.stateChanged()
       }

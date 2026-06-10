@@ -7,7 +7,7 @@ export class Toolbar implements IContent {
   private radioGroup: RadioGroup | null = null
   private selectedTool: string
   
-  constructor (panel: Group, private state: EditorState) {
+  constructor (private panel: Group, private state: EditorState) {
     this.selectedTool = state.currentTool.name
     
     panel.radioGroup([
@@ -22,6 +22,11 @@ export class Toolbar implements IContent {
   }
 
   update () {
-    this.radioGroup.defaultValue = this.state.currentTool.name
+    const toolName = this.state.currentTool.name
+    this.radioGroup.defaultValue = toolName
+    const tools = ['select', 'move-shapes', 'draw-rectangle', 'draw-polygon']
+    tools.includes(toolName) 
+      ? this.panel.show() 
+      : this.panel.hide()
   }
 }

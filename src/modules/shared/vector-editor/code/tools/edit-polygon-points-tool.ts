@@ -5,24 +5,26 @@ import { VectorEditorTools } from "./tool-types"
 
 export class EditPolygonPointTool extends Tool {
   readonly name: VectorEditorTools = 'edit-polygon-points'
-  //private shape: PolygonShape | null = null
-  private movingPoint: Point | null = null
+  
   
   input (ev: GameEvent) {
     const polygon = this.state.selectedShapes.items[0]
     if (!isPolygonShape(polygon)) return
     
     if (ev.type === 'MOUSEDOWN') {
-      this.movingPoint = polygon.points.find(p => p.inRadius(ev.pos, 5))
+      const point = polygon.getHittestPoint(ev.pos)
+      polygon.selectPoint(point, ev.ctrlKey)
+      this.state.stateChanged()
     }
 
-    if (ev.type === 'MOUSEMOVE') {
+    if (ev.type === 'MOUSEMOVE' && ev.lbc) {
       
-      polygon.movePoint(ev.shift, this.movingPoint)
+      polygon.movePoints(ev.shift)
+      this.state.stateChanged()
     }
 
     if (ev.type === 'MOUSEUP' || ev.type === 'MOUSELEAVE') {
-      this.movingPoint = null
+      
     }
   } 
 }

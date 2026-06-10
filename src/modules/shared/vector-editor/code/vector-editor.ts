@@ -1,4 +1,4 @@
-import { GameEvent, Key, Keys, Surface } from "smallgame"
+import { GameEvent, Key, Keys, MemSurface, Surface } from "smallgame"
 import { UIBuilder } from "../../../../components/example"
 import { EditorState } from "./editor-state"
 import { Renderer } from "./renderer"
@@ -18,14 +18,17 @@ export class VectorEditor {
 
     this.state.onSelectedShapes = () => {
       this._ui?.update()
+      this.renderer.update()
     }
 
     this.state.onToolChanged = () => {
       this._ui?.update()
+      this.renderer.update()
     }
 
     this.state.onStateChanged = () => {
       this._ui?.update()
+      this.renderer.update()
     }
   }
 
@@ -57,7 +60,8 @@ export class VectorEditor {
   }
 
   draw (frame: Surface) {
-    this.renderer.render(frame)
+    if (!this.renderer.surface) this.renderer.surface = new MemSurface(frame.rect.size)
+    frame.blit(this.renderer.surface, this.renderer.surface.rect)
   }
   
   ui (uiBuilder: UIBuilder) {

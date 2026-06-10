@@ -17,11 +17,14 @@ export class DrawRectangleTool extends Tool {
     if (ev.type === 'MOUSEMOVE') {
       if (ev.lbc && this.shape) {
         this.shape.rect = Rect.fromTwoPoints(this.sp,  ev.pos)
+        this.state.stateChanged()
       }
     }
 
     if (ev.type === 'MOUSEUP' || ev.type === 'MOUSELEAVE') {
       this.state.applyDrawingShape()
     }
+
+    
   } 
 }

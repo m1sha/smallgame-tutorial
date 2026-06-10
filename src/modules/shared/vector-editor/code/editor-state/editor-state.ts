@@ -24,12 +24,14 @@ export class EditorState {
   createDrawingRectangle (pos: Point) {
     const shape = new RectangleShape(pos, this.shapeDrawStyle.clone())
     this.drawingShape = shape
+    this.stateChanged()
     return shape
   }
 
   createDrawingPolygon (start: Point, end: Point) { 
     const shape = new PolygonShape(start, end, this.shapeDrawStyle.clone())
     this.drawingShape = shape
+    this.stateChanged()
     return shape
   }
 
@@ -37,6 +39,7 @@ export class EditorState {
     if (!this.drawingShape) return
     this.shapes.add(this.drawingShape)
     this.drawingShape = null
+    this.stateChanged()
   }
 
   changeTool (name: VectorEditorTools) {

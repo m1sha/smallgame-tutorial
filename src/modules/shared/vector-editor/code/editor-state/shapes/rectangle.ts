@@ -11,6 +11,10 @@ export class RectangleShape extends ShapeBase  {
     this.rect.moveSelf(startPoint)
   }
 
+  shift (point: Point): void {
+    this.rect.shiftSelf(point)
+  }
+
   get bounds () {
     return this.rect
   }
