@@ -1,7 +1,8 @@
 import { UIBuilder } from "../../../../../components/example"
 import { Group } from "../../../../../components/example/code/ui/controls"
-import { download } from "../../../../../utils"
 import { EditorState } from "../editor-state"
+import { save } from "../editor-state/data/save"
+import { loadState } from "../editor-state/data/load"
 import { CreateShapeCommon, EditPolygon, EditRect, EditShapeCommon, IContent, Toolbar } from "./content"
 
 export function createUI (uiBuilder: UIBuilder, state: EditorState, editor: { useEditor: boolean }) {
@@ -35,15 +36,10 @@ export class UI {
    
   private createSavePorjectControls () {
     this.editorGroup.button('Save Project', () => saveState(this.state))
+    this.editorGroup.upload('Load Project', file =>loadState(this.state, file) )
   }
 }
 
 function saveState (state: EditorState) {
-  let data = '@ve_1.0\n'
-  for (const shape of state.shapes.items) {
-    if (shape.type === 'rectangle') {
-      data += `Rect(${Math.round(shape.rect.x)}, ${Math.round(shape.rect.y)}, ${Math.round(shape.rect.width)}, ${Math.round(shape.rect.height)})\n`
-    }
-  }
-  download('file.txt', data)
+  save(state)
 }

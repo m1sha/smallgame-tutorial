@@ -53,6 +53,10 @@ export class Renderer {
 
         sketch.dots({ fill: '#a3a3a3' }, shape.points, 5)
         sketch.dots({ fill: '#038d03' }, shape.selectedPoints, 5)
+
+        if (shape.activePoint) {
+          sketch.circle({ fill: '#911' }, shape.activePoint, 5)
+        }
         return 
       }
 

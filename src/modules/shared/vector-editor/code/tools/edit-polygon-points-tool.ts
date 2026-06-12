@@ -17,14 +17,30 @@ export class EditPolygonPointTool extends Tool {
       this.state.stateChanged()
     }
 
-    if (ev.type === 'MOUSEMOVE' && ev.lbc) {
+    if (ev.type === 'MOUSEMOVE') {
+      const { segment, point } = polygon.getActiveSegmentAndPoint(ev.pos)
       
-      polygon.movePoints(ev.shift)
+      polygon.setActiveSegment(null)
+      polygon.setActivePoint(null)
+
+      if (ev.ctrlKey) {
+        polygon.setActiveSegment(segment)
+        polygon.setActivePoint(point)
+      }
+      
+      if ( ev.lbc) {
+        polygon.shiftPoints(ev.shift)
+        
+      }
       this.state.stateChanged()
     }
 
     if (ev.type === 'MOUSEUP' || ev.type === 'MOUSELEAVE') {
-      
+      const { segmentIndex } = polygon.getActiveSegmentAndPoint(ev.pos)
+      if (polygon.activePoint && segmentIndex >= 0 && ev.ctrlKey) {
+        polygon.addPoint(segmentIndex)
+        this.state.stateChanged()
+      }
     }
   } 
 }

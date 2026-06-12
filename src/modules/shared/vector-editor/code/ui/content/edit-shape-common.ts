@@ -12,8 +12,8 @@ export class EditShapeCommon implements IContent  {
     this.shapeStyleStroke = createRefObj('#333')
 
     panel.expand()
-    panel.color('Fill',  val => { this.shapeStyleFill.value = val }, this.shapeStyleFill )
-    panel.color('Stroke', val => { this.shapeStyleStroke.value = val }, this.shapeStyleStroke )
+    panel.color('Fill',  val => { this.shapeStyleFill.value = val; this.changeFill(val) }, this.shapeStyleFill )
+    panel.color('Stroke', val => { this.shapeStyleStroke.value = val; this.changeStroke(val) }, this.shapeStyleStroke )
     panel.hide()
   }
   
@@ -23,6 +23,20 @@ export class EditShapeCommon implements IContent  {
   
   updateSelectedShapes () {
     this.checkPanelVisible()
+  }
+
+  private changeFill (color: string) {
+    for (const shape of this.state.selectedShapes.items) {
+      shape.style.fill = color
+    }
+    this.state.stateChanged()
+  }
+
+  private changeStroke (color: string) {
+    for (const shape of this.state.selectedShapes.items) {
+      shape.style.stroke = color
+    }
+    this.state.stateChanged()
   }
 
   private checkPanelVisible () {
