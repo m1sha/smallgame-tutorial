@@ -10,8 +10,12 @@ export interface IListItemEntity {
 
 export interface IListEntityCollection {
   objs: any[]
+  selectedObjs: any[]
   map: (obj: any) => IListItemEntity
   options: CollectionOptions
+
+  onSelect?: (obj: any) => void
+  onDelete?: (obj: any) => void
 }
 
 export class ListEntityCollection<TEntity> extends EntityCollectionBase<TEntity> {
@@ -22,4 +26,7 @@ export class ListEntityCollection<TEntity> extends EntityCollectionBase<TEntity>
     super()
     this.map = map
   }
+
+  onSelect: ((obj: TEntity) => void) | null = null
+  onDelete: ((obj: TEntity) => void) | null = null
 }
