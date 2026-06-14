@@ -10,13 +10,14 @@ export class DrawRectangleTool extends Tool {
   input (ev: GameEvent) {
     
     if (ev.type === 'MOUSEDOWN') {
-      this.sp.moveSelf(ev.pos)
-      this.shape = this.state.createDrawingRectangle(ev.pos)
+      const pos = this.toLocalPoint(ev.pos)
+      this.sp.moveSelf(pos)
+      this.shape = this.state.createDrawingRectangle(pos)
     }
 
     if (ev.type === 'MOUSEMOVE') {
       if (ev.lbc && this.shape) {
-        this.shape.rect = Rect.fromTwoPoints(this.sp,  ev.pos)
+        this.shape.rect = Rect.fromTwoPoints(this.sp,  this.toLocalPoint(ev.pos))
         this.state.stateChanged()
       }
     }

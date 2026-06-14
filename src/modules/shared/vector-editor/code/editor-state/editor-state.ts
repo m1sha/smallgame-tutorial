@@ -5,7 +5,7 @@ import { Tool, ToolFactory, VectorEditorTools } from "../tools"
 import { Shapes } from "./shapes/shapes"
 
 export class EditorState {
-  
+  offset: Point
   currentTool: Tool
   private toolFactory: ToolFactory = new ToolFactory(this)
   shapes: Shapes = new Shapes()

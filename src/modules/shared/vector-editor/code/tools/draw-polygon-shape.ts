@@ -10,13 +10,15 @@ export class DrawPolygonTool extends Tool {
   input (ev: GameEvent) {
     
     if (ev.type === 'MOUSEDOWN') {
-      this.sp.moveSelf(ev.pos)
-      this.shape = this.state.createDrawingPolygon(ev.pos, ev.pos)
+      const pos = this.toLocalPoint(ev.pos)
+      this.sp.moveSelf(pos)
+      this.shape = this.state.createDrawingPolygon(pos, pos)
     }
 
     if (ev.type === 'MOUSEMOVE') {
       if (ev.lbc && this.shape) {
-        this.shape = this.state.createDrawingPolygon(this.sp,  ev.pos)
+        const pos = this.toLocalPoint(ev.pos)
+        this.shape = this.state.createDrawingPolygon(this.sp,  pos)
       }
     }
 

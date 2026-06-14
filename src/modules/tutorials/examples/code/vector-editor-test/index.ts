@@ -2,11 +2,15 @@ import { Viewer } from "../../../../shared"
 import { displayFps } from "../../../../../utils/display-fps"
 import { type ScriptModule, type ScriptSettings } from "../../../../../components/example"
 import { VectorEditor } from "../../../../shared/vector-editor"
+import { MemSurface, Size } from "smallgame"
 
 export default async ({ container, containerSize, fps, builders }: ScriptSettings): Promise<ScriptModule> => {
   const viewer = new Viewer(containerSize, container, { disableContextMenu: true })
 
-  const editor = new VectorEditor()
+  const surface = new MemSurface(new Size(viewer.viewportRect).scale(.75))
+  surface.rect.absCenter = viewer.viewportRect.center
+
+  const editor = new VectorEditor(surface)
 
   viewer.onInput = ev => {
     editor.input(ev)
@@ -18,8 +22,9 @@ export default async ({ container, containerSize, fps, builders }: ScriptSetting
 
   viewer.onFrameChanged = frame => {
     frame.clear()
-
-    editor.draw(frame)
+    surface.fill('#444')
+    editor.draw(surface)
+    frame.blit(surface, surface.rect)
     displayFps(fps)
   }
 

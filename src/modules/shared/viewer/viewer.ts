@@ -63,6 +63,11 @@ export class Viewer {
 
     this.gameloopId = gameloop(() => {
       for (const ev of game.event.get()) {
+        
+        if (document.activeElement && document.activeElement.tagName.toLowerCase() === 'input') {
+          continue
+        }
+        
         if (ev.type === 'MOUSEDOWN') {
           if (ev.lbc && ev.altKey) {
             startSelectRect = true
@@ -110,8 +115,11 @@ export class Viewer {
         this.onInput?.(ev)
       }
       
-      this.onKeyPressed?.(game.key)
-      this.onGamepad?.(game.gamepads)
+      if (document.activeElement && document.activeElement.tagName.toLowerCase() !== 'input') {
+        this.onKeyPressed?.(game.key)
+        this.onGamepad?.(game.gamepads)
+      }
+      
       fixedUpdate()
       this.onFrameChanged?.(this.surface)
 

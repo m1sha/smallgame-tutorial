@@ -6,7 +6,8 @@ export class SelectTool extends Tool {
   readonly name: VectorEditorTools = 'select'
   input (ev: GameEvent) {
     if (ev.type === 'MOUSEDOWN') {
-      this.state.selectedShapes.select(ev.pos, ev.ctrlKey)
+      const pos = this.toLocalPoint(ev.pos)
+      this.state.selectedShapes.select(pos, ev.ctrlKey)
     }
   } 
 }

@@ -10,8 +10,9 @@ export class VectorEditor {
   private renderer: Renderer
   private _ui: UI
 
-  constructor () {
+  constructor (surface: Surface) {
     this.state = new EditorState()
+    this.state.offset = surface.rect.topLeft
    
     this.state.changeTool('select')
     this.renderer = new Renderer(this.state)

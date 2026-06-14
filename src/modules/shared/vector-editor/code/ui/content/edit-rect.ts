@@ -16,10 +16,10 @@ export class EditRect implements IContent {
     this.h = createRefObj('0')
     panel.expand()
     panel.hide()
-    panel.input('X', v => {}, this.x)
-    panel.input('Y', v => {}, this.y)
-    panel.input('Width', v => {}, this.w)
-    panel.input('Height', v => {}, this.h)
+    panel.input('X', v => this.changeValue('x', +v), this.x)
+    panel.input('Y', v => this.changeValue('y', +v), this.y)
+    panel.input('Width', v => this.changeValue('w', +this.w.value), this.w)
+    panel.input('Height', v => this.changeValue('h', +this.h.value), this.h)
   }
 
   update () { 
@@ -44,5 +44,19 @@ export class EditRect implements IContent {
     }
     
     this.panel.hide()
+  }
+
+  private changeValue (type: 'x' | 'y' | 'w' | 'h', value: number) {
+    const selecteds = this.state.selectedShapes
+    selecteds.forEach(shape => {
+      if (shape.type !== 'rectangle') return
+      switch (type) {
+        case 'x': shape.rect.x = value; break
+        case 'y': shape.rect.y = value; break 
+        case 'w': shape.rect.width = value; break
+        case 'h': shape.rect.height = value; break
+      }
+      this.state.stateChanged()
+    })
   }
 }
