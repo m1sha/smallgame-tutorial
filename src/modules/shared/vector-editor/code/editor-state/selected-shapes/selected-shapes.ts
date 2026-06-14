@@ -34,7 +34,10 @@ export class SelectedShapes {
 
   attachToSelected (shape: Shape, removeExist: boolean = false) {
     if (this.items.some(p => p === shape)) {
-      if (removeExist) removeItem(this.items, p => p === shape)
+      if (removeExist) {
+        removeItem(this.items, p => p === shape)
+        this.onSelectedShapes()
+      }
       return
     }
     this.items.push(shape)
@@ -48,5 +51,9 @@ export class SelectedShapes {
       }
     }
     
+  }
+
+  delete (shape: Shape)  {
+    removeItem(this.items, p => p === shape)
   }
 }

@@ -1,8 +1,11 @@
 import { Point } from "smallgame"
 import { Shape } from "./shape"
+import { removeItem } from "smallgame/src/utils"
 
 export class Shapes {
   items: Shape[] = []
+
+  onShapesChanged:  (() => void) | null = null
 
   getByHittest (pos: Point, onlyOne: boolean = false): Shape[] {
     const result = []
@@ -18,9 +21,15 @@ export class Shapes {
     return result
   }
 
+  delete (shape: Shape) {
+    removeItem(this.items, p => p === shape)
+    this.onShapesChanged?.()
+  }
+
   get count () { return this.items.length }
 
   add (shape: Shape) {
     this.items.push(shape)
+    this.onShapesChanged?.()
   }
 }

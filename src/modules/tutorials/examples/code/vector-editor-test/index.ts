@@ -29,10 +29,12 @@ export default async ({ container, containerSize, fps, builders }: ScriptSetting
   }
 
   const ui = builders.ui()
+  const entities = builders.entities()
   
-  editor.ui(ui)
+  editor.ui(ui, entities)
   return {
     ui: ui.build(),
+    entities: entities.build(),
     dispose () { 
       viewer.remove() 
     }

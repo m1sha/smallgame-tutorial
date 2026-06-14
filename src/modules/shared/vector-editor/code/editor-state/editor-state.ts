@@ -17,9 +17,10 @@ export class EditorState {
   onToolChanged:  (() => void) | null = null
 
   get onSelectedShapes () { return this.selectedShapes.onSelectedShapes }
-  set onSelectedShapes (value: (() => void) | null) { 
-    this.selectedShapes.onSelectedShapes = value 
-  }
+  set onSelectedShapes (value: (() => void) | null) { this.selectedShapes.onSelectedShapes = value }
+
+  get onShapesChanged () { return this.shapes.onShapesChanged }
+  set onShapesChanged (value: (() => void) | null) { this.shapes.onShapesChanged = value }
 
   createDrawingRectangle (pos: Point) {
     const shape = new RectangleShape(pos, this.shapeDrawStyle.clone())
@@ -42,6 +43,11 @@ export class EditorState {
     this.stateChanged()
   }
 
+  deleteShape (shape: Shape) {
+    this.selectedShapes.delete(shape)
+    this.shapes.delete(shape)
+  }
+
   changeTool (name: VectorEditorTools) {
     this.currentTool = this.toolFactory.create(name)
     this.onToolChanged?.()
@@ -49,6 +55,7 @@ export class EditorState {
 
   stateChanged () {
     this.onStateChanged?.()
+    //console.log('stateChanged')
   }
   
 }
