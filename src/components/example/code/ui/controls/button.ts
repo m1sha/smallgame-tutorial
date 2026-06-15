@@ -6,6 +6,7 @@ export class Button extends UIControl {
   readonly type: ControlType = 'button'
   parent: Toolbar | null = null
   private _selected: boolean = false
+  private _disabled: boolean = false
   readonly name: string = ''
   get selected() { return this._selected }
   set selected (value: boolean) { 
@@ -15,6 +16,14 @@ export class Button extends UIControl {
       })
     }
     this._selected = value
+  }
+
+  get disabled () {
+    return this.options && this.options.disabledif ? this.options.disabledif() : this._disabled
+  }
+
+  set disabled (value: boolean) {
+    this._disabled = value
   }
   
   

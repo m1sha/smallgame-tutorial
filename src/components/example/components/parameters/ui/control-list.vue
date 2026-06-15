@@ -44,7 +44,7 @@ function isSelected (control: any)  {
       <DropDownList v-if="control.type === 'select'" v-model="control.defaultValue" :items="getItems(control.items)" :caption="control.caption" @update:model-value="value => control.callback(value ?? '')" />
       
       <!--@vue-ignore-->
-      <PushButton v-if="control.type === 'button'" @click="control.callback(control)" :class="{ selected: isSelected(control) }" :title="control.caption" >
+      <PushButton v-if="control.type === 'button'" @click="control.callback(control)" :class="{ selected: isSelected(control) }" :disabled="control.disabled" :title="control.caption" >
         <template v-if="!isToolbar">{{ cast<Button>(control).caption }}</template> 
         <i v-if="isToolbar" :class="'fa fa-' + cast<Button>(control).options!.icon"></i>
       </PushButton>
@@ -96,7 +96,7 @@ function isSelected (control: any)  {
 .control-list
   display: flex
   flex-direction: column
-  gap: 8px
+  gap: 4px
   flex-wrap: wrap
 
   .vue3-uui__radio-group

@@ -35,7 +35,7 @@ export class Renderer {
     const drawingShape = this.state.shapes.drawingShape
     const shapeDrawStyle = this.state.shapes.drawStyle
     if (drawingShape) {
-      debugger
+      
       if (drawingShape.type === 'rectangle') {
         sketch.rect(shapeDrawStyle, drawingShape.rect)
       }

@@ -20,7 +20,7 @@ export class UI {
     const root = this.editorGroup
 
     this.contents = [
-      new Toolbar(root.group('Tools'), state),
+      new Toolbar(root.panel(() => {}), state),
       new CreateShapeCommon(root.group('Common'), state),
       new EditShapeCommon(root.group('Common'), state),
       new EditRect(root.group('Rectangle'), state),

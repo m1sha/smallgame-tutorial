@@ -21,8 +21,8 @@ export class EditorState {
     this.commandHistory.push(command)
   }
 
-  canUndo () { this.commandHistory.canUndo() }
-  canRedo () { this.commandHistory.canRedo() }
+  canUndo () { return this.commandHistory.canUndo() }
+  canRedo () { return this.commandHistory.canRedo() }
   undo () { this.commandHistory.undo() }
   redo () { this.commandHistory.redo() }
 }

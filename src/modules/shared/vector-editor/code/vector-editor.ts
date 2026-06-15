@@ -64,6 +64,7 @@ export class VectorEditor {
   
   ui (uiBuilder: UIBuilder, entities: EntityListBuilder) {
     this._ui = createUI(uiBuilder, this.state, this as any as { useEditor: boolean })
+    this._ui.update()
     this._entities = new Entities(entities, this.state)
   }
 }

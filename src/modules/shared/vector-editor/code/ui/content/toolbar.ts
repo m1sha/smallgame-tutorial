@@ -1,4 +1,4 @@
-import { RadioGroup, Group } from "../../../../../../components/example/code/ui/controls"
+import { RadioGroup, Toolbar as CToolbar, Panel, Button } from "../../../../../../components/example/code/ui/controls"
 import { EditorState } from "../../editor-state"
 import { VectorEditorTools } from "../../tools"
 import { IContent } from "./content"
@@ -7,8 +7,13 @@ export class Toolbar implements IContent {
   private radioGroup: RadioGroup | null = null
   private selectedTool: string
   
-  constructor (private panel: Group, private state: EditorState) {
+  constructor (private panel: Panel, private state: EditorState) {
     this.selectedTool = state.tools.currentName
+
+    panel.toolbar(toolbar => {
+      toolbar.button('Undo', () => { state.undo() }, { icon: 'undo' })
+      toolbar.button('Redo', () => { state.redo() }, { icon: 'redo' })
+    })
     
     panel.radioGroup([
       { icon: 'fa fa-arrows-up-down-left-right', title: 'Select', name: 'move-shapes' },
@@ -16,7 +21,7 @@ export class Toolbar implements IContent {
       { icon: 'fa fa-draw-polygon', title: 'Select', name: 'draw-polygon' },
     ], this.selectedTool, name => this.state.tools.changeTool(name as VectorEditorTools))
     
-    panel.expand()
+    //panel.expand()
     this.radioGroup = panel.getControlByType(RadioGroup)[0]
   }
 
@@ -27,5 +32,14 @@ export class Toolbar implements IContent {
     tools.includes(toolName) 
       ? this.panel.show() 
       : this.panel.hide()
+
+      
+    const toolbar = this.panel.getControlByType(CToolbar)[0]
+    if (toolbar) {
+      const [undo, redo] = toolbar.getControlByType(Button)
+      if (undo) undo.disabled = !this.state.canUndo()
+      if (redo) redo.disabled = !this.state.canRedo()
+    }
+    
   }
 }
