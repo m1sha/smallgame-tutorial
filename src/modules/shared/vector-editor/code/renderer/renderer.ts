@@ -32,12 +32,17 @@ export class Renderer {
   private drawDrawingShape (frame: Surface) {
     const sketch = new Sketch()
 
-    if (this.state.drawingShape && this.state.drawingShape.type === 'rectangle') {
-      sketch.rect(this.state.shapeDrawStyle, this.state.drawingShape.rect)
-    }
+    const drawingShape = this.state.shapes.drawingShape
+    const shapeDrawStyle = this.state.shapes.drawStyle
+    if (drawingShape) {
+      debugger
+      if (drawingShape.type === 'rectangle') {
+        sketch.rect(shapeDrawStyle, drawingShape.rect)
+      }
 
-    if (this.state.drawingShape && this.state.drawingShape.type === 'polygon') {
-      sketch.polygon(this.state.shapeDrawStyle, this.state.drawingShape.points)
+      if (drawingShape.type === 'polygon') {
+        sketch.polygon(shapeDrawStyle, drawingShape.points)
+      }
     }
 
     sketch.draw(frame)
@@ -48,7 +53,7 @@ export class Renderer {
     const size = 5
     sketch.defineStyle('dotcolor', { stroke: '#eee' })
     
-    this.state.selectedShapes.forEach(shape => {
+    this.state.shapes.selecteds.forEach(shape => {
       if (shape.type === 'polygon' && shape.editPoints) { 
 
         sketch.dots({ fill: '#a3a3a3' }, shape.points, 5)

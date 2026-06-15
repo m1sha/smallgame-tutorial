@@ -1,61 +1,28 @@
-import { Point, ShapeStyle } from "smallgame"
-import { PolygonShape, RectangleShape, Shape } from "./shapes"
-import { SelectedShapes } from "./selected-shapes"
-import { Tool, ToolFactory, VectorEditorTools } from "../tools"
+import { Point } from "smallgame"
+import { Tools } from "../tools"
 import { Shapes } from "./shapes/shapes"
+//import { Command, CommandHistory } from "../commands"
 
 export class EditorState {
   offset: Point
-  currentTool: Tool
-  private toolFactory: ToolFactory = new ToolFactory(this)
-  shapes: Shapes = new Shapes()
-  drawingShape: Shape | null = null
-  selectedShapes: SelectedShapes = new SelectedShapes(this)
-  shapeDrawStyle: ShapeStyle = new ShapeStyle({ stroke: '#ddd' })
 
+  //private commandHistory: CommandHistory = new CommandHistory(this)
+  readonly shapes: Shapes = new Shapes(this)
+  readonly tools: Tools = new Tools(this)
+   
   onStateChanged:  (() => void) | null = null
-  onToolChanged:  (() => void) | null = null
-
-  get onSelectedShapes () { return this.selectedShapes.onSelectedShapes }
-  set onSelectedShapes (value: (() => void) | null) { this.selectedShapes.onSelectedShapes = value }
-
+  
+  get onSelectedShapes () { return this.shapes.selecteds.onSelectedShapes }
+  set onSelectedShapes (value: (() => void) | null) { this.shapes.selecteds.onSelectedShapes = value }
   get onShapesChanged () { return this.shapes.onShapesChanged }
   set onShapesChanged (value: (() => void) | null) { this.shapes.onShapesChanged = value }
 
-  createDrawingRectangle (pos: Point) {
-    const shape = new RectangleShape(pos, this.shapeDrawStyle.clone())
-    this.drawingShape = shape
-    this.stateChanged()
-    return shape
-  }
-
-  createDrawingPolygon (start: Point, end: Point) { 
-    const shape = new PolygonShape(start, end, this.shapeDrawStyle.clone())
-    this.drawingShape = shape
-    this.stateChanged()
-    return shape
-  }
-
-  applyDrawingShape () {
-    if (!this.drawingShape) return
-    this.shapes.add(this.drawingShape)
-    this.drawingShape = null
-    this.stateChanged()
-  }
-
-  deleteShape (shape: Shape) {
-    this.selectedShapes.delete(shape)
-    this.shapes.delete(shape)
-  }
-
-  changeTool (name: VectorEditorTools) {
-    this.currentTool = this.toolFactory.create(name)
-    this.onToolChanged?.()
-  }
-
-  stateChanged () {
+  stateChanged (reason?: string) {
     this.onStateChanged?.()
-    //console.log('stateChanged')
   }
-  
+
+  //sendCommand (command: Command) {
+  //  command.execute(this)
+  //  this.commandHistory.push(command)
+  //}
 }

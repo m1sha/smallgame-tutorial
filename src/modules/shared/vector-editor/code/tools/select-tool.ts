@@ -7,7 +7,7 @@ export class SelectTool extends Tool {
   input (ev: GameEvent) {
     if (ev.type === 'MOUSEDOWN') {
       const pos = this.toLocalPoint(ev.pos)
-      this.state.selectedShapes.select(pos, ev.ctrlKey)
+      this.state.shapes.selecteds.select(pos, ev.ctrlKey)
     }
   } 
 }

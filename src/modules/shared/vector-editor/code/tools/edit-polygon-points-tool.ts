@@ -8,7 +8,7 @@ export class EditPolygonPointTool extends Tool {
   
   
   input (ev: GameEvent) {
-    const polygon = this.state.selectedShapes.items[0]
+    const polygon = this.state.shapes.selecteds.all()[0]
     if (!isPolygonShape(polygon)) return
     
     if (ev.type === 'MOUSEDOWN') {

@@ -14,6 +14,10 @@ export class SelectedShapes {
 
   get count () { return this.items.length }
 
+  all () {
+    return this.items
+  }
+
   select (pos: Point, accumulate = false) {
     if (!accumulate) this.items = []
     for (let i = this.state.shapes.count - 1; i >= 0; i--) {

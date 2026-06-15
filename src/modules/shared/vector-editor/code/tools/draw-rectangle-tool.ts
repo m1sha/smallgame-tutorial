@@ -12,7 +12,7 @@ export class DrawRectangleTool extends Tool {
     if (ev.type === 'MOUSEDOWN') {
       const pos = this.toLocalPoint(ev.pos)
       this.sp.moveSelf(pos)
-      this.shape = this.state.createDrawingRectangle(pos)
+      this.shape = this.state.shapes.createDrawingRectangle(pos)
     }
 
     if (ev.type === 'MOUSEMOVE') {
@@ -23,9 +23,7 @@ export class DrawRectangleTool extends Tool {
     }
 
     if (ev.type === 'MOUSEUP' || ev.type === 'MOUSELEAVE') {
-      this.state.applyDrawingShape()
+      this.state.shapes.applyDrawingShape()
     }
-
-    
   } 
 }

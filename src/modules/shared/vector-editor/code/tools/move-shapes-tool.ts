@@ -10,12 +10,13 @@ export class MoveShapesTool extends Tool {
     if (ev.type === 'MOUSEDOWN') {
       const pos = this.toLocalPoint(ev.pos)
       const shapes = this.state.shapes.getByHittest(pos, true)
+      const selecteds = this.state.shapes.selecteds
 
-      if (  shapes.length > 0) {
-        this.state.selectedShapes.attachToSelected(shapes[0], ev.ctrlKey)
+      if (shapes.length > 0) {
+        selecteds.attachToSelected(shapes[0], ev.ctrlKey)
       }
 
-      this.state.selectedShapes.forEach(shape => {
+      selecteds.forEach(shape => {
         this.canMove = shape.pointIn(pos)
         if (this.canMove) return false
       })
@@ -23,7 +24,8 @@ export class MoveShapesTool extends Tool {
 
     if (ev.type === 'MOUSEMOVE') { 
       if (this.canMove && ev.lbc) {
-        this.state.selectedShapes.forEach(shape => {
+        const selecteds = this.state.shapes.selecteds
+        selecteds.forEach(shape => {
           shape.shift(ev.shift)
         })
         this.state.stateChanged()

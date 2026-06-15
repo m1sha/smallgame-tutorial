@@ -14,7 +14,7 @@ export class EditPolygon implements IContent {
     panel.radioGroup([
       { name: 'edit-polygon-points', title: 'Edit Vertext', icon: 'material-symbols-outlined vertex'},
       { name: 'edit-polygon-edges', title: 'Edit Edges', icon: 'material-symbols-outlined edges'}
-    ], state.currentTool.name)
+    ], state.tools.currentName)
     panel.hide()
     this.radioGroup = panel.getControlByType(RadioGroup)[0]
   }
@@ -22,7 +22,7 @@ export class EditPolygon implements IContent {
   update () { 
     this.checkVisible()
 
-    const toolName = this.state.currentTool.name
+    const toolName = this.state.tools.currentName
     this.radioGroup.defaultValue = toolName
     //const tools = ['edit-polygon-points', 'edit-polygon-points']
     //tools.includes(toolName) 
@@ -31,7 +31,7 @@ export class EditPolygon implements IContent {
   }
 
   private checkVisible () {
-    const selecteds = this.state.selectedShapes
+    const selecteds = this.state.shapes.selecteds
     if (selecteds.count > 0 && selecteds.items[0].type === 'polygon')
     {
       this.editPoints.value = selecteds.items[0].editPoints
@@ -43,10 +43,10 @@ export class EditPolygon implements IContent {
   }
 
   private seteditPoints (value: boolean) {
-    const selecteds = this.state.selectedShapes
+    const selecteds = this.state.shapes.selecteds
     if (selecteds.count > 0 && selecteds.items[0].type === 'polygon'){
       this.editPoints.value = selecteds.items[0].editPoints = value
-      this.state.changeTool(value ? 'edit-polygon-points' : 'select')
+      this.state.tools.changeTool(value ? 'edit-polygon-points' : 'select')
     }
   }
 }

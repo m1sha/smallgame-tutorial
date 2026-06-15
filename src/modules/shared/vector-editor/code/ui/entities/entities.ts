@@ -10,15 +10,15 @@ export class Entities  {
     this.shapeList = entitiesBulder.addList<Shape>(shape => ({ caption: shape.type }))
     this.shapeList.onSelect = shape => {
       //state.changeTool('select')
-      state.selectedShapes.attachToSelected(shape, true)
+      state.shapes.selecteds.attachToSelected(shape, true)
     }
     this.shapeList.onDelete = shape => {
-      state.deleteShape(shape)
+      state.shapes.delete(shape)
     }
   }
 
   select () {
-    this.shapeList.select(this.state.selectedShapes.items as Shape[])
+    this.shapeList.select(this.state.shapes.selecteds.all() as Shape[])
   }
 
   update () {

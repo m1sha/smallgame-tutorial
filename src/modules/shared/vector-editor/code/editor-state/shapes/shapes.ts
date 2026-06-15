@@ -1,9 +1,20 @@
-import { Point } from "smallgame"
+import { Point, ShapeStyle } from "smallgame"
 import { Shape } from "./shape"
 import { removeItem } from "smallgame/src/utils"
+import { EditorState } from "../editor-state"
+import { SelectedShapes } from "../selected-shapes"
+import { RectangleShape } from "./rectangle"
+import { PolygonShape } from "./polygon"
 
 export class Shapes {
   items: Shape[] = []
+  selecteds: SelectedShapes
+  drawingShape: Shape | null = null
+  drawStyle: ShapeStyle = new ShapeStyle({ stroke: '#ddd' })
+
+  constructor (state: EditorState) {
+    this.selecteds = new SelectedShapes(state)
+  }
 
   onShapesChanged:  (() => void) | null = null
 
@@ -21,7 +32,28 @@ export class Shapes {
     return result
   }
 
+  createDrawingRectangle (pos: Point) {
+    const shape = new RectangleShape(pos, this.drawStyle.clone())
+    this.drawingShape = shape
+    this.onShapesChanged?.()
+    return shape
+  }
+
+  createDrawingPolygon (start: Point, end: Point) { 
+    const shape = new PolygonShape(start, end, this.drawStyle.clone())
+    this.drawingShape = shape
+    this.onShapesChanged?.()
+    return shape
+  }
+  
+  applyDrawingShape () {
+    if (!this.drawingShape) return
+    this.add(this.drawingShape)
+    this.drawingShape = null
+  }
+
   delete (shape: Shape) {
+    this.selecteds.delete(shape)
     removeItem(this.items, p => p === shape)
     this.onShapesChanged?.()
   }

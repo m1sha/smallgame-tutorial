@@ -12,18 +12,18 @@ export class DrawPolygonTool extends Tool {
     if (ev.type === 'MOUSEDOWN') {
       const pos = this.toLocalPoint(ev.pos)
       this.sp.moveSelf(pos)
-      this.shape = this.state.createDrawingPolygon(pos, pos)
+      this.shape = this.state.shapes.createDrawingPolygon(pos, pos)
     }
 
     if (ev.type === 'MOUSEMOVE') {
       if (ev.lbc && this.shape) {
         const pos = this.toLocalPoint(ev.pos)
-        this.shape = this.state.createDrawingPolygon(this.sp,  pos)
+        this.shape = this.state.shapes.createDrawingPolygon(this.sp,  pos)
       }
     }
 
     if (ev.type === 'MOUSEUP' || ev.type === 'MOUSELEAVE') {
-      this.state.applyDrawingShape()
+      this.state.shapes.applyDrawingShape()
     }
   } 
 }

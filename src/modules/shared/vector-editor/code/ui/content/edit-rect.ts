@@ -31,7 +31,7 @@ export class EditRect implements IContent {
   }
 
   private checkVisible () {
-    const selecteds = this.state.selectedShapes
+    const selecteds = this.state.shapes.selecteds
     if (selecteds.count > 0 && selecteds.items[0].type === 'rectangle')
     {
       this.panel.show()
@@ -47,7 +47,7 @@ export class EditRect implements IContent {
   }
 
   private changeValue (type: 'x' | 'y' | 'w' | 'h', value: number) {
-    const selecteds = this.state.selectedShapes
+    const selecteds = this.state.shapes.selecteds
     selecteds.forEach(shape => {
       if (shape.type !== 'rectangle') return
       switch (type) {

@@ -3,7 +3,6 @@ import { EntityListBuilder, UIBuilder } from "../../../../components/example"
 import { EditorState } from "./editor-state"
 import { Renderer } from "./renderer"
 import { createUI, UI } from "./ui"
-import { Shape } from "./editor-state/shapes"
 import { Entities } from "./ui/entities"
 
 export class VectorEditor {
@@ -17,7 +16,7 @@ export class VectorEditor {
     this.state = new EditorState()
     this.state.offset = surface.rect.topLeft
    
-    this.state.changeTool('select')
+    this.state.tools.changeTool('select')
     this.renderer = new Renderer(this.state)
 
     this.state.onSelectedShapes = () => {
@@ -25,11 +24,7 @@ export class VectorEditor {
       this._entities.select()
       this.renderer.update()
     }
-
-    this.state.onToolChanged = () => {
-      this._ui?.update()
-      this.renderer.update()
-    }
+   
 
     this.state.onStateChanged = () => {
       this._ui?.update()
@@ -43,29 +38,29 @@ export class VectorEditor {
   }
 
   input (ev: GameEvent) {
-    this.state.currentTool.input(ev)
+    this.state.tools.current.input(ev)
   }
   
   keyPressed (keys: Keys) {
     
-    if (this.state.currentTool.keyPressed(keys) === false) {
+    if (this.state.tools.current.keyPressed(keys) === false) {
       return
     }
 
     const pressed = keys.getPressed()
     
     if (pressed[Key.K_1]) {
-      this.state.changeTool('select')
+      this.state.tools.changeTool('select')
     }
     if (pressed[Key.K_2]) {
-      this.state.changeTool('move-shapes')
+      this.state.tools.changeTool('move-shapes')
     }
     if (pressed[Key.K_3]) {
       debugger
-      this.state.changeTool('draw-rectangle')
+      this.state.tools.changeTool('draw-rectangle')
     }
     if (pressed[Key.K_4]) {
-      this.state.changeTool('draw-polygon')
+      this.state.tools.changeTool('draw-polygon')
     }
   }
 

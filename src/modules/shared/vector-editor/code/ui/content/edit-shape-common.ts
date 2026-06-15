@@ -26,23 +26,23 @@ export class EditShapeCommon implements IContent  {
   }
 
   private changeFill (color: string) {
-    for (const shape of this.state.selectedShapes.items) {
+    for (const shape of this.state.shapes.selecteds.all()) {
       shape.style.fill = color
     }
     this.state.stateChanged()
   }
 
   private changeStroke (color: string) {
-    for (const shape of this.state.selectedShapes.items) {
+    for (const shape of this.state.shapes.selecteds.all()) {
       shape.style.stroke = color
     }
     this.state.stateChanged()
   }
 
   private checkPanelVisible () {
-    if (this.state.currentTool.name === 'select') {
-      if (this.state.selectedShapes.count > 0) {
-        const style = this.state.selectedShapes.items[0].style
+    if (this.state.tools.currentName === 'select') {
+      if (this.state.shapes.selecteds.count > 0) {
+        const style = this.state.shapes.selecteds.all()[0].style
         this.shapeStyleStroke.value = style.stroke.toString()
         this.shapeStyleFill.value = style.fill.toString()
         this.panel.show()
