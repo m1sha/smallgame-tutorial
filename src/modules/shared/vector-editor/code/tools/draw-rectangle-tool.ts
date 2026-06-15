@@ -2,11 +2,13 @@ import { GameEvent, Point, Rect } from "smallgame"
 import { Tool } from "./tool"
 import { RectangleShape } from "../editor-state/shapes"
 import { VectorEditorTools } from "./tool-types"
+import { CreateRectangleCommand } from "../commands"
 
 export class DrawRectangleTool extends Tool {
   readonly name: VectorEditorTools = 'draw-rectangle'
   private shape: RectangleShape | null = null
   private sp = Point.zero
+  
   input (ev: GameEvent) {
     
     if (ev.type === 'MOUSEDOWN') {
@@ -23,7 +25,8 @@ export class DrawRectangleTool extends Tool {
     }
 
     if (ev.type === 'MOUSEUP' || ev.type === 'MOUSELEAVE') {
-      this.state.shapes.applyDrawingShape()
+      this.state.sendCommand(new CreateRectangleCommand())
+      
     }
   } 
 }

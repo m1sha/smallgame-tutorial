@@ -46,7 +46,7 @@ export class EditPolygon implements IContent {
     const selecteds = this.state.shapes.selecteds
     if (selecteds.count > 0 && selecteds.items[0].type === 'polygon'){
       this.editPoints.value = selecteds.items[0].editPoints = value
-      this.state.tools.changeTool(value ? 'edit-polygon-points' : 'select')
+      this.state.tools.changeTool(value ? 'edit-polygon-points' : 'move-shapes')
     }
   }
 }

@@ -64,4 +64,12 @@ export class Shapes {
     this.items.push(shape)
     this.state.stateChanged('shapes', 'created')
   }
+
+  shift (shift: Point) {
+    const selecteds = this.state.shapes.selecteds
+    selecteds.forEach(shape => {
+      shape.shift(shift)
+    })
+    this.state.stateChanged('shapes', 'moved')
+  }
 }

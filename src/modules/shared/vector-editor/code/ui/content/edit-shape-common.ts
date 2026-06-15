@@ -40,7 +40,7 @@ export class EditShapeCommon implements IContent  {
   }
 
   private checkPanelVisible () {
-    if (this.state.tools.currentName === 'select') {
+    if (this.state.tools.currentName === 'move-shapes') {
       if (this.state.shapes.selecteds.count > 0) {
         const style = this.state.shapes.selecteds.all()[0].style
         this.shapeStyleStroke.value = style.stroke.toString()

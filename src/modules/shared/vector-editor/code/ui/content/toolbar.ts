@@ -11,7 +11,6 @@ export class Toolbar implements IContent {
     this.selectedTool = state.tools.currentName
     
     panel.radioGroup([
-      { icon: 'fa fa-arrow-pointer', title: 'Select', name: 'select' },
       { icon: 'fa fa-arrows-up-down-left-right', title: 'Select', name: 'move-shapes' },
       { icon: 'fa fa-square', title: 'Select', name: 'draw-rectangle' },
       { icon: 'fa fa-draw-polygon', title: 'Select', name: 'draw-polygon' },
@@ -24,7 +23,7 @@ export class Toolbar implements IContent {
   update () {
     const toolName = this.state.tools.currentName
     this.radioGroup.defaultValue = toolName
-    const tools = ['select', 'move-shapes', 'draw-rectangle', 'draw-polygon']
+    const tools = ['move-shapes', 'draw-rectangle', 'draw-polygon']
     tools.includes(toolName) 
       ? this.panel.show() 
       : this.panel.hide()

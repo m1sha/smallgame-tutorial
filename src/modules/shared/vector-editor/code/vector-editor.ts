@@ -16,7 +16,7 @@ export class VectorEditor {
     this.state = new EditorState()
     this.state.offset = surface.rect.topLeft
    
-    this.state.tools.changeTool('select')
+    this.state.tools.changeTool('move-shapes')
     this.renderer = new Renderer(this.state)
 
     this.state.onStateChanged = (source, reason) => {
@@ -47,15 +47,12 @@ export class VectorEditor {
     const pressed = keys.getPressed()
     
     if (pressed[Key.K_1]) {
-      this.state.tools.changeTool('select')
-    }
-    if (pressed[Key.K_2]) {
       this.state.tools.changeTool('move-shapes')
     }
-    if (pressed[Key.K_3]) {
+    if (pressed[Key.K_2]) {
       this.state.tools.changeTool('draw-rectangle')
     }
-    if (pressed[Key.K_4]) {
+    if (pressed[Key.K_3]) {
       this.state.tools.changeTool('draw-polygon')
     }
   }

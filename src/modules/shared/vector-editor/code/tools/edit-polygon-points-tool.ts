@@ -25,7 +25,7 @@ export class EditPolygonPointTool extends Tool {
       polygon.setActiveSegment(null)
       polygon.setActivePoint(null)
 
-      if (ev.ctrlKey) {
+      if (ev.shiftKey) {
         polygon.setActiveSegment(segment)
         polygon.setActivePoint(point)
       }
@@ -40,7 +40,7 @@ export class EditPolygonPointTool extends Tool {
     if (ev.type === 'MOUSEUP' || ev.type === 'MOUSELEAVE') {
       const pos = this.toLocalPoint(ev.pos)
       const { segmentIndex } = polygon.getActiveSegmentAndPoint(pos)
-      if (polygon.activePoint && segmentIndex >= 0 && ev.ctrlKey) {
+      if (polygon.activePoint && segmentIndex >= 0 && ev.shiftKey) {
         polygon.addPoint(segmentIndex)
         this.state.stateChanged('polygon')
       }

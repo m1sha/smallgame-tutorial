@@ -2,6 +2,7 @@ import { GameEvent, Point, Rect } from "smallgame"
 import { Tool } from "./tool"
 import { PolygonShape } from "../editor-state/shapes"
 import { VectorEditorTools } from "./tool-types"
+import { CreatePolygonCommand } from "../commands"
 
 export class DrawPolygonTool extends Tool {
   readonly name: VectorEditorTools = 'draw-polygon'
@@ -23,7 +24,7 @@ export class DrawPolygonTool extends Tool {
     }
 
     if (ev.type === 'MOUSEUP' || ev.type === 'MOUSELEAVE') {
-      this.state.shapes.applyDrawingShape()
+      this.state.sendCommand(new CreatePolygonCommand())
     }
   } 
 }
