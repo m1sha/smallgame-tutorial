@@ -1,14 +1,13 @@
 import { Point } from "smallgame"
 import { Shape } from "../shapes"
 import { removeItem } from "../../../../../games/old-tv/utils"
-import { Shapes } from "../shapes/shapes"
+
+import { EditorState } from "../editor-state"
 
 export class SelectedShapes {
   items: Shape[] = []
 
-  onSelectedShapes: (() => void) | null = null
-
-  constructor (private state: { shapes: Shapes }) {
+  constructor (private state: EditorState) {
 
   }
 
@@ -33,19 +32,19 @@ export class SelectedShapes {
       }
     }
 
-    this.onSelectedShapes()
+    this.state.stateChanged('shapes', 'selected')
   }
 
   attachToSelected (shape: Shape, removeExist: boolean = false) {
     if (this.items.some(p => p === shape)) {
       if (removeExist) {
         removeItem(this.items, p => p === shape)
-        this.onSelectedShapes()
+        this.state.stateChanged('shapes', 'selected')
       }
       return
     }
     this.items.push(shape)
-    this.onSelectedShapes()
+    this.state.stateChanged('shapes', 'selected')
   }
 
   forEach (callback: (shape: Shape, index: number, array: Shape[]) => boolean | void) {

@@ -28,7 +28,7 @@ export class MoveShapesTool extends Tool {
         selecteds.forEach(shape => {
           shape.shift(ev.shift)
         })
-        this.state.stateChanged()
+        this.state.stateChanged('shapes', 'moved')
       }
     }
 

@@ -10,7 +10,7 @@ export function loadState (state: EditorState, file: File) {
     const lines = content.toString().replaceAll('\r', '').split('\n')
     if (lines[0] !== '@ve_1.0') throw Error('File is not Vector Editor format!')
     parse (state, lines)
-    state.stateChanged()
+    state.stateChanged('shapes', 'created')
   }
   reader.readAsText(file)
 

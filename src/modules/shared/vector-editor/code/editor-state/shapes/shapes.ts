@@ -12,11 +12,11 @@ export class Shapes {
   drawingShape: Shape | null = null
   drawStyle: ShapeStyle = new ShapeStyle({ stroke: '#ddd' })
 
-  constructor (state: EditorState) {
+  constructor (private state: EditorState) {
     this.selecteds = new SelectedShapes(state)
   }
 
-  onShapesChanged:  (() => void) | null = null
+  //onShapesChanged:  (() => void) | null = null
 
   getByHittest (pos: Point, onlyOne: boolean = false): Shape[] {
     const result = []
@@ -35,14 +35,14 @@ export class Shapes {
   createDrawingRectangle (pos: Point) {
     const shape = new RectangleShape(pos, this.drawStyle.clone())
     this.drawingShape = shape
-    this.onShapesChanged?.()
+    this.state.stateChanged('shapes', 'drawing')
     return shape
   }
 
   createDrawingPolygon (start: Point, end: Point) { 
     const shape = new PolygonShape(start, end, this.drawStyle.clone())
     this.drawingShape = shape
-    this.onShapesChanged?.()
+    this.state.stateChanged('shapes', 'drawing')
     return shape
   }
   
@@ -55,13 +55,13 @@ export class Shapes {
   delete (shape: Shape) {
     this.selecteds.delete(shape)
     removeItem(this.items, p => p === shape)
-    this.onShapesChanged?.()
+    this.state.stateChanged('shapes', 'deleted')
   }
 
   get count () { return this.items.length }
 
   add (shape: Shape) {
     this.items.push(shape)
-    this.onShapesChanged?.()
+    this.state.stateChanged('shapes', 'created')
   }
 }

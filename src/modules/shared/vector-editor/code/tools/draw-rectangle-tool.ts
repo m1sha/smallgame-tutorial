@@ -18,7 +18,7 @@ export class DrawRectangleTool extends Tool {
     if (ev.type === 'MOUSEMOVE') {
       if (ev.lbc && this.shape) {
         this.shape.rect = Rect.fromTwoPoints(this.sp,  this.toLocalPoint(ev.pos))
-        this.state.stateChanged()
+        this.state.stateChanged('shapes', 'drawing')
       }
     }
 

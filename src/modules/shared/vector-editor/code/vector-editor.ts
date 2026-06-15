@@ -19,21 +19,18 @@ export class VectorEditor {
     this.state.tools.changeTool('select')
     this.renderer = new Renderer(this.state)
 
-    this.state.onSelectedShapes = () => {
-      this._ui?.update()
-      this._entities.select()
-      this.renderer.update()
-    }
-   
-
-    this.state.onStateChanged = () => {
+    this.state.onStateChanged = (source, reason) => {
       this._ui?.update()
       this.renderer.update()
-    }
 
-    this.state.onShapesChanged = () => {
-      this._entities.update()
-      this.renderer.update()
+      if (source === 'shapes') {
+        if (['created', 'deleted'].includes(reason)) {
+          this._entities.update()
+        }
+        if (['selected'].includes(reason)) {
+          this._entities.select()
+        }
+      }
     }
   }
 
@@ -56,7 +53,6 @@ export class VectorEditor {
       this.state.tools.changeTool('move-shapes')
     }
     if (pressed[Key.K_3]) {
-      debugger
       this.state.tools.changeTool('draw-rectangle')
     }
     if (pressed[Key.K_4]) {
@@ -72,7 +68,5 @@ export class VectorEditor {
   ui (uiBuilder: UIBuilder, entities: EntityListBuilder) {
     this._ui = createUI(uiBuilder, this.state, this as any as { useEditor: boolean })
     this._entities = new Entities(entities, this.state)
-    
-    //list.add
   }
 }

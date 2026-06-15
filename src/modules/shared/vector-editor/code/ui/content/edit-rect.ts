@@ -56,7 +56,7 @@ export class EditRect implements IContent {
         case 'w': shape.rect.width = value; break
         case 'h': shape.rect.height = value; break
       }
-      this.state.stateChanged()
+      this.state.stateChanged('shapes', 'changed')
     })
   }
 }

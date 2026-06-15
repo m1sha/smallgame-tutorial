@@ -15,7 +15,7 @@ export class EditPolygonPointTool extends Tool {
       const pos = this.toLocalPoint(ev.pos)
       const point = polygon.getHittestPoint(pos)
       polygon.selectPoint(point, ev.ctrlKey)
-      this.state.stateChanged()
+      this.state.stateChanged('polygon')
     }
 
     if (ev.type === 'MOUSEMOVE') {
@@ -34,7 +34,7 @@ export class EditPolygonPointTool extends Tool {
         polygon.shiftPoints(ev.shift)
         
       }
-      this.state.stateChanged()
+      this.state.stateChanged('polygon')
     }
 
     if (ev.type === 'MOUSEUP' || ev.type === 'MOUSELEAVE') {
@@ -42,7 +42,7 @@ export class EditPolygonPointTool extends Tool {
       const { segmentIndex } = polygon.getActiveSegmentAndPoint(pos)
       if (polygon.activePoint && segmentIndex >= 0 && ev.ctrlKey) {
         polygon.addPoint(segmentIndex)
-        this.state.stateChanged()
+        this.state.stateChanged('polygon')
       }
     }
   } 

@@ -1,0 +1,1 @@
+export type StateChangeSource = 'shapes' | 'tools' | 'polygon'

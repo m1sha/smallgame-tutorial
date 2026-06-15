@@ -15,6 +15,6 @@ export class Tools {
 
   changeTool (name: VectorEditorTools) {
     this.current = this.toolFactory.create(name)
-    this.state.stateChanged()
+    this.state.stateChanged('tools', 'changed')
   }
 }

@@ -29,14 +29,14 @@ export class EditShapeCommon implements IContent  {
     for (const shape of this.state.shapes.selecteds.all()) {
       shape.style.fill = color
     }
-    this.state.stateChanged()
+    this.state.stateChanged('shapes', 'changed-style')
   }
 
   private changeStroke (color: string) {
     for (const shape of this.state.shapes.selecteds.all()) {
       shape.style.stroke = color
     }
-    this.state.stateChanged()
+    this.state.stateChanged('shapes', 'changed-style')
   }
 
   private checkPanelVisible () {
