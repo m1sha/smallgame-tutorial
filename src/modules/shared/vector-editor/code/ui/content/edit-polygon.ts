@@ -30,6 +30,10 @@ export class EditPolygon implements IContent {
     //  : this.panel.hide()
   }
 
+  setVisible (value: boolean) {
+    value ? this.panel.show() : this.panel.hide()
+  }
+
   private checkVisible () {
     const selecteds = this.state.shapes.selecteds
     if (selecteds.count > 0 && selecteds.items[0].type === 'polygon')

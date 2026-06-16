@@ -15,6 +15,10 @@ export class CreateShapeCommon implements IContent  {
     ? this.panel.show()
     : this.panel.hide()
   }
+  
+  setVisible (value: boolean) {
+    value ? this.panel.show() : this.panel.hide()
+  }
 
   private get drawStyle () { return this.state.shapes.drawStyle }
 }

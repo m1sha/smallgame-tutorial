@@ -21,6 +21,10 @@ export class EditShapeCommon implements IContent  {
     this.checkPanelVisible()
   }
   
+  setVisible (value: boolean) {
+    value ? this.panel.show() : this.panel.hide()
+  }
+  
   updateSelectedShapes () {
     this.checkPanelVisible()
   }

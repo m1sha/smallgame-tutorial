@@ -1,5 +1,7 @@
 import { RadioGroup, Toolbar as CToolbar, Panel, Button } from "../../../../../../components/example/code/ui/controls"
 import { EditorState } from "../../editor-state"
+import { loadState } from "../../editor-state/data/load"
+import { save } from "../../editor-state/data/save"
 import { VectorEditorTools } from "../../tools"
 import { IContent } from "./content"
 
@@ -13,6 +15,8 @@ export class Toolbar implements IContent {
     panel.toolbar(toolbar => {
       toolbar.button('Undo', () => { state.undo() }, { icon: 'undo' })
       toolbar.button('Redo', () => { state.redo() }, { icon: 'redo' })
+      toolbar.button('Save', () => { save(this.state) }, { icon: 'save' })
+      toolbar.upload('Open',  file => loadState(this.state, file), { icon: 'upload' })
     })
     
     panel.radioGroup([
@@ -23,6 +27,10 @@ export class Toolbar implements IContent {
     
     //panel.expand()
     this.radioGroup = panel.getControlByType(RadioGroup)[0]
+  }
+  
+  setVisible (value: boolean) {
+    value ? this.panel.show() : this.panel.hide()
   }
 
   update () {

@@ -5,18 +5,18 @@ import { save } from "../editor-state/data/save"
 import { loadState } from "../editor-state/data/load"
 import { CreateShapeCommon, EditPolygon, EditRect, EditShapeCommon, IContent, Toolbar } from "./content"
 
-export function createUI (uiBuilder: UIBuilder, state: EditorState, editor: { useEditor: boolean }) {
-  return new UI(uiBuilder, state, editor)
+export function createUI (uiBuilder: UIBuilder, state: EditorState) {
+  return new UI(uiBuilder, state)
 }
 
 export class UI {
   private editorGroup: Group
   private contents: IContent[]
 
-  constructor (uiBuilder: UIBuilder, private state: EditorState, editor: { useEditor: boolean }) {
+  constructor (uiBuilder: UIBuilder, private state: EditorState) {
     this.editorGroup = uiBuilder.group('Editor')
     this.editorGroup.expand()
-    this.editorGroup.switch('Edit Mode', val =>  editor.useEditor = val, editor.useEditor)
+    this.editorGroup.switch('Edit Mode', val =>  { state.useEditor = val; this.update() }, state.useEditor)
     const root = this.editorGroup
 
     this.contents = [
@@ -27,11 +27,18 @@ export class UI {
       new EditPolygon(root.group('Polygon'), state)
     ]
  
-    this.createSavePorjectControls()
+    //this.createSavePorjectControls()
   }
 
   update () {
-    this.contents.forEach(c => c.update())
+    if (!this.state.useEditor) {
+      this.contents.forEach(c => c.setVisible(false))  
+      return
+    }
+    this.contents.forEach(c => {
+      c.setVisible(true)
+      c.update()
+    })
   }
    
   private createSavePorjectControls () {

@@ -6,7 +6,6 @@ import { createUI, UI } from "./ui"
 import { Entities } from "./ui/entities"
 
 export class VectorEditor {
-  protected useEditor: boolean = true
   private state: EditorState
   private renderer: Renderer
   private _ui: UI
@@ -34,11 +33,17 @@ export class VectorEditor {
     }
   }
 
+  useEditor (value: boolean) {
+    this.state.useEditor = value
+  }
+
   input (ev: GameEvent) {
+    if (!this.state.useEditor) return
     this.state.tools.current.input(ev)
   }
   
   keyPressed (keys: Keys) {
+    if (!this.state.useEditor) return
     
     if (this.state.tools.current.keyPressed(keys) === false) {
       return
@@ -63,7 +68,7 @@ export class VectorEditor {
   }
   
   ui (uiBuilder: UIBuilder, entities: EntityListBuilder) {
-    this._ui = createUI(uiBuilder, this.state, this as any as { useEditor: boolean })
+    this._ui = createUI(uiBuilder, this.state)
     this._ui.update()
     this._entities = new Entities(entities, this.state)
   }

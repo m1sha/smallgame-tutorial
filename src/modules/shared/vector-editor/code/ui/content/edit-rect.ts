@@ -30,6 +30,10 @@ export class EditRect implements IContent {
     this.checkVisible()
   }
 
+  setVisible (value: boolean) {
+    value ? this.panel.show() : this.panel.hide()
+  }
+
   private checkVisible () {
     const selecteds = this.state.shapes.selecteds
     if (selecteds.count > 0 && selecteds.items[0].type === 'rectangle')

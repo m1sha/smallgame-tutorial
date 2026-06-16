@@ -12,6 +12,8 @@ export default async ({ container, containerSize, fps, builders }: ScriptSetting
 
   const editor = new VectorEditor(surface)
 
+  //editor.useEditor(false)
+
   viewer.onInput = ev => {
     editor.input(ev)
   }
