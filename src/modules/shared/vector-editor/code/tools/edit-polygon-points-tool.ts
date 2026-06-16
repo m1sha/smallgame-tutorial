@@ -14,7 +14,12 @@ export class EditPolygonPointTool extends Tool {
     if (ev.type === 'MOUSEDOWN') {
       const pos = this.toLocalPoint(ev.pos)
       const point = polygon.getHittestPoint(pos)
-      polygon.selectPoint(point, ev.ctrlKey)
+      if (ev.altKey) {
+        polygon.deletePoint(point)
+      } else {
+        polygon.selectPoint(point, ev.ctrlKey)
+      }
+      
       this.state.stateChanged('polygon')
     }
 

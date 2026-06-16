@@ -1,7 +1,7 @@
 import { Point, Sketch, Splines, Time } from "smallgame"
 import { displayFps } from "../../../../../utils/display-fps"
 import { type ScriptModule, type ScriptSettings } from "../../../../../components/example"
-import { easeOutBounce } from "../movements/func"
+import { easeInBounce, easeOutBounce, easeOutSine } from "../movements/func"
 import { Viewer } from "../../../../shared"
 
 export default async ({ container, containerSize, fps, builders }: ScriptSettings): Promise<ScriptModule> => {
@@ -21,7 +21,7 @@ export default async ({ container, containerSize, fps, builders }: ScriptSetting
     }
   }
   viewer.onFrameChanged = (surface => {
-    const c = Splines.cubicBezier(a, b, cp1, cp2, easeOutBounce(t))
+    const c = Splines.cubicBezier(a, b, cp1, cp2, easeInBounce(t))
     
     if (t < 1) {
       t += 0.2 * Time.deltaTime

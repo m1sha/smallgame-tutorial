@@ -1,5 +1,6 @@
 import { MemSurface, Rect, Sketch, Surface } from "smallgame";
 import { EditorState } from "../editor-state";
+import { Shape } from "../editor-state/shapes";
 
 export class Renderer {
   constructor (protected state: EditorState) {}
@@ -51,7 +52,9 @@ export class Renderer {
   private drawSelectedShapes (frame: Surface) {
     const sketch = new Sketch()
     const size = 5
-    sketch.defineStyle('dotcolor', { stroke: '#eee' })
+    sketch.defineStyle('dotcolor', { stroke: '#eee', fill: '#fff' })
+    sketch.defineStyle('dotcolor-hover', { stroke: '#eee', fill: '#08cf4a' })
+    sketch.defineStyle('dotcolor-seleted', { stroke: '#06832b', fill: '#098031' })
     
     this.state.shapes.selecteds.forEach(shape => {
       if (shape.type === 'polygon' && shape.editPoints) { 
@@ -66,16 +69,24 @@ export class Renderer {
       }
 
       const rect = shape.bounds
-      sketch.rect({ stroke: '#4d9c75', lineDash: [3,5] }, rect)
-      sketch.rect('dotcolor', Rect.fromCenter(rect.topLeft, size, size))
-      sketch.rect('dotcolor', Rect.fromCenter(rect.midTop, size, size))
-      sketch.rect('dotcolor', Rect.fromCenter(rect.topRight, size, size))
-      sketch.rect('dotcolor', Rect.fromCenter(rect.midLeft, size, size))
-      sketch.rect('dotcolor', Rect.fromCenter(rect.midRight, size, size))
-      sketch.rect('dotcolor', Rect.fromCenter(rect.bottomLeft, size, size))
-      sketch.rect('dotcolor', Rect.fromCenter(rect.midBottom, size, size))
-      sketch.rect('dotcolor', Rect.fromCenter(rect.bottomRight, size, size))
+      sketch.rect({ stroke: '#e2e2e2', lineDash: [3,5] }, rect)
+      sketch.rect(getDotStyle(shape,'top-left'), Rect.fromCenter(rect.topLeft, size, size))
+      sketch.rect(getDotStyle(shape,'mid-top'), Rect.fromCenter(rect.midTop, size, size))
+      sketch.rect(getDotStyle(shape,'top-right'), Rect.fromCenter(rect.topRight, size, size))
+      sketch.rect(getDotStyle(shape,'mid-left'), Rect.fromCenter(rect.midLeft, size, size))
+      sketch.rect(getDotStyle(shape,'mid-right'), Rect.fromCenter(rect.midRight, size, size))
+      sketch.rect(getDotStyle(shape,'bottom-left'), Rect.fromCenter(rect.bottomLeft, size, size))
+      sketch.rect(getDotStyle(shape,'mid-bottom'), Rect.fromCenter(rect.midBottom, size, size))
+      sketch.rect(getDotStyle(shape,'bottom-right'), Rect.fromCenter(rect.bottomRight, size, size))
     })
     sketch.draw(frame)
   }
+}
+
+function getDotStyle (shape: Shape, corner: string) {
+  if (shape.seletedCorner === corner)
+    return 'dotcolor-seleted'
+  if (shape.hoveredCorner === corner)
+    return 'dotcolor-hover'
+  return 'dotcolor'
 }

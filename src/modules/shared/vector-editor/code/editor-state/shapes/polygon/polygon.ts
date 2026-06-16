@@ -94,6 +94,16 @@ export class PolygonShape extends ShapeBase  {
     this.calcBounds()
   }
 
+  deletePoint (point: Point) {
+    removeItem(this.points, p => p === point)
+    this.calcBounds()
+    this.calcSegments()
+  }
+
+  resizeBySelectedCorner (pos: Point): void {
+    
+  }
+
   private calcBounds () {
     const x = GMath.minX(this.points)
     const w = GMath.maxX(this.points) - x
