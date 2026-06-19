@@ -2,19 +2,24 @@ import { Point, Rect, ShapeStyle } from "smallgame";
 import { EditorState } from "../editor-state";
 import { PolygonShape, RectangleShape } from "../shapes";
 
-export function loadState (state: EditorState, file: File) {
+export async function loadState (state: EditorState, file: File | string) {
+  const content = file instanceof File ? await loadFile(file): file
+  const lines = content.toString().replaceAll('\r', '').split('\n')
+  if (lines[0] !== '@ve_1.0') throw Error('File is not Vector Editor format!')
+  parse (state, lines)
+  state.stateChanged('shapes', 'created')
+}
+
+const loadFile = async (file: File): Promise<string> => new Promise((resolve, reject) => {
   const reader = new FileReader()
   reader.onload = () => {
     const content = reader.result
     if (!content) return
-    const lines = content.toString().replaceAll('\r', '').split('\n')
-    if (lines[0] !== '@ve_1.0') throw Error('File is not Vector Editor format!')
-    parse (state, lines)
-    state.stateChanged('shapes', 'created')
+    resolve(content as string)
   }
   reader.readAsText(file)
+})
 
-}
 
 function parse (state: EditorState, lines: string[]) {
   for (let i = 1; i < lines.length; i++) {

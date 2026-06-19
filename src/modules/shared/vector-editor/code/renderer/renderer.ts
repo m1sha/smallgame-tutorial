@@ -1,10 +1,12 @@
-import { MemSurface, Rect, Sketch, Surface } from "smallgame";
+import { MemSurface, Rect, Size, Sketch, Surface } from "smallgame";
 import { EditorState } from "../editor-state";
 import { Shape } from "../editor-state/shapes";
 
 export class Renderer {
-  constructor (protected state: EditorState) {}
-  surface: MemSurface | null
+  readonly surface: MemSurface 
+  constructor (protected state: EditorState, size: Size) {
+    this.surface = new MemSurface(size)
+  }
 
   render () {
     this.surface.clear()
