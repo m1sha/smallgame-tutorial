@@ -26,6 +26,7 @@ details.control-group
     padding: 0.5em
     font-size: 0.8em
     cursor: pointer
+    background-color: #2b2b2b
 
     &:hover
       background-color: var(--panel-color)
