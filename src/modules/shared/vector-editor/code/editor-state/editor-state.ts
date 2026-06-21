@@ -6,10 +6,19 @@ import { Command, CommandHistory } from "../commands"
 
 export class EditorState {
   private commandHistory: CommandHistory = new CommandHistory(this)
-  useEditor: boolean = true
+  private _useEditor: boolean = true
   offset: Point
   readonly shapes: Shapes = new Shapes(this)
   readonly tools: Tools = new Tools(this)
+
+  get useEditor (): boolean {
+    return this._useEditor
+  }
+
+  set useEditor (v: boolean) {
+    this._useEditor = v
+    this.stateChanged('editor', 'useEditor')
+  }
    
   onStateChanged:  ((source: StateChangeSource, reason: string) => void) | null = null
 

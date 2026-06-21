@@ -4,9 +4,14 @@ import { type ScriptModule, type ScriptSettings } from "../../../../components/e
 import { Key, Rect, Sketch, Time } from "smallgame"
 
 import { Player } from "./player"
+import { VectorEditor } from "../../../shared/vector-editor"
+import { Platforms } from "./platforms"
+import platformsData from "./platforms-data"
 
 export default async ({ container, containerSize, fps, builders }: ScriptSettings): Promise<ScriptModule> => {
   const viewer = new Viewer(containerSize, container, { disableContextMenu: true })
+  const editor = new VectorEditor(viewer.surface)
+  editor.useEditor(false)
 
   const telemetry = builders.telemetry()
   const ui = builders.ui()
@@ -14,84 +19,87 @@ export default async ({ container, containerSize, fps, builders }: ScriptSetting
   const scrCenter = containerSize.half().toPoint()
   const groundRect = Rect.fromCenter(scrCenter, 900, 10).shiftSelf(0, 80)
   const backgroundRect = Rect.size(900, 200).moveSelf(groundRect, 'top-right')
-  const heroRect = Rect.size(28, 72)
-    .moveSelf(groundRect.topLeft, 'top-right').shiftSelf(0, -9)
-  
-
 
   const player = new Player()
   await player.load()
+  player.heroRect
+    .moveSelf(groundRect.topLeft, 'top-right')//.shiftSelf(0, -10)
 
-  const force_recover = telemetry.def('force_recover', 14)
-  let force_i = 0
+  const platforms = new Platforms()
+  editor.onShapesChanged = shapes => {
+    platforms.clear()
+    shapes.forEach(shape => {
+      if (shape.type === 'rectangle')
+        platforms.addPlatform(shape.rect)
+    })
+    player.setPlatforms(platforms)
+  }
   
+  viewer.onInput = ev => {
+    editor.input(ev)
+  }
 
   viewer.onKeyPressed = keys => {
-    keys.sensitivityX = 0.8
+    editor.keyPressed(keys)
+    keys.sensitivityX = player.movementSensitivity
+    keys.frictionX = player.movementFriction
     if ( keys.horizontalAxisRaw  === 0) player.isIdle = true
     else {
       player.isIdle = false
       player.dir = keys.horizontalAxisRaw 
-      
     }
 
     const pressed = keys.getPressed()
 
-    if (pressed[Key.SPACE] && !player.jumping && force_recover.value >= 14) {
-      player.jumping = true
-      force_i = force_recover.value
-      force_recover.value = 0
+    if (pressed[Key.SPACE]) {
+      player.jump()
     }
-    
-    heroRect.shiftSelf(keys.horizontalAxis, 0)
-    //console.log(keys.horizontalAxis)
+    player.move(keys.horizontalAxis)
   }
 
   
- 
-  const hy = heroRect.y
-  let a = 0.2
   viewer.onFrameChanged = surface => {
+    player.action()
+
+    const p_img = player.image
+    p_img.rect.absCenter = player.heroRect.absCenter
+    p_img.rect.shiftSelf(0, -10)
+
     surface.clear()
-
-    if (force_i > 0) {
-      force_i -= 80.5 * Time.deltaTime
-      
-     
-     
-      heroRect.shiftSelf(0, -force_i )
-    }
-
-    if (heroRect.y < hy) {
-      a += a * Time.deltaTime
-      console.log(a)
-      heroRect.shiftSelf(0, a)
-    }
-    else {
-      a = 3
-      player.jumping = false
-    }
-
-    if (force_recover.value < 14 && !player.jumping) {
-      force_recover.value += 40.5 * Time.deltaTime
-    }
-
     Sketch.new()
       .rect({ fill: '#2b2b2b' }, backgroundRect)
       .rect({ fill: '#311e09' }, groundRect)
+      .circle({ fill: '#911' }, player.heroRect.midBottom, 3)
+      .rect({ fill: '#11679928' }, player.heroRect)
       .draw(surface)
-
-    const p_img = player.image
-    p_img.rect.absCenter = heroRect.absCenter
-    player.action()
     surface.blit(p_img, p_img.rect)
-
+    editor.draw(surface)
     displayFps(fps)
   }
 
- 
+  ui.group('Player', gr => {  
+    gr.expand()
+    gr.group('Jump', jgr => jgr
+      .expand()
+      .tracker('Jump Force', 1, 20, .1, val => player.maxJumpForce = val, player.maxJumpForce)
+      .tracker('Expense JF Speed', 1, 180, .1, val => player.expenseJumpForce = val, player.expenseJumpForce)
+      .tracker('Fall Down Acceleration', .125, 6, .1, val => player.maxFallDownAccel = val, player.maxFallDownAccel)
+      .tracker('Recovering JF Speed', 1, 180, .1, val => player.recoveringJumpForce = val, player.recoveringJumpForce)
+    )
+    gr.group('Movement', mgr => mgr
+      .expand()
+      .tracker('Sensitivity', 0.01, 4, 0.01, val => player.movementSensitivity = val, player.movementSensitivity)
+      .tracker('Friction', 0.01, 4, 0.01, val => player.movementFriction = val, player.movementFriction)
+    )
+  })
+
+  const entities = builders.entities()
+  editor.ui(ui, entities)
+  editor.load(platformsData)
+
   return {
     ui: ui.build(),
+    entities: entities.build(),
     telemetry: telemetry.build(),
     dispose () { 
       viewer.remove() 

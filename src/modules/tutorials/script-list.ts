@@ -38,6 +38,7 @@ const scriptList: ScriptDef[] = [
   { name: 'Persecution By Emeny', category: cat5, subCategory: platformer, codeDir: 'ai/concentration-places', module: async (state: any) => (await import('./ai/persecution-by-enemy')).default(state)  },
 
   { name: 'Movement', category: player, subCategory: platformer, codeDir: 'player/platformer-movement', module: async (state: any) => (await import('./player/platformer-movement')).default(state)  },
+  { name: 'Platformers', category: player, subCategory: platformer, codeDir: 'player/platformers', module: async (state: any) => (await import('./player/platformers')).default(state)  },
   { name: 'Gamepad', category: player, subCategory: platformer, codeDir: 'player/gamepad', module: async (state: any) => (await import('./player/gamepad')).default(state)  },
   
 

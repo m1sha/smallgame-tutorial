@@ -1,1 +1,1 @@
-export type StateChangeSource = 'shapes' | 'tools' | 'polygon'
+export type StateChangeSource = 'editor' | 'shapes' | 'tools' | 'polygon'

@@ -13,6 +13,7 @@ export class VectorEditor {
   private _ui: UI
   private _entities: Entities
   onShapesChanged: ((shapes: Shape[]) => void) | null = null
+  onEditorUsed: ((used: boolean) => void) | null = null
 
   constructor (surface: Surface) {
     this.state = new EditorState()
@@ -34,12 +35,18 @@ export class VectorEditor {
           this._entities.select()
         }
       }
+      if (source === 'editor') {
+        if (reason === 'useEditor')
+          this.onEditorUsed?.(this.state.useEditor)
+      }
     }
   }
 
   useEditor (value: boolean) {
     this.state.useEditor = value
   }
+
+  get isEditorUsed () { return this.state.useEditor }
 
   input (ev: GameEvent) {
     if (!this.state.useEditor) return
