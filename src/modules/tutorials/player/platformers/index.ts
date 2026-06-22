@@ -35,13 +35,16 @@ export default async ({ container, containerSize, fps, builders }: ScriptSetting
 
     for (const p of platforms.items) {
       if (p.insect === 'bottom') {
-        Sketch.new().rect({ fill: '#1281372f' }, p.rect).draw(frame)
+        const r = new Rect(p.rect.x, p.rect.y, p.rect.width, 10)
+        Sketch.new().rect({ fill: '#588868' }, r).draw(frame)
       }
       if (p.insect === 'right') {
-        Sketch.new().rect({ fill: '#1b50a05e' }, p.rect).draw(frame)
+        const r = new Rect(p.rect.x, p.rect.y, 10,  p.rect.height)
+        Sketch.new().rect({ fill: '#588868' }, r).draw(frame)
       }
       if (p.insect === 'left') {
-        Sketch.new().rect({ fill: '#390e8a5e' }, p.rect).draw(frame)
+        const r = new Rect(p.rect.absWidth - 10, p.rect.y, 10,  p.rect.height)
+        Sketch.new().rect({ fill: '#588868' },r).draw(frame)
       }
     }
     displayFps(fps)

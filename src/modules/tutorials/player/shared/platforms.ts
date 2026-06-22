@@ -45,6 +45,8 @@ export class Platforms {
     
     for (let i = 0; i < this.items.length; i++) {
       const r = this.items[i].rect
+      const ry0 = r.y
+      const ry1 = r.absHeight
       const isBellow = (r.x < x0 && x0 < r.absWidth) || (r.x < x1 && x1 < r.absWidth)
       if (isBellow) {
         bottoms.push(this.items[i])
@@ -53,16 +55,17 @@ export class Platforms {
       const isLeft =  r.absWidth < x0
       const isRight = x1 < r.x
 
-      if (isRight) {
-        
-        const down =  (y1 <= r.absHeight) || ( y0 >= r.y)
-        if ( down) {
-          if (!right) right = this.items[i]
+      if (isRight || isLeft) {
+        const _in =  y0 >= ry0 && y0 <= ry1
+        const _out = ry0 > y0 && ry0 < y1
+        if (_in || _out) {
+          if (isRight && !right) {
+            right = this.items[i]
+          }
+          if (isLeft) {
+            left = this.items[i]
+          }
         }
-      }
-
-      if (isLeft) {
-        if (r.y < y1 && y1 <= r.absHeight) left = this.items[i]
       }
     }
     return {
