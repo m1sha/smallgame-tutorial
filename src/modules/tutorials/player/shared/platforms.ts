@@ -56,8 +56,8 @@ export class Platforms {
       const isRight = x1 < r.x
 
       if (isRight || isLeft) {
-        const _in =  y0 >= ry0 && y0 <= ry1
-        const _out = ry0 > y0 && ry0 < y1
+        const _in =  (y0 >= ry0 && y0 <= ry1) || (y1 >= ry0 && y1 <= ry1)
+        const _out = (ry0 > y0 && ry0 < y1) || (ry1 > y0 && ry1 < y1)
         if (_in || _out) {
           if (isRight && !right) {
             right = this.items[i]

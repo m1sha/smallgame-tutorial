@@ -3,13 +3,20 @@ import { TelemetryBuilder } from "./telemetry";
 import { UIBuilder } from "./ui";
 
 export class Builders {
+  private _ui: UIBuilder | null = null
+  private _telemetry: TelemetryBuilder | null = null
+  private _entities: EntityListBuilder | null = null
+
   ui () {
-    return new UIBuilder()
+    if (this._ui) return this._ui
+    return this._ui = new UIBuilder()
   }
   telemetry () {
-    return new TelemetryBuilder()
+    if (this._telemetry) return this._telemetry
+    return this._telemetry = new TelemetryBuilder()
   }
   entities () {
-    return new EntityListBuilder()
+    if (this._entities) return this._entities
+    return this._entities = new EntityListBuilder()
   }
 }

@@ -5,6 +5,7 @@ import { SelectedObjects } from "./selected-objects"
 import { initViewerControls, IViewerControls, ViewerUI } from "./ui"
 import { Viewport } from "./viewport"
 import { setDebounce } from "smallgame/src/time"
+import { IEditor } from "./editor"
 
 export class Viewer {
   private gameloopId: number
@@ -20,6 +21,8 @@ export class Viewer {
   #offset: Point = Point.zero
   mousePosition: Point = Point.zero
   fixedUpdateTimeout: number = 25
+
+  private editor: IEditor | null = null
 
   onFrameChanged: ((surface: Surface) => void) | null = null
   onFixedUpdate: (() => void) | null = null
@@ -67,6 +70,8 @@ export class Viewer {
         if (document.activeElement && document.activeElement.tagName.toLowerCase() === 'input') {
           continue
         }
+
+        if (this.editor) this.editor.input(ev)
         
         if (ev.type === 'MOUSEDOWN') {
           if (ev.lbc && ev.altKey) {
@@ -116,13 +121,14 @@ export class Viewer {
       }
       
       if (document.activeElement && document.activeElement.tagName.toLowerCase() !== 'input') {
+        if (this.editor) this.editor.keyPressed(game.key)
         this.onKeyPressed?.(game.key)
         this.onGamepad?.(game.gamepads)
       }
       
       fixedUpdate()
       this.onFrameChanged?.(this.surface)
-
+      //if (this.editor) { this.editor.draw(this.surface)}
       this.screen.clear()
       this.screen.blit(this.background.surface, this.background.surface.rect)
       this.screen.blit(this.surface, this.surface.rect)
@@ -157,6 +163,10 @@ export class Viewer {
 
   selectObjects (objects: { rect: Rect }[]) {
     this.selectedObjects.addObjects(objects)
+  }
+
+  useInput (editor: IEditor) {
+    this.editor = editor
   }
 
   [Symbol.dispose] () {

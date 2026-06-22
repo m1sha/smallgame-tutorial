@@ -11,6 +11,7 @@ export default async ({ container, containerSize, fps, builders }: ScriptSetting
   const viewer = new Viewer(containerSize, container, { disableContextMenu: true })
   const editor = new VectorEditor(viewer.surface)
   editor.useEditor(false)
+  viewer.useInput(editor)
 
   const cursor = new Cursor()
   const platforms = new Platforms()
@@ -20,31 +21,24 @@ export default async ({ container, containerSize, fps, builders }: ScriptSetting
   editor.onShapesChanged = shapes => platforms.add(shapes.map(shape => shape.bounds))
   
   viewer.onInput = ev => {
-    editor.input(ev)
     if (!editor.isEditorUsed) cursor.input(ev)
-  }
-
-  viewer.onKeyPressed = keys => {
-    editor.keyPressed(keys)
   }
 
   viewer.onFrameChanged = frame => {
     frame.clear()
     editor.draw(frame)
     cursor.draw(frame)
+    const drwRect = (rect: Rect) => Sketch.new().rect({ fill: '#588868' }, rect).draw(frame)
 
     for (const p of platforms.items) {
       if (p.insect === 'bottom') {
-        const r = new Rect(p.rect.x, p.rect.y, p.rect.width, 10)
-        Sketch.new().rect({ fill: '#588868' }, r).draw(frame)
+        drwRect(new Rect(p.rect.x, p.rect.y, p.rect.width, 10))
       }
       if (p.insect === 'right') {
-        const r = new Rect(p.rect.x, p.rect.y, 10,  p.rect.height)
-        Sketch.new().rect({ fill: '#588868' }, r).draw(frame)
+        drwRect(new Rect(p.rect.x, p.rect.y, 10,  p.rect.height))
       }
       if (p.insect === 'left') {
-        const r = new Rect(p.rect.absWidth - 10, p.rect.y, 10,  p.rect.height)
-        Sketch.new().rect({ fill: '#588868' },r).draw(frame)
+        drwRect(new Rect(p.rect.absWidth - 10, p.rect.y, 10,  p.rect.height))
       }
     }
     displayFps(fps)
