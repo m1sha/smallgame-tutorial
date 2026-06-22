@@ -3,7 +3,7 @@ import { Group } from "../../../../../components/example/code/ui/controls"
 import { EditorState } from "../editor-state"
 import { save } from "../editor-state/data/save"
 import { loadState } from "../editor-state/data/load"
-import { CreateShapeCommon, EditPolygon, EditRect, EditShapeCommon, IContent, Toolbar } from "./content"
+import { CreateShapeCommon, EditPolygon, EditRect, EditShapeCommon, IContent, Toolbar, Alignment } from "./content"
 
 export function createUI (uiBuilder: UIBuilder, state: EditorState) {
   return new UI(uiBuilder, state)
@@ -24,7 +24,8 @@ export class UI {
       new CreateShapeCommon(root.group('Common'), state),
       new EditShapeCommon(root.group('Common'), state),
       new EditRect(root.group('Rectangle'), state),
-      new EditPolygon(root.group('Polygon'), state)
+      new EditPolygon(root.group('Polygon'), state),
+      new Alignment(root.group('Alignment'), state)
     ]
  
     //this.createSavePorjectControls()
