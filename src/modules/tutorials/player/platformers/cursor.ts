@@ -42,11 +42,11 @@ export class Cursor {
     if (ev.type === 'MOUSEMOVE') {
       if (ev.lbc && this.cursorActive) {
         const pltrms = this.platforms.getPlatforms(colliderRect)
-        const isBellow = pltrms.some(p => p.insect === 'bottom' && colliderRect.midBottom.shift(ev.shift).y +1 >  p.rect.y )
+        const isBellow = pltrms.isBottomCollided(colliderRect.midBottom.shift(ev.shift).y +1) // pltrms.some(p => p.insect === 'bottom' && colliderRect.midBottom.shift(ev.shift).y +1 >  p.rect.y )
         if (isBellow) return
-        const isRight = pltrms.some(p => p.insect === 'right' && colliderRect.absWidth + ev.shift.x +1 >  p.rect.x )
+        const isRight = pltrms.isRightCollided(colliderRect.absWidth + ev.shift.x +1) // .some(p => p.insect === 'right' && colliderRect.absWidth + ev.shift.x +1 >  p.rect.x )
         if (isRight) return
-        const isLeft = pltrms.some(p => p.insect === 'left' && colliderRect.x + ev.shift.x -1 <  p.rect.absWidth )
+        const isLeft = pltrms.isLeftCollided(colliderRect.x + ev.shift.x -1 )// pltrms.some(p => p.insect === 'left' && colliderRect.x + ev.shift.x -1 <  p.rect.absWidth )
         if (isLeft) return
         
         this.pos.shiftSelf(ev.shift)
@@ -62,7 +62,7 @@ export class Cursor {
   draw (frame: Surface) {
     const colliderRect = this.colliderRect.shift(this.spriteRect)
     const pltrms = this.platforms.getPlatforms(colliderRect)
-    const isBellow = pltrms.some(p => p.insect === 'bottom' && colliderRect.midBottom.shift(this.fallSpeed * Time.deltaTime).y +1 >  p.rect.y )
+    const isBellow = pltrms.isBottomCollided(colliderRect.midBottom.shift(this.fallSpeed * Time.deltaTime).y +1) //pltrms.some(p => p.insect === 'bottom' && colliderRect.midBottom.shift(this.fallSpeed * Time.deltaTime).y +1 >  p.rect.y )
     if (!isBellow && !this.cursorActive) {
       this.pos.shiftYSelf(this.fallSpeed * Time.deltaTime)
       this.sprite = this.spriteMoving

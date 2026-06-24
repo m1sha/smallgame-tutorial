@@ -17,7 +17,7 @@ export default async ({ container, containerSize, fps, builders }: ScriptSetting
   const platforms = new Platforms()
   await cursor.load()
   cursor.setPlatforms(platforms)
-  cursor.pos.shiftSelf(300, 60)
+  cursor.pos.shiftSelf(300, 60) // 20, 10
   editor.onShapesChanged = shapes => platforms.add(shapes.map(shape => shape.bounds))
   
   viewer.onInput = ev => {
@@ -27,20 +27,25 @@ export default async ({ container, containerSize, fps, builders }: ScriptSetting
   viewer.onFrameChanged = frame => {
     frame.clear()
     editor.draw(frame)
-    cursor.draw(frame)
-    const drwRect = (rect: Rect) => Sketch.new().rect({ fill: '#588868' }, rect).draw(frame)
-
+    const allow = '#588868'
+    const deny = '#813d47'
+    const drwRect = (rect: Rect) => Sketch.new().rect({ fill: deny, stroke: deny }, rect).draw(frame)
     for (const p of platforms.items) {
       if (p.insect === 'bottom') {
-        drwRect(new Rect(p.rect.x, p.rect.y, p.rect.width, 10))
+        drwRect(new Rect(p.rect.x, p.rect.y, p.rect.width, 6))
       }
       if (p.insect === 'right') {
-        drwRect(new Rect(p.rect.x, p.rect.y, 10,  p.rect.height))
+        drwRect(new Rect(p.rect.x, p.rect.y, 6,  p.rect.height))
       }
       if (p.insect === 'left') {
-        drwRect(new Rect(p.rect.absWidth - 10, p.rect.y, 10,  p.rect.height))
+        drwRect(new Rect(p.rect.absWidth - 6, p.rect.y, 6,  p.rect.height))
+      }
+      if (p.insect === 'top') {
+        const rect = new Rect(p.rect.x, p.rect.absHeight - 6, p.rect.width, 6)
+        Sketch.new().rect({ fill: allow, stroke: allow }, rect).draw(frame)
       }
     }
+    cursor.draw(frame)
     displayFps(fps)
   }
 

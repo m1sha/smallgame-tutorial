@@ -1,5 +1,27 @@
-import { Rect } from "smallgame";
+import { Point, Rect } from "smallgame";
 import { Platform } from "./platform";
+
+export class PlatformsCollision {
+  constructor (readonly bottom?: Platform, readonly right?: Platform,readonly left?: Platform, readonly top?: Platform) {
+
+  }
+
+  isBottomCollided (y:number) {
+    return this.bottom ? y > this.bottom.rect.y : false
+  }
+
+  isRightCollided (x: number) {
+    return this.right ? x > this.right.rect.x : false
+  }
+
+  isLeftCollided (x: number) {
+    return this.left ? x < this.left.rect.absWidth : false
+  }
+
+  isTopCollided (point: Point) {
+    return this.top ? point.y < this.top.rect.absHeight : false
+  }
+}
 
 export class Platforms {
   items: Platform[] = []
@@ -7,23 +29,7 @@ export class Platforms {
   getPlatforms (rect: Rect) {
     this.items.forEach(p => p.insect = 'none')
     const items = this.__get(rect)
-    const result: Platform[] = []
-    for (const item of items.bottoms) {
-      if (item.rect.y > rect.absHeight) {
-        item.insect = 'bottom'
-        result.push(item)
-        break
-      }
-    }
-    if (items.right)  {
-      items.right.insect = 'right'
-      result.push(items.right)
-    }
-    if (items.left)  {
-      items.left.insect = 'left'
-      result.push(items.left)
-    }
-    return result
+    return items
   }
 
   add (rects: Rect[]) {
@@ -61,17 +67,36 @@ export class Platforms {
         if (_in || _out) {
           if (isRight && !right) {
             right = this.items[i]
+            right.insect = 'right'
           }
           if (isLeft) {
+            if (left && left.rect.absWidth > this.items[i].rect.absWidth) continue
+            if (left) left.insect = 'none'
             left = this.items[i]
+            left.insect = 'left'
           }
         }
       }
     }
-    return {
-      bottoms: bottoms.sort((a, b) => a.rect.y - b.rect.y),
-      right,
-      left
+
+    bottoms.sort((a, b) => a.rect.y - b.rect.y)
+    let bottom: Platform | null = null
+    let top: Platform | null = null
+    for (let i = 0; i < bottoms.length; i++) {
+      const item = bottoms[i]
+      if (item.rect.y > rect.absHeight) {
+        item.insect = 'bottom'
+        bottom = item
+        top = bottoms[i - 1] ?? null
+        if (top) top.insect = 'top'
+        break
+      }
     }
+    return new PlatformsCollision(
+      bottom,
+      right,
+      left,
+      top
+    )
   }
 }
