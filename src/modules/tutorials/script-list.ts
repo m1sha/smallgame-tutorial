@@ -20,6 +20,7 @@ const scriptList: ScriptDef[] = [
   { name: 'Movement To Cursor', category: cat6, codeDir: 'orientation/movement-to-cursor', module: async (state: any) => (await import('./orientation/movement-to-cursor')).default(state)  },
   { name: 'Zoom Pan', category: cat6, codeDir: 'orientation/zoom-pan', module: async (state: any) => (await import('./orientation/zoom-pan')).default(state)  },
   { name: 'Camera 2D', category: cat6, codeDir: 'orientation/camera', module: async (state: any) => (await import('./orientation/camera')).default(state)  },
+  { name: 'Camera 2D Control', category: cat6, codeDir: 'orientation/camera-control', module: async (state: any) => (await import('./orientation/camera-control')).default(state)  },
   { name: 'Objects In Space', category: cat6, codeDir: 'orientation/objects', module: async (state: any) => (await import('./orientation/objects')).default(state)  },
   { name: 'Scaling', category: cat6, codeDir: 'orientation/scaling', module: async (state: any) => (await import('./orientation/scaling')).default(state)  },
   { name: 'Zoom To Cursor (Image)', category: cat6, codeDir: 'orientation/scaling', module: async (state: any) => (await import('./orientation/zoom-to-cursor-image')).default(state)  },
@@ -55,6 +56,7 @@ const scriptList: ScriptDef[] = [
   
 
   { name: 'Blit', category: cat2, codeDir: 'surfaces/code/rectangle', module: async (state: any) => (await import('./surfaces/code/rectangle')).default(state)  },
+  { name: 'Blit Distribute Rect', category: cat2, codeDir: 'surfaces/code/dist-rect', module: async (state: any) => (await import('./surfaces/code/dist-rect')).default(state)  },
   { name: 'Math Coords', category: cat2, codeDir: 'surfaces/code/math-coords', module: async (state: any) => (await import('./surfaces/code/math-coords')).default(state)  },
   { name: 'Textured Text', category: cat2, codeDir: 'surfaces/code/simple-text', module: async (state: any) => (await import('./surfaces/code/simple-text')).default(state)  },
   { name: 'Textured Text (GL)', category: cat2, codeDir: 'surfaces/code/surface-gl', module: async (state: any) => (await import('./surfaces/code/surface-gl')).default(state)  },
