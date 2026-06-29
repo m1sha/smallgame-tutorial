@@ -1,5 +1,5 @@
 import { GameEvent, Key, Keys, MemSurface, Surface } from "smallgame"
-import { EntityListBuilder, UIBuilder } from "../../../../components/example"
+import { Builders, EntityListBuilder, UIBuilder } from "../../../../components/example"
 import { EditorState } from "./editor-state"
 import { Renderer } from "./renderer"
 import { createUI, UI } from "./ui"
@@ -81,6 +81,10 @@ export class VectorEditor {
     this._ui = createUI(uiBuilder, this.state)
     this._ui.update()
     this._entities = new Entities(entities, this.state)
+  }
+
+  useBuilders (builder: Builders) {
+    this.ui(builder.ui(), builder.entities())
   }
 
   async load (file: File | string) {
