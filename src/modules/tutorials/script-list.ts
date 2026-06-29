@@ -39,15 +39,17 @@ const scriptList: ScriptDef[] = [
   { name: 'Persecution By Emeny', category: cat5, subCategory: platformer, codeDir: 'ai/concentration-places', module: async (state: any) => (await import('./ai/persecution-by-enemy')).default(state)  },
 
   { name: 'Movement', category: player, subCategory: platformer, codeDir: 'player/platformer-movement', module: async (state: any) => (await import('./player/platformer-movement')).default(state)  },
-  { name: 'Platformers', category: player, subCategory: platformer, codeDir: 'player/platformers', module: async (state: any) => (await import('./player/platformers')).default(state)  },
+  { name: 'Test Platforms', category: player, subCategory: platformer, codeDir: 'player/platformers', module: async (state: any) => (await import('./player/platformers')).default(state)  },
   { name: 'Gamepad', category: player, subCategory: platformer, codeDir: 'player/gamepad', module: async (state: any) => (await import('./player/gamepad')).default(state)  },
   
 
   { name: 'Hello World', category: cat1, codeDir: 'examples/code/hello-world', module: async (state: any) => (await import('./examples/code/hello-world')).default(state)  },
+  { name: 'Arcs', category: cat1, codeDir: 'examples/code/arcs', module: async (state: any) => (await import('./examples/code/arcs')).default(state)  },
   { name: 'Car Movement', category: cat1, codeDir: 'examples/code/car-movement', module: async (state: any) => (await import('./examples/code/car-movement')).default(state)  },
   { name: 'Parallax', category: cat1, codeDir: 'examples/code/parallax', module: async (state: any) => (await import('./examples/code/parallax')).default(state)  },
   { name: 'Sketching', category: cat1, codeDir: 'examples/code/sketching', module: async (state: any) => (await import('./examples/code/sketching')).default(state)  },
   { name: 'Paint', category: cat1, codeDir: 'examples/code/paint', module: async (state: any) => (await import('./examples/code/paint')).default(state)  },
+  { name: 'Line Insterpolation', category: cat1, codeDir: 'examples/code/line-insterpolation', module: async (state: any) => (await import('./examples/code/line-insterpolation')).default(state)  },
   { name: 'Bezier Lines', category: cat1, codeDir: 'examples/code/bezier-lines', module: async (state: any) => (await import('./examples/code/bezier-lines')).default(state)  },
   { name: 'Bezier Interpolation', category: cat1, codeDir: 'examples/code/bezier-interpolation', module: async (state: any) => (await import('./examples/code/bezier-interpolation')).default(state)  },
   { name: 'Path Interpolation', category: cat1, codeDir: 'examples/code/path-interpolation', module: async (state: any) => (await import('./examples/code/path-interpolation')).default(state)  },
