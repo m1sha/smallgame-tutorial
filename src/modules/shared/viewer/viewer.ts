@@ -33,12 +33,16 @@ export class Viewer {
   onContextMenuClick: ((pos: TPoint) => void) | null = null
   onViewportChanged: ((pos: Point, zoom: number) => void) | null = null
 
-  constructor (viewportSize: TSize, container: HTMLDivElement, options?: { disableContextMenu?: boolean, viewerControls?: IViewerControls }) {
+  constructor (viewportSize: TSize, container: HTMLDivElement, options?: { disableContextMenu?: boolean, viewerControls?: IViewerControls, garbageCollect?: (callback: () => void) => void }) {
     const { game, screen } = Game.create(viewportSize.width, viewportSize.height, container)
 
     const viewerSettings = options && options.viewerControls ? options.viewerControls : initViewerControls()
     viewerSettings.updateChanges = () => {
       // update viewerSettings
+
+      if (options && options.garbageCollect) {
+        options.garbageCollect(() => this.remove())
+      }
     }
     
 
