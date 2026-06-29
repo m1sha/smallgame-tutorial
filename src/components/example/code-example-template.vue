@@ -42,6 +42,9 @@ async function main() {
   const width = container.value!.clientWidth 
   const height = container.value!.clientHeight
   const containerSize = new Size(width, height)
+  const builders = new Builders()
+  let moduleDisposer: (() => void) | null = null
+  const disposer = (callback: () => void) => moduleDisposer = callback
 
   currentModule.value = await script.module({ 
     container: container.value!, 
@@ -49,9 +52,26 @@ async function main() {
     width, 
     height, 
     containerSize, 
-    builders: new Builders(),
-    viewerControls: viewerControls.value
-  })
+    builders,
+    viewerControls: viewerControls.value,
+    disposer
+  }) || {}
+
+  if (builders.has('ui') && !currentModule.value.ui) {
+    currentModule.value.ui = builders.ui().build()
+  }
+
+  if (builders.has('telemetry') && !currentModule.value.telemetry) {
+    currentModule.value.telemetry = builders.telemetry().build()
+  }
+
+  if (builders.has('entities') && !currentModule.value.entities) {
+    currentModule.value.entities = builders.entities().build()
+  }
+
+  if (moduleDisposer && !currentModule.value.dispose) {
+    currentModule.value.dispose = moduleDisposer
+  }
 }
 
 function changeScript (id: string) {

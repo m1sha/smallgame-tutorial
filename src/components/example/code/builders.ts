@@ -6,7 +6,7 @@ export class Builders {
   private _ui: UIBuilder | null = null
   private _telemetry: TelemetryBuilder | null = null
   private _entities: EntityListBuilder | null = null
-
+  
   ui () {
     if (this._ui) return this._ui
     return this._ui = new UIBuilder()
@@ -18,5 +18,13 @@ export class Builders {
   entities () {
     if (this._entities) return this._entities
     return this._entities = new EntityListBuilder()
+  }
+
+  has (builderType: 'ui' | 'telemetry' | 'entities') {
+    switch (builderType) {
+      case "ui": return Boolean(this._ui)
+      case "telemetry": return Boolean(this._telemetry)
+      case "entities": return Boolean(this._entities)
+    }
   }
 }

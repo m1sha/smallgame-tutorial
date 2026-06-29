@@ -1,20 +1,12 @@
 import { Viewer } from "../../../../shared"
 import { displayFps } from "../../../../../utils/display-fps"
-import { type ScriptModule, type ScriptSettings } from "../../../../../components/example"
+import { type ScriptSettings } from "../../../../../components/example"
 
-export default async ({ container, containerSize, fps, builders }: ScriptSettings): Promise<ScriptModule> => {
-  const viewer = new Viewer(containerSize, container, { disableContextMenu: true })
+export default async ({ container, containerSize, fps, builders, garbageCollect }: ScriptSettings): Promise<void> => {
+  const viewer = new Viewer(containerSize, container, { disableContextMenu: true, garbageCollect })
 
   viewer.onFrameChanged = frame => {
     frame.clear()
     displayFps(fps)
-  }
-
-  const ui = builders.ui()
-  return {
-    ui: ui.build(),
-    dispose () { 
-      viewer.remove() 
-    }
   }
 }

@@ -10,4 +10,5 @@ export interface ScriptSettings {
   containerSize: Size
   builders: Builders
   viewerControls: IViewerControls
+  garbageCollect: (callback: () => void) => void
 }
