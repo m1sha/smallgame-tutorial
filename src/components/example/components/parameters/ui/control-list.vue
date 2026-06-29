@@ -80,6 +80,18 @@ function isSelected (control: any)  {
       <!--@vue-ignore-->
       <TextBox v-if="control.type === 'input'" v-model="control.defaultValue" :caption="control.caption" @update:model-value="value => control.callback(value)" />
 
+      <!--@vue-ignore-->
+      <div class="point-editor" v-if="control.type === 'point'">
+         <!--@vue-ignore-->
+        <label style="color: #eee;" v-html="control.caption"></label>
+        <div style="display: flex; gap: 8px;">
+         <!--@vue-ignore-->
+        <TextBox  v-model="control.defaultValue.x" caption="x" @update:model-value="value => control.callback?.(value)" style="width: 80px;" />
+        <!--@vue-ignore-->
+        <TextBox  v-model="control.defaultValue.y" caption="y" @update:model-value="value => control.callback?.(value)"  style="width: 80px;"/>
+          </div>
+      </div>
+
       <div v-if="control.type === 'info-panel'">
         <div class="ui-info-panel" v-html="cast<InfoPanel>(control).text">
           

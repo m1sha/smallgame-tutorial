@@ -9,6 +9,8 @@ import { RefObj } from "../ref-obj"
 import { UIControl } from "./ui-control"
 import { TOption } from "../option"
 import { RadioGroup } from "./radio-group"
+import { TPoint } from "smallgame"
+import { PointEditor } from "./point-editor"
 
 export class UIContariner extends UIControl  {
   controls: UIControl[]
@@ -91,6 +93,11 @@ export class UIContariner extends UIControl  {
 
   input (caption: string, callback: (value: string) => void, defaultValue?: string | RefObj<string>) {
     this.controls.push(new Input(caption, callback, defaultValue ?? ''))
+    return this
+  }
+
+  point (caption: string, value: TPoint | RefObj<TPoint>, callback?: (value: string) => void, options?: any) {
+    this.controls.push(new PointEditor(caption, value, callback, options))
     return this
   }
 }
