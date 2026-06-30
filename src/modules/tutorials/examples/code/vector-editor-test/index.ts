@@ -1,26 +1,15 @@
-import { Viewer } from "../../../../shared"
-import { displayFps } from "../../../../../utils/display-fps"
-import { type ScriptModule, type ScriptSettings } from "../../../../../components/example"
-import { VectorEditor } from "../../../../shared/vector-editor"
+import { type ScriptSettings, Viewer, displayFps, VectorEditor } from "../../../core"
 import { MemSurface, Size } from "smallgame"
 
-export default async ({ container, containerSize, fps, builders }: ScriptSettings): Promise<ScriptModule> => {
-  const viewer = new Viewer(containerSize, container, { disableContextMenu: true })
-
+export default async ({ container, containerSize, fps, builders, garbageCollect }: ScriptSettings): Promise<void> => {
+  const viewer = new Viewer(containerSize, container, { disableContextMenu: true, garbageCollect })
   const surface = new MemSurface(new Size(viewer.viewportRect).scale(.75))
   surface.rect.absCenter = viewer.viewportRect.center
 
   const editor = new VectorEditor(surface)
-
-  //editor.useEditor(false)
-
-  viewer.onInput = ev => {
-    editor.input(ev)
-  }
-
-  viewer.onKeyPressed = keys => {
-    editor.keyPressed(keys)
-  }
+  editor.useBuilders(builders)
+  viewer.useInput(editor)
+  // editor.useEditor(false)
 
   viewer.onFrameChanged = frame => {
     frame.clear()
@@ -28,17 +17,5 @@ export default async ({ container, containerSize, fps, builders }: ScriptSetting
     editor.draw(surface)
     frame.blit(surface, surface.rect)
     displayFps(fps)
-  }
-
-  const ui = builders.ui()
-  const entities = builders.entities()
-  
-  editor.ui(ui, entities)
-  return {
-    ui: ui.build(),
-    entities: entities.build(),
-    dispose () { 
-      viewer.remove() 
-    }
   }
 }

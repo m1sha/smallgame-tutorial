@@ -1,6 +1,4 @@
-import { Viewer } from "../../../../shared"
-import { displayFps } from "../../../../../utils/display-fps"
-import { type ScriptSettings } from "../../../../../components/example"
+import { type ScriptSettings, Viewer, displayFps } from "../../../core"
 
 export default async ({ container, containerSize, fps, builders, garbageCollect }: ScriptSettings): Promise<void> => {
   const viewer = new Viewer(containerSize, container, { disableContextMenu: true, garbageCollect })
