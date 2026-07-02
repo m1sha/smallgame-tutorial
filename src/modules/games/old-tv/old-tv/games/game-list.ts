@@ -1,5 +1,5 @@
 import { BricksBreaker } from "../../games/bricks-breaker/bricks-breaker"
-import { SnakeGame } from "../../games/snake/snake-game"
+import { SnakeSceneOld } from "../../games/snake/snake-scene-old"
 import { StockBoy } from "../../games/stock-boy"
 import { PlatformerAnimation } from "../../games/tests"
 import { Tetris } from "../../games/tetrix/tetris"
@@ -12,7 +12,7 @@ class GameList {
     this.list = [
       {
         name: '0001.THE SNAKE',
-        factory: (w, h, index) => new SnakeGame(w, h, index),
+        factory: (w, h, index) => new SnakeSceneOld(w, h, index),
         coverBg: 'old-tv/snake.png',
         gameoverBg: 'old-tv/snake.png'
       },

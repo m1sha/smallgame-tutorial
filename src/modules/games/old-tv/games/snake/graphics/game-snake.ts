@@ -16,7 +16,7 @@ export class GameSnake {
         sketch.rect('snake', new Rect(cellSize * col, cellSize * row, cellSize, cellSize))
       }
       //sketch.rect({ stroke: 'red', lineWidth: 3 }, sketch.bounds)
-      debugger
+      
       return sketch.toSurface()
   }
 

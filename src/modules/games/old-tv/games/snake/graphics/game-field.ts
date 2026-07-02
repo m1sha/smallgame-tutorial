@@ -10,10 +10,10 @@ export class GameField {
   private createField () {
     const { rows, cols, cellSize } = this
     const sketch = new Sketch()
-    sketch.defineStyle('rect', { fill: '#222', stroke: '#aaa', lineWidth: 1, paintOrder: 'stroke' })
+    sketch.defineStyle('rect', { fill: '#222222ee', stroke: '#888', lineWidth: 1, paintOrder: 'stroke' })
     for (let i = 0; i < rows; i++){
       for (let j = 0; j < cols; j++){
-        sketch.rect('rect', new Rect(cellSize * j, cellSize * i, cellSize, cellSize))
+        sketch.rect('rect', new Rect(cellSize * j +1, cellSize * i +1, cellSize, cellSize))
       }  
     }
     return sketch.toSurface()

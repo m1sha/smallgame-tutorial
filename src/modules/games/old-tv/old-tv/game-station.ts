@@ -1,5 +1,5 @@
 import { displayFps } from '../utils/display-fps'
-import { Game, loadImage, gameloop, Rect } from 'smallgame'
+import { Game, loadImage, gameloop, Rect, Screen } from 'smallgame'
 import { EffectPipeline } from './effects/base/effect-pipeline'
 import { GameStationSettings } from './game-station-settings'
 import { createEffectPipeline } from './effects'
@@ -14,17 +14,10 @@ export class GameStation {
   private currentScene: IScene
   private gameRect: Rect
   private effectPipeline: EffectPipeline
-  constructor (
-    private setting: GameStationSettings,
-    public width: number, 
-    public height: number
-  ) {
-   
-    this.gameRect = Rect.fromRatio(9 / 16, height * 0.9, 'height')
-    this.gameRect.center = Rect.size(width, height).center
 
-    
-    
+  constructor (private setting: GameStationSettings) {
+    this.gameRect = Rect.fromRatio(9 / 16, setting.containerSize.height * 0.9, 'height')
+    this.gameRect.center = Rect.size(setting.containerSize.width, setting.containerSize.height).center
 
     if (DEFAULTGAMEINDEX > -1) {
       const factory = gameList.setGame(DEFAULTGAMEINDEX)
@@ -37,18 +30,18 @@ export class GameStation {
   }
 
   async create () {
-    const { width, height, setting, bgColor, currentScene, effectPipeline } = this
-    const { game, screen } = Game.create(width, height, setting.container)
-    
-    
+    const { setting, bgColor, currentScene, effectPipeline } = this
+    const screen = new Screen('transform', setting.containerSize.width, setting.containerSize.height)
+    screen.attachContrainer(setting.container)
+    const bus = screen.createEventBusController()
 
     await currentScene.create()
     currentScene.onAction = (name, data) => this.callbackHandler(name, data)
 
-    let prevSurface = this.currentScene.nextFrame(game.event, game.key)
+    let prevSurface = this.currentScene.nextFrame(bus.event, bus.key)
 
     gameloop(() => {
-      let surface = this.currentScene.nextFrame(game.event, game.key)
+      let surface = this.currentScene.nextFrame(bus.event, bus.key)
 
       if (setting.useShaders)
         surface = effectPipeline.build(surface, prevSurface)

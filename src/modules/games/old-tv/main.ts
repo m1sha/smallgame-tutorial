@@ -2,12 +2,14 @@
 import './style.css'
 import { GameStation } from './old-tv/index.ts'
 import { GameStationSettings } from './old-tv/game-station-settings.ts'
+import { Size } from 'smallgame'
 
 const settings: GameStationSettings = {
   container: document.querySelector<HTMLDivElement>('#app')!,
   fps: document.querySelector<HTMLDivElement>('#fps')!,
   useShaders: true,
-  showTV: true
+  showTV: true,
+  containerSize: Size.zero
 }
 
 async function main () {
@@ -21,7 +23,11 @@ async function main () {
     settings.showTV = input.checked
   })
 
-  await new GameStation(settings, 768, 768).create()
+  const width = settings.container.clientWidth 
+  const height =settings.container.clientHeight
+  settings.containerSize = new Size(width, height)
+
+  await new GameStation(settings).create()
 }
 
 
