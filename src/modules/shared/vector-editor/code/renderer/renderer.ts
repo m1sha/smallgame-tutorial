@@ -11,8 +11,10 @@ export class Renderer {
   render () {
     this.surface.clear()
     this.drawShapes(this.surface)
-    this.drawDrawingShape(this.surface)
-    this.drawSelectedShapes(this.surface)
+    if (this.state.useEditor) {
+      this.drawDrawingShape(this.surface)
+      this.drawSelectedShapes(this.surface)
+    }
   }
 
   update () {

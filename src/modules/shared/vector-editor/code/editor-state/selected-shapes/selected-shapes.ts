@@ -35,6 +35,10 @@ export class SelectedShapes {
     this.state.stateChanged('shapes', 'selected')
   }
 
+  deselectAll () {
+    this.items = []
+  }
+
   attachToSelected (shape: Shape, removeExist: boolean = false) {
     if (this.items.some(p => p === shape)) {
       if (removeExist) {
