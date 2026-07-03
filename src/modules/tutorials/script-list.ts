@@ -59,7 +59,8 @@ const scriptList: ScriptDef[] = [
 
   { name: 'Blit', category: cat2, codeDir: 'surfaces/code/rectangle', module: async (state: any) => (await import('./surfaces/code/rectangle')).default(state)  },
   { name: 'Blit Distribute Rect', category: cat2, codeDir: 'surfaces/code/dist-rect', module: async (state: any) => (await import('./surfaces/code/dist-rect')).default(state)  },
-  { name: 'Fill Pattern', category: cat2, codeDir: 'surfaces/code/blit-repeated', module: async (state: any) => (await import('./surfaces/code/fill-pattern')).default(state)  },
+  { name: 'Pattern', category: cat2, codeDir: 'surfaces/code/pattern', module: async (state: any) => (await import('./surfaces/code/pattern')).default(state)  },
+  { name: 'Fill Pattern', category: cat2, codeDir: 'surfaces/code/fill-pattern', module: async (state: any) => (await import('./surfaces/code/fill-pattern')).default(state)  },
   { name: 'Math Coords', category: cat2, codeDir: 'surfaces/code/math-coords', module: async (state: any) => (await import('./surfaces/code/math-coords')).default(state)  },
   { name: 'Textured Text', category: cat2, codeDir: 'surfaces/code/simple-text', module: async (state: any) => (await import('./surfaces/code/simple-text')).default(state)  },
   { name: 'Textured Text (GL)', category: cat2, codeDir: 'surfaces/code/surface-gl', module: async (state: any) => (await import('./surfaces/code/surface-gl')).default(state)  },
