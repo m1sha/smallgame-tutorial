@@ -5,7 +5,7 @@ import { SelectedObjects } from "./selected-objects"
 import { initViewerControls, IViewerControls, ViewerUI } from "./ui"
 import { Viewport } from "./viewport"
 import { setDebounce } from "smallgame/src/time"
-import { IEditor } from "./editor"
+import { IInputDelegate } from "./input-delegate"
 
 export class Viewer {
   private gameloopId: number
@@ -22,7 +22,7 @@ export class Viewer {
   mousePosition: Point = Point.zero
   fixedUpdateTimeout: number = 25
 
-  private editor: IEditor | null = null
+  private inputDelegates: IInputDelegate[] = []
 
   onFrameChanged: ((surface: Surface) => void) | null = null
   onFixedUpdate: (() => void) | null = null
@@ -75,7 +75,7 @@ export class Viewer {
           continue
         }
 
-        if (this.editor) this.editor.input(ev)
+        if (this.inputDelegates.length) this.inputDelegates.forEach(d => d.input(ev, this))
         
         if (ev.type === 'MOUSEDOWN') {
           if (ev.lbc && ev.altKey) {
@@ -125,9 +125,8 @@ export class Viewer {
       }
       
       if (document.activeElement && document.activeElement.tagName.toLowerCase() !== 'input') {
-        if (this.editor) this.editor.keyPressed(game.key)
+        if (this.inputDelegates.length) this.inputDelegates.forEach(d => d.keyPressed(game.key))
         this.onKeyPressed?.(game.key)
-        this.onGamepad?.(game.gamepads)
       }
       
       fixedUpdate()
@@ -165,12 +164,20 @@ export class Viewer {
     return this.surface.rect
   }
 
+  get cursor () {
+    return this.screen.cursor
+  }
+
+  set cursor (value: string) {
+    this.screen.cursor = value
+  }
+
   selectObjects (objects: { rect: Rect }[]) {
     this.selectedObjects.addObjects(objects)
   }
 
-  useInput (editor: IEditor) {
-    this.editor = editor
+  useInput (delegate: IInputDelegate) {
+    this.inputDelegates.push(delegate)
   }
 
   [Symbol.dispose] () {
