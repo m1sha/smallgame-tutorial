@@ -21,6 +21,7 @@ const scriptList: ScriptDef[] = [
   { name: 'Zoom Pan', category: cat6, codeDir: 'orientation/zoom-pan', module: async (state: any) => (await import('./orientation/zoom-pan')).default(state)  },
   { name: 'Camera 2D', category: cat6, codeDir: 'orientation/camera', module: async (state: any) => (await import('./orientation/camera')).default(state)  },
   { name: 'Camera 2D Control', category: cat6, codeDir: 'orientation/camera-control', module: async (state: any) => (await import('./orientation/camera-control')).default(state)  },
+  { name: 'Camera 2D LookAt', category: cat6, codeDir: 'orientation/camera-look-at', module: async (state: any) => (await import('./orientation/camera-look-at')).default(state)  },
   { name: 'Objects In Space', category: cat6, codeDir: 'orientation/objects', module: async (state: any) => (await import('./orientation/objects')).default(state)  },
   { name: 'Scaling', category: cat6, codeDir: 'orientation/scaling', module: async (state: any) => (await import('./orientation/scaling')).default(state)  },
   { name: 'Zoom To Cursor (Image)', category: cat6, codeDir: 'orientation/scaling', module: async (state: any) => (await import('./orientation/zoom-to-cursor-image')).default(state)  },
@@ -44,7 +45,11 @@ const scriptList: ScriptDef[] = [
   
 
   { name: 'Hello World', category: cat1, codeDir: 'examples/code/hello-world', module: async (state: any) => (await import('./examples/code/hello-world')).default(state)  },
+  { name: 'Segment', category: cat1, codeDir: 'examples/code/segment', module: async (state: any) => (await import('./examples/code/segment')).default(state)  },
+  { name: 'Circle', category: cat1, codeDir: 'examples/code/circle', module: async (state: any) => (await import('./examples/code/circle')).default(state)  },
   { name: 'Arcs', category: cat1, codeDir: 'examples/code/arcs', module: async (state: any) => (await import('./examples/code/arcs')).default(state)  },
+  { name: 'Triangle Angle', category: cat1, codeDir: 'examples/code/triangle-angle', module: async (state: any) => (await import('./examples/code/triangle-angle')).default(state)  },
+  { name: 'Text', category: cat1, codeDir: 'examples/code/text', module: async (state: any) => (await import('./examples/code/text')).default(state)  },
   { name: 'Car Movement', category: cat1, codeDir: 'examples/code/car-movement', module: async (state: any) => (await import('./examples/code/car-movement')).default(state)  },
   { name: 'Parallax', category: cat1, codeDir: 'examples/code/parallax', module: async (state: any) => (await import('./examples/code/parallax')).default(state)  },
   { name: 'Sketching', category: cat1, codeDir: 'examples/code/sketching', module: async (state: any) => (await import('./examples/code/sketching')).default(state)  },

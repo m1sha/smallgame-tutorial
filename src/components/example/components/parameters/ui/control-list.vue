@@ -108,7 +108,7 @@ function isSelected (control: any)  {
 .control-list
   display: flex
   flex-direction: column
-  gap: 4px
+  gap: 8px
   flex-wrap: wrap
 
   .vue3-uui__radio-group

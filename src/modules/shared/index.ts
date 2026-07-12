@@ -1,3 +1,5 @@
 export * from './viewer'
 export * from './zoomer'
 export * from './drag-panel'
+export * from './patterns'
+export * from './points-movement-handler'

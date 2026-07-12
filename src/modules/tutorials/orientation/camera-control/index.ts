@@ -1,4 +1,4 @@
-import { Viewer } from "../../../shared"
+import { DragPanel, Viewer } from "../../../shared"
 import { displayFps } from "../../../../utils/display-fps"
 import { type ScriptModule, type ScriptSettings } from "../../../../components/example"
 import { loadImage, MemSurface, Rect, Size, Sketch } from "smallgame"
@@ -14,20 +14,17 @@ export default async ({ container, containerSize, fps, builders }: ScriptSetting
   const previewFitRect = Rect.fromRatio(img.rect.ratio, preview.width, 'width')
   const cursorRect = new Rect(0, 0, 800, 600)
   cursorRect.moveSelf(img.rect).shiftSelf(0, img.height - cursorRect.height)
-  let cameraFitRect = Rect.zero
-  const calcCameraFitRect = () => (cameraFitRect = Rect.fromRatio(
-    cursorRect.ratio, 
-    cameraFitRect.width > cameraFitRect.height ? camera.width : camera.height, 
-    cameraFitRect.width > cameraFitRect.height ? 'width' : 'height'
-  ))
-  calcCameraFitRect()
+  let cameraFitRect = Rect.scaleToFit(cursorRect, camera) 
   const delta = img.rect.size.inverse(previewFitRect.size).toPoint()
   const getClipRect = () => cursorRect.scalesize(delta.x, delta.y).moveSelf(cursorRect.topLeft.scale(delta))
   let isCursorActive = false
+  const cameraPanel = new DragPanel('Camera', new Rect(20, 300, 600, 460), { useSmooth: true, resizable: true })
+  viewer.useInput(cameraPanel)
 
   viewer.onInput = ev => {
     if (ev.type === 'MOUSEDOWN') {
-      isCursorActive = true
+      const clipRect = getClipRect()
+      if (clipRect.containsPoint(ev.pos.shift(-700, -30))) isCursorActive = true
     }
 
     if (ev.type === 'MOUSEMOVE') {
@@ -57,10 +54,13 @@ export default async ({ container, containerSize, fps, builders }: ScriptSetting
     .rect({ stroke: '#0f98d8', lineWidth: 3 }, srect)
     .draw(preview)
     
-    camera.blit(img, cursorRect, { distRect: cameraFitRect.move(0, 0) })
+    cameraFitRect.center = camera.rect.center
+    camera.blit(img, cursorRect, { distRect: cameraFitRect })
 
     frame.blit(preview, preview.rect.move(700, 30))
-    frame.blit(camera, camera.rect.move(30, 270))
+
+    cameraPanel.content = camera
+    cameraPanel.draw(frame)
 
     displayFps(fps)
   }
@@ -70,12 +70,12 @@ export default async ({ container, containerSize, fps, builders }: ScriptSetting
     .tracker('Width', 1, img.width, 1, val => {
       if (img.width - (val + cursorRect.x) < 1) return
       cursorRect.width = val
-      calcCameraFitRect()
+      cameraFitRect = Rect.scaleToFit(cursorRect, camera) 
     }, cursorRect.width)
     .tracker('Height', 1, img.height, 1, val => {
       if (img.height - (val + cursorRect.y)  < 1) return
       cursorRect.height = val
-      calcCameraFitRect()
+      cameraFitRect = Rect.scaleToFit(cursorRect, camera) 
     }, cursorRect.height)
   )
   

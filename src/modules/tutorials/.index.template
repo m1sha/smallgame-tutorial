@@ -1,7 +1,7 @@
 import { type ScriptSettings, Viewer, displayFps } from "../../../core"
 
-export default async ({ container, containerSize, fps, builders, garbageCollect }: ScriptSettings): Promise<void> => {
-  const viewer = new Viewer(containerSize, container, { disableContextMenu: true, garbageCollect })
+export default async ({ container, containerSize, fps, builders, garbageCollect, viewerControls }: ScriptSettings): Promise<void> => {
+  const viewer = new Viewer(containerSize, container, { disableContextMenu: true, garbageCollect, viewerControls })
 
   viewer.onFrameChanged = frame => {
     frame.clear()

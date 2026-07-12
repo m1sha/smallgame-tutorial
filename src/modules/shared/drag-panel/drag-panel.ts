@@ -86,16 +86,17 @@ export class DragPanel implements IInputDelegate {
 
   resize (size: Size) {
     if (size.width < 200 || size.height < 200) return
+    this.pos = this.surface.rect.topLeft
     this.size = size
     this.drawWindow()
     this.blit(this.content)
   }
 
   private blit (surface: SurfaceBase) {
-    const rect = Rect.scaleToFit(surface, this.contentRect.outline(0, 0, 8, 2))
-    rect.center = this.surface.rect.center.shift(-2, -2)
+    const rect = Rect.scaleToFit(surface, this.contentRect.outline(2, 0, 8, 2))
+    rect.center = this.surface.rect.center//
     Sketch.new().rect({ fill: this.contentBgColor }, this.contentRect).draw(this.surface)
-    this.surface.blit(surface, rect)
+    this.surface.blit(surface, rect.shift(-2, 8))
     const br = this.size.toPoint().shiftSelf(-2, -2)
     Sketch.new()
       .polygon({ fill: this.resizable ? this.borderColor : 'transparent' }, [br.shiftX(-16), br, br.shiftY(-16), br.shiftX(-16)])
