@@ -10,6 +10,7 @@ const cat6 = 'Orientation'
 const isometricCat = 'Isometric'
 const player = 'Player'
 const platformer = 'Platformer'
+const geometry = 'Geometry'
 
 
 const scriptList: ScriptDef[] = [
@@ -45,19 +46,19 @@ const scriptList: ScriptDef[] = [
   
 
   { name: 'Hello World', category: cat1, codeDir: 'examples/code/hello-world', module: async (state: any) => (await import('./examples/code/hello-world')).default(state)  },
-  { name: 'Segment', category: cat1, codeDir: 'examples/code/segment', module: async (state: any) => (await import('./examples/code/segment')).default(state)  },
-  { name: 'Circle', category: cat1, codeDir: 'examples/code/circle', module: async (state: any) => (await import('./examples/code/circle')).default(state)  },
-  { name: 'Arcs', category: cat1, codeDir: 'examples/code/arcs', module: async (state: any) => (await import('./examples/code/arcs')).default(state)  },
-  { name: 'Triangle Angle', category: cat1, codeDir: 'examples/code/triangle-angle', module: async (state: any) => (await import('./examples/code/triangle-angle')).default(state)  },
-  { name: 'Text', category: cat1, codeDir: 'examples/code/text', module: async (state: any) => (await import('./examples/code/text')).default(state)  },
+  { name: 'Segment', category: cat1, subCategory: geometry, codeDir: 'examples/code/segment', module: async (state: any) => (await import('./examples/code/segment')).default(state)  },
+  { name: 'Circle', category: cat1, subCategory: geometry, codeDir: 'examples/code/circle', module: async (state: any) => (await import('./examples/code/circle')).default(state)  },
+  { name: 'Arcs', category: cat1, subCategory: geometry, codeDir: 'examples/code/arcs', module: async (state: any) => (await import('./examples/code/arcs')).default(state)  },
+  { name: 'Triangle Angle', category: cat1, subCategory: geometry, codeDir: 'examples/code/triangle-angle', module: async (state: any) => (await import('./examples/code/triangle-angle')).default(state)  },
+  { name: 'Text', category: cat1, subCategory: geometry, codeDir: 'examples/code/text', module: async (state: any) => (await import('./examples/code/text')).default(state)  },
   { name: 'Car Movement', category: cat1, codeDir: 'examples/code/car-movement', module: async (state: any) => (await import('./examples/code/car-movement')).default(state)  },
   { name: 'Parallax', category: cat1, codeDir: 'examples/code/parallax', module: async (state: any) => (await import('./examples/code/parallax')).default(state)  },
   { name: 'Sketching', category: cat1, codeDir: 'examples/code/sketching', module: async (state: any) => (await import('./examples/code/sketching')).default(state)  },
   { name: 'Paint', category: cat1, codeDir: 'examples/code/paint', module: async (state: any) => (await import('./examples/code/paint')).default(state)  },
-  { name: 'Line Insterpolation', category: cat1, codeDir: 'examples/code/line-insterpolation', module: async (state: any) => (await import('./examples/code/line-insterpolation')).default(state)  },
-  { name: 'Bezier Lines', category: cat1, codeDir: 'examples/code/bezier-lines', module: async (state: any) => (await import('./examples/code/bezier-lines')).default(state)  },
-  { name: 'Bezier Interpolation', category: cat1, codeDir: 'examples/code/bezier-interpolation', module: async (state: any) => (await import('./examples/code/bezier-interpolation')).default(state)  },
-  { name: 'Path Interpolation', category: cat1, codeDir: 'examples/code/path-interpolation', module: async (state: any) => (await import('./examples/code/path-interpolation')).default(state)  },
+  { name: 'Line Insterpolation', category: cat1, subCategory: geometry, codeDir: 'examples/code/line-insterpolation', module: async (state: any) => (await import('./examples/code/line-insterpolation')).default(state)  },
+  { name: 'Bezier Lines', category: cat1, subCategory: geometry, codeDir: 'examples/code/bezier-lines', module: async (state: any) => (await import('./examples/code/bezier-lines')).default(state)  },
+  { name: 'Bezier Interpolation', category: cat1, subCategory: geometry, codeDir: 'examples/code/bezier-interpolation', module: async (state: any) => (await import('./examples/code/bezier-interpolation')).default(state)  },
+  { name: 'Path Interpolation', category: cat1, subCategory: geometry, codeDir: 'examples/code/path-interpolation', module: async (state: any) => (await import('./examples/code/path-interpolation')).default(state)  },
   { name: 'Numeric Table', category: cat1, codeDir: 'examples/code/table', module: async (state: any) => (await import('./examples/code/table')).default(state)  },
   { name: 'Vector Editor', category: cat1, codeDir: 'examples/code/vector-editor-test', module: async (state: any) => (await import('./examples/code/vector-editor-test')).default(state)  },
   

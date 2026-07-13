@@ -2,8 +2,10 @@
 import { computed, nextTick, onMounted, ref, watch } from 'vue'
 import { ItemList, TDropMenu, TextBox } from 'vue3-universal-components'
 import { Client, OkResult } from '../../../../api'
+import ProjectList from './project-list.vue';
+import { ScriptListModel } from './script-list-model.ts';
 
-const props = defineProps<{ items: {id: string, name: string, category: string, codeDir: string }[], selectedId: string}>()
+const props = defineProps<{ items: {id: string, name: string, category: string, subCategory: string, codeDir: string }[], selectedId: string}>()
 const emit = defineEmits<{click: [id: string]}>()
 const filtredItems = computed(() => {
   if (!search.value) return props.items
@@ -12,25 +14,25 @@ const filtredItems = computed(() => {
 const categories = computed(() => [...new Set(filtredItems.value.map(p => p.category)).keys()])
 const selected = ref(props.selectedId)
 const search = ref('')
+const viewmodel = new ScriptListModel(props.items)
 
 watch(() => props.selectedId, () => selected.value = props.selectedId)
 
 const itemMenu = ref<TDropMenu>({ items: [ { name: 'open',  text: 'Open in VS Code'}]})
 
-const onMenuOpen = async (id: string, menuName) => {
+const onMenuOpen = async (id: string) => {
   const item = filtredItems.value.find(p => p.id === id)
   if (!item) {
     console.error('Item is not foound. Id ' + id)
     return
   }
-
-  if (menuName === 'open') {
-    const response = await Client.get<OkResult>(`openInCode/?path=${item.codeDir}`)
-    if (response instanceof Error) return
-    if (!response.ok) {
-      alert('Response in not ok')
-    } 
-  }
+ 
+  const response = await Client.get<OkResult>(`openInCode/?path=${item.codeDir}`)
+  if (response instanceof Error) return
+  if (!response.ok) {
+    alert('Response in not ok')
+  } 
+ 
 }
 
 onMounted(async () => {
@@ -51,16 +53,33 @@ onMounted(async () => {
     </div>
     <div class="scroll-list">
       
-    <template v-for="cat in categories">
-      <p class="category">{{ cat }}</p>
-      <ItemList 
-        :items="filtredItems.filter(p => p.category === cat)" 
-        :menu="itemMenu"
+    <template v-for="cat in viewmodel.categories">
+      <p class="category">{{ cat.name }}</p>
+
+      
+
+      <ProjectList 
+        :items="cat.projects" 
+        
         v-model="selected" 
         @click="({ id }) => emit('click', id )"
-        @menu-click="onMenuOpen"
+        @open-in-vs-code="onMenuOpen"
         >
-      </ItemList>
+      </ProjectList>
+
+      <template v-for="sub in cat.subCategories" >
+        <p class="sub-category">{{ sub.name }}</p>
+        <div style="margin-left: 8px;">
+        <ProjectList 
+          :items="sub.projects" 
+          v-model="selected" 
+          @click="({ id }) => emit('click', id )"
+          @open-in-vs-code="onMenuOpen"
+        >
+        
+        </ProjectList>
+        </div>
+      </template>
     </template>
 
     <p v-if="!filtredItems.length && search">Empty Result</p>
@@ -95,5 +114,15 @@ onMounted(async () => {
     padding: 0
     margin-top: 24px
     margin-bottom: 8px
+    font-size: 16px
+    color: #ccc
+
+  p.sub-category
+    padding: 0
+    margin-top: 8px
+    margin-bottom: 8px
+    font-size: 14px
+    font-weight: 300
+    color: #bbb
   
 </style>
