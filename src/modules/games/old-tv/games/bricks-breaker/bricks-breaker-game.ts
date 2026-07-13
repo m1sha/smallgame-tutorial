@@ -1,6 +1,6 @@
-import { GameBase } from "../../station"
+import { GameApp } from "../../station"
 
-export class BricksBreakerGame extends GameBase {
+export class BricksBreakerGame extends GameApp {
   update(): void {
     
   }

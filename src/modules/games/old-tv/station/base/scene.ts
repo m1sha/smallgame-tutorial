@@ -1,10 +1,10 @@
 import { GameEvent, Keys, Surface } from "smallgame";
-import { GameBase } from "./game-base"
+import { GameApp } from "./game-base"
 
 export abstract class Scene {
   #isLoaded = false
 
-  constructor (private game: GameBase) {
+  constructor (private game: GameApp) {
 
   }
 

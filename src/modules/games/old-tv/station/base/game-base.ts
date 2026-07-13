@@ -1,7 +1,7 @@
 import { EventController, MemSurface, Size } from "smallgame"
 import { Scene } from "./scene"
 
-export abstract class GameBase {
+export abstract class GameApp {
   private _frame: MemSurface | null = null
   readonly resolution: Size
   readonly scenes: Scene[] = []

@@ -2,7 +2,7 @@ import { GameStationSettings } from "./game-station-settings"
 import { EventController, gameloop, killgameloop, MemSurface, Rect, Screen, Surface, SurfaceBase } from 'smallgame'
 
 import gameStore from '../games/game-list'
-import { GameBase } from "./base"
+import { GameApp } from "./base"
 import { displayFps } from "../utils"
 import { EffectPipeline } from "../old-tv/effects/base/effect-pipeline"
 import { createEffectPipeline } from "../old-tv/effects"
@@ -10,7 +10,7 @@ import { IGameStationParameters } from "./parameters"
 
 export class GameStation2 {
   private gameloopId: number = 0
-  private game: GameBase | null = null
+  private game: GameApp | null = null
   private bus: EventController | null = null
   private screen: Screen
   private effectPipeline: EffectPipeline
