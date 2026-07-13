@@ -44,8 +44,13 @@ class Cursors {
         const angle = a < 0 ? 360 + a : a
         if (this.cursor.name === 'B') {
           console.log(`angleB: ${angle} angleC: ${this.angleC} angleA: ${this.angleA}`)
-          if (angle > this.angleC) return
-          if (angle < this.angleA) return
+
+          const aB = angle > 180 ? angle - 360 : angle 
+          const aA = this.angleA > 180 ? this.angleA - 360 : this.angleA
+          const aC = this.angleC > 180 ? this.angleC - 360 : this.angleC
+
+          if (aB > aC) return
+          if (aB < aA) return
         }
         this.cursor.seg.end.moveSelf(this.center.rotate(a, this.radius))
         this.cursor.a = angle
@@ -96,13 +101,15 @@ class Renderer {
     sketch
         .line({ stroke: '#f37d7d', lineWidth: 2 }, this.cursors.segA)
         .circle({ fill: '#f37d7d' }, this.cursors.segA.end, this.dotRadius)
-        .text({ color: '#f37d7d', fontSize: '18px' }, (this.cursors.angleA).toFixed(), this.cursors.segA.extrapolateEnd(60).end, { pivote: 'center-center' })
-        .line({ stroke: '#7df37d', lineWidth: 2 }, this.cursors.segB)
-        .circle({ fill: '#7df37d' }, this.cursors.segB.end, this.dotRadius)
-        .text({ color: '#7df37d', fontSize: '18px' }, (this.cursors.angleB).toFixed(), this.cursors.segB.extrapolateEnd(60).end, { pivote: 'center-center' })
+        .text({ color: '#f37d7d', fontSize: '18px' }, 'A ' + (this.cursors.angleA).toFixed(), this.cursors.segA.extrapolateEnd(60).end, { pivote: 'center-center' })
+        
         .line({ stroke: '#7d7dfd', lineWidth: 2 }, this.cursors.segC)
         .circle({ fill: '#7d7dfd' }, this.cursors.segC.end, this.dotRadius)
-        .text({ color: '#7d7dfd', fontSize: '18px' }, (this.cursors.angleC).toFixed(), this.cursors.segC.extrapolateEnd(60).end, { pivote: 'center-center' })
+        .text({ color: '#7d7dfd', fontSize: '18px' }, 'C ' + (this.cursors.angleC).toFixed(), this.cursors.segC.extrapolateEnd(60).end, { pivote: 'center-center' })
+
+        .line({ stroke: '#7df37d', lineWidth: 2 }, this.cursors.segB)
+        .circle({ fill: '#7df37d' }, this.cursors.segB.end, this.dotRadius)
+        .text({ color: '#7df37d', fontSize: '18px' }, 'B ' + (this.cursors.angleB).toFixed(), this.cursors.segB.extrapolateEnd(60).end, { pivote: 'center-center' })
 
     sketch.circle({ fill: '#bbb' }, center, this.dotRadius)
     sketch.draw(this.surface)
