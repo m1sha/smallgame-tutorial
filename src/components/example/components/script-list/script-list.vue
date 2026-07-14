@@ -1,38 +1,23 @@
 <script setup lang="ts">
-import { computed, nextTick, onMounted, ref, watch } from 'vue'
-import { ItemList, TDropMenu, TextBox } from 'vue3-universal-components'
-import { Client, OkResult } from '../../../../api'
+import { nextTick, onMounted, ref, watch } from 'vue'
+import { TextBox } from 'vue3-universal-components'
 import ProjectList from './project-list.vue';
 import { ScriptListModel } from './script-list-model.ts';
 
-const props = defineProps<{ items: {id: string, name: string, category: string, subCategory: string, codeDir: string }[], selectedId: string}>()
+const props = defineProps<{ 
+  items: {id: string, name: string, category: string, subCategory: string, codeDir: string }[], 
+  selectedId: string
+}>()
 const emit = defineEmits<{click: [id: string]}>()
-const filtredItems = computed(() => {
-  if (!search.value) return props.items
-  return props.items.filter(p => p.name.toLocaleLowerCase().includes(search.value.toLocaleLowerCase()))
-})
-const categories = computed(() => [...new Set(filtredItems.value.map(p => p.category)).keys()])
 const selected = ref(props.selectedId)
 const search = ref('')
 const viewmodel = new ScriptListModel(props.items)
-
-watch(() => props.selectedId, () => selected.value = props.selectedId)
-
-const itemMenu = ref<TDropMenu>({ items: [ { name: 'open',  text: 'Open in VS Code'}]})
-
 const onMenuOpen = async (id: string) => {
-  const item = filtredItems.value.find(p => p.id === id)
-  if (!item) {
-    console.error('Item is not foound. Id ' + id)
-    return
-  }
- 
-  const response = await Client.get<OkResult>(`openInCode/?path=${item.codeDir}`)
+  const response = await viewmodel.openInVsCode(id)
   if (response instanceof Error) return
   if (!response.ok) {
     alert('Response in not ok')
   } 
- 
 }
 
 onMounted(async () => {
@@ -44,6 +29,9 @@ onMounted(async () => {
     item.scrollIntoView({ behavior: 'instant', block: 'center' })
   })
 })
+
+watch(() => props.selectedId, () => selected.value = props.selectedId)
+watch(() => search.value, () => viewmodel.search(search.value))
 
 </script>
 <template>
@@ -82,7 +70,7 @@ onMounted(async () => {
       </template>
     </template>
 
-    <p v-if="!filtredItems.length && search">Empty Result</p>
+    <p v-if="viewmodel.isEmptySearch">Empty Result</p>
     </div>
     
   </div>
