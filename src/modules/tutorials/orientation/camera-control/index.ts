@@ -1,4 +1,4 @@
-import { DragPanel, Viewer } from "../../../shared"
+import { DragPanels, Viewer } from "../../../shared"
 import { displayFps } from "../../../../utils/display-fps"
 import { type ScriptModule, type ScriptSettings } from "../../../../components/example"
 import { loadImage, MemSurface, Rect, Size, Sketch } from "smallgame"
@@ -18,8 +18,9 @@ export default async ({ container, containerSize, fps, builders }: ScriptSetting
   const delta = img.rect.size.inverse(previewFitRect.size).toPoint()
   const getClipRect = () => cursorRect.scalesize(delta.x, delta.y).moveSelf(cursorRect.topLeft.scale(delta))
   let isCursorActive = false
-  const cameraPanel = new DragPanel('Camera', new Rect(20, 300, 600, 460), { useSmooth: true, resizable: true })
-  viewer.useInput(cameraPanel)
+  const panels = new DragPanels(containerSize)
+  const cameraPanel = panels.add('Camera', new Rect(20, 300, 600, 460), { useSmooth: true, resizable: true })
+  viewer.useInput(panels)
 
   viewer.onInput = ev => {
     if (ev.type === 'MOUSEDOWN') {
@@ -60,7 +61,7 @@ export default async ({ container, containerSize, fps, builders }: ScriptSetting
     frame.blit(preview, preview.rect.move(700, 30))
 
     cameraPanel.content = camera
-    cameraPanel.draw(frame)
+    panels.draw(frame)
 
     displayFps(fps)
   }
