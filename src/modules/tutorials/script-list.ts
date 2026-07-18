@@ -61,6 +61,7 @@ const scriptList: ScriptDef[] = [
   { name: 'Path Interpolation', category: cat1, subCategory: geometry, codeDir: 'examples/code/path-interpolation', module: async (state: any) => (await import('./examples/code/path-interpolation')).default(state)  },
   { name: 'Numeric Table', category: cat1, codeDir: 'examples/code/table', module: async (state: any) => (await import('./examples/code/table')).default(state)  },
   { name: 'Vector Editor', category: cat1, codeDir: 'examples/code/vector-editor-test', module: async (state: any) => (await import('./examples/code/vector-editor-test')).default(state)  },
+  { name: 'Drag Panels', category: cat1, codeDir: 'examples/code/drag-panel-test', module: async (state: any) => (await import('./examples/code/drag-panel-test')).default(state)  },
   
 
   { name: 'Blit', category: cat2, codeDir: 'surfaces/code/rectangle', module: async (state: any) => (await import('./surfaces/code/rectangle')).default(state)  },
@@ -68,6 +69,7 @@ const scriptList: ScriptDef[] = [
   { name: 'Pattern', category: cat2, codeDir: 'surfaces/code/pattern', module: async (state: any) => (await import('./surfaces/code/pattern')).default(state)  },
   { name: 'Fill Pattern', category: cat2, codeDir: 'surfaces/code/fill-pattern', module: async (state: any) => (await import('./surfaces/code/fill-pattern')).default(state)  },
   { name: 'Surface Mix', category: cat2, codeDir: 'surfaces/code/mix', module: async (state: any) => (await import('./surfaces/code/mix')).default(state)  },
+  { name: 'Clip', category: cat2, codeDir: 'surfaces/code/clip', module: async (state: any) => (await import('./surfaces/code/clip')).default(state)  },
   { name: 'Math Coords', category: cat2, codeDir: 'surfaces/code/math-coords', module: async (state: any) => (await import('./surfaces/code/math-coords')).default(state)  },
   { name: 'Textured Text', category: cat2, codeDir: 'surfaces/code/simple-text', module: async (state: any) => (await import('./surfaces/code/simple-text')).default(state)  },
   { name: 'Textured Text (GL)', category: cat2, codeDir: 'surfaces/code/surface-gl', module: async (state: any) => (await import('./surfaces/code/surface-gl')).default(state)  },
@@ -94,6 +96,7 @@ const scriptList: ScriptDef[] = [
   { name: 'Chess', category: cat3, codeDir: 'gl-effects/code/chess', module: async (state: any) => (await import('./gl-effects/code/chess')).default(state)  },
 
   { name: 'Hello World (WebGL)', category: cat4, codeDir: 'gl/code/hello-world', module: async (state: any) => (await import('./gl/code/hello-world')).default(state)  },
+  { name: 'Z Index', category: cat4, codeDir: 'gl/code/z-index', module: async (state: any) => (await import('./gl/code/z-index')).default(state)  },
   { name: 'Vertex Array Object (Points)', category: cat4, codeDir: 'gl/code/vao-points', module: async (state: any) => (await import('./gl/code/vao-points')).default(state)  },
   { name: 'Vertex Array Object (Rects)', category: cat4, codeDir: 'gl/code/vao-rects', module: async (state: any) => (await import('./gl/code/vao-rects')).default(state)  },
   { name: 'Tiles (Rects)', category: cat4, codeDir: 'gl/code/tiles-rects', module: async (state: any) => (await import('./gl/code/tiles-rects')).default(state)  },
