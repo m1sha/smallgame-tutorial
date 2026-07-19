@@ -6,7 +6,7 @@ export class PanelRenderer {
   private readonly screen: MemSurface
   private readonly activeSurface: MemSurface
 
-  constructor (private panels: DragPanel[], private sender: { selected: DragPanel | null, needRedraw: boolean }, viewportSize: Size) {
+  constructor (private panels: DragPanel[], private sender: { selected: DragPanel | null, needRedraw: boolean, setRedrawed: () => void }, viewportSize: Size) {
     this.surface = new MemSurface(viewportSize)
     this.activeSurface = new MemSurface(viewportSize)
     this.screen = new MemSurface(viewportSize)
@@ -23,7 +23,7 @@ export class PanelRenderer {
       this.drawPanel(panel, this.screen)
       panel.needRemake = 'none'
     }
-    this.sender.needRedraw = false
+    this.sender.setRedrawed()
    }
 
     const selected = this.sender.selected

@@ -9,7 +9,14 @@ export class DragPanels implements IInputDelegate {
   private renderer: PanelRenderer
   selected: DragPanel | null = null
   onSelect: ((panel: DragPanel) => void) | null = null
-  needRedraw = true
+  
+  get needRedraw () {
+    return this.panels.some(p => p.needRemake !== 'none')
+  }
+
+  setRedrawed () {
+    this.panels.forEach(p => p.needRemake = 'none')
+  }
 
   constructor (viewportSize: Size) {
     this.renderer = new PanelRenderer(this.panels, this, viewportSize)
@@ -37,7 +44,7 @@ export class DragPanels implements IInputDelegate {
             }
 
             if (this.selected) {
-              this.needRedraw = true
+              panel.needRemake = 'full'
             }
 
             if (panel.active || this.selected) {
