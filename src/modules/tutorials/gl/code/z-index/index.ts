@@ -108,32 +108,32 @@ export default async ({ container, containerSize, fps, builders }: ScriptSetting
     render()
   }, true)
 
-  ui.info(`
-    If the 'Enabled Depth' parameter is enabled, rectangles are sorted along the Z-axis; otherwise, they are sorted in the order of definition.
-    <br /><br />
-    <div style="display:flex; gap: 8px">
-      <div>
-        <span>Definition</span>
-        <ul style="display:flex; flex-direction: column; gap: 4px">
-          <li><div class="bx16" style="background-color: #ac2b3a"></div></li>
-          <li><div class="bx16" style="background-color: #119922"></div></li>
-          <li><div class="bx16" style="background-color: #1258c0"></div></li>
-          <li><div class="bx16" style="background-color: #ce5f04"></div></li>
-          <li><div class="bx16" style="background-color: #b816c7"></div></li>
-        </ul>
-      </div>
-      <div>
-        <span>Sorted</span>
-        <ul style="display:flex; flex-direction: column; gap: 4px">
-          <li><div class="bx16" style="background-color: #ce5f04"></div></li>
-          <li><div class="bx16" style="background-color: #ac2b3a"></div></li>
-          <li><div class="bx16" style="background-color: #b816c7"></div></li>
-          <li><div class="bx16" style="background-color: #119922"></div></li>
-          <li><div class="bx16" style="background-color: #1258c0"></div></li>
-        </ul>
-      </div>
-    </div>
-    `)
+  ui.info(/*html*/`
+    If the 'Enabled Depth' switch is on, rectangles are sorted along the Z-axis; otherwise, they are sorted in the order of definition.
+    <empty-line></empty-line>
+    <f-panel>
+      <f-panel vert no-gap>
+        <f-text>Definition</f-text>
+        <f-list>
+          <li><colored-box color="#ac2b3a" /></li>
+          <li><colored-box color="#119922" /></li>
+          <li><colored-box color="#1258c0" /></li>
+          <li><colored-box color="#ce5f04" /></li>
+          <li><colored-box color="#b816c7" /></li>
+        </f-list>
+      </f-panel>
+      <f-panel vert no-gap>
+        <f-text>Sorted</f-text>
+        <f-list>
+          <li><colored-box color="#1258c0" /></li>
+          <li><colored-box color="#119922" /></li>
+          <li><colored-box color="#b816c7" /></li>
+          <li><colored-box color="#ac2b3a" /></li>
+          <li><colored-box color="#ce5f04" /></li>
+        </f-list>
+      </f-panel>
+    </f-panel>
+  `)
  
   return { 
     dispose () { 
