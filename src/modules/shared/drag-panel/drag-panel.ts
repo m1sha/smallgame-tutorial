@@ -8,11 +8,11 @@ export type DragPanelOptions = {
 }
 
 export class DragPanel {
-  headerHeight = 28
+  headerHeight = 26
   borderColor = '#282828'
   headerBgColor = '#282828'
   headerTextColor = '#aaa'
-  contentBgColor =  '#353535'
+  contentBgColor =  '#313131'
   pos: Point
   private prePos: Point
   private preSize: Size

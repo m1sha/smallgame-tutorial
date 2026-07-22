@@ -50,7 +50,7 @@ export class PanelRenderer {
       .rect({ fill: panel.active ? '#2b2b2b' : panel.headerBgColor }, panel.headerRect)
       .rect({ fill: panel.contentBgColor }, panel.contentRect)
       .polygon({ fill: panel.resizable ? panel.borderColor : 'transparent' }, [br.shiftX(-16), br, br.shiftY(-16), br.shiftX(-16)])
-      .text({ color: panel.headerTextColor, fontSize: '16px' }, panel.caption, panel.headerRect.shift(8, 4))
+      .text({ color: panel.headerTextColor, fontSize: '14px' }, panel.caption, panel.headerRect.shift(8, 4))
       .draw(surface)
     
   }
@@ -59,7 +59,7 @@ export class PanelRenderer {
     const rect = Rect.scaleToFit(panel.content, panel.contentRect.outline(2, 0, 8, 2))
     rect.absCenter = panel.contentRect.absCenter
     Sketch.new().rect({ fill: panel.contentBgColor }, panel.contentRect).draw(surface)
-    surface.blit(panel.content, panel.contentAlignment === 'fit' ? rect : surface.rect)
+    surface.blit(panel.content, panel.contentAlignment === 'fit' ? rect : panel.content.rect.shift(panel.contentRect))
     const br = panel.fullRect.bottomRight.shift(-2, -2)
     Sketch.new()
       .polygon({ fill: panel.resizable ? panel.borderColor : 'transparent' }, [br.shiftX(-16), br, br.shiftY(-16), br.shiftX(-16)])

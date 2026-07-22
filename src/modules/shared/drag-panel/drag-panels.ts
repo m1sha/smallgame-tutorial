@@ -1,4 +1,4 @@
-import { GameEvent, Keys, Rect, Size, Surface } from "smallgame";
+import { GameEvent, Keys, Point, Rect, Size, Surface } from "smallgame";
 import { IInputDelegate } from "../viewer/input-delegate";
 import { DragPanel, DragPanelOptions } from "./drag-panel";
 import { removeItem } from "smallgame/src/utils";
@@ -9,6 +9,8 @@ export class DragPanels implements IInputDelegate {
   private renderer: PanelRenderer
   selected: DragPanel | null = null
   onSelect: ((panel: DragPanel) => void) | null = null
+  onContentClick: ((panel: DragPanel, pos: Point) => void) | null = null
+  inputDelegate: ((panel: DragPanel, ev: GameEvent, owner: { cursor: string }) => void | boolean) = null
   
   get needRedraw () {
     return this.panels.some(p => p.needRemake !== 'none')
@@ -32,45 +34,45 @@ export class DragPanels implements IInputDelegate {
   input (ev: GameEvent, owner: { cursor: string }) {
     for (let i = this.panels.length - 1; i >= 0; i--) {
       const panel = this.panels[i]
-          const br = panel.fullRect.bottomRight
+      if (this.inputDelegate?.(panel, ev, owner) === false) continue
       
-          if (ev.type === 'MOUSEDOWN') {
-            panel.active = panel.headerRect.containsPoint(ev.pos)
-            this.selected = panel.fullRect.containsPoint(ev.pos) ? panel : null
+      const br = panel.fullRect.bottomRight
+      
+      if (ev.type === 'MOUSEDOWN') {
+        panel.active = panel.headerRect.containsPoint(ev.pos)
+        this.selected = panel.fullRect.containsPoint(ev.pos) ? panel : null
             
+        if (panel.contentRect.containsPoint(ev.pos)) {
+          this.onContentClick?.(panel, ev.pos)
+        }
             
-            if (br.inRadius(ev.pos, 10) && panel.resizable) {
-              panel.canDoResizing = true
-            }
+        if (br.inRadius(ev.pos, 10) && panel.resizable) {
+          panel.canDoResizing = true
+        }
 
-            if (this.selected) {
-              panel.needRemake = 'full'
-            }
+        if (this.selected) {
+          panel.needRemake = 'full'
+        }
 
-            if (panel.active || this.selected) {
-              this.bringToTop(panel)
-              
-              break
-            }
-          }
+        if (panel.active || this.selected) {
+          this.bringToTop(panel)
+          break
+        }
+      }
       
-          if (ev.type === 'MOUSEMOVE') {
-
-            const hittest =  br.inRadius(ev.pos, 10)  && panel.resizable
-            owner.cursor = hittest ? 'se-resize' :'default'
-      
-            if (ev.lbc && panel.active) {
-              panel.move(ev.shift)
-              this.setUpdatePanels(panel)
-            }
-      
-            if (ev.lbc && panel.canDoResizing) {
-              panel.resize(panel.size.expand(ev.shift))
-              this.setUpdatePanels(panel)
-            }
-
-            if (hittest) break
-          }
+      if (ev.type === 'MOUSEMOVE') {
+        const hittest =  br.inRadius(ev.pos, 10)  && panel.resizable
+        owner.cursor = hittest ? 'se-resize' :'default'
+        if (ev.lbc && panel.active) {
+          panel.move(ev.shift)
+          this.setUpdatePanels(panel)
+        }
+        if (ev.lbc && panel.canDoResizing) {
+          panel.resize(panel.size.expand(ev.shift))
+          this.setUpdatePanels(panel)
+        }
+        if (hittest) break
+      }
       
       if (ev.type === 'MOUSEUP' || ev.type === 'MOUSELEAVE') {
         panel.active = false

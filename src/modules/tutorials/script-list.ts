@@ -62,6 +62,7 @@ const scriptList: ScriptDef[] = [
   { name: 'Numeric Table', category: cat1, codeDir: 'examples/code/table', module: async (state: any) => (await import('./examples/code/table')).default(state)  },
   { name: 'Vector Editor', category: cat1, codeDir: 'examples/code/vector-editor-test', module: async (state: any) => (await import('./examples/code/vector-editor-test')).default(state)  },
   { name: 'Drag Panels', category: cat1, codeDir: 'examples/code/drag-panel-test', module: async (state: any) => (await import('./examples/code/drag-panel-test')).default(state)  },
+  { name: 'TiledSurface', category: cat1, codeDir: 'examples/code/tiled-surface-test', module: async (state: any) => (await import('./examples/code/tiled-surface-test')).default(state)  },
   
 
   { name: 'Blit', category: cat2, codeDir: 'surfaces/code/rectangle', module: async (state: any) => (await import('./surfaces/code/rectangle')).default(state)  },
