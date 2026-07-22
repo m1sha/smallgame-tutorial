@@ -3,7 +3,7 @@ import { type ScriptModule, type ScriptSettings } from "../../../../../component
 import { displayFps } from "../../../../../utils/display-fps"
 
 export default async ({ container, width, height, fps }: ScriptSettings): Promise<ScriptModule> => {
-  const img = await loadImage('istockphoto-517188688-612x612.jpg')
+  const img = await loadImage('img/green-mountains_612x384_61K.jpg')
   img.zoomSelf(4)
   
   console.time('Simple Text')

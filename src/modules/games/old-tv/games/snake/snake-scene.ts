@@ -37,7 +37,7 @@ export class SnakeGameScene extends Scene {
     }
     this.snakeGame.start()
 
-    this.img = await loadImage('nature-3082832_1280.jpg')
+    this.img = await loadImage('img/lake_1280x720_264K.jpg')
     await super.create()
   }
 

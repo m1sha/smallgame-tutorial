@@ -8,7 +8,7 @@ export default async ({ container, containerSize, fps, builders, viewerControls 
   const telemetry = builders.telemetry()
   const zoom = telemetry.def('Zoom', 1)
 
-  let img = await loadImage('nature-3082832_1280.jpg') // await loadImage('juiiana-zebra-10048351_1280.jpg')
+  let img = await loadImage('img/lake_1280x720_264K.jpg') // await loadImage('img/tritubebuilding_640x960_120K.jpg')
   img.rect.center = viewer.viewportRect.center
   let rect = img.rect.dup()
 

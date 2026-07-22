@@ -7,7 +7,7 @@ export default async ({ container, containerSize, fps, builders }: ScriptSetting
   const viewer = new Viewer(containerSize, container, { disableContextMenu: true })
   const ui = builders.ui()
 
-  const img = await loadImage('istockphoto-517188688-612x612.jpg')
+  const img = await loadImage('img/green-mountains_612x384_61K.jpg')
   const clipRect = Rect.size(150, 125).moveSelf(400, 0)
   
   const origin = new MemSurface(new Size(750, 500))

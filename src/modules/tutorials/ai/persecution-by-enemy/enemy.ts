@@ -28,15 +28,15 @@ export class Enemy {
   }
 
   async load () {
-    let img = await loadImage('zombie/Wild Zombie/Walk.png')
+    let img = await loadImage('platformer/characters/zombie/Wild Zombie/Walk.png')
     let ss = new SpriteSheet(img, new Size(96, 96), 4)
     this.spriteWalk = new AnimatedSprite(ss)
 
-    img = await loadImage('zombie/Wild Zombie/Run.png')
+    img = await loadImage('platformer/characters/zombie/Wild Zombie/Run.png')
     ss = new SpriteSheet(img, new Size(96, 96), 14)
     this.spriteRun = new AnimatedSprite(ss)
 
-    img = await loadImage('zombie/Wild Zombie/Attack_3.png')
+    img = await loadImage('platformer/characters/zombie/Wild Zombie/Attack_3.png')
     ss = new SpriteSheet(img, new Size(96, 96), 8)
     this.spriteAttack = new AnimatedSprite(ss)
   }

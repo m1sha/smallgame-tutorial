@@ -1,17 +1,17 @@
 import { Sprite, Surface, loadImage, Point, Time } from 'smallgame'
 
 const background = [
-  '/parallax/v2/11_background.png',
-  '/parallax/v2/10_distant_clouds.png',
-  '/parallax/v2/09_distant_clouds1.png',
-  '/parallax/v2/08_clouds.png',
-  '/parallax/v2/07_huge_clouds.png',
-  '/parallax/v2/06_hill2.png',
-  '/parallax/v2/05_hill1.png',
-  '/parallax/v2/04_bushes.png',
-  '/parallax/v2/03_distant_trees.png',
-  '/parallax/v2/02_trees and bushes.png',
-  '/parallax/v2/01_ground.png'
+  '/platformer/parallax/v2/11_background.png',
+  '/platformer/parallax/v2/10_distant_clouds.png',
+  '/platformer/parallax/v2/09_distant_clouds1.png',
+  '/platformer/parallax/v2/08_clouds.png',
+  '/platformer/parallax/v2/07_huge_clouds.png',
+  '/platformer/parallax/v2/06_hill2.png',
+  '/platformer/parallax/v2/05_hill1.png',
+  '/platformer/parallax/v2/04_bushes.png',
+  '/platformer/parallax/v2/03_distant_trees.png',
+  '/platformer/parallax/v2/02_trees and bushes.png',
+  '/platformer/parallax/v2/01_ground.png'
 ]
 
 export class ParallaxBackground extends Sprite {

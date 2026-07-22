@@ -72,13 +72,13 @@ draw()
 
 const loadImages = async () => {
   const list = [
-    '/parallax/v4/1.png',
-    '/parallax/v4/2.png',
-    '/parallax/v4/3.png',
-    '/parallax/v4/4.png',
-    '/parallax/v4/5.png',
-    '/parallax/v4/6.png',
-    '/parallax/v4/7.png'
+    '/platformer/parallax/v4/1.png',
+    '/platformer/parallax/v4/2.png',
+    '/platformer/parallax/v4/3.png',
+    '/platformer/parallax/v4/4.png',
+    '/platformer/parallax/v4/5.png',
+    '/platformer/parallax/v4/6.png',
+    '/platformer/parallax/v4/7.png'
   ]
     const rates = [1, 0.95, 0.9, 0.85, 0.8,  0.75, 0.7]
     const names = list

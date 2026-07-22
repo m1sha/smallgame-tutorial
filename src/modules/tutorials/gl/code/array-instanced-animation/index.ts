@@ -11,7 +11,7 @@ export default async ({ container, containerSize, fps, builders }: ScriptSetting
   const glSurface = gl.toSurface()
   using programm = gl.createProgram(vertex, fragmnet, 'assemble-and-use')
 
-  const img = await loadImage('space-striker/asteroids/Asteroid_1.png')
+  const img = await loadImage('arcades/space-striker/asteroids/Asteroid_1.png')
   gl.createTexture('uSampler', img)
   gl.uniform('uResolution', 'vec2').value = [containerSize.width, containerSize.height]
 

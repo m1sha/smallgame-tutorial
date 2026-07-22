@@ -7,7 +7,7 @@ export class Target {
   startMove = false
   
   async load () {
-    this.img = await loadImage('food/meat2/02.png')
+    this.img = await loadImage('platformer/food/meat2/02.png')
   }
 
   get image () {

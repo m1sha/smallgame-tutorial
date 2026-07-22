@@ -7,7 +7,7 @@ export default async ({ container, containerSize, fps, builders }: ScriptSetting
   const viewer = new Viewer(containerSize, container, { disableContextMenu: true })
   const ui = builders.ui()
 
-  const img = await loadImage('aaa/screenshot 2026-06-24 222445.jpg')
+  const img = await loadImage('img/platformer-screenshot_1693x974_422K.jpg')
   const preview = new MemSurface(new Size(1200, 720))
   const camera = new MemSurface(new Size(640, 480))
   camera.imageRendering = 'pixelated'

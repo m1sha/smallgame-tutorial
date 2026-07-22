@@ -13,9 +13,9 @@ export default async ({ container, containerSize, fps, builders }: ScriptSetting
   const alienRect = telemetry.def('Alien Rect', Rect.zero)
   const mousePos = telemetry.def('Cursor', Point.zero)
   const hittest = telemetry.def('Collided', false)
-  const frigate = await loadImage('space-striker/ships/Frigate_1.png')
+  const frigate = await loadImage('arcades/space-striker/ships/Frigate_1.png')
   const frigateMask = frigate.createMask()
-  const alien = await loadImage('space-striker/ships/Alien_4.png')
+  const alien = await loadImage('arcades/space-striker/ships/Alien_4.png')
   const alienMask = alien.createMask()
   frigate.rect.absCenter = viewer.surface.rect.center
   frigateRect.value = frigate.rect

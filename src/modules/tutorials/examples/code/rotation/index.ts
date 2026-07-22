@@ -10,9 +10,9 @@ export default async ({ container, containerSize, fps, builders }: ScriptSetting
 
   const ca = telemetry.def('ca', 0, val => (val % 360).toFixed(0) + '°')
 
-  const img = await loadImage('space-striker/tiny-ships/tinyShip1.png')
-  const img2 = await loadImage('space-striker/tiny-ships/tinyShip2.png')
-  const img3 = await loadImage('space-striker/tiny-ships/tinyShip3.png')
+  const img = await loadImage('arcades/space-striker/tiny-ships/tinyShip1.png')
+  const img2 = await loadImage('arcades/space-striker/tiny-ships/tinyShip2.png')
+  const img3 = await loadImage('arcades/space-striker/tiny-ships/tinyShip3.png')
   const spriteSheet = new SpriteSheet(img, new Size(24, 27), 12, new Point(1, 0))
     .addBatch('idle', 0, 5)
     .addBatch('attack', 6, 4)

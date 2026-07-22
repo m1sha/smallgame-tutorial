@@ -6,7 +6,7 @@ import { loadImage, Rect, Sketch } from "smallgame"
 export default async ({ container, containerSize, fps, builders }: ScriptSettings): Promise<ScriptModule> => {
   const viewer = new Viewer(containerSize, container, { disableContextMenu: true })
 
-  const img = await loadImage('istockphoto-517188688-612x612.jpg')
+  const img = await loadImage('img/green-mountains_612x384_61K.jpg')
   const roundedrect = Sketch
     .new()
     //.roundedrect({ fill: '#000' }, Rect.size(img.width + 1, img.height+ 1), 80)

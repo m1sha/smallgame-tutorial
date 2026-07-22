@@ -1,9 +1,9 @@
-import { loadImage, Rect, Sketch, Surface, SurfaceGL, Text } from "smallgame"
+import { loadImage, Rect, Surface, SurfaceGL, Text } from "smallgame"
 import { type ScriptModule, type ScriptSettings } from "../../../../../components/example"
 import { displayFps } from "../../../../../utils/display-fps"
 
 export default async ({ container, width, height, fps }: ScriptSettings): Promise<ScriptModule> => {
-  const img = await loadImage('istockphoto-517188688-612x612.jpg')
+  const img = await loadImage('img/green-mountains_612x384_61K.jpg')
   
   console.time('Simple Text (GL)')
   

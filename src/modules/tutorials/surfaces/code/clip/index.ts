@@ -4,7 +4,7 @@ import { type ScriptSettings, Viewer, displayFps } from "../../../core"
 export default async ({ container, containerSize, fps, builders, garbageCollect, viewerControls }: ScriptSettings): Promise<void> => {
   const viewer = new Viewer(containerSize, container, { disableContextMenu: true, garbageCollect, viewerControls })
   const ui = builders.ui()
-  const img = await loadImage('istockphoto-517188688-612x612.jpg')
+  const img = await loadImage('img/green-mountains_612x384_61K.jpg')
   const x = ui.var(160)
   const y = ui.var(100)
   const w = ui.var(300)

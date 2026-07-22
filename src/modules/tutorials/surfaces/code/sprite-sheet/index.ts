@@ -7,10 +7,10 @@ export default async ({ container, containerSize, fps, builders }: ScriptSetting
   const entities = builders.entities()
   const viewer = new Viewer(containerSize, container, { disableContextMenu: true })
   
-  const img1 = await loadImage('space-striker/tiny-ships/tinyShip1.png')
-  const img2 = await loadImage('space-striker/tiny-ships/tinyShip2.png')
-  const img3 = await loadImage('space-striker/tiny-ships/tinyShip3.png')
-  const img4 = await loadImage('characters/raza/raza54bbig1.png')
+  const img1 = await loadImage('arcades/space-striker/tiny-ships/tinyShip1.png')
+  const img2 = await loadImage('arcades/space-striker/tiny-ships/tinyShip2.png')
+  const img3 = await loadImage('arcades/space-striker/tiny-ships/tinyShip3.png')
+  const img4 = await loadImage('platformer/characters/raza/raza54bbig1.png')
 
   const knight = await loadImage('topdown/CharacterKnight/Run.png')
   

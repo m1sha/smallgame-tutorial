@@ -3,9 +3,9 @@ import { loadImage, Sprite, Surface } from "smallgame"
 export class Car extends Sprite {
   private img: Surface | null = null
   async create(): Promise<void> {
-    this.image = await loadImage('car-side-view/car-body.png')
+    this.image = await loadImage('platformer/car-side-view/car-body.png')
     this.rect = this.image.rect
-    this.img = await loadImage('car-side-view/wheele.png')
+    this.img = await loadImage('platformer/car-side-view/wheele.png')
 
     this.image.blit(this.img, this.img.rect.move(40, 58))
   }

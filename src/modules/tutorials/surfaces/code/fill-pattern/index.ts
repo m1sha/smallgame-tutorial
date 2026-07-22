@@ -6,8 +6,8 @@ import { loadImage, Point, Rect } from "smallgame"
 export default async ({ container, containerSize, fps, builders, garbageCollect }: ScriptSettings): Promise<void> => {
   const ui = builders.ui()
   const viewer = new Viewer(containerSize, container, { disableContextMenu: true, garbageCollect })
-  const img = await loadImage('space-striker/bg.png')
-  // const img = await loadImage('istockphoto-517188688-612x612.jpg')
+  const img = await loadImage('arcades/space-striker/bg.png')
+  // const img = await loadImage('img/green-mountains_612x384_61K.jpg')
   let pattern = img.toPattern('repeat')
   const zoom = ui.var(1)
   const w = ui.var(img.width)

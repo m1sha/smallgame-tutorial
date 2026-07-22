@@ -5,6 +5,6 @@ export class AssetStore {
   static get asteroid () { return this.#asteroid! }
 
   async load () {
-    AssetStore.#asteroid = new Sprite(await loadImage('space-striker/asteroids/Asteroid_1.png'))
+    AssetStore.#asteroid = new Sprite(await loadImage('arcades/space-striker/asteroids/Asteroid_1.png'))
   }
 }

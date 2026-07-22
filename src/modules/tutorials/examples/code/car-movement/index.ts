@@ -8,7 +8,7 @@ export default async ({ container, containerSize, fps, builders }: ScriptSetting
   const telemetry = builders.telemetry().open()
   const goal = telemetry.def('Goal', Point.zero)
   const angle = telemetry.def('Angle', 0)
-  const car = await loadImage('car-top-view/car.png')
+  const car = await loadImage('topdown/car-top-view/car.png')
   car.rect.absCenter = viewer.surface.rect.center
   const currentVelocity = new SmoothDampVelocity()
   const rb = new RigidBody2D()

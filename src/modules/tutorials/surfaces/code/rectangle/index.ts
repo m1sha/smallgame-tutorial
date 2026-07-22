@@ -9,7 +9,7 @@ export default async ({ container, containerSize, fps, builders }: ScriptSetting
 
   let a = 18
 
-  const img = await loadImage('istockphoto-517188688-612x612.jpg')
+  const img = await loadImage('img/green-mountains_612x384_61K.jpg')
   img.rect.center = viewer.viewportRect.center
 
   viewer.onFrameChanged = surface => {

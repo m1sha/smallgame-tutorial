@@ -5,8 +5,8 @@ import { Viewer } from "../../../../shared"
 
 export default async ({ container, containerSize, fps, builders }: ScriptSettings): Promise<ScriptModule> => {
   const viewer = new Viewer(containerSize, container)
-  const car = await loadImage('car-top-view/car.png')
-  const road = await loadImage('car-top-view/roadNS.png')
+  const car = await loadImage('topdown/car-top-view/car.png')
+  const road = await loadImage('topdown/car-top-view/roadNS.png')
   car.rect.center = viewer.surface.rect.center
   road.rect.center = viewer.surface.rect.center.shift(-30, 0)
   

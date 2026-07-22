@@ -5,7 +5,7 @@ export class Flag {
   private rect: Rect = Rect.zero
 
   async load () {
-    const img = await loadImage('flags/flag-green.png')
+    const img = await loadImage('platformer/flags/flag-green.png')
     const size = new Size(img.rect.width / 5, img.rect.height)
     const ss = new SpriteSheet(img, size, 4)
     this.sprite = new AnimatedSprite(ss)

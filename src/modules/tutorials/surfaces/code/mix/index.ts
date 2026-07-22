@@ -13,7 +13,7 @@ export default async ({ container, containerSize, fps, builders, garbageCollect 
   
   let distinationImageName = 'mask-circle-5.png'
   const render = async () => {
-    source = await loadImage('nature-3082832_1280.jpg')
+    source = await loadImage('img/lake_1280x720_264K')
     distination  = (await loadImage('masks/' + distinationImageName)).scaleSelf(.6, .6)
     //distination = new MemSurface(img.rect.size)
     //distination.fill(p.pattern)

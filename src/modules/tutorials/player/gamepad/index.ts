@@ -6,7 +6,7 @@ import { loadImage, MemSurface, Point, Sketch, StdGamepad } from "smallgame"
 export default async ({ container, containerSize, fps }: ScriptSettings): Promise<ScriptModule> => {
   const viewer = new Viewer(containerSize, container, { disableContextMenu: true })
   
-  const img = await loadImage('Xbox-Controller-PNG.png')
+  const img = await loadImage('img/Xbox-Controller-PNG_458x281_44K.png')
   const surface = new MemSurface(img.rect.size)
   surface.rect.absCenter = img.rect.absCenter = containerSize.half().toPoint()
   

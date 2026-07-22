@@ -21,7 +21,7 @@ export class Player {
   movementFriction = .9
   
   async load () {
-    const img = await loadImage('action-pack/Full-Sheet.png')
+    const img = await loadImage('platformer/action-pack/Full-Sheet.png')
     const ss = new SpriteSheet(img, new Size(72.225, 72), 8)
     ss.addBatch('idle', 1)
     ss.addBatch('run', 2, 8)

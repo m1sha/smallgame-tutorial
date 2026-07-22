@@ -7,11 +7,11 @@ export default async ({ container, containerSize, fps, builders }: ScriptSetting
   const { game, screen } = Game.create(containerSize.width, containerSize.height, container)
 
   const imgs: Surface[] = []
-  imgs.push(await loadImage('space-striker/ships/Alien_4.png'))
-  imgs.push(await loadImage('space-striker/ships/Turret_Platform.png'))
-  //imgs.push(await loadImage('space-striker/ships/Fighter_1.png'))
-  imgs.push(await loadImage('space-striker/ships/Alien_1.png'))
-  imgs.push(await loadImage('space-striker/ships/Frigate_1.png'))
+  imgs.push(await loadImage('arcades/space-striker/ships/Alien_4.png'))
+  imgs.push(await loadImage('arcades/space-striker/ships/Turret_Platform.png'))
+  //imgs.push(await loadImage('arcades/space-striker/ships/Fighter_1.png'))
+  imgs.push(await loadImage('arcades/space-striker/ships/Alien_1.png'))
+  imgs.push(await loadImage('arcades/space-striker/ships/Frigate_1.png'))
 
   const rect = Rect.size(GMath.maxWidth(imgs) * 2 + 8, GMath.maxHeight(imgs) * imgs.length + 8)
   rect.absCenter = screen.rect.center

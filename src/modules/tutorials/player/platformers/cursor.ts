@@ -19,11 +19,11 @@ export class Cursor {
   }
 
   async load () {
-    let img = await loadImage('characters/Gangsters_2/Idle_2.png')
+    let img = await loadImage('platformer/characters/Gangsters_2/Idle_2.png')
     let idleSs = new SpriteSheet(img, new Size(img.width / 13, img.height), 8)
     this.spriteIdle = new AnimatedSprite(idleSs, new Size(128), { useDiagonal: false })
     
-    img = await loadImage('characters/Gangsters_2/Jump.png')
+    img = await loadImage('platformer/characters/Gangsters_2/Jump.png')
     idleSs = new SpriteSheet(img, new Size(img.width / 10, img.height), 6)
     idleSs.addBatch('jump', 4, 4)
     this.spriteMoving = new AnimatedSprite(idleSs, new Size(128), { useDiagonal: false })

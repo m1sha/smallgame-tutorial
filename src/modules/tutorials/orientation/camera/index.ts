@@ -45,7 +45,7 @@ export default async ({ container, containerSize, fps, builders }: ScriptSetting
   const zoom = telemetry.def('Zoom', 1)
   const clipRect = telemetry.def('Clip Rect', Rect.zero)
 
-  const img = await loadImage('istockphoto-517188688-612x612.jpg')
+  const img = await loadImage('img/green-mountains_612x384_61K.jpg')
   img.rect.absCenter = viewer.surface.rect.absCenter.shiftX(200)
 
  

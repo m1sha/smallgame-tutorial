@@ -45,25 +45,25 @@ export class Hero extends Sprite {
   }
 
   async create(): Promise<void> {
-    this.surface = await loadImage('space-striker/ships/Fighter_1.png')
+    this.surface = await loadImage('arcades/space-striker/ships/Fighter_1.png')
     this.surface.rect.center = this.rect.center
   }
 
   async setSkin (v: string) {
-    if (v === 'Fighter') this.surface = await loadImage('space-striker/ships/Fighter_1.png')
-    if (v === 'Fighter 2') this.surface = await loadImage('space-striker/ships/Fighter 2.png')
-    if (v === 'Fighter 3') this.surface = await loadImage('space-striker/ships/Fighter 3.png')
-    if (v === 'Fighter 4') this.surface = await loadImage('space-striker/ships/Fighter 4.png')
+    if (v === 'Fighter') this.surface = await loadImage('arcades/space-striker/ships/Fighter_1.png')
+    if (v === 'Fighter 2') this.surface = await loadImage('arcades/space-striker/ships/Fighter 2.png')
+    if (v === 'Fighter 3') this.surface = await loadImage('arcades/space-striker/ships/Fighter 3.png')
+    if (v === 'Fighter 4') this.surface = await loadImage('arcades/space-striker/ships/Fighter 4.png')
       
-    if (v === 'Alien') this.surface = await loadImage('space-striker/ships/Alien_4.png')
-    if (v === 'Alien 2') this.surface = await loadImage('space-striker/ships/Alien 2.png')
+    if (v === 'Alien') this.surface = await loadImage('arcades/space-striker/ships/Alien_4.png')
+    if (v === 'Alien 2') this.surface = await loadImage('arcades/space-striker/ships/Alien 2.png')
     
-    if (v === 'Frigate') this.surface = await loadImage('space-striker/ships/Frigate_1.png')
-    if (v === 'Cruiser')  this.surface = await loadImage('space-striker/ships/Cruiser 3.png')
+    if (v === 'Frigate') this.surface = await loadImage('arcades/space-striker/ships/Frigate_1.png')
+    if (v === 'Cruiser')  this.surface = await loadImage('arcades/space-striker/ships/Cruiser 3.png')
 
-    if (v === 'Destroyer 1')  this.surface = await loadImage('space-striker/ships/Destroyer 1.png')
-    if (v === 'Destroyer 2')  this.surface = await loadImage('space-striker/ships/Destroyer 2.png')
-    if (v === 'Huge')  this.surface = await loadImage('space-striker/ships/Huge 1.png')
+    if (v === 'Destroyer 1')  this.surface = await loadImage('arcades/space-striker/ships/Destroyer 1.png')
+    if (v === 'Destroyer 2')  this.surface = await loadImage('arcades/space-striker/ships/Destroyer 2.png')
+    if (v === 'Huge')  this.surface = await loadImage('arcades/space-striker/ships/Huge 1.png')
     
     if (this.surface) this.surface.rect.center = this.rect.center
   }
