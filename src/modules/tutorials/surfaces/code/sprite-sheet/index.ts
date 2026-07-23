@@ -1,7 +1,7 @@
-import { AnimatedSprite, loadImage, Point, setSize, Size, SpriteSheet, Surface } from "smallgame"
+import { AnimatedSprite, loadImage, Point, Rect, setSize, Size, SpriteSheet, Surface } from "smallgame"
 import { displayFps } from "../../../../../utils/display-fps"
 import { type ScriptModule, type ScriptSettings } from "../../../../../components/example"
-import { Viewer } from "../../../../shared"
+import { Assets, Viewer } from "../../../../shared"
 
 export default async ({ container, containerSize, fps, builders }: ScriptSettings): Promise<ScriptModule> => {
   const entities = builders.entities()
@@ -37,7 +37,12 @@ export default async ({ container, containerSize, fps, builders }: ScriptSetting
     
 
 
-  
+  const { sprite: vfx1 } = await Assets.vfx('explosion-smoke-01')
+  const { sprite: vfx2 } = await Assets.vfx('pixel-smoke-dust-06')
+  vfx1.spriteSheet.rate = 15
+  vfx1.rect.x = 40
+  //vfx1.
+
     
   
   
@@ -94,6 +99,9 @@ export default async ({ container, containerSize, fps, builders }: ScriptSetting
     sprite4.draw(surface)
     knightSprite.draw(surface)
     sprite1.update()
+    
+    vfx1.draw(surface)
+    vfx2.draw(surface, new Rect(0, 0, 256, 256))
 
     surface.blit(sprite1.image, sprite1.rect)
     displayFps(fps)
