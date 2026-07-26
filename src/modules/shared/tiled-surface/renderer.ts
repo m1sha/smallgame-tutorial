@@ -1,31 +1,36 @@
-import { GL, GlProgram, MatrixUtils, Point, Rect, Size, Surface, SurfaceGL, vec2 } from "smallgame"
+import { GL, GlProgram, MatrixUtils, MemSurface, Point, Rect, Size, Sketch, Surface, SurfaceGL, vec2 } from "smallgame"
 import vertex from './shaders/vert'
 import fragmnet from './shaders/frag'
 import { ITileMap } from "./tile-map"
 
 export class Renderer {
   private gl: GL
-  readonly glSurface: SurfaceGL
+  readonly surface: Surface
+  readonly gridSurface: Surface
+  private readonly glSurface: SurfaceGL
   private programm: GlProgram
   tileSheet: Surface
-  tileSize = new Point(16, 16)
+  //tileSize = new Point(16, 16)
   private vertexCount = 0
   private instanceCount = 0
   private vao: { use: (callback: () => void) => void }
 
-  constructor (private containerSize: Size) {
+  constructor (private containerSize: Size, readonly tileSize: Size, private zoom: number, private offset: Point) {
     this.gl = new GL(this.containerSize)
     this.glSurface = this.gl.toSurface()
     this.programm = this.gl.createProgram(vertex, fragmnet, 'assemble-and-use')
+    this.surface = new MemSurface(this.containerSize)
+    this.gridSurface = new MemSurface(this.containerSize)
+    this.drawGrid()
   }
 
   data (map: ITileMap) {
-    const rect = Rect.size(64, 64)
+    const rect = Rect.size(this.tileSize.scale(this.zoom))
     
     
     const shift = Point.zero
-    const gap = 4
-    const getTile = (col: number, row: number) => new Point(col * this.tileSize.x, row * this.tileSize.y).shiftYSelf(this.tileSize.y).uv(this.tileSheet.rect).arr()
+    const gap = 1
+    const getTile = (col: number, row: number) => new Point(col * this.tileSize.width, row * this.tileSize.height).shiftYSelf(this.tileSize.height).uv(this.tileSheet.rect).arr()
       
     const tilesPositions = []
     const tiles = []
@@ -44,7 +49,7 @@ export class Renderer {
     this.gl.createTexture('uSampler', this.tileSheet, { minMag: 'nearest' })
     this.gl.uniform('uResolution', 'vec2').value = [this.containerSize.width, this.containerSize.height]
     this.gl.uniform('uProj', 'mat3').value = MatrixUtils.ortho2D(0, this.containerSize.width, this.containerSize.height, 0) as any
-    this.gl.uniform('uTileSize', 'vec2').value = this.tileSize.uv(this.tileSheet.rect).arr()
+    this.gl.uniform('uTileSize', 'vec2').value = this.tileSize.toPoint().uv(this.tileSheet.rect).arr()
     
     this.vao.use(() => {
       this.vertexCount = this.gl.pabo('aPos', vec2)
@@ -67,10 +72,33 @@ export class Renderer {
         this.gl.drawArraysInstanced('triangle-strip', 0, this.vertexCount, this.instanceCount)
       })
     })
+
+    this.surface.blit(this.glSurface, this.glSurface.rect)
+    this.surface.blit(this.gridSurface, this.gridSurface.rect)
+  }
+
+  private drawGrid () {
+    const sk = new Sketch()
+    sk.defineStyle('line', {  stroke: '#555555'})
+    const tileSize = this.tileSize.scale(this.zoom)
+    const rows = this.containerSize.height / (tileSize.height)
+    const cols = this.containerSize.width / (tileSize.width)
+
+    for (let i = 0; i < rows; i++) {
+      sk.hline('line', new Point(0, i * tileSize.height), this.containerSize.width)
+    }
+
+    for (let j = 0; j < cols; j++) {
+      sk.vline('line', new Point(j * tileSize.width, 0), this.containerSize.height)
+    }
+
+    sk.rect('line', Rect.size(this.containerSize).outline(1))
+
+    sk.draw(this.gridSurface)
   }
 
   private getRowCol (j: number, i: number, map: ITileMap): [number, number] {
-    const tsCols = this.tileSheet.width / this.tileSize.x
+    const tsCols = this.tileSheet.width / this.tileSize.width
     //const tsRows = this.tileSheet.height / this.tileSize.y
     const index = map.data[i * map.cols + j]
     let row = 0 | (index / tsCols);
