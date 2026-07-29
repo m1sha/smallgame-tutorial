@@ -6,6 +6,7 @@ import { ParameterList, ScriptList, Telemetry, Toolbar, ToolbarDropdownPanel, Co
 import { Size } from "smallgame";
 import { BottomBar } from "./components/bottom-bar";
 import { initViewerControls, IViewerControls } from "../../modules/shared"
+import { runModule } from "../../modules/tutorials/script-list"
 
 
 const props = defineProps<{ scriptList: ScriptDef[] }>()
@@ -45,8 +46,7 @@ async function main() {
   const builders = new Builders()
   let moduleDisposer: (() => void) | null = null
   const disposer = (callback: () => void) => moduleDisposer = callback
-
-  currentModule.value = await script.module({ 
+  const data = { 
     container: container.value!, 
     fps: fps.value!, 
     width, 
@@ -55,7 +55,9 @@ async function main() {
     builders,
     viewerControls: viewerControls.value,
     disposer
-  }) || {}
+  }
+  
+  currentModule.value = await runModule(script.codeDir, data) || {}
 
   if (builders.has('ui') && !currentModule.value.ui) {
     currentModule.value.ui = builders.ui().build()

@@ -1,5 +1,12 @@
 import { ScriptDef } from '../../components/example/code/script-def'
 
+const modules = import.meta.glob('./**/index.ts')
+
+const runModule = async (path: string, data: any) => {
+  const module = (await modules[`./${path}/index.ts`]()) as any
+  return module.default(data)
+}
+
 const cat0 = 'Physics'
 const cat1 = 'Examples'
 const cat2 = 'Surfaces'
@@ -14,20 +21,20 @@ const geometry = 'Geometry'
 
 
 const scriptList: ScriptDef[] = [
-  { name: 'Viewer Navigations', category: cat6, codeDir: 'orientation/viewer-navigations', module: async (state: any) => (await import('./orientation/viewer-navigations')).default(state)  },
-  { name: 'Rect Move + Pivote', category: cat6, codeDir: 'orientation/rect-shift-pivote', module: async (state: any) => (await import('./orientation/rect-shift-pivote')).default(state)  },
-  { name: 'Rect Scale + Pivote', category: cat6, codeDir: 'orientation/rect-scale-pivote', module: async (state: any) => (await import('./orientation/rect-scale-pivote')).default(state)  },
-  { name: 'Rect Scale to Cursor', category: cat6, codeDir: 'orientation/rect-scale-to-cursor', module: async (state: any) => (await import('./orientation/rect-scale-to-cursor')).default(state)  },
-  { name: 'Movement To Cursor', category: cat6, codeDir: 'orientation/movement-to-cursor', module: async (state: any) => (await import('./orientation/movement-to-cursor')).default(state)  },
-  { name: 'Zoom Pan', category: cat6, codeDir: 'orientation/zoom-pan', module: async (state: any) => (await import('./orientation/zoom-pan')).default(state)  },
-  { name: 'Camera 2D', category: cat6, codeDir: 'orientation/camera', module: async (state: any) => (await import('./orientation/camera')).default(state)  },
-  { name: 'Camera 2D Control', category: cat6, codeDir: 'orientation/camera-control', module: async (state: any) => (await import('./orientation/camera-control')).default(state)  },
-  { name: 'Camera 2D LookAt', category: cat6, codeDir: 'orientation/camera-look-at', module: async (state: any) => (await import('./orientation/camera-look-at')).default(state)  },
-  { name: 'Objects In Space', category: cat6, codeDir: 'orientation/objects', module: async (state: any) => (await import('./orientation/objects')).default(state)  },
-  { name: 'Scaling', category: cat6, codeDir: 'orientation/scaling', module: async (state: any) => (await import('./orientation/scaling')).default(state)  },
-  { name: 'Zoom To Cursor (Image)', category: cat6, codeDir: 'orientation/scaling', module: async (state: any) => (await import('./orientation/zoom-to-cursor-image')).default(state)  },
+  { name: 'Viewer Navigations', category: cat6, codeDir: 'orientation/viewer-navigations'  },
+  { name: 'Rect Move + Pivote', category: cat6, codeDir: 'orientation/rect-shift-pivote' },
+  { name: 'Rect Scale + Pivote', category: cat6, codeDir: 'orientation/rect-scale-pivote' },
+  { name: 'Rect Scale to Cursor', category: cat6, codeDir: 'orientation/rect-scale-to-cursor' },
+  { name: 'Movement To Cursor', category: cat6, codeDir: 'orientation/movement-to-cursor' },
+  { name: 'Zoom Pan', category: cat6, codeDir: 'orientation/zoom-pan' },
+  { name: 'Camera 2D', category: cat6, codeDir: 'orientation/camera' },
+  { name: 'Camera 2D Control', category: cat6, codeDir: 'orientation/camera-control' },
+  { name: 'Camera 2D LookAt', category: cat6, codeDir: 'orientation/camera-look-at' },
+  { name: 'Objects In Space', category: cat6, codeDir: 'orientation/objects' },
+  { name: 'Scaling', category: cat6, codeDir: 'orientation/scaling' },
+  { name: 'Zoom To Cursor (Image)', category: cat6, codeDir: 'orientation/scaling' },
 
-  { name: 'Linear Movement', category: cat0, codeDir: 'examples/code/linear-movement', module: async (state: any) => (await import('./examples/code/linear-movement')).default(state)  },
+  { name: 'Linear Movement', category: cat0, codeDir: 'examples/code/linear-movement'  },
   { name: 'Movements', category: cat0, codeDir: 'examples/code/movements', module: async (state: any) => (await import('./examples/code/movements')).default(state)  },
   { name: 'Move & Rotate', category: cat0, codeDir: 'examples/code/rotate-move', module: async (state: any) => (await import('./examples/code/rotate-move')).default(state)  },
   { name: 'Rotation', category: cat0, codeDir: 'examples/code/rotation', module: async (state: any) => (await import('./examples/code/rotation')).default(state)  },
@@ -120,4 +127,4 @@ const scriptList: ScriptDef[] = [
   { name: 'Parallax (GL)', category: cat4, codeDir: 'gl/code/parallax-gl', module: async (state: any) => (await import('./gl/code/parallax-gl')).default(state)  },
 ]
 
-export { scriptList }
+export { scriptList, runModule }
