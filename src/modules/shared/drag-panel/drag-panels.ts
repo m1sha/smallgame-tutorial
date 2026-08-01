@@ -41,6 +41,10 @@ export class DragPanels implements IInputDelegate {
       if (ev.type === 'MOUSEDOWN') {
         panel.active = panel.headerRect.containsPoint(ev.pos)
         this.selected = panel.fullRect.containsPoint(ev.pos) ? panel : null
+        if (this.selected) {
+          console.log('Stop')
+          ev.stopPropagation()
+        }
             
         if (panel.contentRect.containsPoint(ev.pos)) {
           this.onContentClick?.(panel, ev.pos)
@@ -61,6 +65,9 @@ export class DragPanels implements IInputDelegate {
       }
       
       if (ev.type === 'MOUSEMOVE') {
+        if (this.selected) {
+          ev.stopPropagation()
+        }
         const hittest =  br.inRadius(ev.pos, 10)  && panel.resizable
         owner.cursor = hittest ? 'se-resize' :'default'
         if (ev.lbc && panel.active) {

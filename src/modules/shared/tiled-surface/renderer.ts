@@ -29,13 +29,13 @@ export class Renderer {
     
     
     const shift = Point.zero
-    const gap = 1
+    const gap = 0
     const getTile = (col: number, row: number) => new Point(col * this.tileSize.width, row * this.tileSize.height).shiftYSelf(this.tileSize.height).uv(this.tileSheet.rect).arr()
       
     const tilesPositions = []
     const tiles = []
-    for (let i = 0; i < map.rows; i ++) {
-      for (let j = 0; j < map.cols; j ++) {
+    for (let i = 0; i < map.table.rows; i ++) {
+      for (let j = 0; j < map.table.cols; j ++) {
         tilesPositions.push(...[shift.x + j * rect.width + j * gap, shift.y + i * rect.height + i * gap,])
         const [row, col] = this.getRowCol(j, i, map)
         tiles.push(...getTile(col, row))
@@ -98,9 +98,8 @@ export class Renderer {
   }
 
   private getRowCol (j: number, i: number, map: ITileMap): [number, number] {
+    const index = map.table.cell(i, j)
     const tsCols = this.tileSheet.width / this.tileSize.width
-    //const tsRows = this.tileSheet.height / this.tileSize.y
-    const index = map.data[i * map.cols + j]
     let row = 0 | (index / tsCols);
     let col = index % tsCols;
     return [row, col]

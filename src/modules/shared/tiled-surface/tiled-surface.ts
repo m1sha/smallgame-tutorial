@@ -8,7 +8,7 @@ export class TiledSurface {
   readonly rect: Rect
   readonly image: MemSurface
 
-  constructor (size: Size, private map: ITileMap, tileSize: Size, zoom: number = 1, offset: Point = Point.zero) {
+  constructor (size: Size, readonly map: ITileMap, tileSize: Size, zoom: number = 1, offset: Point = Point.zero) {
     this.rect = Rect.size(size)
     this.image = new MemSurface(size)
     this.renderer = new Renderer(size, tileSize, zoom, offset)

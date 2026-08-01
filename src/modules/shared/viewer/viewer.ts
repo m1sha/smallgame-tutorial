@@ -75,7 +75,12 @@ export class Viewer {
           continue
         }
 
-        if (this.inputDelegates.length) this.inputDelegates.forEach(d => d.input(ev, this))
+        if (this.inputDelegates.length) {
+          for (const delegate of this.inputDelegates) {
+            delegate.input(ev, this)
+            if (!ev.propagate) return
+          }
+        }
         
         if (ev.type === 'MOUSEDOWN') {
           if (ev.lbc && ev.altKey) {
