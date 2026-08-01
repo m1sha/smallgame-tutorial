@@ -14,10 +14,10 @@ export default async ({ container, containerSize, fps, builders, garbageCollect,
  
   const editor = new LevelEditor(img, tileSize, levelEditorSize, containerSize)
   editor.update()
-  viewer.useInput(editor)
-
   const palette = new TilePalette(img, tileSize, palettePanelSize, containerSize)
+  
   viewer.useInput(palette.panels)
+  viewer.useInput(editor)
 
   palette.onTilesSelected = cursor => {
     editor.setCursor(cursor)

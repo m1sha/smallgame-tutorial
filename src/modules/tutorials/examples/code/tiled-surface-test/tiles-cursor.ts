@@ -1,9 +1,12 @@
 import { Surface } from "smallgame";
 
-export class TilesCursor {
-  constructor (readonly start: number, readonly end: number, readonly surface: Surface) {}
+export type SelectedData = {
+  cols: number
+  rows: number
+  data: number[]
+}
 
-  dup () {
-    return new TilesCursor(this.start, this.end, this.surface.dup())
-  }
+
+export class TilesCursor {
+  constructor (readonly start: number, readonly end: number, readonly surface: Surface, readonly data: SelectedData) {}
 }

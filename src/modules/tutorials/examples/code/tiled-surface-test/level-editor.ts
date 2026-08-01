@@ -38,11 +38,17 @@ export class LevelEditor implements IInputDelegate {
     const dx = this.img.width / this.tileSize.width 
     const getTile = (i: number, j: number) => Array2D.toIndex(i, j, dx) 
     
-    const map = createTileMap(this.tileSize, 3, 3, [
-      0, 1, 2,
-      getTile(1, 0), getTile(1, 1), getTile(1, 2),
-      getTile(2, 0), getTile(2, 1), getTile(2, 2),
-    ])
+    const map = createTileMap(this.tileSize, this.rows, this.cols, [])
+
+    const data = [
+      0, 1, 1, 1, 1, 1, 1, 2,
+      getTile(1, 0), getTile(1, 1), getTile(1, 1), getTile(1, 1), getTile(1, 1), getTile(1, 1), getTile(1, 1), getTile(1, 2),
+      getTile(1, 0), getTile(1, 1), getTile(1, 1), getTile(1, 1), getTile(1, 1), getTile(1, 1), getTile(1, 1), getTile(1, 2),
+      getTile(1, 0), getTile(1, 1), getTile(1, 1), getTile(1, 1), getTile(1, 1), getTile(1, 1), getTile(1, 1), getTile(1, 2),
+      getTile(1, 0), getTile(1, 1), getTile(1, 1), getTile(1, 1), getTile(1, 1), getTile(1, 1), getTile(1, 1), getTile(1, 2),
+      getTile(2, 0), getTile(2, 1), getTile(2, 1), getTile(2, 1), getTile(2, 1), getTile(2, 1), getTile(2, 1), getTile(2, 2),
+    ]
+    map.table.set(2,2, data, 6, 8)
 
     this.tiledSurface = new TiledSurface(this.selfSize, map, this.tileSize, this.zoom)
     this.tiledSurface.addTileSheet(this.img)
@@ -54,9 +60,14 @@ export class LevelEditor implements IInputDelegate {
   }
 
   input (ev: GameEvent, owner: { cursor: string }) {
+    console.log('input')
     const sOffest = this.sOffest
 
     if (ev.type === 'MOUSEMOVE') {
+      
+     const pos = this.tileSize.inverse(ev.pos.x, ev.pos.y).toPoint().int().scaleSelf(this.tileSize.width, this.tileSize.height)
+     console.log(`Before ${ev.pos.x}  ${ev.pos.y}`)
+     console.log(`After ${pos.x}  ${pos.y}`)
       this.cursorPos.moveSelf(ev.pos)
     }
 
@@ -65,8 +76,13 @@ export class LevelEditor implements IInputDelegate {
       const { width: j, height: i } = this.tileSize.inverse(pos.x, pos.y).int()
       const index = Array2D.toIndex(i, j, this.cols)
       console.log(`i ${i}; j ${j}; index: ${index}`)
+      
 
-      //this.cursor.data
+      debugger
+      const data = this.cursor.data
+      if (!data) return
+      this.tiledSurface.map.table.set(i, j, data.data, data.rows, data.cols)
+      this.tiledSurface.render()
     }
   }
 

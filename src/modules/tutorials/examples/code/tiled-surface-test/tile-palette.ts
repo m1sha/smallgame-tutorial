@@ -1,6 +1,8 @@
 import { MemSurface, Point, Rect, Size, Sketch, Surface } from "smallgame"
 import { DragPanels, DragPanel } from "../../../core"
-import { TilesCursor } from "./tiles-cursor"
+import { SelectedData, TilesCursor } from "./tiles-cursor"
+import { Array2D } from "../../../../../utils"
+
 
 export class TilePalette {
   readonly panels: DragPanels
@@ -55,7 +57,8 @@ export class TilePalette {
         if (!panel.contentRect.containsPoint(ev.pos)) return
         
         const sur = this.getSelectedSurface()
-        this.onTilesSelected?.(new TilesCursor(this.selecedRange.start, this.selecedRange.end, sur))
+        const data = this.getSelectedData()
+        this.onTilesSelected?.(new TilesCursor(this.selecedRange.start, this.selecedRange.end, sur, data))
         this.startedIndex = -1
       }
     }
@@ -138,5 +141,30 @@ export class TilePalette {
     
     if (si < 0 || sj < 0 || ei < 0 || ej < 0) return Surface.default
     return this.img.clip(rect)
+  }
+
+  private getSelectedData (): SelectedData {
+    if (this.selecedRange.end < 0) {
+      return {
+        data: [this.startedIndex],
+        rows: 1,
+        cols: 1
+      }
+    }
+
+    const [si, sj, ei, ej] = this.sortSelection()
+    const cols = ej - sj
+    const rows = ei - si
+    const data: number[] = []
+
+    for (let i = si; i < ei + 1; i++)
+      for (let j = sj; j < ej + 1; j++)
+        data.push(Array2D.toIndex(i, j, this.cols))
+    
+    return {
+      cols,
+      rows,
+      data
+    }
   }
 }
