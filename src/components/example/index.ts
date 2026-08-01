@@ -1,3 +1,3 @@
-import CodeExampleTemplate from './code-example-template.vue'
-export { CodeExampleTemplate }
+import SandBox from './sand-box.vue'
+export { SandBox }
 export * from './code'

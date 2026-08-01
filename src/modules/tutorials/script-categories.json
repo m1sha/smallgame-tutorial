@@ -1,0 +1,71 @@
+[
+  {
+    "id": 1,
+    "name": "Orientation",
+    "template": "default",
+    "subCategories": [],
+    "dir": "orientation"
+  },
+  {
+    "id": 2,
+    "name": "Physics",
+    "template": "default",
+    "subCategories": [],
+    "dir": "physics"
+  },
+  {
+    "id": 3,
+    "name": "AI",
+    "template": "default",
+    "subCategories": [
+      { "id": 1, "name": "Platformer" }
+    ],
+    "dir": "ai"
+  },
+  {
+    "id": 4,
+    "name": "Player",
+    "template": "default",
+    "subCategories": [
+      { "id": 1, "name": "Platformer" }
+    ],
+    "dir": "player"
+  },
+  {
+    "id": 5,
+    "name": "Examples",
+    "template": "default",
+    "subCategories": [
+      { "id": 2, "name": "Geometry" }
+    ],
+    "dir": "examples/code"
+  },
+  {
+    "id": 6,
+    "name": "Surfaces",
+    "template": "default",
+    "subCategories": [],
+    "dir": "surfaces/code"
+  },
+  {
+    "id": 7,
+    "name": "Isometric",
+    "template": "default",
+    "subCategories": [],
+    "dir": "surfaces"
+  },
+  {
+    "id": 8,
+    "name": "Raw GLSL",
+    "template": "glsl",
+    "subCategories": [],
+    "dir": "gl-effects/code"
+  },
+  {
+    "id": 9,
+    "name": "WebGL",
+    "template": "webgl",
+    "subCategories": [],
+    "dir": "gl/code"
+  }
+]

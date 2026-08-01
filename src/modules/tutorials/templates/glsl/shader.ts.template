@@ -1,0 +1,13 @@
+export default /*glsl*/`
+
+uniform float time;
+out vec4 fragColor;
+uniform vec2 iResolution;
+
+void main() {
+  vec2 uv = (gl_FragCoord.xy - .5 * iResolution.xy) / iResolution.y;
+  vec3 color = vec3(length(uv.xy));
+  fragColor = vec4(color, 1.0);
+}
+
+`

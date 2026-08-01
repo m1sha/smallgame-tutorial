@@ -1,8 +1,8 @@
 import { Game, GL, Time } from 'smallgame'
 import vertex from './shaders/vert'
 import fragmnet from './shaders/frag'
-import { type ScriptModule, type ScriptSettings } from "../../../../../components/example"
-import { displayFps } from '../../../../../utils/display-fps'
+import { type ScriptModule, type ScriptSettings } from "../../../../components/example"
+import { displayFps } from '../../../../utils/display-fps'
 
 export default async ({ container, containerSize, fps }: ScriptSettings): Promise<ScriptModule> => {
   const gl = new GL(containerSize, true)

@@ -6,21 +6,37 @@ import { ParameterList, ScriptList, Telemetry, Toolbar, ToolbarDropdownPanel, Co
 import { Size } from "smallgame";
 import { BottomBar } from "./components/bottom-bar";
 import { initViewerControls, IViewerControls } from "../../modules/shared"
-import { runModule } from "../../modules/tutorials/script-list"
+import { runScript } from "../../modules/tutorials/script-runner"
+import { IScriptCategory } from "./code/script-category"
+import { IScriptListItem } from "./code/script-list-item"
+import { useScriptsStore } from "./store";
 
+const props = defineProps<{ items: IScriptListItem[], categories: IScriptCategory[] }>()
+const store = useScriptsStore()
+const scriptList = ref<ScriptDef[]>([])
+for (const item of props.items) {
+  const cat = props.categories.find(p => item.categoryId == p.id)
+  if (!cat) continue
 
-const props = defineProps<{ scriptList: ScriptDef[] }>()
+  scriptList.value.push({
+    name: item.name,
+    category: cat.name,
+    codeDir: item.codeDir,
+    subCategory: cat.subCategories.find(p => p.id === item.subCategoryId)?.name
+  })
+}
 const route = useRoute()
 const router = useRouter()
 const container = ref<HTMLDivElement>()
 const fps = ref<HTMLDivElement>()
 const scriptId = computed(() => route.params.name as string)
 const currentModule = ref<ScriptModule | null>()
-const scriptListItems = computed(() => props.scriptList.map((p, i) => ({ id: p.name.replaceAll(' ', '_').toLocaleLowerCase(), name: p.name, category: p.category, codeDir: p.codeDir, subCategory: p.subCategory })) )
+const scriptListItems = computed(() => scriptList.value.map((p, i) => ({ id: p.name.replaceAll(' ', '_').toLocaleLowerCase(), name: p.name, category: p.category, codeDir: p.codeDir, subCategory: p.subCategory })) )
 const settings = new Settings()
 const viewerControls = ref<IViewerControls>(initViewerControls())
 
 onMounted(async () => {
+  store.set(props.items, props.categories)
   await main()
   window.addEventListener('resize', () => {
     clearPrevious()
@@ -29,7 +45,7 @@ onMounted(async () => {
 })
 
 async function main() {
-  const script = !scriptId.value ? props.scriptList[0] : props.scriptList.find(p => p.name.replaceAll(' ', '_').toLocaleLowerCase() === scriptId.value)
+  const script = !scriptId.value ? scriptList[0] : scriptList.value.find(p => p.name.replaceAll(' ', '_').toLocaleLowerCase() === scriptId.value)
   if (!script) {
     console.warn('Script is not found')
     return
@@ -57,7 +73,7 @@ async function main() {
     disposer
   }
   
-  currentModule.value = await runModule(script.codeDir, data) || {}
+  currentModule.value = await runScript(script.codeDir, data) || {}
 
   if (builders.has('ui') && !currentModule.value.ui) {
     currentModule.value.ui = builders.ui().build()
