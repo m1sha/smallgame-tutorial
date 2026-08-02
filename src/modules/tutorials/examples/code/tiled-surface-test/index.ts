@@ -9,7 +9,7 @@ export default async ({ container, containerSize, fps, builders, garbageCollect,
   
   const img = await loadImage('platformer/Terrain_(16x16).png')
   const tileSize = new Size(16)
-  const levelEditorSize = new Size(1000, 800)
+  const levelEditorSize = new Size(800, 800)
   const palettePanelSize = new Size(700, 400)
  
   const editor = new LevelEditor(img, tileSize, levelEditorSize, containerSize)

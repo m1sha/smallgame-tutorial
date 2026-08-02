@@ -77,6 +77,7 @@ export class Viewer {
 
         if (this.inputDelegates.length) {
           for (const delegate of this.inputDelegates) {
+            if (!ev.propagate) return
             delegate.input(ev, this)
             if (!ev.propagate) return
           }

@@ -64,11 +64,10 @@ export class LevelEditor implements IInputDelegate {
     const sOffest = this.sOffest
 
     if (ev.type === 'MOUSEMOVE') {
-      
-     const pos = this.tileSize.inverse(ev.pos.x, ev.pos.y).toPoint().int().scaleSelf(this.tileSize.width, this.tileSize.height)
-     console.log(`Before ${ev.pos.x}  ${ev.pos.y}`)
-     console.log(`After ${pos.x}  ${pos.y}`)
-      this.cursorPos.moveSelf(ev.pos)
+      const pos = ev.pos.shift(sOffest.neg()).scale(1/ this.zoom)
+      const { width: j, height: i } = this.tileSize.inverse(pos.x, pos.y).int()
+      const _pos = new Point(j * this.tileSize.width * this.zoom, i* this.tileSize.height * this.zoom).shift(sOffest)
+      this.cursorPos.moveSelf(_pos)
     }
 
     if (ev.type === 'MOUSEDOWN') {
@@ -76,9 +75,6 @@ export class LevelEditor implements IInputDelegate {
       const { width: j, height: i } = this.tileSize.inverse(pos.x, pos.y).int()
       const index = Array2D.toIndex(i, j, this.cols)
       console.log(`i ${i}; j ${j}; index: ${index}`)
-      
-
-      debugger
       const data = this.cursor.data
       if (!data) return
       this.tiledSurface.map.table.set(i, j, data.data, data.rows, data.cols)
