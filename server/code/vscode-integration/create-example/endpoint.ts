@@ -7,8 +7,8 @@ export function addCreateExampleEndpoints (app: Express) {
     const title = req.params.title as string
     const cat = req.params.cat as string
     const subcat = req.params.subcat as string
-    createProject(name, title, cat, subcat)
+    const item = createProject(name, title, cat, subcat)
     console.log(`Project ${name} - ${title} was created.` )
-    res.json({ ok: true });
+    res.json(item);
   })
 }

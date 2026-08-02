@@ -16,18 +16,21 @@ export function createProject (name: string, title: string, categoryId: string, 
     return
   }
   
-  addProject(name, title, category, +subCategoryId)
+  const item = addProject(name, title, category, +subCategoryId)
   createScriptFromTemplate(category.template, `${category.dir}/${name}`)
+  return item
 }
 
 function addProject (name: string, title: string, category: { id: number, dir: string }, subCategoryId: number) {
- const id = Math.max.apply(null, items.map(p => p.id)) + 1
-  items.push({ id, name: title, categoryId: category.id, subCategoryId: subCategoryId, codeDir: category.dir + '/' + name })
+  const id = Math.max.apply(null, items.map(p => p.id)) + 1
+  const item = { id, name: title, categoryId: category.id, subCategoryId: subCategoryId, codeDir: category.dir + '/' + name }
+  items.push(item)
 
   const content = JSON.stringify(items, null, 2)
   const filename = resolve(`../src/modules/tutorials/script-list.json`)
   writeFileSync(filename, content, 'utf8')
   console.log(`The project ${title} added`)
+  return item
 }
 
 function createScriptFromTemplate (template: string, dir: string) {

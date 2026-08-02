@@ -4,6 +4,7 @@ import { DropDownList, ModalDialog, PushButton, TextBox } from 'vue3-universal-c
 import { Client, OkResult } from '../../../../api'
 import { useScriptsStore } from '../../store'
 import { useRouter } from 'vue-router'
+import { IScriptListItem } from '../../code'
 
 export interface IScriptCreator {
   open (cat: string, subCat: string): void
@@ -30,11 +31,11 @@ defineExpose({
 
 async function createProject () {
   const sub = subCategoryId.value ?? ''
-  const r = await Client.get<OkResult>(`create-project/${name.value}/${title.value}/${categoryId.value}/${sub}`)
-  if (r instanceof Error) return
+  const item = await Client.get<IScriptListItem>(`create-project/${name.value}/${title.value}/${categoryId.value}/${sub}`)
+  if (item instanceof Error) return
   show.value = false
   router.replace({ name: 'Sandbox', params: { name: title.value.replaceAll(' ', '_') }})
-  //
+  await Client.get<OkResult>(`openInCode/?path=${item.codeDir}`)
 }
 
 </script>
