@@ -38,6 +38,11 @@ async function createProject () {
   await Client.get<OkResult>(`openInCode/?path=${item.codeDir}`)
 }
 
+function onNameChanged () {}
+function onTitleChanged () {
+  name.value = title.value.toLocaleLowerCase().replaceAll(' ', '-')
+}
+
 </script>
 
 <template>
@@ -51,8 +56,8 @@ async function createProject () {
           </div>
         </div>
         <div class="name-title">
-          <TextBox v-model="name" caption="Project Name" />
-          <TextBox v-model="title" caption="Display Name" />
+          <TextBox v-model="name" caption="Project Name" @input="onNameChanged" />
+          <TextBox v-model="title" caption="Display Name" @input="onTitleChanged" />
         </div>
       </div>
     </template>

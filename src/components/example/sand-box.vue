@@ -45,7 +45,7 @@ onMounted(async () => {
 })
 
 async function main() {
-  const script = !scriptId.value ? scriptList[0] : scriptList.value.find(p => p.name.replaceAll(' ', '_').toLocaleLowerCase() === scriptId.value)
+  const script = !scriptId.value ? scriptList.value[0] : scriptList.value.find(p => p.name.replaceAll(' ', '_').toLocaleLowerCase() === scriptId.value)
   if (!script) {
     console.warn('Script is not found')
     return
@@ -55,18 +55,14 @@ async function main() {
     console.warn('container is not found')
     return
   }
-
-  const width = container.value!.clientWidth 
-  const height = container.value!.clientHeight
-  const containerSize = new Size(width, height)
+  
+  const containerSize = new Size(container.value!.clientWidth, container.value!.clientHeight)
   const builders = new Builders()
   let moduleDisposer: (() => void) | null = null
   const disposer = (callback: () => void) => moduleDisposer = callback
   const data = { 
     container: container.value!, 
     fps: fps.value!, 
-    width, 
-    height, 
     containerSize, 
     builders,
     viewerControls: viewerControls.value,
