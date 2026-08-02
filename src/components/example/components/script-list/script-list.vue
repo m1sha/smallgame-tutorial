@@ -45,14 +45,11 @@ watch(() => search.value, () => viewmodel.search(search.value))
         <TextBox placeholder="Search" v-model="search" search />
       </div>
       
-      <div class="project-edit">
-        <a href="javascript:void(0)" @click="editScripts?.open()"><i class="fa fa-edit"></i> Edit</a>
-        <br />
-      </div>
+      
       
       <div class="scroll-list">
         <template v-for="cat in viewmodel.categories">
-          <div style="display: flex; align-items: center; justify-content: space-between;">
+          <div class="category-title">
             <p class="category">{{ cat.name }}</p>
             <a href="javascript:void(0)" @click="createScript.open(cat.name, '')" title="Create Project"><i class="fa fa-plus"></i></a>
           </div>
@@ -65,7 +62,7 @@ watch(() => search.value, () => viewmodel.search(search.value))
           </ProjectList>
 
           <template v-for="sub in cat.subCategories" >
-            <div style="display: flex; align-items: center; justify-content: space-between;">
+            <div class="category-title">
               <p class="sub-category">{{ sub.name }}</p>
               <a href="javascript:void(0)" @click="createScript.open(cat.name, sub.name)" title="Create Project"><i class="fa fa-plus"></i></a>
             </div>
@@ -82,6 +79,11 @@ watch(() => search.value, () => viewmodel.search(search.value))
         </template>
 
         <p v-if="viewmodel.isEmptySearch">Empty Result</p>
+      </div>
+
+      <div class="project-edit">
+        <a href="javascript:void(0)" title="Edit Projects Sructure" @click="editScripts?.open()"><i class="fa fa-edit"></i> Edit Projects</a>
+        <br />
       </div>
     </div>
 
@@ -111,17 +113,32 @@ watch(() => search.value, () => viewmodel.search(search.value))
     margin-bottom: 18px
 
   .project-edit
+    margin-top: 8px
+    padding-top: 8px
     a
       font-size: 12px
       color: #aaa
+      padding-bottom: 1px
+      border-bottom: 1px solid #999
+      &:hover
+        color: #bbb
       
       
 
   .scroll-list
-    height: calc( 100vh -  168px)
+    height: calc( 100vh -  198px)
     overflow-y: auto
-    margin-top: 8px
-    
+    //margin-top: 8px
+
+    .category-title
+      display: flex 
+      align-items: center 
+      justify-content: space-between
+      a 
+        opacity: 0
+      &:hover
+        a
+          opacity: 1
 
   p.category
     padding: 0
