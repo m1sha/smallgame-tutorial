@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from "vue"
 import { useRoute, useRouter } from "vue-router"
-import { Builders, ScriptDef, ScriptModule, Settings } from "./code"
-import { ParameterList, ScriptList, Telemetry, Toolbar, ToolbarDropdownPanel, ContextMenu, EntityList, Viewport } from './components'
+import { Builders, IToastMessage, ScriptDef, ScriptModule, Settings } from "./code"
+import { ParameterList, ScriptList, Telemetry, Toolbar, ToolbarDropdownPanel, ContextMenu, EntityList, Viewport, Toasts } from './components'
 import { Size } from "smallgame";
 import { BottomBar } from "./components/bottom-bar";
 import { initViewerControls, IViewerControls } from "../../modules/shared"
@@ -10,6 +10,7 @@ import { runScript } from "../../modules/tutorials/script-runner"
 import { IScriptCategory } from "./code/script-category"
 import { IScriptListItem } from "./code/script-list-item"
 import { useScriptsStore } from "./store";
+import { removeItem } from "smallgame/src/utils";
 
 const props = defineProps<{ items: IScriptListItem[], categories: IScriptCategory[] }>()
 const store = useScriptsStore()
@@ -34,6 +35,7 @@ const currentModule = ref<ScriptModule | null>()
 const scriptListItems = computed(() => scriptList.value.map((p, i) => ({ id: p.name.replaceAll(' ', '_').toLocaleLowerCase(), name: p.name, category: p.category, codeDir: p.codeDir, subCategory: p.subCategory })) )
 const settings = new Settings()
 const viewerControls = ref<IViewerControls>(initViewerControls())
+const messages = ref<IToastMessage[]>([])
 
 onMounted(async () => {
   store.set(props.items, props.categories)
@@ -66,7 +68,12 @@ async function main() {
     containerSize, 
     builders,
     viewerControls: viewerControls.value,
-    disposer
+    disposer,
+    messanger: {
+      info: (message: string) => {
+        messages.value.push({ message })
+      }
+    }
   }
   
   currentModule.value = await runScript(script.codeDir, data) || {}
@@ -108,6 +115,10 @@ function clearPrevious () {
     const module = currentModule.value
     module.dispose?.()
   }
+}
+
+function onToastClose (message: IToastMessage) {
+  removeItem(messages.value, p => p === message)
 }
 
 </script>
@@ -173,6 +184,8 @@ function clearPrevious () {
     </template>
   </BottomBar>
   </div>
+
+  <Toasts :messages @close="onToastClose" />
 </template>
 
 <style lang="sass">

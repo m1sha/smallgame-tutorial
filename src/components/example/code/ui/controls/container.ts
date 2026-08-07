@@ -9,8 +9,9 @@ import { RefObj } from "../ref-obj"
 import { UIControl } from "./ui-control"
 import { TOption } from "../option"
 import { RadioGroup } from "./radio-group"
-import { TPoint } from "smallgame"
+import { Surface, TPoint } from "smallgame"
 import { PointEditor } from "./point-editor"
+import { SelectImage } from "./select-image"
 
 export class UIContariner extends UIControl  {
   controls: UIControl[]
@@ -78,6 +79,11 @@ export class UIContariner extends UIControl  {
 
   select (caption: string, items: string[] | TOption[], callback: (value: string) => void, defaultValue?: string | undefined, options?: any) {
     this.controls.push(new Select(caption, items, callback, defaultValue, options))
+    return this
+  }
+
+  selectImage (caption: string, items: { id: string, name?: string, surface: Surface }[], callback: (id: string) => void, defaultId?: string ) {
+    this.controls.push(new SelectImage(caption, items, callback, defaultId))
     return this
   }
 

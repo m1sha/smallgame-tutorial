@@ -1,1 +1,1 @@
-export type ControlType = 'button' | 'upload' | 'upload-many' | 'tracker' | 'select' | 'color' | 'switch' | 'group' | 'panel' | 'toolbar' | 'info-panel' | 'input' | 'radio-group' | 'point'
+export type ControlType = 'button' | 'upload' | 'upload-many' | 'tracker' | 'select' | 'color' | 'switch' | 'group' | 'panel' | 'toolbar' | 'info-panel' | 'input' | 'radio-group' | 'point' | 'select-image'

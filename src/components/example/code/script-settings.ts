@@ -11,4 +11,5 @@ export interface ScriptSettings {
   builders: Builders
   viewerControls: IViewerControls
   garbageCollect: (callback: () => void) => void
+  messanger: { info: (message: string) => void }
 }

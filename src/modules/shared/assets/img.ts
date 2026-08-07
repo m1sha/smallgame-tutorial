@@ -10,6 +10,7 @@ export type ImageNames =
 | 'platformer-screenshot_1693x974_422K.jpg'
 | 'space_4991x3469_3M.jpg'
 | 'Xbox-Controller-PNG_458x281_44K.png'
+| 'solder-1_221x42_12K.png'
 
 export async function img (name: ImageNames) {
   return await loadImage('img/' + name)

@@ -6,6 +6,7 @@ import Toolbar from './toolbar.vue'
 import { TOption } from '../../../code';
 import { InfoPanel } from '../../../code/ui/controls/info-panel';
 import Panel from './panel.vue';
+import { SelectImage } from '../../../../base';
 
 defineProps<{ controls: IControl[], isToolbar: boolean }>()
 
@@ -96,6 +97,11 @@ function isSelected (control: any)  {
         <div class="ui-info-panel" v-html="cast<InfoPanel>(control).text">
           
         </div>
+      </div>
+
+      <div v-if="control.type === 'select-image'">
+        <!--@vue-ignore-->
+        <SelectImage :items="control.items" v-model="control.defaultId"  @update:model-value="value => control.callback?.(value)" />
       </div>
         
       

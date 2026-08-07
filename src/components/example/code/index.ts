@@ -10,3 +10,4 @@ export * from './builders'
 
 export * from './script-category'
 export * from './script-list-item'
+export * from './messages'

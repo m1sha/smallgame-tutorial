@@ -575,5 +575,19 @@
     "name": "Parallax (GL)",
     "categoryId": 9,
     "codeDir": "gl/code/parallax-gl"
+  },
+  {
+    "id": 95,
+    "name": "Dithering",
+    "categoryId": 6,
+    "subCategoryId": null,
+    "codeDir": "surfaces/code/dithering"
+  },
+  {
+    "id": 96,
+    "name": "Get Palette",
+    "categoryId": 6,
+    "subCategoryId": null,
+    "codeDir": "surfaces/code/get-palette"
   }
 ]
