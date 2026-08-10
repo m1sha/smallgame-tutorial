@@ -1,0 +1,99 @@
+.grid-table  {
+  max-height: 70vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  background-color: inherit;
+  color: #ccc;
+  .headers {
+    display: grid;
+    grid-template-columns: 24px 1fr 1fr 1fr 110px;
+  }
+
+  .headers {
+    position: sticky;
+    top: 0;
+  }
+
+  .header {
+    background-color: var(--data-page-bg-color);
+    color: #aaa;
+    padding-bottom: 4px;
+    margin-bottom: 4px;
+    border-bottom: 1px solid #585858;
+
+    &:first-child {
+      padding-left: 8px;
+    }
+  }
+
+  .row {
+    display: grid;
+    grid-template-columns: 24px 1fr 1fr 1fr 110px;
+    transition: all 0.1s ease;
+    border-top: 1px solid transparent;
+    box-sizing: border-box;
+    
+
+    .column {
+      display: flex;
+      align-items: center;
+      cursor: default;
+      padding: 2px 0;
+      padding-right: 8px;
+
+      &:first-child {
+        padding-left: 8px;
+        border-radius: 2px 0 0 2px;
+      }
+
+      &:last-child {
+        
+        border-radius: 0 2px 2px 0;
+      }
+    }
+
+    .drag-handle {
+      color: #888;
+      &:hover {
+        cursor: grab;
+      }
+    }
+
+    .button-column {
+      display: flex;
+      gap: 4px;
+      
+      width: fit-content;
+    }
+
+    .button-column, .drag-handle {
+      & > * {
+        opacity: 0;
+      }
+    }
+
+    &:hover {
+      & > div {
+        background-color: #313136;
+      }
+     .button-column, .drag-handle {
+        & > * {
+          opacity: 1;
+        }
+      } 
+    }
+
+    .dragging {
+      background-color: #42b883;
+      align-items: center;
+      .column {
+        background-color: #6d6d6d;
+      }
+    }
+
+    &.drop-placeholder {
+      border-top: 1px solid #9e9e9e;
+    }
+
+  }
+}

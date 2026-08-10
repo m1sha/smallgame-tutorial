@@ -1,29 +1,29 @@
 <script setup lang="ts">
-import './style.css'
-import { PushButton } from 'vue3-universal-components'
 import { useScriptsStore } from '../../../store'
+import { GridTable, IHeader } from '../../../../base';
+import { IScriptCategory } from '../../../code';
+import { PushButton } from 'vue3-universal-components'
+
+const headers: IHeader<IScriptCategory> [] = [
+  { key: 'name', name: 'Cateroty' },
+  { key: 'subCategories', name: 'Sub Cateroties' },
+  { key: 'template', name: 'Template' },
+]
 
 const store = useScriptsStore()
 </script>
 
 <template>
   <div class="tab-content">
-    <div class="category-grid">
-      <div class="header">Cateroty</div>
-      <div class="header">Sub Cateroties</div>
-      <div class="header">Template</div>
-      <div class="header"></div>
-      <template v-for="category in store.catagories">
-        <div>{{ category.name }}</div>
-        <div>
-          <div v-for="subCat in category.subCategories">{{ subCat.name }}</div>
-        </div>
-        <div>{{ category.template }}</div>
-        <div>
-          <PushButton><i class="fa fa-edit"></i></PushButton>
-          <PushButton><i class="fa fa-trash"></i></PushButton>
-        </div>
+    <GridTable :headers :items="store.catagories" @replace="store.replaceCategory">
+      <template #subCategories="{ item }">
+        <div v-if="item.subCategories && item.subCategories.length" v-for="subCat in item.subCategories">{{ subCat.name }}</div>
+        <span v-else></span>
       </template>
-    </div>
+      <template #action-column>
+        <PushButton><i class="fa fa-edit"></i></PushButton>
+        <PushButton><i class="fa fa-trash"></i></PushButton>
+      </template>
+    </GridTable>
   </div>
 </template>

@@ -3,6 +3,7 @@ import { ref } from 'vue';
 import { ModalDialog, PushButton, Tab, Tabs } from 'vue3-universal-components'
 import ProjectsTabContent from './edit-script/projects-tab-content.vue';
 import CategoriesTabContent from './edit-script/categories-tab-content.vue';
+import { useScriptsStore } from '../../store/script-store.ts';
 
 export interface IScriptEditor {
   open (): void
@@ -10,12 +11,19 @@ export interface IScriptEditor {
 
 const activeTab = ref('projects')
 const show = ref(false)
+const store = useScriptsStore()
 
 defineExpose({
   open () {
     show.value = true
   }
 })
+
+async function saveData () {
+  const result = await store.saveData()
+  if (result instanceof Error) return
+  show.value = false
+}
 </script>
 
 <template>
@@ -33,8 +41,8 @@ defineExpose({
       </div>
     </template>
     <template #footer>
-      <PushButton>Cancel</PushButton>
-      <PushButton>OK</PushButton>
+      <PushButton @click="show = false">Cancel</PushButton>
+      <PushButton @click="saveData()">OK</PushButton>
     </template>
   </ModalDialog>
 </template>

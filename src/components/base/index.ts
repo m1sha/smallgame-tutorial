@@ -1,3 +1,4 @@
 import SelectImage from "./select-image/select-image.vue"
+import { GridTable, type IHeader  } from "./grid-table"
 
-export { SelectImage }
+export { SelectImage, GridTable, type IHeader  }
