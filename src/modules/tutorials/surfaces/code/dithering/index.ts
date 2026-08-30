@@ -9,7 +9,7 @@ import { Halftone } from "./halftone"
 
 export default async ({ container, containerSize, fps, builders, garbageCollect, viewerControls }: ScriptSettings): Promise<void> => {
   const viewer = new Viewer(containerSize, container, { disableContextMenu: true, garbageCollect, viewerControls })
-  const img = await loadImage('img/lake_1280x720_264K.jpg') //await loadImage('img/green-mountains_612x384_61K.jpg')
+  const img = await loadImage('img/green-mountains_612x384_61K.jpg') //await loadImage('img/lake_1280x720_264K.jpg') //
   const mask =  await loadImage('patterns/chess-tex.jpg') // await loadImage('masks/blue-noise/blue-noisewea-low-frequency.png') // await loadImage('patterns/chess-tex.jpg') //await loadImage('masks/blue-noise/blue-noisewea-low-frequency.png')
   const surface = new MemSurface(img.rect.size)
   const applyFilter = (filter?: { apply: (pixels: Pixels) => void }) => {
@@ -23,7 +23,7 @@ export default async ({ container, containerSize, fps, builders, garbageCollect,
   applyFilter(OrderedDithering)
 
   const rect = img.rect.dup()
-  rect.scalesizeSelf(1.1)
+  rect.scalesizeSelf(2.1)
   rect.center = viewer.viewportRect.center
 
   viewer.onFrameChanged = frame => {
