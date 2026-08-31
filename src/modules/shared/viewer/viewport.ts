@@ -25,6 +25,16 @@ export class Viewport {
     this.vwp.offset = setPoint(this._offset.x, this._offset.y)
     this.vwp.zoom = this._zoom
   }
+
+  zoomAt (delta: number, x: number, y: number) {
+    const factor = delta < 0 ? 1.1 : 0.9
+    const newZoom = Math.min(4, Math.max(0.2, this.zoom * factor))
+    if (newZoom === this.zoom) return
+    const { x: worldX, y: worldY} = this.screenToWorld(x, y)
+    this._zoom = newZoom
+    this.offset.x = x - worldX * newZoom
+    this.offset.y = y - worldY * newZoom
+  }
   
   panTo (point: TPoint): void {
     this._offset.x = point.x
@@ -45,5 +55,31 @@ export class Viewport {
     this._offset.y = 0
     this.vwp.offset = setPoint(this._offset.x, this._offset.y)
     this.vwp.zoom = this._zoom
+  }
+
+   zoomIn () {
+    if (this.zoom < 4) this._zoom += 0.2
+  }
+
+  zoomOut () {
+    if (this.zoom > 0.2) this._zoom -= 0.2
+  }
+
+  goHome () {
+    this._zoom = 1
+    this.offset.x = 0
+    this.offset.y = 0
+  }
+
+  screenToWorld (x: number, y: number): { x: number, y: number } {
+    const worldX = (x - this.offset.x) / this.zoom
+    const worldY = (y - this.offset.y) / this.zoom
+    return { x: worldX, y: worldY }
+  }
+
+  worldToScreen (x: number, y: number): { x: number, y: number } {
+    const screenX = (x + this.offset.x) * this.zoom
+    const screenY = (y + this.offset.y) * this.zoom
+    return { x: screenX, y: screenY }
   }
 }

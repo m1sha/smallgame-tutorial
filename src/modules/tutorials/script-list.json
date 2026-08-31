@@ -589,5 +589,12 @@
     "categoryId": 6,
     "subCategoryId": null,
     "codeDir": "surfaces/code/get-palette"
+  },
+  {
+    "id": 97,
+    "name": "Sprite Atlas",
+    "categoryId": 6,
+    "subCategoryId": null,
+    "codeDir": "surfaces/code/sprite-atlas"
   }
 ]
