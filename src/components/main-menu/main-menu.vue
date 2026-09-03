@@ -15,7 +15,13 @@ const editorsMenu = ref<HTMLElement>()
       
       <div class="sep"></div>
       <div class="nav-link">
-        <a href="#/sandbox" :class="{ 'router-link-active': route.path.startsWith('/sandbox')  }"><i class="nf nf-md-atom_variant"></i> Sandbox</a>
+        <a href="#/sandbox" :class="{ 'router-link-active': route.path.startsWith('/sandbox')  }"><i class="nf nf-md-toy_brick_outline"></i> Sandbox</a>
+        <div class="border"></div>
+      </div>
+
+      <div class="sep"></div>
+      <div class="nav-link">
+        <a href="#/ide" :class="{ 'router-link-active': route.path.startsWith('/ide')  }"><i class="nf nf-md-application_brackets_outline"></i> IDE</a>
         <div class="border"></div>
       </div>
       

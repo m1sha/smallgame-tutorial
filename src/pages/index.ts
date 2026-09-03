@@ -5,6 +5,7 @@ import RasterFiltersPage from "./raster-filters/raster-filters-page.vue"
 import SpriteEditorPage from "./sprite-editor/sprite-editor-page.vue"
 import TileEditorPage from "./tile-editor/tile-editor-page.vue"
 import GamesPage from "./games/games-page.vue"
+export * from './ide'
 
 
 export { HomePage, TutorialsPage, PolygonEditorPage, RasterFiltersPage, GamesPage, SpriteEditorPage, TileEditorPage }
