@@ -3,7 +3,6 @@ import { ref, watch } from 'vue';
 import { ISplitSheetWorkspace } from '../../../modules/ide/workspaces/split-sheet-workspace'
 import { loadImage, Sketch } from 'smallgame';
 import { findSpriteBoundingBoxes } from '../../../modules/shared';
-import { ChessBg, GridBg } from '../bg';
 
 const { workspace } = defineProps<{ workspace: ISplitSheetWorkspace }>()
 const dataUrl = ref('')
@@ -25,27 +24,24 @@ watch(() => workspace.url, async () => {
 
 <template>
   <div class="split-sheet-workspace">
-    <ChessBg :cell-size="8" :offset-x="0" :offset-y="0" even-color="#3b3b3b" odd-color="#555" :zoom="1"  />
     <img draggable="false" v-if="dataUrl" :src="dataUrl" />
   </div>
 </template>
 
 <style lang="css">
 .split-sheet-workspace {
-  position: relative;
-  width: max-content; 
-  height: max-content;
+  width: 100%; 
+  height: 100%;
 
-  .chess-pattern {
-    display: flex;
-    flex: 1;
-    flex-shrink: 1;
-    width: 100%;
-    height: 100%;
-  }
+  --local-even-color: #333;
+  --local-odd-color: #282828;
+  --local-cell-size: 8px;
+
+  background:
+    conic-gradient(var(--local-even-color) 25%, var(--local-odd-color) 0 50%, var(--local-even-color) 0 75%, var(--local-odd-color) 0)
+    0 0 / calc(var(--local-cell-size) * 2) calc(var(--local-cell-size) * 2);
 
   img {
-    position: absolute;
     object-fit: contain;
   }
 }

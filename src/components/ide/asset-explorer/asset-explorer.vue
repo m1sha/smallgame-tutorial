@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { nextTick, ref } from 'vue';
-import { ChessBg } from '../bg';
 
 function scrollHorizontally(event: WheelEvent) {
   const viewer = event.currentTarget as HTMLElement;
@@ -49,7 +48,7 @@ async function onDragStart (event: DragEvent, asset: any) {
       
       <div class="card" :draggable="true" v-for="asset in sprites" @dragstart="onDragStart($event, asset)">
         <div class="preview">
-          <ChessBg :cell-size="8" :offset-x="0" :offset-y="0" even-color="#3b3b3b" odd-color="#555" :zoom="1" />
+          
           <img :src="asset.img" height="100%" width="100%" />
         </div>
         <div class="footer">
@@ -107,9 +106,17 @@ async function onDragStart (event: DragEvent, asset: any) {
         width: 100%;
         height: 100%;
         overflow: hidden;
-        position: relative;
+    
+          --local-even-color: #333;
+  --local-odd-color: #282828;
+  --local-cell-size: 8px;
+
+  background:
+    conic-gradient(var(--local-even-color) 25%, var(--local-odd-color) 0 50%, var(--local-even-color) 0 75%, var(--local-odd-color) 0)
+    0 0 / calc(var(--local-cell-size) * 2) calc(var(--local-cell-size) * 2);
+
         img {
-          position: absolute;
+    
           display: block;
           width: 100%;
           height: 100%;
