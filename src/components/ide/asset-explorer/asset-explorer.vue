@@ -107,13 +107,12 @@ async function onDragStart (event: DragEvent, asset: any) {
         height: 100%;
         overflow: hidden;
     
-          --local-even-color: #333;
-  --local-odd-color: #282828;
-  --local-cell-size: 8px;
-
-  background:
-    conic-gradient(var(--local-even-color) 25%, var(--local-odd-color) 0 50%, var(--local-even-color) 0 75%, var(--local-odd-color) 0)
-    0 0 / calc(var(--local-cell-size) * 2) calc(var(--local-cell-size) * 2);
+        --local-even-color: #2e2e2e;
+        --local-odd-color: #262626;
+        --local-cell-size: 8px;
+        background:
+          conic-gradient(var(--local-even-color) 25%, var(--local-odd-color) 0 50%, var(--local-even-color) 0 75%, var(--local-odd-color) 0)
+          0 0 / calc(var(--local-cell-size) * 2) calc(var(--local-cell-size) * 2);
 
         img {
     

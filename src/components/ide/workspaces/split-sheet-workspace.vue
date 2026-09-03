@@ -33,8 +33,8 @@ watch(() => workspace.url, async () => {
   width: 100%; 
   height: 100%;
 
-  --local-even-color: #333;
-  --local-odd-color: #282828;
+  --local-even-color: #2e2e2e;
+  --local-odd-color: #262626;
   --local-cell-size: 8px;
 
   background:
