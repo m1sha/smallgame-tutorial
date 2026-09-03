@@ -1,4 +1,4 @@
-import Editor from './editor.vue'
+import Editor from './editor/editor.vue'
 export { Editor }
-export * from './asset-explorer'
-export * from './bg'
+export * from './editor/asset-explorer'
+export * from './editor/bg'

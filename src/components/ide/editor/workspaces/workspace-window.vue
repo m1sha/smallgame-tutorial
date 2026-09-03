@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { IWorkspace } from '../../../modules/ide'
-import { isSplitSheetWorkspace } from '../../../modules/ide/workspaces/split-sheet-workspace';
+import { IWorkspace } from '../../../../modules/ide'
+import { isSplitSheetWorkspace } from '../../../../modules/ide/workspaces/split-sheet-workspace';
 import SplitSheetWorkspace from './split-sheet-workspace.vue';
 
 defineProps<{ workspace: IWorkspace }>()

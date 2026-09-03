@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue';
-import { ISplitSheetWorkspace } from '../../../modules/ide/workspaces/split-sheet-workspace'
+import { ISplitSheetWorkspace } from '../../../../modules/ide/workspaces/split-sheet-workspace'
 import { loadImage, Sketch } from 'smallgame';
-import { findSpriteBoundingBoxes } from '../../../modules/shared';
+import { findSpriteBoundingBoxes } from '../../../../modules/shared';
 
 const { workspace } = defineProps<{ workspace: ISplitSheetWorkspace }>()
 const dataUrl = ref('')
