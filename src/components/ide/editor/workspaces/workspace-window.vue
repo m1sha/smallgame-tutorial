@@ -10,9 +10,8 @@ defineProps<{ workspace: IWorkspace }>()
 
 <template>
   <div 
-    
     @dragstart.stop 
-    class="workspace" 
+    class="workspace selected" 
     :style="{ 
       top: workspace.position.y + 'px', 
       left: workspace.position.x + 'px',
@@ -23,9 +22,9 @@ defineProps<{ workspace: IWorkspace }>()
       <span>
         {{ workspace.title }}
       </span>
-      <div class="menu-trigger-button" role="button">
+      <!-- <div class="menu-trigger-button" role="button">
         <i class="fa fa-chevron-down"></i>
-      </div>
+      </div> -->
     </div>
 
     <div class="content">
@@ -36,21 +35,31 @@ defineProps<{ workspace: IWorkspace }>()
 
 <style lang="css">
 .workspace {
+  --br: 6px;
   position: absolute;
   left: 100px;
   top: 100px;
-  --r: 4px;
-  
-
   display: flex;
   flex-direction: column;
-
-
   padding: 4px;
+
+  &.selected {
+    .header, .content {
+      border-color: #7a8796;
+      background-color: #242629;
+    }
+    
+    .header {
+      border-bottom-color: #242424;
+      
+    }
+  }
+
   .header {
-   
+    z-index: 1;
     border: 1px solid #242424;
-    border-radius: var(--r) var(--r) 0 0;
+    border-bottom: none;
+    border-radius: var(--br) var(--br) 0 0;
     background-color: #242424;
     color: #bbb;
     width: fit-content;
@@ -59,7 +68,8 @@ defineProps<{ workspace: IWorkspace }>()
     gap: 8px;
 
     span {
-       padding: 4px 8px;
+      min-width: 20ch;
+      padding: 4px 8px;
       font-size: 16px;
       font-weight: 300;
     }
@@ -69,7 +79,7 @@ defineProps<{ workspace: IWorkspace }>()
       padding: 4px 8px;
       background-color: #2b2b2b;
       color: #999;
-      border-radius: 0 0 0 var(--r);
+      border-radius: 0 var(--br) 0 0 ;
       &:hover {
         background-color: #2e2e2e;
         color: #bbb;
@@ -77,11 +87,15 @@ defineProps<{ workspace: IWorkspace }>()
     }
   }
   .content {
+    z-index: -1;
+    margin-top: -2px;
+    padding: 4px;
+    padding-top: 6px;
     background-color: #242424;
     border: 1px solid #242424;
     flex: 1;
     position: relative;
-    border-radius: 0 var(--r) var(--r) var(--r);
+    border-radius: 0 var(--br) var(--br) var(--br);
   }
 }
 </style>

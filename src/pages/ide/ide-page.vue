@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { Editor } from '../../components/ide'
+import { Editor, usePlugins } from '../../components/ide'
+const plugins = usePlugins()
 </script>
 
 <template>
-  <Editor />
+  <Editor :plugins />
 </template>

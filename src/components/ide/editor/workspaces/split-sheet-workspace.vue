@@ -32,6 +32,7 @@ watch(() => workspace.url, async () => {
 .split-sheet-workspace {
   width: 100%; 
   height: 100%;
+  
 
   --local-even-color: #2e2e2e;
   --local-odd-color: #262626;

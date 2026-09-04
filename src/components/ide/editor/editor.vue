@@ -1,11 +1,14 @@
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue'
 import { AssetExplorer } from './asset-explorer'
 import { GridBg } from './bg'
-import { useEditorStore } from './store';
-import { Point, Size } from 'smallgame';
-import { WorkspaceWindow } from './workspaces';
-import { ChoiceModal, choseModal } from './modals';
+import { useEditorStore } from './store'
+import { Point, Size } from 'smallgame'
+import { WorkspaceWindow } from './workspaces'
+import { ChoiceModal, choseModal } from './modals'
+import { IPlugin } from '../../../modules/ide'
+
+defineProps<{ plugins: IPlugin[] }>()
 
 const store = useEditorStore()
 const editor = store.editor
@@ -30,8 +33,7 @@ function onPointerDown (event: PointerEvent) {
   prevMousePos.moveSelf(event.clientX, event.clientY)
   //store.eventController.onPointerDown(event)
   const viewport = event.currentTarget as HTMLElement
-
-    viewport.setPointerCapture(event.pointerId)
+  viewport.setPointerCapture(event.pointerId)
 }
 
 function onPointerMove (event: PointerEvent) {
@@ -129,15 +131,10 @@ async function onDrop(event: DragEvent) {
     top: 0;
     width: 100%;
     height: 100%;
-    
-
     transform-origin: 0 0;
     transform:
       translate(var(--pan-x), var(--pan-y))
       scale(var(--zoom));
   }
 }
-
-
-
 </style>

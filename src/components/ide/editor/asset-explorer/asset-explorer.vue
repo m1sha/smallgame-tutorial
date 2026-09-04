@@ -1,33 +1,37 @@
 <script setup lang="ts">
-import { nextTick, ref } from 'vue';
+import { nextTick, onMounted, ref } from 'vue';
+import { useEditorStore } from '../store';
+
+const store = useEditorStore()
 
 function scrollHorizontally(event: WheelEvent) {
   const viewer = event.currentTarget as HTMLElement;
   viewer.scrollLeft += event.deltaY;
 }
 
-const sprites = ref([
-  { title: 'Terrain_(16x16).png',  img: '/platformer/Terrain_(16x16).png'},
-  { title: 'tileset.png',  img: '/platformer/tileset.png'},
-  { title: 'beaver_idle.png',  img: '/platformer/characters/beaver/beaver_idle.png'},
-  { title: 'beaver_walk_run_jump.png',  img: '/platformer/characters/beaver/beaver_walk_run_jump.png'},
-  { title: 'green-mountains_612x384_61K.jpg',  img: '/img/green-mountains_612x384_61K.jpg'},
-])
+onMounted(() => {
+  store.editor.assets.addSprite('Terrain_(16x16).png', '/platformer/Terrain_(16x16).png')
+  store.editor.assets.addSprite('tileset.png', '/platformer/tileset.png')
+  store.editor.assets.addSprite('beaver_idle.png', '/platformer/characters/beaver/beaver_idle.png')
+  store.editor.assets.addSprite('beaver_walk_run_jump.png', '/platformer/characters/beaver/beaver_walk_run_jump.png')
+  store.editor.assets.addSprite('green-mountains_612x384_61K.jpg', '/img/green-mountains_612x384_61K.jpg')
+})
+
 
 async function onDragStart (event: DragEvent, asset: any) {
-  const element = event.target as HTMLElement
-   const clone = element.cloneNode(true);
-   const div = document.createElement('div')
-   div.appendChild(clone)
-  div.style.opacity = '1';
-  div.style.position = 'absolute';
-  div.style.top = '-9999px';
-  div.style.backgroundColor = '#000'
-  div.style.padding = '8px'
-  div.style.borderRadius = '12px'
-  div.style.border = '4px solid green'
-  document.body.appendChild(div)
-  event.dataTransfer?.setDragImage(div, 1, 1)
+  //const element = event.target as HTMLElement
+  //const clone = element.cloneNode(true);
+  //const div = document.createElement('div')
+  //div.appendChild(clone)
+  //div.style.opacity = '1';
+  //div.style.position = 'absolute';
+  //div.style.top = '-9999px';
+  //div.style.backgroundColor = '#000'
+  //div.style.padding = '8px'
+  //div.style.borderRadius = '12px'
+  //div.style.border = '4px solid green'
+  //document.body.appendChild(div)
+  //event.dataTransfer?.setDragImage(div, 1, 1)
   event.dataTransfer?.setData('assetImg', asset.img)
   await nextTick()
  // div.remove()
@@ -46,14 +50,14 @@ async function onDragStart (event: DragEvent, asset: any) {
     </div>
     <div class="viewer" @wheel.stop.prevent="scrollHorizontally" @pointerdown.stop>
       
-      <div class="card" :draggable="true" v-for="asset in sprites" @dragstart="onDragStart($event, asset)">
+      <div class="card" :draggable="true" v-for="asset in store.editor.assets.items" @dragstart="onDragStart($event, asset)">
         <div class="preview">
           
-          <img :src="asset.img" height="100%" width="100%" />
+          <img :src="asset.preview" height="100%" width="100%" />
         </div>
         <div class="footer">
           <div class="caption">
-            <span>{{ asset.title }}</span>
+            <span>{{ asset.name }}</span>
           </div>
         </div>
       </div>
