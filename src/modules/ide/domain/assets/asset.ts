@@ -1,4 +1,4 @@
-import { uuidv4 } from "../../../utils";
+import { uuidv4 } from "../../../../utils";
 
 export class Asset {
   id: string = uuidv4()

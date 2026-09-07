@@ -32,7 +32,7 @@ async function onDragStart (event: DragEvent, asset: any) {
   //div.style.border = '4px solid green'
   //document.body.appendChild(div)
   //event.dataTransfer?.setDragImage(div, 1, 1)
-  event.dataTransfer?.setData('assetImg', asset.img)
+  event.dataTransfer?.setData('assetId', asset.id)
   await nextTick()
  // div.remove()
 }

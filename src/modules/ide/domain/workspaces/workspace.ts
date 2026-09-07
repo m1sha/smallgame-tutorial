@@ -1,5 +1,5 @@
 import { Point, Size, TPoint, TSize } from "smallgame"
-import { uuidv4 } from "../../../utils"
+import { uuidv4 } from "../../../../utils"
 
 export interface IWorkspace {
   id: string

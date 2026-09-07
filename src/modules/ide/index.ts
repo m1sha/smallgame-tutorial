@@ -1,4 +1,2 @@
-export * from './editor'
-export * from './workspaces'
-export * from './plugin'
-export * from './assets'
+//export * from './domain'
+export * from './view'

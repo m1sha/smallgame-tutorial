@@ -6,9 +6,9 @@ import { useEditorStore } from './store'
 import { Point, Size } from 'smallgame'
 import { WorkspaceWindow } from './workspaces'
 import { ChoiceModal, choseModal } from './modals'
-import { IPlugin } from '../../../modules/ide'
+//import { Plugin } from '../../../modules/ide'
 
-defineProps<{ plugins: IPlugin[] }>()
+//defineProps<{ plugins: Plugin[] }>()
 
 const store = useEditorStore()
 const editor = store.editor
@@ -21,7 +21,8 @@ const viewportStyle = computed(() => ({
 
 onMounted(() => {
   editor.workspaces.create('Window 1', { position: new Point(100, 50), size: new Size(600, 500)})
-  editor.workspaces.create('Window 2', { position: new Point(1000, 50)})
+  const ws = editor.workspaces.create('Window 2', { position: new Point(1000, 50)})
+  editor.workspaces.addSelected(ws)
 })
 
 let mouseDown = false
@@ -61,7 +62,7 @@ function zoomViewport(event: WheelEvent) {
 
 const imgPath = ref('')
 async function onDrop(event: DragEvent) {
-  const assetImg = event.dataTransfer?.getData('assetImg')
+  const assetImg = event.dataTransfer?.getData('assetId')
   imgPath.value = assetImg
 
   const currentTarget = event.currentTarget as HTMLElement

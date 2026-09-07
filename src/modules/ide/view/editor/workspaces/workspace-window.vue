@@ -1,24 +1,68 @@
 <script setup lang="ts">
-import { IWorkspace } from '../../../../modules/ide'
-import { isSplitSheetWorkspace } from '../../../../modules/ide/workspaces/split-sheet-workspace';
+import { Point } from 'smallgame';
 import SplitSheetWorkspace from './split-sheet-workspace.vue';
+import { useEditorStore } from '../store/editor-store.ts';
+import { IWorkspace, isSplitSheetWorkspace } from '../../../domain';
 
-defineProps<{ workspace: IWorkspace }>()
+const { workspace } =  defineProps<{ workspace: IWorkspace }>()
+const store = useEditorStore()
+const workspaces = store.editor.workspaces
 
+const prevCoord = Point.zero
+let down = false
+const onPointerdown = (e: PointerEvent) => {
+  workspaces.addSelected(workspace)
+  down = true
+  prevCoord.moveSelf(e.clientX, e.clientY)
+  const currentTarget = e.currentTarget as HTMLElement
+  currentTarget.setPointerCapture(e.pointerId)
+
+  console.log('DOWN')
+  e.stopPropagation()
+}
+
+const onPointermove = (e: PointerEvent) => {
+  if (!down) return
+
+  const currCoord = new Point(e.clientX, e.clientY)
+  const shift = currCoord.shift(prevCoord.neg())
+  
+  workspace.position = shift.shift(workspace.position)
+  prevCoord.moveSelf(e.clientX, e.clientY)
+  const hypot = Math.hypot(shift.x, shift.y)
+ 
+  console.log('MOVE', hypot)
+}
+
+const onPointerup = (e: PointerEvent) => {
+  down = false
+  const currentTarget = e.currentTarget as HTMLElement
+  if (currentTarget.hasPointerCapture(e.pointerId))
+    currentTarget.releasePointerCapture(e.pointerId)
+}
 </script>
-
 
 <template>
   <div 
     @dragstart.stop 
-    class="workspace selected" 
+    class="workspace" 
+    :class="{ selected: workspaces.isSelected(workspace) }"
     :style="{ 
       top: workspace.position.y + 'px', 
       left: workspace.position.x + 'px',
       minWidth: workspace.size.width + 'px',
       minHeight: workspace.size.height + 'px',
-    }">
-    <div class="header">
+    }"
+    
+    >
+    
+    <div 
+      class="header" 
+      
+      @pointerdown="onPointerdown"
+      @pointermove="onPointermove"
+      @pointerup="onPointerup"
+      >
       <span>
         {{ workspace.title }}
       </span>
@@ -51,7 +95,6 @@ defineProps<{ workspace: IWorkspace }>()
     
     .header {
       border-bottom-color: #242424;
-      
     }
   }
 
