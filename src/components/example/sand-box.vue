@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from "vue"
 import { useRoute, useRouter } from "vue-router"
-import { Builders, IToastMessage, ScriptDef, ScriptModule, Settings } from "./code"
+import { Builders, IToastMessage, PanelManager, ScriptDef, ScriptModule, Settings } from "./code"
 import { ParameterList, ScriptList, Telemetry, Toolbar, ToolbarDropdownPanel, ContextMenu, EntityList, Viewport, Toasts } from './components'
 import { Size } from "smallgame";
 import { BottomBar } from "./components/bottom-bar";
@@ -11,6 +11,7 @@ import { IScriptCategory } from "./code/script-category"
 import { IScriptListItem } from "./code/script-list-item"
 import { useScriptsStore } from "./store";
 import { removeItem } from "smallgame/src/utils";
+import Panels from "./components/panels/panels.vue";
 
 const props = defineProps<{ items: IScriptListItem[], categories: IScriptCategory[] }>()
 const store = useScriptsStore()
@@ -62,6 +63,7 @@ async function main() {
   const builders = new Builders()
   let moduleDisposer: (() => void) | null = null
   const disposer = (callback: () => void) => moduleDisposer = callback
+  
   const data = { 
     container: container.value!, 
     fps: fps.value!, 
@@ -73,10 +75,12 @@ async function main() {
       info: (message: string) => {
         messages.value.push({ message })
       }
-    }
+    },
+    panels: new PanelManager()
   }
   
   currentModule.value = await runScript(script.codeDir, data) || {}
+  currentModule.value.panels = data.panels.items
 
   if (builders.has('ui') && !currentModule.value.ui) {
     currentModule.value.ui = builders.ui().build()
@@ -169,6 +173,7 @@ function onToastClose (message: IToastMessage) {
   <div class="example-page show-hiddable">
     <div ref="container" class="container"></div>
     <ContextMenu v-if="currentModule && currentModule.contextMenu" :context="currentModule.contextMenu" />
+    <Panels :items="currentModule?.panels ?? []" />
     <div class="fps" ref="fps"></div>
   </div>
 
