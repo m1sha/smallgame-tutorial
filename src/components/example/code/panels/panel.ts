@@ -10,16 +10,25 @@ export interface IPanel {
   component: Component
   data?: any
   action?: (actionName: string, args?: any) => void
-  info: { visible: boolean }
+  info: { visible: boolean, title: string }
 }
 
-export class Panel implements IPanel {
-  info = createReactiveData({ visible: true })
+export class Panel<DataType>  {
+  protected info = createReactiveData({ visible: true, title: '' })
   id: string
-  data?: any
-  action?: (actionName: string, args?: any) => void
-  constructor (public title: string, public component: Component, public position: TPoint) {
+  protected data?: DataType
+  protected action?: (actionName: string, args?: any) => void
+  constructor (title: string, protected component: Component, public position: TPoint) {
     this.id = uuidv4()
+    this.info.title = title
+  }
+
+  get title () {
+    return this.info.title
+  }
+
+  set title (value: string) {
+    this.info.title = value
   }
 
   hide () {

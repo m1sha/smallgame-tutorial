@@ -1,0 +1,11 @@
+export type ImageViewAction = 
+  | 'zoom-in'
+  | 'zoom-out'
+  | 'home'
+  | 'fit'
+  | 'start-move'
+  | 'moving'
+  | 'end-move'
+  | 'zoom'
+  | 'upload'
+  | 'download'

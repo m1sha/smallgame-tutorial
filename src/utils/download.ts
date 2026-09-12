@@ -1,5 +1,7 @@
 export function download (filename: string, data: string | Blob | {}) {
-  const blob = data instanceof Blob 
+
+  return new Promise<void>(resolve => {
+const blob = data instanceof Blob 
     ? data 
     : typeof data === 'string' || data instanceof String 
     ? new Blob([data.toString()], { type: 'text/plain' })
@@ -13,5 +15,9 @@ export function download (filename: string, data: string | Blob | {}) {
   link.click()
   window.URL.revokeObjectURL(urlObject)
   document.body.removeChild(link)
+
+    resolve()
+  })
+  
   
 }

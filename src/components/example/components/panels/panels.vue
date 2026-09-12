@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import { Point } from 'smallgame';
 import { IPanel } from '../../code/panels/panel';
-import { watch } from 'vue';
+//import { watch } from 'vue';
 
 const { items } = defineProps<{ items: IPanel[] }>()
-debugger
-watch(() => items, () => {
-  console.dir(items)
-}, { immediate: true })
+
+//watch(() => items, () => {
+//  //console.dir(items)
+//}, { immediate: true })
 
 const prevPoint = Point.zero
 let down = false
@@ -49,7 +49,7 @@ function onpointerup (_: IPanel, ev: PointerEvent) {
 <style lang="css">
 .panel {
   position: absolute;
-  background-color: #44444490;
+  background-color: #444444F0;
 
   display: flex;
   flex-direction: column;
