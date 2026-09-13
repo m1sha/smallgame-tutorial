@@ -1,18 +1,21 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Tracker } from 'vue3-universal-components'
 import ColorTile from './color-tile.vue'
 import { IColorsPaletteData } from '../colors-palette-data.ts'
 
-defineProps<IColorsPaletteData>()
-const emit = defineEmits<{ postData: [ action: string ] }>()
+const props = defineProps<IColorsPaletteData>()
+const emit = defineEmits<{ postData: [ action: string, args?: any ] }>()
 const mode = ref<'normal' | 'replace-colors'>('normal')
-const thrashold = ref(0.2)
-const colorCount = ref(16)
+
 const tempCellCount = 32
 
-const replaceColorTrigger = () => {
-  mode.value = mode.value === 'normal' ? 'replace-colors' : 'normal'
+// const replaceColorTrigger = () => {
+//   mode.value = mode.value === 'normal' ? 'replace-colors' : 'normal'
+// }
+
+const changeColor = (value: string, index: number) => {
+  props.colors[index] = value
+  emit('postData', 'changed-color', index)
 }
 </script>
 
@@ -26,49 +29,21 @@ const replaceColorTrigger = () => {
         <i class="fa fa-eyedropper"></i>
       </button>
 
-      <button class="right" title="Replace Colors" @click="replaceColorTrigger">
+      <!-- <button class="right" title="Replace Colors" @click="replaceColorTrigger">
         <i class="fa fa-chevron-right" v-if="mode === 'normal'"></i>
         <i class="fa fa-chevron-left" v-else></i>
-      </button>
+      </button> -->
     </div>
     
 
     <div class="palette-grid-wrapper" :class="{ grid: mode === 'replace-colors' }">
-      <span class="table-caption">Palette</span>
-      <span class="table-caption" v-if="mode === 'replace-colors'">Replace Palette</span>
+      <!-- <span class="table-caption">Palette</span> -->
       <div class="palette-grid">
-        <ColorTile :color="color" v-for="color, index in colors" @change-color="v => colors[index] = v" />
+        <ColorTile :color="color" v-for="color, index in colors" @change-color="v => changeColor(v, index)" />
         <div v-if="tempCellCount - colors.length > 0" v-for="_ in tempCellCount - colors.length"></div>
       </div>
       
-      <div class="palette-grid" v-if="mode === 'replace-colors'">
-        <ColorTile :color="color" v-for="color, index in replaceColors" @change-color="v => replaceColors[index] = v" />
-        <div v-if="tempCellCount - colors.length > 0" v-for="_ in tempCellCount - colors.length"></div>
-      </div>
     </div>
-
-    <div class="command-blocks" v-if="mode === 'replace-colors'">
-      <button @click="emit('postData', 'replace-colors')" style="margin-left: auto;">Replace Colors</button>
-    </div>
-
-    <div class="command-blocks"  v-if="mode === 'normal'">
-      <div class="command-block">
-        <span class="header">Indexing</span>
-        <div class="checkbox">
-          <input type="checkbox" /> <span>Use Palette Colors</span>
-        </div>
-        <Tracker caption="Colors" v-model="colorCount" :min="2" :max="512" :step="1" />
-        <button @click="emit('postData', 'indexing-colors')">Apply</button>
-      </div>
-      <div class="command-block">
-        <span class="header">Erasing</span>
-        
-        <Tracker caption="Thrashold" v-model="thrashold" :min="0" :max="1" :step="0.05" />
-        <button @click="emit('postData', 'erase-colors')">Apply</button>
-      </div>
-    </div>
-
-    
   </div>
   
 </template>
@@ -78,6 +53,7 @@ const replaceColorTrigger = () => {
   display: flex;
   flex-direction: column;
   gap: 12px;
+  padding-bottom: 12px;
   .tools {
     display: flex;
     gap: 4px;

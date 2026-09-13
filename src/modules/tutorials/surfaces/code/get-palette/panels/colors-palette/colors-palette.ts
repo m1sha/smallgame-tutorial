@@ -5,9 +5,14 @@ import { createReactiveData } from "../../../../../../../components/example/inde
 import { eraseColors, replaceColors, indexingColors } from "./functions/index.ts"
 import { IColorsPaletteData } from "./colors-palette-data.ts"
 
+export interface IColorsPalette {
+  colors: Color[]
+  pickColor (color: Color): void
+}
+
 export class ColorsPalette {
   readonly panel: Panel<IColorsPaletteData>
-  private colors: Color[] = []
+  readonly colors: Color[] = []
 
   onEraseColors: ((suface: (surface: Surface) => Surface) => void) | null = null
   onReplaceColors: ((suface: (surface: Surface) => Surface) => void) | null = null
@@ -18,43 +23,53 @@ export class ColorsPalette {
   }
 
   get toolName () {
-    return this.panel.data.tool.name
+    return this.data.tool.name
   }
 
-  private panelCallback  (actionName: string)  {
-    const  oklabs = this.colors.map(p => p.toOklab())
+  private get data () {
+    return (this.panel as any).data as IColorsPaletteData
+  }
 
-    if (actionName === 'indexing-colors') {
-      this.onIndexingColors?.(surface  => { 
-        const out = indexingColors(surface, this.colors, this.panel.data.indexing.count) 
-        this.panel.data.colors = []
-        this.panel.data.replaceColors = []
-        this.colors.forEach(color => {
-          this.panel.data.colors.push(color.toString())
-          this.panel.data.replaceColors.push(color.toString())
-        })
-        return out
-      })
+  private panelCallback  (actionName: string, args?: any)  {
+    if (actionName === 'changed-color' && typeof args === 'number') {
+      const c = this.data.colors[args]
+      this.colors[args] = Color.from(c)
     }
 
-    if (actionName === 'replace-colors') {
-      this.onReplaceColors?.(surface => replaceColors(surface, this.panel.data.replaceColors, oklabs, 0.001))
-    }
+   // const  oklabs = this.colors.map(p => p.toOklab())
 
-    if (actionName === 'erase-colors') {
-      this.onEraseColors?.(surface => eraseColors(surface, oklabs, 0.001))
-    }
+    // if (actionName === 'indexing-colors') {
+    //   this.onIndexingColors?.(surface  => { 
+    //     const out = indexingColors(surface, this.colors, this.data.indexing.count) 
+    //     this.data.colors = []
+    //     this.data.replaceColors = []
+    //     this.colors.forEach(color => {
+    //       this.data.colors.push(color.toString())
+    //       this.data.replaceColors.push(color.toString())
+    //     })
+    //     return out
+    //   })
+    // }
+
+    // if (actionName === 'replace-colors') {
+    //   this.onReplaceColors?.(surface => replaceColors(surface, this.data.replaceColors, oklabs, 0.001))
+    // }
+
+    // if (actionName === 'erase-colors') {
+    //   this.onEraseColors?.(surface => eraseColors(surface, oklabs, 0.001))
+    // }
 
     if (actionName == 'eyepicker') {
-      const tool = this.panel.data.tool
+      const tool = this.data.tool
       tool.name = tool.name === 'select' ? 'eyepicker' : 'select'
     }
   }
 
   private createPanel () {
     const result = new Panel<IColorsPaletteData>('Colors Palette', EntryComponent, new Point(400, 50))
-    result.action = actionName => this.panelCallback(actionName)
-    result.data = createReactiveData({ 
+    const r = result as any
+    r.action = (actionName, args) => this.panelCallback(actionName, args)
+    r.data = createReactiveData({ 
       colors: [],
       replaceColors: [],
       tool: {
@@ -77,8 +92,7 @@ export class ColorsPalette {
   pickColor (color: Color) {
     if (this.toolName !== 'eyepicker') return
     this.colors.push(color)
-    this.panel.data.colors.push(color.toString())
-    this.panel.data.replaceColors.push(color.toString())
+    this.data.colors.push(color.toString())
   }
 
 
