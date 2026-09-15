@@ -1,8 +1,11 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 
-defineProps<{ color: string }>()
-const emit = defineEmits<{ changeColor: [color: string], deleteColor: [] }>()
+defineProps<{ color: string, selected: boolean }>()
+const emit = defineEmits<{ 
+  changeColor: [color: string],
+  colorSelect: [color: string]
+}>()
 
 const colorPicker = ref<HTMLInputElement>()
 
@@ -10,36 +13,59 @@ const onInput = () => {
   emit('changeColor', colorPicker.value?.value ?? '')
 }
 
+const onSelectTile = () => {
+  emit('colorSelect', colorPicker.value?.value ?? '')
+}
+
 </script>
 
 <template>
-<div class="menu" :style="{ backgroundColor: color }">
-  <div class="button" :style="{ backgroundColor: color }" @click="emit('deleteColor')">
-   🗑️
-  </div>
-  <div class="button" :style="{ backgroundColor: color }" @click="colorPicker.click()">
-    ✏️
+<div class="palette-color-tile" :class="{ selected }"  @click.stop="onSelectTile">
+  <div class="color" :style="{ backgroundColor: color }">
+  <div class="button" @click="colorPicker.click()">
     <input type="color" style="opacity: 0;" :value="color" ref="colorPicker" @input="onInput" />
+    <span>✏️</span>
   </div>
-  
+  </div>
 </div>
 </template>
 
 <style lang="css">
-.menu {
+.palette-color-tile {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: 0;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  width: 40px;
+  height: 40px;
+  border: 1px solid transparent;
+  border-radius: 4px;
+
+  &.selected {
+    border: 1px solid #00c732;
+  }
+
+  .color {
+    width: calc(100% - 4px);
+    height: calc(100% - 4px);
+    border-radius: 4px;
+  }
 
   .button {
     font-size: 12px;
     border: none;
     background-color: transparent;
-    height: 100%;
+    height: fit-content;
     width: 100%;
     opacity: 0;
-    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    span {
+      padding: 4px;
+    }
+    
     &:hover {
       opacity: 1;
       cursor: pointer;

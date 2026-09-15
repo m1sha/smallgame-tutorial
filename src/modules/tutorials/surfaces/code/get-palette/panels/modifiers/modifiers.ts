@@ -39,7 +39,7 @@ export class Modifiers extends Panel<ModifiersData> {
       this.onIndexingColors?.(surface => {
         const colors: Color[] = []
         const out = indexingColors(surface, colors, this.data.indexing.count, this.data.indexing.thrashold / 1000)
-        colors.forEach(c => this.palette.pickColor(c))
+        colors.forEach(c => this.palette.pickColor(c, true))
        return out
       })
     }

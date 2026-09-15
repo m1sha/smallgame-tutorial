@@ -7,7 +7,7 @@ import { IColorsPaletteData } from "./colors-palette-data.ts"
 
 export interface IColorsPalette {
   colors: Color[]
-  pickColor (color: Color): void
+  pickColor (color: Color, force?: boolean): void
 }
 
 export class ColorsPalette {
@@ -89,8 +89,8 @@ export class ColorsPalette {
     return result 
   }
 
-  pickColor (color: Color) {
-    if (this.toolName !== 'eyepicker') return
+  pickColor (color: Color, force = false) {
+    if (!force && this.toolName !== 'eyepicker') return
     this.colors.push(color)
     this.data.colors.push(color.toString())
   }
