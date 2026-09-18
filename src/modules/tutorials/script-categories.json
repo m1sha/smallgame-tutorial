@@ -14,6 +14,13 @@
     "dir": "physics"
   },
   {
+    "id": 10,
+    "name": "Genetic Algorithms",
+    "template": "default",
+    "subCategories": [],
+    "dir": "ga-visual"
+  },
+  {
     "id": 3,
     "name": "AI",
     "template": "default",

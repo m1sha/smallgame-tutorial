@@ -1,0 +1,84 @@
+import { Size } from "smallgame"
+import { Ball } from "./ball"
+import { BrickMap } from "./brick-map"
+import { Carrent } from "./carrent"
+import { Collider } from "./collisions"
+import { ArkanoidGameDefinition, createArkanoidGameDefinition } from "./game-definition"
+import { World } from "./world"
+import { RewardCounter } from "./reward-counter"
+
+export class Arkanoid {
+  world: World
+  carrent: Carrent
+  ball: Ball
+  brickMap: BrickMap
+  collider: Collider
+  rewards: RewardCounter
+  state: 'playing' | 'gameover'
+
+  constructor (readonly def: ArkanoidGameDefinition) {
+    this.carrent = new Carrent(def.carrentPos.dup(), def.carrentVelocity.dup(), def.carrentSpeed, def.carrentSize)
+    this.ball = new Ball(def.ballPos.dup(), def.ballVelocity.dup(), def.ballSpeed, def.ballRadius)
+    this.world = new World(def.worldSize)
+    this.brickMap = new BrickMap(def.bricksMap, def.brickSize, def.bricksOffset, def.bricksStartPos)
+    this.rewards = new RewardCounter()
+    this.collider = new Collider()
+    this.state = 'playing'
+  }
+
+  reset () {
+    this.carrent = new Carrent(this.def.carrentPos.dup(), this.def.carrentVelocity.dup(), this.def.carrentSpeed, this.def.carrentSize)
+    this.ball = new Ball(this.def.ballPos.dup(), this.def.ballVelocity.dup(), this.def.ballSpeed, this.def.ballRadius)
+    this.brickMap = new BrickMap(this.def.bricksMap, this.def.brickSize, this.def.bricksOffset, this.def.bricksStartPos)
+    this.rewards = new RewardCounter()
+    this.state = 'playing'
+  }
+
+  moveLeft () {
+    if (this.state !== 'playing') return
+    const tick = this.def.getDt()
+    this.carrent.moveLeft(tick)
+    if (this.carrent.position.x < 0 || this.carrent.position.x + this.carrent.size.width > this.world.size.width) {
+      this.rewards.removeRewardForOutSide()
+    } else
+    this.rewards.addRewardForMovement()
+  }
+
+  moveRight () {
+    if (this.state !== 'playing') return
+    const tick = this.def.getDt()
+    this.carrent.moveRight(tick)
+    this.rewards.addRewardForMovement()
+  }
+
+  next () {
+    if (this.state !== 'playing') return
+    const tick = this.def.getDt()
+
+    this.ball.move(tick)
+
+    const bgResult = this.collider.ballCollidesWorld(this.ball, this.world)
+
+    if (bgResult === 'GameOver') {
+      this.state = 'gameover'
+      
+      return
+    }
+
+    if (bgResult === 'Collided') {
+      return
+    }
+
+    if (this.collider.ballCollidesCarret(this.ball, this.carrent)) {
+      this.rewards.addRewardForCatch()
+    }
+
+    if (this.collider.ballCollidesBricks(this.ball, this.brickMap.bricks)) {
+      this.rewards.addRewardForBrokenBrick()
+    }
+  }
+
+  static create (worldSize: Size, getDt: () => number) {
+    return new Arkanoid(createArkanoidGameDefinition(worldSize, getDt))
+  }
+}

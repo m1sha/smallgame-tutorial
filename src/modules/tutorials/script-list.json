@@ -120,6 +120,12 @@
     "codeDir": "examples/code/collision"
   },
   {
+    "id": 98,
+    "name": "Arkanoid",
+    "categoryId": 10,
+    "codeDir": "ga-visual/arkanoid"
+  },
+  {
     "id": 21,
     "name": "A* Alogorithm",
     "categoryId": 3,
