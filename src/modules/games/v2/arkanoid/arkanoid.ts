@@ -40,6 +40,7 @@ export class Arkanoid {
     this.carrent.moveLeft(tick)
     if (this.carrent.position.x < 0 || this.carrent.position.x + this.carrent.size.width > this.world.size.width) {
       this.rewards.removeRewardForOutSide()
+      this.carrent.toLeft()
     } else
     this.rewards.addRewardForMovement()
   }
@@ -48,6 +49,10 @@ export class Arkanoid {
     if (this.state !== 'playing') return
     const tick = this.def.getDt()
     this.carrent.moveRight(tick)
+    if (this.carrent.position.x < 0 || this.carrent.position.x + this.carrent.size.width > this.world.size.width) {
+      this.rewards.removeRewardForOutSide()
+      this.carrent.toRight(this.world.size.width)
+    } else
     this.rewards.addRewardForMovement()
   }
 

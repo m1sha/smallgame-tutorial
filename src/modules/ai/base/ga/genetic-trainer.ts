@@ -1,34 +1,44 @@
 import { Individual } from "./individual"
-import { uniformCrossover } from "./mate"
+import { blendCrossover, uniformCrossover } from "./mate"
 import { mutate } from "./mutate"
 import { Population } from "./population"
 
 export class GeneticTrainer {
+  #epochs = 0
   population: Population
 
   constructor () {
     this.population = new Population()
   }
 
-  individualTemplate: ((epoch: number, needInit: boolean) => Individual) | null = null
+  get epochs () { return this.#epochs }
+
+  createIndividual: ((epoch: number, needInit: boolean) => Individual) | null = null
 
   createPopulation(instanceCount: number) {
-    if (!this.individualTemplate) throw Error('individualTemplate is null')
+    if (!this.createIndividual) throw Error('individualTemplate is null')
     for (let i = 0; i < instanceCount; i++) {
-      this.population.add(this.individualTemplate(0, true))
+      this.population.add(this.createIndividual(0, true))
     }
   }
 
-  train (iterationNum: number) {
+  train (epochs: number, callback: (epoch: number) => void) {
+    for (let i = 0; i < epochs; i++) {
+      this.#epochs++
+      this._train()
+      callback(this.#epochs)
+    }
+  }
+
+  private _train () {
     const tournamentSelected = new Population()
     for (const _ of this.population.individuals) {
-      const individual = this.population.tournamentSelect(2)
-      if (tournamentSelected.individuals.some(p => p.name === individual.name)) continue
+      const individual = this.population.tournamentSelect(3)
+      //if (tournamentSelected.individuals.some(p => p.id === individual.id)) continue
       tournamentSelected.add(individual)
     }
 
     const eliteCount =  Math.floor(tournamentSelected.count * 0.05)
-    //debugger
     const elites = tournamentSelected.top(eliteCount)
 
     const newGeneration = new Population()
@@ -36,25 +46,28 @@ export class GeneticTrainer {
 
     const bestEFitness = elites[0].currentFitness.toFixed(2)
     const worstEFitness = elites.at(-1).currentFitness.toFixed(2)
-    const w = tournamentSelected.individuals.at(-1).currentFitness.toFixed(2)
-
     console.log(`${elites[0].name} vs. ${elites.at(-1).name} (${bestEFitness}:${worstEFitness}`)
 
     for (let i = 0; i < tournamentSelected.count - elites.length; i+=2) {
       const individualA = tournamentSelected.individuals[i]
       const individualB = tournamentSelected.individuals[i + 1]
 
-      const brain = uniformCrossover(individualA.model.getWeights(), individualB.model.getWeights())
-      mutate(brain, 0.8, 0.3)
-      const child = this.individualTemplate(iterationNum + 1, false)
+      const brain = blendCrossover(individualA.model.getWeights(), individualB.model.getWeights())
+      mutate(brain)
+      const child = this.createIndividual(this.epochs + 1, false)
       child.model.setWeights(brain)
+      child.parentA = individualA.name
+      child.parentB = individualB.name
 
+       if (newGeneration.has(child)) continue
       newGeneration.add(child)
     }
 
-    while ( this.population.count > newGeneration.count) {
+    while (this.population.count > newGeneration.count) {
       const x = Math.floor(Math.random() * this.population.count)
-      newGeneration.add(this.population.individuals[x])
+      const individual = this.population.individuals[x]
+      if (newGeneration.has(individual)) continue
+      newGeneration.add(individual)
     }
 
     this.population.set(newGeneration)

@@ -14,6 +14,10 @@ export class Population {
     return best
   }
 
+  get (id: string) {
+    return this.individuals.find(p => p.id === id)
+  }
+
   add (individual: Individual) {
     this.individuals.push(individual)
   }
@@ -25,6 +29,10 @@ export class Population {
 
   top (count) {
     return this.individuals.sort((a, b) => b.currentFitness - a.currentFitness).slice(0, count)
+  }
+
+  has (individual: Individual) {
+    return this.individuals.some(p => p.id === individual.id)
   }
 
   get count () { return this.individuals.length }

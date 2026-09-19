@@ -15,7 +15,7 @@ export class Collider  {
     if (left || right) 
       ball.velocity.x = -ball.velocity.x
     
-    if (bottom || top)
+    if (top)
       ball.velocity.y = -ball.velocity.y
     
     if (top || left || right) return 'Collided'
@@ -34,6 +34,7 @@ export class Collider  {
     const collided = (cx0 <= bx0 && bx0 <= cx1) || (cx0 <= bx1 && bx1 <= cx1)
     if (collided) {
       ball.velocity.y = -ball.velocity.y
+      ball.position.y -= 4
     }
     return collided
   }

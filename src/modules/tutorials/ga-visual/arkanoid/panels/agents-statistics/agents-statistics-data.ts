@@ -11,6 +11,7 @@ export type AgentInfo = {
   cautchBalls: number
   activeMoving: number
   outsideMoving: number
+  timeLife: number
   parentAId: string | null
   parentBId: string | null
 }
@@ -25,6 +26,7 @@ export function createAgentInfo (
   cautchBalls: number,
   activeMoving: number,
   outsideMoving: number,
+  timeLife: number,
   parentAId: string | null,
   parentBId: string | null
 ): AgentInfo {
@@ -37,6 +39,7 @@ export function createAgentInfo (
     cautchBalls,
     activeMoving,
     outsideMoving,
+    timeLife,
     parentAId,
     parentBId
   }

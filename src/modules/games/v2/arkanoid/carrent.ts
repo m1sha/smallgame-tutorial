@@ -7,4 +7,7 @@ export class Carrent {
 
   moveLeft (tick: number) { this.position.x -= this.speed * tick }
   moveRight (tick: number) { this.position.x += this.speed * tick }
+
+  toLeft () { this.position.x = 1 }
+  toRight (width: number) { this.position.x = width - this.size.width - 1 }
 }

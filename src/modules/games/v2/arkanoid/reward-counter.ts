@@ -1,6 +1,5 @@
 export class RewardCounter {
   score = 0
-
   outsideTimes = 0
   catchTimes = 0
   moveTimes = 0
@@ -26,7 +25,7 @@ export class RewardCounter {
   }
 
   removeRewardForOutSide () {
-    this.score -= 100
+    this.score -= 0.01
     this.outsideTimes++
   }
 

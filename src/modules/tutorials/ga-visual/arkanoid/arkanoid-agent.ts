@@ -1,8 +1,9 @@
 import { Individual, Model } from "../../../ai"
-import { Arkanoid } from "../../../games/v2"
-
+import { Arkanoid, RewardCounter } from "../../../games/v2"
 export class ArkanoidAgent extends Individual {
   model: Model
+  timeLife = 0
+  rewards: RewardCounter
 
   constructor (private arkanoid: Arkanoid, private gameTicks: number = 300, name: string, needInit: boolean) {
     super()
@@ -10,10 +11,11 @@ export class ArkanoidAgent extends Individual {
     const inputLegth = this.getObservations().length
     this.model = new Model({ 
       input: { neurons: inputLegth }, 
-      hiddens: [ {neurons: 4, activation: 'ReLU' }], 
+      hiddens: [ {neurons: 16, activation: 'tanh' }], 
       output: { neurons: 3, activation: 'softmax' }
     })
     if (needInit) this.model.initWeights()
+    this.rewards = new RewardCounter()
   }
 
   fitness (): number {
@@ -29,8 +31,9 @@ export class ArkanoidAgent extends Individual {
     }
 
     const ticks = this.gameTicks - (this.gameTicks - i)
-
-    this.currentFitness =  (this.arkanoid.rewards.moveTimes - this.arkanoid.rewards.outsideTimes) * 0.01 + this.arkanoid.rewards.catchTimes  //  this.arkanoid.rewards.score < 0 ? 0 : ticks
+    this.timeLife = ticks
+    this.rewards = this.arkanoid.rewards
+    this.currentFitness = ticks //  (this.arkanoid.rewards.moveTimes - this.arkanoid.rewards.outsideTimes) * 0.01 + this.arkanoid.rewards.catchTimes  //  this.arkanoid.rewards.score < 0 ? 0 : ticks
     return this.currentFitness
   }
 
@@ -52,6 +55,10 @@ export class ArkanoidAgent extends Individual {
     arr[8] = this.arkanoid.carrent.velocity.y
     arr[9] = this.arkanoid.carrent.size.width / size.width
     return arr
+  }
+
+  load (weights: Float32Array) {
+    this.model.setWeights(weights)
   }
 
 }

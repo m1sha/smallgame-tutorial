@@ -6,10 +6,16 @@ import { createReactiveData } from "../../../../../../components/example"
 
 export class AgentsStatistics extends Panel<AgentsStatisticsData> {
   constructor () {
-    super('Agents', AgentsStatisticsComponent, new Point(50, 100))
+    super('Agents', AgentsStatisticsComponent, new Point(10, 310))
     this.data = createReactiveData({ agents: [] })
+    this.action = (actionName, args) => {
+      if (actionName === 'download-weigths') {
+        this.onDownloadWeigths?.(args)
+      }
+    }
   }
 
+  onDownloadWeigths: ((id: string) => void) | null = null
 
   addAget (agent: AgentInfo) {
     this.data!.agents.push(agent)
