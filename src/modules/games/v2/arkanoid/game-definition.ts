@@ -28,7 +28,7 @@ export function createArkanoidGameDefinition (worldSize: Size, getDt: () => numb
   const gapY = worldSize.height / 100
   const ds = Math.hypot(worldSize.width, worldSize.height) / 1000
 
-  const carrentSize = new Size(worldSize.width / 4, worldSize.height / 40)
+  const carrentSize = new Size(worldSize.width / 12, worldSize.height / 40)
   const carrentPos = new Point((worldSize.width - carrentSize.width) / 2, worldSize.height - worldSize.height / 30 - gapY)
 
   const ballRadius = worldSize.height / 100

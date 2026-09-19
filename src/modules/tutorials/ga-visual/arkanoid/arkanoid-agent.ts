@@ -5,7 +5,7 @@ export class ArkanoidAgent extends Individual {
   timeLife = 0
   rewards: RewardCounter
 
-  constructor (private arkanoid: Arkanoid, private gameTicks: number = 300, name: string, needInit: boolean) {
+  constructor (private arkanoid: Arkanoid, name: string, private needInit: boolean) {
     super()
     this.name = name
     const inputLegth = this.getObservations().length
@@ -18,30 +18,11 @@ export class ArkanoidAgent extends Individual {
     this.rewards = new RewardCounter()
   }
 
-  fitness (): number {
-    this.arkanoid.reset()
-    let i = 0
-    for (i; i < this.gameTicks; i++) {
-      const result = this.model.predict(this.getObservations())
-      if (result === 1) this.arkanoid.moveLeft()
-      if (result === 2) this.arkanoid.moveRight()
-      this.arkanoid.next()
-
-      if (this.arkanoid.state === 'gameover') break
-    }
-
-    const ticks = this.gameTicks - (this.gameTicks - i)
-    this.timeLife = ticks
-    this.rewards = this.arkanoid.rewards
-    this.currentFitness = ticks //  (this.arkanoid.rewards.moveTimes - this.arkanoid.rewards.outsideTimes) * 0.01 + this.arkanoid.rewards.catchTimes  //  this.arkanoid.rewards.score < 0 ? 0 : ticks
-    return this.currentFitness
-  }
-
   decide () {
     return this.model.predict(this.getObservations())
   }
 
-  private getObservations () {
+  getObservations () {
     const arr = new Float32Array(10)
     const size = this.arkanoid.world.size
     arr[0] = this.arkanoid.ball.position.x / size.width
@@ -57,8 +38,12 @@ export class ArkanoidAgent extends Individual {
     return arr
   }
 
-  load (weights: Float32Array) {
-    this.model.setWeights(weights)
+  dup(): ArkanoidAgent {
+    const clone = new ArkanoidAgent(this.arkanoid, this.name, this.needInit)
+    clone.name = this.name
+    clone.cloneCount = this.cloneCount + 1
+    clone.fitness = this.fitness
+    ;(clone as any).model = this.model.dup()
+    return clone
   }
-
 }

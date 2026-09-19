@@ -4,6 +4,7 @@ import { Point, Rect, Size } from "smallgame";
 
 export class BrickMap {
   bricks: Brick[] = []
+  get allBroken () { return !this.bricks.some(p => p.alive)}
 
   constructor (readonly map: Array2D<number>, readonly brickSize: Size, readonly bricksGap: Point, readonly bricksStartPos: Point) {
     for (let i = 0; i < map.rows; i++) {

@@ -14,7 +14,7 @@ export class Arkanoid {
   brickMap: BrickMap
   collider: Collider
   rewards: RewardCounter
-  state: 'playing' | 'gameover'
+  state: 'playing' | 'gameover' | 'win'
 
   constructor (readonly def: ArkanoidGameDefinition) {
     this.carrent = new Carrent(def.carrentPos.dup(), def.carrentVelocity.dup(), def.carrentSpeed, def.carrentSize)
@@ -58,6 +58,12 @@ export class Arkanoid {
 
   next () {
     if (this.state !== 'playing') return
+    
+    if (this.brickMap.allBroken) {
+      this.rewards.addRewardForWin()
+      this.state = 'win'
+      return
+    }
     const tick = this.def.getDt()
 
     this.ball.move(tick)
