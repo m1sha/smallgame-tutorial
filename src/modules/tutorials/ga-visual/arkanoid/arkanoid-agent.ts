@@ -5,7 +5,7 @@ export class ArkanoidAgent extends Individual {
   timeLife = 0
   rewards: RewardCounter
 
-  constructor (private arkanoid: Arkanoid, name: string, private needInit: boolean) {
+  constructor (private arkanoid: Arkanoid, name: string, private needInit: boolean = false) {
     super()
     this.name = name
     const inputLegth = this.getObservations().length
@@ -58,7 +58,7 @@ export class ArkanoidAgent extends Individual {
     const longPlay = ticks /gameTicks 
     const brokens =  this.rewards.brokenBricks / arkanoid.brickMap.count
     const win = this.rewards.win
-    this.fitness = brokens + win
+    this.fitness = brokens + win + longPlay * 0.1
 
     return this.fitness 
   }

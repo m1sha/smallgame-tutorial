@@ -8,13 +8,13 @@ import { ArkanoidAgent } from "./arkanoid-agent"
 import { UniqueNameGenerator } from "../../../../utils/random"
 import yoneur from "./agents-raw/yoneur"
 import { download } from "../../../../utils"
+import { ArkanoidAgentsTrainerHelper } from "./worker"
 
 export default async ({ container, containerSize, fps, builders, garbageCollect, viewerControls, panels }: ScriptSettings): Promise<void> => {
   const viewer = new Viewer(containerSize, container, { disableContextMenu: true, garbageCollect, viewerControls })
   const telemetry = builders.telemetry().noLegend()
   const score = telemetry.def('Score', 0)
   const frames = telemetry.def('Frames', 0)
-  const loading = telemetry.def('loading', true)
   const player = telemetry.def('player', '')
 
   const actionsPanel = new ActionsPanel()
@@ -44,16 +44,9 @@ export default async ({ container, containerSize, fps, builders, garbageCollect,
     renderer.render(arkanoid)
   }
 
-  const agentTrainer = new GeneticTrainer()
-  let topagent: ArkanoidAgent  | null = new ArkanoidAgent(arkanoid, 'yo', false)
+  
+  let topagent: ArkanoidAgent  | null = new ArkanoidAgent(arkanoid, 'yo')
   topagent.load(new Float32Array(yoneur))
-
-  agentsStatistics.onDownloadWeigths = (id) => {
-   const individual = agentTrainer.population.get(id)
-   if (!individual) return
-   const content = `[${individual.model.getWeights().map(p => p).join(', ')}]`
-   download(individual.name + '_weights.txt', content)
-  }
 
   const rect = Rect.size(worldSize)
   rect.absCenter = viewer.viewportRect.center.shiftX(200)
@@ -80,67 +73,87 @@ export default async ({ container, containerSize, fps, builders, garbageCollect,
     }
   }
 
-  const names = new UniqueNameGenerator()
-  agentTrainer.createIndividual = (epoch, needInit) => {
-      const e = epoch ? ' v.' + epoch : ''
-      const name = `${names.next()}${e}`
-      return new ArkanoidAgent(arkanoid, name, needInit) 
-  }
-  agentTrainer.createPopulation(300)
-  agentTrainer.fitnessFunc = individual => {
-    const agent = individual as ArkanoidAgent
-    return agent.calcFitness() 
-  }
 
-  agentTrainerPanel.epochs = 500
-
+  agentTrainerPanel.epochs = 600
   agentTrainerPanel.onStartTrain = () => {
-    trainAgents()
+    ArkanoidAgentsTrainerHelper.train(agentTrainerPanel.epochs)
+    //trainAgents()
   }
 
-  arkanoid.reset()
+  ArkanoidAgentsTrainerHelper.onTrain = (data) => {
+    agentTrainerPanel.epoch = data.epoch
+    agentTrainerPanel.addLog(data.epoch, data.max, data.meen, data.min, data.brokenBricks, data.catchTimes)
+  }
+
+  ArkanoidAgentsTrainerHelper.onComplete = (data) => {
+    for (const individual of data.individuals) {
+      agentsStatistics.addAget(
+        createAgentInfo(
+          individual.id, 
+          individual.name, 
+          individual.epoch, 
+          individual.fitness, 
+          individual.brokenBricks, 
+          individual.catchTimes, 
+          individual.moveTimes, 
+          individual.outsideTimes, 
+          individual.timeLife, 
+          individual.parentA, 
+          individual.parentB
+        )
+      )
+    }
+
+    const { id, name, weights } = data.individual
+    topagent = new ArkanoidAgent(arkanoid, name)
+    topagent.id = id
+    topagent.load(new Float32Array(weights))
+    arkanoid.reset()
+  }
+
   
-  function trainAgents () {
-    return new Promise<void>(resolve => {
-    setTimeout(() => {
-      agentTrainer.train(agentTrainerPanel.epochs, (epoch) => {
-        const topone = agentTrainer.population.top(1)[0] as ArkanoidAgent
-        const meen =  agentTrainer.population.meen()
-        const worst =  agentTrainer.population.worst()
-        console.log(`epoch ${epoch} fitness: ${topone.fitness} broken bricks: ${topone.rewards.brokenBricks} `)
+  
+  // function trainAgents () {
+  //   return new Promise<void>(resolve => {
+  //   setTimeout(() => {
+  //     agentTrainer.train(agentTrainerPanel.epochs, (epoch) => {
+  //       const topone = agentTrainer.population.top(1)[0] as ArkanoidAgent
+  //       const meen =  agentTrainer.population.meen()
+  //       const worst =  agentTrainer.population.worst()
+  //       console.log(`epoch ${epoch} fitness: ${topone.fitness} broken bricks: ${topone.rewards.brokenBricks} `)
 
-        agentTrainerPanel.epoch = epoch
-        agentTrainerPanel.addLog(epoch, topone.fitness, meen, worst, topone.rewards.brokenBricks, topone.rewards.catchTimes)
+  //       agentTrainerPanel.epoch = epoch
+  //       agentTrainerPanel.addLog(epoch, topone.fitness, meen, worst, topone.rewards.brokenBricks, topone.rewards.catchTimes)
         
-        if (epoch < agentTrainerPanel.epochs - 1) return
+  //       if (epoch < agentTrainerPanel.epochs - 1) return
         
-        for (const individual of agentTrainer.population.individuals) {
-          const a = individual as ArkanoidAgent
-          agentsStatistics.addAget(
-            createAgentInfo(
-              a.id, 
-              a.name, 
-              epoch, 
-              a.fitness, 
-              a.rewards.brokenBricks, 
-              a.rewards.catchTimes, 
-              a.rewards.moveTimes, 
-              a.rewards.outsideTimes, 
-              a.timeLife, 
-              a.parentA, 
-              a.parentB
-            )
-          )
-        }
-      })
+  //       for (const individual of agentTrainer.population.individuals) {
+  //         const a = individual as ArkanoidAgent
+  //         agentsStatistics.addAget(
+  //           createAgentInfo(
+  //             a.id, 
+  //             a.name, 
+  //             epoch, 
+  //             a.fitness, 
+  //             a.rewards.brokenBricks, 
+  //             a.rewards.catchTimes, 
+  //             a.rewards.moveTimes, 
+  //             a.rewards.outsideTimes, 
+  //             a.timeLife, 
+  //             a.parentA, 
+  //             a.parentB
+  //           )
+  //         )
+  //       }
+  //     })
 
-      topagent = agentTrainer.population.top(1)[0] as ArkanoidAgent
-      player.value = topagent.name
-      arkanoid.reset()
-      loading.value = false
-      resolve()
-    }, 0)
-    })
-  }
+  //     topagent = agentTrainer.population.top(1)[0] as ArkanoidAgent
+  //     player.value = topagent.name
+  //     arkanoid.reset()
+  //     loading.value = false
+  //     resolve()
+  //   }, 0)
+  //   })
+  // }
   
 }
