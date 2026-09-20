@@ -6,6 +6,14 @@ export class BrickMap {
   bricks: Brick[] = []
   get allBroken () { return !this.bricks.some(p => p.alive)}
 
+  get brokenCount () {
+    return this.bricks.filter(p => !p.alive).length
+  }
+
+  get count () {
+    return this.bricks.length
+  }
+
   constructor (readonly map: Array2D<number>, readonly brickSize: Size, readonly bricksGap: Point, readonly bricksStartPos: Point) {
     for (let i = 0; i < map.rows; i++) {
       for (let j = 0; j < map.cols; j++) {

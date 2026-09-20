@@ -38,6 +38,31 @@ export class ArkanoidAgent extends Individual {
     return arr
   }
 
+  calcFitness () {
+    const arkanoid = this.arkanoid
+    arkanoid.reset()
+    const gameTicks = 80000
+    let tick = 0
+    for (tick; tick < gameTicks; tick++) {
+      const result = this.model.predict(this.getObservations())
+      if (result === 1) arkanoid.moveLeft()
+      if (result === 2) arkanoid.moveRight()
+      arkanoid.next()
+      if (arkanoid.state === 'gameover') break
+      if (arkanoid.state === 'win') break
+    }
+
+    const ticks = gameTicks - (gameTicks - tick)
+    this.timeLife = ticks
+    this.rewards = arkanoid.rewards
+    const longPlay = ticks /gameTicks 
+    const brokens =  this.rewards.brokenBricks / arkanoid.brickMap.count
+    const win = this.rewards.win
+    this.fitness = brokens + win
+
+    return this.fitness 
+  }
+
   dup(): ArkanoidAgent {
     const clone = new ArkanoidAgent(this.arkanoid, this.name, this.needInit)
     clone.name = this.name

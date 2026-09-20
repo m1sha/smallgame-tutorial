@@ -27,8 +27,10 @@ export class Arkanoid {
   }
 
   reset () {
+    const ballVelocity = this.def.ballVelocity.dup()
+    //ballVelocity.x = Math.random() < .5 ? -1: 1
     this.carrent = new Carrent(this.def.carrentPos.dup(), this.def.carrentVelocity.dup(), this.def.carrentSpeed, this.def.carrentSize)
-    this.ball = new Ball(this.def.ballPos.dup(), this.def.ballVelocity.dup(), this.def.ballSpeed, this.def.ballRadius)
+    this.ball = new Ball(this.def.ballPos.dup(), ballVelocity, this.def.ballSpeed, this.def.ballRadius)
     this.brickMap = new BrickMap(this.def.bricksMap, this.def.brickSize, this.def.bricksOffset, this.def.bricksStartPos)
     this.rewards = new RewardCounter()
     this.state = 'playing'

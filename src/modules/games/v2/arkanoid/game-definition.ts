@@ -39,7 +39,7 @@ export function createArkanoidGameDefinition (worldSize: Size, getDt: () => numb
     
     ballPos: ballPos,
     ballRadius: ballRadius,
-    ballVelocity: new Point(-1, 1),
+    ballVelocity: new Point(Math.random() < .5 ? -1: 1, 1),
     ballSpeed: 1 * ds,
 
     brickSize: new Size(worldSize.width / 13, worldSize.height / 22),

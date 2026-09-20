@@ -3,11 +3,12 @@ export class RewardCounter {
   outsideTimes = 0
   catchTimes = 0
   moveTimes = 0
-  brokenBrick = 0
+  brokenBricks = 0
+  win = 0
   
   addRewardForBrokenBrick() {
     this.score += 1
-    this.brokenBrick++
+    this.brokenBricks++
   }
 
   addRewardForMovement() {
@@ -16,7 +17,8 @@ export class RewardCounter {
   }
 
   addRewardForWin() {
-    this.score += 100
+    this.score += 1
+    this.win ++
   }
 
   addRewardForCatch() { 

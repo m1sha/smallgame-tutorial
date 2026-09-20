@@ -43,7 +43,7 @@ export class GeneticTrainer {
       const parentB = this.population.tournamentSelect(3)
 
       const brain = uniformCrossover(parentA.model.getWeights(), parentB.model.getWeights())
-      mutate(brain)
+      mutate(brain, 0.1)
 
       const child = this.createIndividual(this.epochs + 1, false)
       child.model.setWeights(brain)

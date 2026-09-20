@@ -30,6 +30,18 @@ export class Population {
     return this.individuals.sort((a, b) => b.fitness - a.fitness).slice(0, count)
   }
 
+  meen () {
+    let k = 0
+    this.individuals.forEach(p => k += p.fitness)
+    return k / this.individuals.length
+  }
+
+  worst () {
+    const individual = this.individuals.sort((a, b) => a.fitness - b.fitness)[0]
+    if (!individual) return 0
+    return individual.fitness
+  }
+
   has (individual: Individual) {
     return this.individuals.some(p => p.id === individual.id)
   }
