@@ -37,9 +37,9 @@ export class UniqueNameGenerator {
 
   private static createNameCollection(): string[] {
     // Every fragment has exactly two letters; 10 × 10 × 10 = 1,000 names.
-    const starts = ["Ja", "O", "Yo", "Bo", "Bu", "Da", "De", "Di", "Q", "Du"];
-    const middles = ["la", "le", "li", "lo", "ma", "me", "mi", "na", "ne", "ni"];
-    const ends = ["an", "ar", "en", "er", "in", "ir", "on", "or", "un", "ur"];
+    const starts = ["Ar", "Ja", "O", "Yo", "Gu", "Da", "Ce", "Li", "Q", "Zu"];
+    const middles = ["la", "le", "li", "lo", "ma", "go", "mi", "sa", "ne", "zi"];
+    const ends = ["ny", "ar", "en", "era", "na", "on", "or", "un", "vo", "ini"];
 
     const names = starts.flatMap((start) =>
       middles.flatMap((middle) => ends.map((end) => start + middle + end)),
