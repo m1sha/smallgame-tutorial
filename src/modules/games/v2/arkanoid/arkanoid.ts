@@ -58,6 +58,12 @@ export class Arkanoid {
     this.rewards.addRewardForMovement()
   }
 
+  action (n: number) {
+    if (n < 1 || n > 2) throw new Error('An action must be 1 or 2.')
+    if (n === 1) this.moveLeft()
+    if (n === 2) this.moveRight()
+  }
+
   next () {
     if (this.state !== 'playing') return
     

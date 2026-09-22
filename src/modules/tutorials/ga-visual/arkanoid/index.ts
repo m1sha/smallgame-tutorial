@@ -3,12 +3,9 @@ import { Arkanoid } from "../../../games/v2"
 import { type ScriptSettings, Viewer, displayFps } from "../../core"
 import { ActionsPanel, AgentsStatistics, AgentTrainerPanel, createAgentInfo } from "./panels"
 import { ArkanoidRenderer } from "./arkanoid-renderer"
-import { GeneticTrainer } from "../../../ai"
 import { ArkanoidAgent } from "./arkanoid-agent"
-import { UniqueNameGenerator } from "../../../../utils/random"
-import yoneur from "./agents-raw/yoneur"
-import { download } from "../../../../utils"
 import { ArkanoidAgentsTrainerHelper } from "./worker"
+import yoneur from "./agents-raw/yoneur"
 
 export default async ({ container, containerSize, fps, builders, garbageCollect, viewerControls, panels }: ScriptSettings): Promise<void> => {
   const viewer = new Viewer(containerSize, container, { disableContextMenu: true, garbageCollect, viewerControls })
@@ -16,7 +13,6 @@ export default async ({ container, containerSize, fps, builders, garbageCollect,
   const score = telemetry.def('Score', 0)
   const frames = telemetry.def('Frames', 0)
   const player = telemetry.def('player', '')
-
   const actionsPanel = new ActionsPanel()
   panels.addPanel(actionsPanel)
   const agentsStatistics = new AgentsStatistics()
@@ -30,22 +26,19 @@ export default async ({ container, containerSize, fps, builders, garbageCollect,
   renderer.render(arkanoid)
 
   actionsPanel.onAction = (action) => {
-    if (action === 1) arkanoid.moveLeft()
-    if (action === 2) arkanoid.moveRight()
+    arkanoid.action(action)
     arkanoid.next()
     renderer.render(arkanoid)
     frames.value ++
   }
 
   viewer.onKeyPressed = keys => {
-    const v = keys.horizontalAxisRaw
-    if (v < 0) arkanoid.moveLeft()
-    if (v > 0) arkanoid.moveRight()
-    renderer.render(arkanoid)
+    if (keys.horizontalAxisRaw !== 0)
+      arkanoid.action(keys.horizontalAxisRaw < 0 ? 1 : 2)
   }
 
   
-  let topagent: ArkanoidAgent  | null = new ArkanoidAgent(arkanoid, 'yo')
+  let topagent = new ArkanoidAgent(arkanoid, 'yo')
   topagent.load(new Float32Array(yoneur))
 
   const rect = Rect.size(worldSize)
@@ -64,8 +57,7 @@ export default async ({ container, containerSize, fps, builders, garbageCollect,
       renderer.render(arkanoid)
       
       decision = topagent.decide()
-      if (decision === 1) arkanoid.moveLeft()
-      if (decision === 2) arkanoid.moveRight()
+      if (decision > 0) arkanoid.action(decision)
     }
 
     if (arkanoid.state === 'gameover' || arkanoid.state === 'win') {
@@ -74,11 +66,8 @@ export default async ({ container, containerSize, fps, builders, garbageCollect,
   }
 
 
-  agentTrainerPanel.epochs = 600
-  agentTrainerPanel.onStartTrain = () => {
-    ArkanoidAgentsTrainerHelper.train(agentTrainerPanel.epochs)
-    //trainAgents()
-  }
+  agentTrainerPanel.epochs = 120
+  agentTrainerPanel.onStartTrain = () => ArkanoidAgentsTrainerHelper.train(agentTrainerPanel.epochs)
 
   ArkanoidAgentsTrainerHelper.onTrain = (data) => {
     agentTrainerPanel.epoch = data.epoch
@@ -86,24 +75,7 @@ export default async ({ container, containerSize, fps, builders, garbageCollect,
   }
 
   ArkanoidAgentsTrainerHelper.onComplete = (data) => {
-    for (const individual of data.individuals) {
-      agentsStatistics.addAget(
-        createAgentInfo(
-          individual.id, 
-          individual.name, 
-          individual.epoch, 
-          individual.fitness, 
-          individual.brokenBricks, 
-          individual.catchTimes, 
-          individual.moveTimes, 
-          individual.outsideTimes, 
-          individual.timeLife, 
-          individual.parentA, 
-          individual.parentB
-        )
-      )
-    }
-
+    data.individuals.forEach(individual => agentsStatistics.addAget(createAgentInfo(individual)))
     const { id, name, weights } = data.individual
     topagent = new ArkanoidAgent(arkanoid, name)
     topagent.id = id
@@ -111,49 +83,4 @@ export default async ({ container, containerSize, fps, builders, garbageCollect,
     arkanoid.reset()
   }
 
-  
-  
-  // function trainAgents () {
-  //   return new Promise<void>(resolve => {
-  //   setTimeout(() => {
-  //     agentTrainer.train(agentTrainerPanel.epochs, (epoch) => {
-  //       const topone = agentTrainer.population.top(1)[0] as ArkanoidAgent
-  //       const meen =  agentTrainer.population.meen()
-  //       const worst =  agentTrainer.population.worst()
-  //       console.log(`epoch ${epoch} fitness: ${topone.fitness} broken bricks: ${topone.rewards.brokenBricks} `)
-
-  //       agentTrainerPanel.epoch = epoch
-  //       agentTrainerPanel.addLog(epoch, topone.fitness, meen, worst, topone.rewards.brokenBricks, topone.rewards.catchTimes)
-        
-  //       if (epoch < agentTrainerPanel.epochs - 1) return
-        
-  //       for (const individual of agentTrainer.population.individuals) {
-  //         const a = individual as ArkanoidAgent
-  //         agentsStatistics.addAget(
-  //           createAgentInfo(
-  //             a.id, 
-  //             a.name, 
-  //             epoch, 
-  //             a.fitness, 
-  //             a.rewards.brokenBricks, 
-  //             a.rewards.catchTimes, 
-  //             a.rewards.moveTimes, 
-  //             a.rewards.outsideTimes, 
-  //             a.timeLife, 
-  //             a.parentA, 
-  //             a.parentB
-  //           )
-  //         )
-  //       }
-  //     })
-
-  //     topagent = agentTrainer.population.top(1)[0] as ArkanoidAgent
-  //     player.value = topagent.name
-  //     arkanoid.reset()
-  //     loading.value = false
-  //     resolve()
-  //   }, 0)
-  //   })
-  // }
-  
 }

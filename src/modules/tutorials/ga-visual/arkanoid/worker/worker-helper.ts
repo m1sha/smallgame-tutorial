@@ -1,5 +1,5 @@
 import ArkanoidAgentsTrainer from './arkanoid-agents-trainer.worker?worker'
-const worker = new ArkanoidAgentsTrainer()
+let worker = null
 
 interface IArkanoidAgentsTrainerHelper {
   onTrain: ((data: any) => void) | null
@@ -11,17 +11,20 @@ const ArkanoidAgentsTrainerHelper: IArkanoidAgentsTrainerHelper = {
   onTrain: null,
   onComplete: null,
   train (epochs: number) {
+    worker?.terminate()
+    worker = new ArkanoidAgentsTrainer()
     worker.postMessage({ command: 'train', epochs })
+    worker.onmessage = e => {
+    const command = e.data.command
+    const result = e.data.result
+    if (command === 'train')
+      ArkanoidAgentsTrainerHelper.onTrain?.(result)
+    if (command === 'complete')
+      ArkanoidAgentsTrainerHelper.onComplete?.(result)
+    }
+
   }
 }
 
-worker.onmessage = e => {
-  const command = e.data.command
-  const result = e.data.result
-  if (command === 'train')
-    ArkanoidAgentsTrainerHelper.onTrain?.(result)
-  if (command === 'complete')
-    ArkanoidAgentsTrainerHelper.onComplete?.(result)
-}
 
 export { ArkanoidAgentsTrainerHelper }
