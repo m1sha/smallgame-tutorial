@@ -6,6 +6,7 @@ import { ArkanoidRenderer } from "./arkanoid-renderer"
 import { ArkanoidAgent } from "./arkanoid-agent"
 import { ArkanoidAgentsTrainerHelper } from "./worker"
 import yoneur from "./agents-raw/yoneur"
+import { RemoteStorePanel } from "../../../shared"
 
 export default async ({ container, containerSize, fps, builders, garbageCollect, viewerControls, panels }: ScriptSettings): Promise<void> => {
   const viewer = new Viewer(containerSize, container, { disableContextMenu: true, garbageCollect, viewerControls })
@@ -19,6 +20,9 @@ export default async ({ container, containerSize, fps, builders, garbageCollect,
   panels.addPanel(agentsStatistics)
   const agentTrainerPanel = new AgentTrainerPanel()
   panels.addPanel(agentTrainerPanel)
+
+  
+  panels.addPanel(new RemoteStorePanel())
 
   const worldSize = new Size(560, 460)
   const arkanoid = Arkanoid.create(worldSize, () => 2)
@@ -66,7 +70,7 @@ export default async ({ container, containerSize, fps, builders, garbageCollect,
   }
 
 
-  agentTrainerPanel.epochs = 120
+  agentTrainerPanel.epochs = 250
   agentTrainerPanel.onStartTrain = () => ArkanoidAgentsTrainerHelper.train(agentTrainerPanel.epochs)
 
   ArkanoidAgentsTrainerHelper.onTrain = (data) => {

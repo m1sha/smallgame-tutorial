@@ -1,10 +1,16 @@
 import axios from "axios"
-import { MediaFileDto, JsonDocumentDto } from "./dto"
+import { MediaFileDto, JsonDocumentDto, SpaceDto } from "./dto"
 import { uuidv4 } from "../uuidv4"
 
-const url = 'https://localhost:60002'
+const url = 'https://localhost:8899'
 
 const RemoteStorage = {
+
+  async spaceList () {
+    const data = await get<SpaceDto[]>(`${url}/spaces`, [])
+    return data.map(p => new Space(p))
+  },
+
   getMediaUrl (name: string) {
     return `${url}/media/name/${name}`
   },
@@ -36,6 +42,21 @@ async function remove (url: string) {
   if (res.status !== 200) {
     console.log(`${res.status}. ${res.statusText}`)
     return
+  }
+}
+
+export class Space {
+  id: string
+  name: string
+  description: string
+  mediaCount: number
+  documentCount: number
+  constructor (dto: SpaceDto) {
+    this.id = dto.id
+    this.name = dto.name
+    this.description = dto.description
+    this.mediaCount = dto.mediaCount
+    this.documentCount = dto.documentCount
   }
 }
 

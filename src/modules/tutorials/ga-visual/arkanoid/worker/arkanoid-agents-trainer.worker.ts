@@ -1,8 +1,9 @@
 import { Size } from "smallgame"
 import { UniqueNameGenerator } from "../../../../../utils/random"
-import { GeneticTrainer } from "../../../../ai"
+
 import { Arkanoid } from "../../../../games/v2"
 import { ArkanoidAgent } from "../arkanoid-agent"
+import { GeneticTrainer } from "../../../../../utils/ai"
 
 const worldSize = new Size(560, 460)
 const arkanoid = Arkanoid.create(worldSize, () => 8)

@@ -1,4 +1,5 @@
-import { Individual, Model } from "../../../ai"
+
+import { Individual, Model } from "../../../../utils/ai"
 import { Arkanoid, RewardCounter } from "../../../games/v2"
 export class ArkanoidAgent extends Individual {
   model: Model
