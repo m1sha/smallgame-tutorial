@@ -1,0 +1,1 @@
+export type Genome = Float32Array
