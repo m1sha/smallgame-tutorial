@@ -1,3 +1,5 @@
+import { Random } from "../../../utils/random";
+
 export type Activation = 'ReLU' | 'sigmoid' | 'tanh' | 'linear' | 'softmax'
 
 export type ModelDefinition = {
@@ -84,12 +86,13 @@ export class Model {
     this.data.set(weights, 0)
   }
 
-  initWeights (): void {
+  initWeights (seed: number): void {
+    const random = new Random(seed)
     for (const layer of this.layers) {
       const limit = Math.sqrt(6 / (layer.inputSize + layer.size))
       const weightCount = layer.inputSize * layer.size
       for (let i = 0; i < weightCount; i++) {
-        this.data[layer.weightsOffset + i] = (Math.random() * 2 - 1) * limit
+        this.data[layer.weightsOffset + i] = (random.next() * 2 - 1) * limit
       }
       this.data.fill(0, layer.biasesOffset, layer.biasesOffset + layer.size)
     }

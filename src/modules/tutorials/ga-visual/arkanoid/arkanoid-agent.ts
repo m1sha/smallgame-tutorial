@@ -14,7 +14,7 @@ export class ArkanoidAgent extends Individual {
       hiddens: [ {neurons: 16, activation: 'tanh' }], 
       output: { neurons: 3, activation: 'softmax' }
     })
-    if (needInit) this.model.initWeights()
+    if (needInit) this.model.initWeights(11112211)
     this.rewards = new RewardCounter()
   }
 
