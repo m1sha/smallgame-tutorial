@@ -6,7 +6,7 @@ const emit = defineEmits<{ postData: [actionName: string, args?: any] }>()
 
 <template>
   <div class="agent-statistics-panel">
-  <div class="agent-statistics-table">
+  <div class="agent-statistics-table v-grid-table">
     <div class="header">
       <div class="header-column">#</div>
       <div class="header-column">Name</div>
@@ -43,55 +43,10 @@ const emit = defineEmits<{ postData: [actionName: string, args?: any] }>()
 <style lang="css">
 
 .agent-statistics-table {
-  display: grid;
   grid-template-columns: 38px repeat(11, max-content);
-  font-size: 12px;
-
   max-height: 50vh;
   overflow-y: auto;
-
   margin: 4px;
   margin-bottom: 12px;
-
-  .header-column {
-    position: sticky;
-    top: 0;
-    background-color: #444;
-    color: #aaa;
-    padding: 2px 4px;
-    padding-bottom: 8px;
-    border-bottom: 1px solid #313131;
-
-    &:last-child {
-      padding-right: 18px;
-    }
-  }
-  .column { 
-    padding: 2px 4px; 
-    color: #888;
-    border-bottom: 1px solid #555;
-    &.num {
-      text-align: right;
-    }
-    &:last-child {
-      padding-right: 18px;
-    }
-
-    button {
-      padding: 2px 4px;
-      min-width: fit-content;
-    }
-  }
-  .row {
-    &:nth-child(odd) {
-      .column {
-        background-color: #3e3e3e;
-      }
-    }
-  }
-
-  .header, .row {
-    display: contents;
-  }
 }
 </style>

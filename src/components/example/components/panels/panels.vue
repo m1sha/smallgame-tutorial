@@ -49,7 +49,7 @@ function onpointerup (_: IPanel, ev: PointerEvent) {
 <style lang="css">
 .panel {
   position: absolute;
-  background-color: #444444F0;
+  background-color: #2f2f2fF0;
 
   display: flex;
   flex-direction: column;

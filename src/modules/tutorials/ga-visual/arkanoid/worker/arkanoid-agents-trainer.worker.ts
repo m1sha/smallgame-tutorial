@@ -3,11 +3,22 @@ import { UniqueNameGenerator } from "../../../../../utils/random"
 
 import { Arkanoid } from "../../../../games/v2"
 import { ArkanoidAgent } from "../arkanoid-agent"
-import { GeneticTrainer } from "../../../../../utils/ai"
+import { GeneticTrainer, GeneticTrainerDefinition } from "../../../../../utils/ai"
 
 const worldSize = new Size(560, 460)
-const arkanoid = Arkanoid.create(worldSize, () => 8)
-const agentTrainer = new GeneticTrainer()
+const arkanoid = Arkanoid.create(worldSize, () => 1)
+const definitions: GeneticTrainerDefinition = {
+  elitePercent: 5,
+  reproduction: {
+    tournamentCount: 3,
+    crossover: { type: 'UniformCrossover' },
+  },
+  mutation: {
+    rate: 0.1,
+    strength: 0.2
+  }
+}
+const agentTrainer = new GeneticTrainer(definitions)
 const names = new UniqueNameGenerator()
 agentTrainer.createIndividual = (epoch, needInit) => {
     const e = epoch ? ' v.' + epoch : ''

@@ -2,13 +2,14 @@ import { Individual } from "./individual"
 import { blendCrossover, uniformCrossover } from "./mate"
 import { mutate } from "./mutate"
 import { Population } from "./population"
+import { GeneticTrainerDefinition } from './genetic-trainer-definitions'
 
 export class GeneticTrainer {
   #epochs = 0
   population: Population
 
-  constructor () {
-    this.population = new Population()
+  constructor (readonly def: GeneticTrainerDefinition, population?: Population) {
+    this.population = population ? population : new Population()
   }
 
   get epochs () { return this.#epochs }
@@ -33,17 +34,28 @@ export class GeneticTrainer {
   }
 
   private _train () {
-    const eliteCount = Math.max(1, Math.floor(this.population.count * 0.05))
+    const def = this.def
+    const eliteCount = Math.max(1, Math.floor(this.population.count * def.elitePercent * 0.01))
     const elites = this.population.top(eliteCount)
     const newGeneration = new Population()
     elites.forEach(p => newGeneration.add(p.dup()))
     
+    const reproduction = def.reproduction
     while (newGeneration.count < this.population.count) {
-      const parentA = this.population.tournamentSelect(3)
-      const parentB = this.population.tournamentSelect(3)
+      const parentA = this.population.tournamentSelect(reproduction.tournamentCount)
+      const parentB = this.population.tournamentSelect(reproduction.tournamentCount)
 
-      const brain = uniformCrossover(parentA.model.getWeights(), parentB.model.getWeights())
-      mutate(brain, 0.1)
+      let brain = null
+      if (reproduction.crossover.type === 'UniformCrossover') {
+        brain = uniformCrossover(parentA.model.getWeights(), parentB.model.getWeights())
+      }
+      if (reproduction.crossover.type === 'BlendCrossover') {
+        brain = blendCrossover(parentA.model.getWeights(), parentB.model.getWeights(), reproduction.crossover.alpha)
+      }
+
+      if (!brain) throw new Error('brain is null')
+       
+      mutate(brain, def.mutation.rate, def.mutation.strength)
 
       const child = this.createIndividual(this.epochs + 1, false)
       child.model.setWeights(brain)

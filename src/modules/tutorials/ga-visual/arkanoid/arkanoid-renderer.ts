@@ -16,10 +16,19 @@ export class ArkanoidRenderer {
 
   drawBgSurface (arkanoid: Arkanoid)  {
     const sketch = new Sketch()
+    sketch.defineStyle('normal3', { fill: '#423c37', stroke: '#777'})
+    sketch.defineStyle('normal2', { fill: '#3d352e', stroke: '#575757'})
+    sketch.defineStyle('normal1', { fill: '#302822', stroke: '#424242'})
+    sketch.defineStyle('immortal', { fill: '#807c7a', stroke: '#999898'})
     sketch.rect({ fill: '#2c2c2c '}, Rect.size(arkanoid.def.worldSize))
     for (const brick of arkanoid.brickMap.bricks) {
       if (!brick.alive) continue
-      sketch.rect({ fill: '#423c37', stroke: '#777'}, Rect.size(brick.size).moveSelf(brick.position))
+
+      let style = 'immortal'
+      if (!brick.immortal) {
+        style ='normal' + brick.lives
+      }
+      sketch.rect(style, Rect.size(brick.size).moveSelf(brick.position))
     }
     this.bgSurface.clear()
     sketch.draw(this.bgSurface)

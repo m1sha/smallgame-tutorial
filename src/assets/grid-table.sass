@@ -1,0 +1,43 @@
+.v-grid-table 
+  display: grid
+  font-size: 12px
+
+  .header, .row 
+    display: contents
+   
+  .header-column 
+    position: sticky
+    top: 0
+    background-color: #2f2f2fF0
+    color: #aaa
+    padding: 2px 4px
+    padding-bottom: 8px
+    border-bottom: 1px solid #444
+
+    &:last-child 
+      padding-right: 18px
+    
+  
+  .column  
+    padding: 2px 4px 
+    color: #888
+    border-bottom: 1px solid #444
+    &.num 
+      text-align: right
+    
+    &:last-child 
+      padding-right: 18px
+    
+
+    button 
+      padding: 2px 4px
+      min-width: fit-content
+    
+  
+  .row 
+    &:nth-child(odd) 
+      .column 
+        background-color: #323232
+ 
+
+  

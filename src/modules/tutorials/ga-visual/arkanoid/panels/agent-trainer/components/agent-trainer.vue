@@ -1,5 +1,7 @@
 <script setup lang="ts">
+import { DropDownList, TextBox } from 'vue3-universal-components';
 import { AgentsTrainerData } from '../agent-trainer-data';
+import TrainingLog from './training-log.vue';
 
 defineProps<AgentsTrainerData>()
 const emit = defineEmits<{ postData: [actionName: string]}>()
@@ -7,44 +9,77 @@ const emit = defineEmits<{ postData: [actionName: string]}>()
 
 <template>
   <div class="agents-trainer-panel">
-    <div class="block">
-      <div>
-        <span>Epoch</span>
-        <span>{{ epoch }}</span>
+    <div class="section">
+      <div class="section-header">
+        <p>Training Settings</p>
       </div>
+
       <div>
-        <span>Epochs</span>
-        <span>{{ epochs }}</span>
+        <TextBox v-model="definition.elitePercent" caption="Percent Of Elite Individuals" />
       </div>
+
       <div>
-        <button @click="emit('postData', 'train')">Train</button>
+        <span style="font-size: 14px; color: #888;">Reproduction</span>
+      </div>
+      <div style="display: flex; gap: 18px;">
+        <TextBox v-model="definition.reproduction.tournamentCount" caption="Tournament Count" />
+        <DropDownList v-model="definition.reproduction.crossover.type" :items="[{ id: 'UniformCrossover', name: 'Uniform' }, { id: 'BlendCrossover', name: 'Blend' }]" caption="Crossover"/>
+      </div>
+
+      <div>
+        <span style="font-size: 14px; color: #888;">Mutation</span>
+      </div>
+      <div style="display: flex; gap: 18px;">
+        <TextBox v-model="definition.mutation.rate" caption="Rate" />
+        <TextBox v-model="definition.mutation.strength" caption="Strength" />
       </div>
     </div>
 
-    <div class="gents-trainer-log">
-      <div class="header">
-        <div class="column-header">Epoch</div>
-        <div class="column-header">Max</div>
-        <div class="column-header">Mean</div>
-        <div class="column-header">Min</div>
-        <div class="column-header">B. Bricks</div>
-        <div class="column-header">Catchs</div>
+    <div class="section">
+      <div class="section-header">
+        <p>Training Settings</p>
       </div>
-      <div class="row" v-for="item of log">
-        <div class="column">{{ item.epoch }}</div>
-        <div class="column">{{ item.max.toFixed(2) }}</div>
-        <div class="column">{{ item.mean.toFixed(2) }}</div>
-        <div class="column">{{ item.min.toFixed(2) }}</div>
-        <div class="column">{{ item.brockenBricks }}</div>
-        <div class="column">{{ item.catchTimes }}</div>
+      <div class="block">
+        <div>
+          <span>Epoch</span>
+          <span>{{ training.epoch }}</span>
+        </div>
+        <div style="display: flex; align-items: center;">
+          <span>Epochs</span>
+          <TextBox v-model="training.epochs" />
+        </div>
+        <div>
+          <button @click="emit('postData', 'train')">Train</button>
+        </div>
       </div>
     </div>
+
+    <TrainingLog :log />
+
   </div>
 
 </template>
 
 <style lang="css">
 .agents-trainer-panel {
+  height: 82vh;
+
+  .section-header {
+    background-color: #252525;
+    padding: 8px;
+    p { 
+      padding: 0; margin: 0px; 
+      font-size: 14px;
+      color: #777;
+    }
+  }
+
+  .section {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 18px;
+  }
   
   .block {
     font-size: 12px;
@@ -55,27 +90,12 @@ const emit = defineEmits<{ postData: [actionName: string]}>()
       display: flex;
       gap: 8px;
     }
-    
   }
 
   .gents-trainer-log {
-    display: grid;
     grid-template-columns: repeat(6, 1fr);
-    font-size: 12px;
-
-    max-height: 650px;
+    max-height: 350px;
     overflow-y: auto;
-
-    .header, .row {
-      display: contents;
-
-      .column-header, .column {
-        padding: 2px 4px;
-        min-width: 8ch;
-        color: #bbb;
-      }
-    }
-    
   }
 }
 </style>

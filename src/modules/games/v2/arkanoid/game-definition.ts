@@ -28,11 +28,14 @@ export function createArkanoidGameDefinition (worldSize: Size, getDt: () => numb
   const gapY = worldSize.height / 100
   const ds = Math.hypot(worldSize.width, worldSize.height) / 1000
 
-  const carrentSize = new Size(worldSize.width / 12, worldSize.height / 40)
+  const carrentSize = new Size(worldSize.width / 15, worldSize.height / 40)
   const carrentPos = new Point((worldSize.width - carrentSize.width) / 2, worldSize.height - worldSize.height / 30 - gapY)
 
   const ballRadius = worldSize.height / 100
   const ballPos = new Point((worldSize.width - ballRadius) / 2, carrentPos.y - ballRadius * ballRadius)
+
+  const  bricksMap = new Array2D<number>(8, 12)
+  bricksMap.apply(level1())
 
   return {
     worldSize,
@@ -45,13 +48,26 @@ export function createArkanoidGameDefinition (worldSize: Size, getDt: () => numb
     brickSize: new Size(worldSize.width / 13, worldSize.height / 22),
     bricksStartPos: new Point(gapX , gapY * 7),
     bricksOffset: new Point(gapX * 0.5, gapY),
-    bricksMap: new Array2D<number>(8, 12, 1),
+    bricksMap,
 
     carrentPos: carrentPos,
     carrentSize: carrentSize,
     carrentVelocity: new Point(-1, 0),
-    carrentSpeed: 5 * ds,
+    carrentSpeed: 2 * ds,
 
     getDt: () => getDt()
   }
+}
+
+function level1 () {
+  return [
+    1,1,1,1,1,1,1,1,1,1,1,1,
+    1,1,1,1,1,1,1,1,1,1,1,1,
+    1,1,1,1,1,1,1,1,1,1,1,1,
+    1,1,1,1,1,1,2,1,1,1,1,1,
+    1,1,1,1,1,1,1,1,1,1,1,1,
+    1,1,1,1,1,1,1,1,1,1,1,1,
+    1,1,2,1,1,1,1,1,1,2,1,1,
+    1,1,1,1,1,2,2,1,1,1,1,1,
+  ]
 }

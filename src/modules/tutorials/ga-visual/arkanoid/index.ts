@@ -25,7 +25,7 @@ export default async ({ container, containerSize, fps, builders, garbageCollect,
   panels.addPanel(new RemoteStorePanel())
 
   const worldSize = new Size(560, 460)
-  const arkanoid = Arkanoid.create(worldSize, () => 2)
+  const arkanoid = Arkanoid.create(worldSize, () => 1)
   const renderer = new ArkanoidRenderer(worldSize)
   renderer.render(arkanoid)
 
@@ -70,7 +70,7 @@ export default async ({ container, containerSize, fps, builders, garbageCollect,
   }
 
 
-  agentTrainerPanel.epochs = 250
+  agentTrainerPanel.epochs = 100
   agentTrainerPanel.onStartTrain = () => ArkanoidAgentsTrainerHelper.train(agentTrainerPanel.epochs)
 
   ArkanoidAgentsTrainerHelper.onTrain = (data) => {

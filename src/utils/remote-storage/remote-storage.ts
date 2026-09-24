@@ -2,7 +2,7 @@ import axios from "axios"
 import { MediaFileDto, JsonDocumentDto, SpaceDto } from "./dto"
 import { uuidv4 } from "../uuidv4"
 
-const url = 'https://localhost:8899'
+const url = 'http://localhost:8899'
 
 const RemoteStorage = {
 

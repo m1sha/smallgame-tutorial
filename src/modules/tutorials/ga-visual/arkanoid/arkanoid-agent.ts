@@ -26,16 +26,17 @@ export class ArkanoidAgent extends Individual {
   getObservations () {
     const arr = new Float32Array(10)
     const size = this.arkanoid.world.size
-    arr[0] = this.arkanoid.ball.position.x / size.width
-    arr[1] = this.arkanoid.ball.position.y / size.height
-    arr[2] = this.arkanoid.ball.velocity.x
-    arr[3] = this.arkanoid.ball.velocity.y
-    arr[4] = this.arkanoid.ball.radius / size.height
-    arr[5] = this.arkanoid.carrent.position.x / size.width
-    arr[6] = this.arkanoid.carrent.position.y / size.height
-    arr[7] = this.arkanoid.carrent.velocity.x
-    arr[8] = this.arkanoid.carrent.velocity.y
-    arr[9] = this.arkanoid.carrent.size.width / size.width
+    const { ball, carrent } = this.arkanoid
+    arr[0] = (ball.position.x - carrent.position.x) / size.width
+    arr[1] = (ball.position.y - carrent.position.y) / size.height
+    arr[2] = ball.velocity.x
+    arr[3] = ball.velocity.y
+    arr[4] = 0 //this.arkanoid.ball.radius / size.height
+    arr[5] = (carrent.position.x + carrent.size.width / 2) / size.width
+    arr[6] = carrent.position.y / size.height
+    arr[7] = carrent.velocity.x
+    arr[8] = carrent.velocity.y
+    arr[9] = carrent.size.width / size.width
     return arr
   }
 

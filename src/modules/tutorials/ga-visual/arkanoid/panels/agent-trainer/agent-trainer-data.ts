@@ -1,7 +1,12 @@
+import { GeneticTrainerDefinition } from "../../../../../../utils/ai"
+
 export type AgentsTrainerData = {
-  epoch: number
-  epochs: number
+  training: {
+    epoch: number
+    epochs: number
+  }
   log: TrainLogRecord[]
+  definition: GeneticTrainerDefinition
 }
 
 export type TrainLogRecord = {

@@ -24,8 +24,8 @@ export class Collider  {
   }
 
   ballCollidesCarret (ball: Ball, carrent: Carrent) {
-    const bx0 = ball.position.x - ball.radius
-    const bx1 = ball.position.x + ball.radius
+    const bx0 = ball.position.x - (ball.radius - 4)
+    const bx1 = ball.position.x + (ball.radius - 4)
     const cx0 = carrent.position.x
     const cx1 = carrent.position.x + carrent.size.width
 
@@ -45,7 +45,8 @@ export class Collider  {
       if (!block[i].alive) continue
      const r = handleBallBlockCollision(ball,  block[i])
       if (r) { 
-        block[i].alive = false
+        if (block[i].immortal) return false
+        block[i].setHit()
         return true 
       }
     }
