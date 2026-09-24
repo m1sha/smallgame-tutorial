@@ -144,6 +144,10 @@ export class JsonDocument extends RemoteFile {
     result.content = content
     return result
   }
+
+  static async find (name) {
+    return (await RemoteStorage.documentList()).find(p => p.name === name)
+  }
 }
 
 

@@ -1,12 +1,14 @@
 import { Rect, Size } from "smallgame"
 import { Arkanoid } from "../../../games/v2"
 import { type ScriptSettings, Viewer, displayFps } from "../../core"
-import { ActionsPanel, AgentsStatistics, AgentTrainerPanel, createAgentInfo } from "./panels"
+import { ActionsPanel, AgentsStatisticsPanel, AgentTrainerPanel, createAgentInfo } from "./panels"
 import { ArkanoidRenderer } from "./arkanoid-renderer"
-import { ArkanoidAgent } from "./arkanoid-agent"
+import { ArkanoidAgent, createAgents } from "./arkanoid-agent"
 import { ArkanoidAgentsTrainerHelper } from "./worker"
 import yoneur from "./agents-raw/yoneur"
 import { RemoteStorePanel } from "../../../shared"
+import { Population } from "../../../../utils/ai/ga/population"
+import { savePopulation } from "./store/population-document"
 
 export default async ({ container, containerSize, fps, builders, garbageCollect, viewerControls, panels }: ScriptSettings): Promise<void> => {
   const viewer = new Viewer(containerSize, container, { disableContextMenu: true, garbageCollect, viewerControls })
@@ -16,16 +18,15 @@ export default async ({ container, containerSize, fps, builders, garbageCollect,
   const player = telemetry.def('player', '')
   const actionsPanel = new ActionsPanel()
   panels.addPanel(actionsPanel)
-  const agentsStatistics = new AgentsStatistics()
-  panels.addPanel(agentsStatistics)
+  const agentsStatisticsPanel = new AgentsStatisticsPanel()
+  panels.addPanel(agentsStatisticsPanel)
   const agentTrainerPanel = new AgentTrainerPanel()
   panels.addPanel(agentTrainerPanel)
-
-  
   panels.addPanel(new RemoteStorePanel())
 
+  const population = new Population()
   const worldSize = new Size(560, 460)
-  const arkanoid = Arkanoid.create(worldSize, () => 1)
+  const arkanoid = Arkanoid.create(worldSize, () => 3)
   const renderer = new ArkanoidRenderer(worldSize)
   renderer.render(arkanoid)
 
@@ -42,7 +43,7 @@ export default async ({ container, containerSize, fps, builders, garbageCollect,
   }
 
   
-  let topagent = new ArkanoidAgent(arkanoid, 'yo')
+  let topagent = new ArkanoidAgent('yo')
   topagent.load(new Float32Array(yoneur))
 
   const rect = Rect.size(worldSize)
@@ -60,7 +61,7 @@ export default async ({ container, containerSize, fps, builders, garbageCollect,
       arkanoid.next()
       renderer.render(arkanoid)
       
-      decision = topagent.decide()
+      decision = topagent.decide(arkanoid)
       if (decision > 0) arkanoid.action(decision)
     }
 
@@ -69,6 +70,12 @@ export default async ({ container, containerSize, fps, builders, garbageCollect,
     }
   }
 
+  agentsStatisticsPanel.onPopulationCreate = async size => {
+    debugger
+    const agents = createAgents(size)
+    await savePopulation('Aquazoic', agents)
+    //population.add()
+  }
 
   agentTrainerPanel.epochs = 100
   agentTrainerPanel.onStartTrain = () => ArkanoidAgentsTrainerHelper.train(agentTrainerPanel.epochs)
@@ -79,9 +86,9 @@ export default async ({ container, containerSize, fps, builders, garbageCollect,
   }
 
   ArkanoidAgentsTrainerHelper.onComplete = (data) => {
-    data.individuals.forEach(individual => agentsStatistics.addAget(createAgentInfo(individual)))
+    data.individuals.forEach(individual => agentsStatisticsPanel.addAget(createAgentInfo(individual)))
     const { id, name, weights } = data.individual
-    topagent = new ArkanoidAgent(arkanoid, name)
+    topagent = new ArkanoidAgent(name)
     topagent.id = id
     topagent.load(new Float32Array(weights))
     arkanoid.reset()

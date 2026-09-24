@@ -1,11 +1,35 @@
 <script setup lang="ts">
+import { ref } from 'vue';
 import { AgentsStatisticsData } from '../agents-statistics-data'
+import { DropDownList, TextBox } from 'vue3-universal-components';
 defineProps<AgentsStatisticsData>()
 const emit = defineEmits<{ postData: [actionName: string, args?: any] }>()
+const populationSize = ref(300)
 </script>
 
 <template>
   <div class="agent-statistics-panel">
+    <div class="agent-statistics-toolbar">
+      <div class="toolbar-section">
+        <TextBox v-model="populationSize" caption="Population Size"  />
+        <div>
+        <button @click="emit('postData', 'create', populationSize)">Create</button>  
+        </div>
+      </div>
+
+      <div class="toolbar-section">
+        <DropDownList :items="[]" caption="Choose Population" />
+        <div>
+        <button @click="emit('postData', 'load')">Load</button>
+        </div>
+      </div>
+
+      <div class="toolbar-section">
+        <button @click="emit('postData', 'save')">Save</button>
+      </div>
+
+    </div>
+
   <div class="agent-statistics-table v-grid-table">
     <div class="header">
       <div class="header-column">#</div>
@@ -42,11 +66,35 @@ const emit = defineEmits<{ postData: [actionName: string, args?: any] }>()
 
 <style lang="css">
 
-.agent-statistics-table {
-  grid-template-columns: 38px repeat(11, max-content);
-  max-height: 50vh;
-  overflow-y: auto;
-  margin: 4px;
-  margin-bottom: 12px;
+.agent-statistics-panel {
+  .agent-statistics-toolbar {
+    display: flex; 
+    gap: 12px; 
+    justify-content: space-between;
+    margin-bottom: 18px;
+
+    .toolbar-section {
+      display: flex; align-items: end; gap: 4px;
+
+      input[type="text"] {
+        width: 80px;
+      }
+
+      button {
+        padding: 5px 8px;
+      }
+    }
+  }
+
+
+  .agent-statistics-table {
+    grid-template-columns: 38px repeat(11, max-content);
+    max-height: 43vh;
+    overflow-y: auto;
+    margin: 4px;
+    margin-bottom: 12px;
+  }
 }
+
+
 </style>

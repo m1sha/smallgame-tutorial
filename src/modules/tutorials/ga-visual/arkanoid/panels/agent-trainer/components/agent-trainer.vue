@@ -94,7 +94,7 @@ const emit = defineEmits<{ postData: [actionName: string]}>()
 
   .gents-trainer-log {
     grid-template-columns: repeat(6, 1fr);
-    max-height: 350px;
+    max-height: 400px;
     overflow-y: auto;
   }
 }

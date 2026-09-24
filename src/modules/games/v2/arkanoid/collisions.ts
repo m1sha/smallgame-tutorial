@@ -33,7 +33,7 @@ export class Collider  {
     
     const collided = (cx0 <= bx0 && bx0 <= cx1) || (cx0 <= bx1 && bx1 <= cx1)
     if (collided) {
-      ball.velocity.y = -ball.velocity.y
+      ball.velocity.y = -Math.abs(ball.velocity.y)
       ball.position.y -= 4
     }
     return collided

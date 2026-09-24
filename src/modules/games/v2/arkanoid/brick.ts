@@ -1,7 +1,7 @@
 import { Point, Size } from "smallgame"
 
 export class Brick {
-  lives = 3
+  lives = 2
   immortal = false
   constructor (readonly position: Point, readonly size: Size) {
 

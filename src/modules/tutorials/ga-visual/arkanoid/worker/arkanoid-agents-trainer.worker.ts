@@ -6,7 +6,7 @@ import { ArkanoidAgent } from "../arkanoid-agent"
 import { GeneticTrainer, GeneticTrainerDefinition } from "../../../../../utils/ai"
 
 const worldSize = new Size(560, 460)
-const arkanoid = Arkanoid.create(worldSize, () => 1)
+const arkanoid = Arkanoid.create(worldSize, () => 3)
 const definitions: GeneticTrainerDefinition = {
   elitePercent: 5,
   reproduction: {
@@ -23,12 +23,12 @@ const names = new UniqueNameGenerator()
 agentTrainer.createIndividual = (epoch, needInit) => {
     const e = epoch ? ' v.' + epoch : ''
     const name = `${names.next()}${e}`
-    return new ArkanoidAgent(arkanoid, name, needInit) 
+    return new ArkanoidAgent(name, needInit) 
 }
 agentTrainer.createPopulation(300)
 agentTrainer.fitnessFunc = individual => {
   const agent = individual as ArkanoidAgent
-  return agent.calcFitness() 
+  return agent.calcFitness(arkanoid) 
 }
 
 self.onmessage = (e: MessageEvent) => {
@@ -37,7 +37,6 @@ self.onmessage = (e: MessageEvent) => {
   if (command === 'train') {
     train(epochs)
   }
-  
 }
 
 function train (epochs: number) {

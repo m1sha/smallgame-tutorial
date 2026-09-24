@@ -1,15 +1,16 @@
 
 import { Individual, Model } from "../../../../utils/ai"
+import { UniqueNameGenerator } from "../../../../utils/random"
 import { Arkanoid, RewardCounter } from "../../../games/v2"
 export class ArkanoidAgent extends Individual {
   model: Model
   timeLife = 0
   rewards: RewardCounter
 
-  constructor (private arkanoid: Arkanoid, name: string, private needInit: boolean = false) {
+  constructor (name: string, private needInit: boolean = false) {
     super()
     this.name = name
-    const inputLegth = this.getObservations().length
+    const inputLegth = 10
     this.model = new Model({ 
       input: { neurons: inputLegth }, 
       hiddens: [ {neurons: 16, activation: 'tanh' }], 
@@ -19,14 +20,14 @@ export class ArkanoidAgent extends Individual {
     this.rewards = new RewardCounter()
   }
 
-  decide () {
-    return this.model.predict(this.getObservations())
+  decide (arkanoid: Arkanoid) {
+    return this.model.predict(this.getObservations(arkanoid))
   }
 
-  getObservations () {
+  getObservations (arkanoid: Arkanoid) {
     const arr = new Float32Array(10)
-    const size = this.arkanoid.world.size
-    const { ball, carrent } = this.arkanoid
+    const size = arkanoid.world.size
+    const { ball, carrent } = arkanoid
     arr[0] = (ball.position.x - carrent.position.x) / size.width
     arr[1] = (ball.position.y - carrent.position.y) / size.height
     arr[2] = ball.velocity.x
@@ -40,13 +41,12 @@ export class ArkanoidAgent extends Individual {
     return arr
   }
 
-  calcFitness () {
-    const arkanoid = this.arkanoid
+  calcFitness (arkanoid: Arkanoid) {
     arkanoid.reset()
     const gameTicks = 80000
     let tick = 0
     for (tick; tick < gameTicks; tick++) {
-      const result = this.model.predict(this.getObservations())
+      const result = this.model.predict(this.getObservations(arkanoid))
       if (result === 1) arkanoid.moveLeft()
       if (result === 2) arkanoid.moveRight()
       arkanoid.next()
@@ -66,11 +66,21 @@ export class ArkanoidAgent extends Individual {
   }
 
   dup(): ArkanoidAgent {
-    const clone = new ArkanoidAgent(this.arkanoid, this.name, this.needInit)
+    const clone = new ArkanoidAgent(this.name, this.needInit)
     clone.name = this.name
     clone.cloneCount = this.cloneCount + 1
     clone.fitness = this.fitness
     ;(clone as any).model = this.model.dup()
     return clone
   }
+}
+
+const names = new UniqueNameGenerator()
+export function createAgents (count: number, needInit = true) {
+  const result: ArkanoidAgent[] = []
+  for (let i =0; i < count; i++) {
+    const name = `${names.next()}`
+    result.push(new ArkanoidAgent(name, needInit))
+  }
+  return result
 }
