@@ -9,9 +9,11 @@ import { initViewerControls, IViewerControls } from "../../modules/shared"
 import { runScript } from "../../modules/tutorials/script-runner"
 import { IScriptCategory } from "./code/script-category"
 import { IScriptListItem } from "./code/script-list-item"
-import { useScriptsStore } from "./store";
-import { removeItem } from "smallgame/src/utils";
-import Panels from "./components/panels/panels.vue";
+import { useScriptsStore } from "./store"
+import { removeItem } from "smallgame/src/utils"
+import Panels from "./components/panels/panels.vue"
+import { CommonModal, CommonModalComponent } from "./components/modals"
+import { Modals } from "./code/modal"
 
 const props = defineProps<{ items: IScriptListItem[], categories: IScriptCategory[] }>()
 const store = useScriptsStore()
@@ -37,6 +39,8 @@ const scriptListItems = computed(() => scriptList.value.map((p, i) => ({ id: p.n
 const settings = new Settings()
 const viewerControls = ref<IViewerControls>(initViewerControls())
 const messages = ref<IToastMessage[]>([])
+const commonModalComponent = ref<CommonModalComponent>()
+let modals: Modals | null = null
 
 onMounted(async () => {
   store.set(props.items, props.categories)
@@ -63,6 +67,8 @@ async function main() {
   const builders = new Builders()
   let moduleDisposer: (() => void) | null = null
   const disposer = (callback: () => void) => moduleDisposer = callback
+
+  modals = new Modals(commonModalComponent)
   
   const data = { 
     container: container.value!, 
@@ -76,7 +82,8 @@ async function main() {
         messages.value.push({ message })
       }
     },
-    panels: new PanelManager()
+    panels: new PanelManager(),
+    modals
   }
   
   currentModule.value = await runScript(script.codeDir, data) || {}
@@ -123,6 +130,10 @@ function clearPrevious () {
 
 function onToastClose (message: IToastMessage) {
   removeItem(messages.value, p => p === message)
+}
+
+function onModalClose (result: string) {
+  modals?.close(result)
 }
 
 </script>
@@ -190,6 +201,7 @@ function onToastClose (message: IToastMessage) {
   </BottomBar>
   </div>
 
+  <CommonModal ref="commonModalComponent" @close="onModalClose" />
   <Toasts :messages @close="onToastClose" />
 </template>
 

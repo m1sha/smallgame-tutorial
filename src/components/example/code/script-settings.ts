@@ -2,6 +2,7 @@ import { Size } from "smallgame"
 import { Builders } from "./builders"
 import { IViewerControls } from "../../../modules/shared"
 import { PanelManager } from "./panels"
+import { Modals } from "./modal"
 
 export interface ScriptSettings {
   container: HTMLDivElement
@@ -14,4 +15,5 @@ export interface ScriptSettings {
   garbageCollect: (callback: () => void) => void
   messanger: { info: ( message: string) => void }
   panels: PanelManager
+  modals: Modals
 }

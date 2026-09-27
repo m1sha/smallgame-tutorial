@@ -1,0 +1,37 @@
+.modal-dialog 
+  background-color: #282828
+  .modal-header
+    display: flex
+    align-items: center
+    color: #999
+    padding: 0
+    .close-button
+      button
+        background-color: transparent
+        border: none
+        color: #999
+        font-size: 18px
+        &:hover
+          color: #aaa
+          cursor: pointer
+
+  .modal-footer
+    button
+      background-color: #222
+      border: 1px solid #333
+      &:hover
+        background-color: #222
+        border: 1px solid #444
+      &:disabled
+        background-color: #353535
+        color: #777
+        border: 1px solid #313131
+        
+    .cancel 
+      background-color: transparent
+      border: none
+      &:hover
+        background-color: transparent
+        border: none
+        text-decoration: underline
+        
