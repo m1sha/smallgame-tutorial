@@ -602,5 +602,12 @@
     "categoryId": 6,
     "subCategoryId": null,
     "codeDir": "surfaces/code/sprite-atlas"
+  },
+  {
+    "id": 99,
+    "name": "Pilot",
+    "categoryId": 10,
+    "subCategoryId": null,
+    "codeDir": "ga-visual/pilot"
   }
 ]
