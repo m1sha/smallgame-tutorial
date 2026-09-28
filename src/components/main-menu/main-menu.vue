@@ -4,16 +4,28 @@ import { useRoute } from 'vue-router';
 
 const route = useRoute()
 const editorsMenu = ref<HTMLElement>()
+
+const menuItems = [
+  {
+    id: 'Home',
+    text: 'Home',
+    path: '#/'
+  }
+]
+
 </script>
 <template>
   <menu class="main-menu">
     <nav>
-      <div class="nav-link">
-        <a href="#/" :class="{ 'router-link-active': route.name === 'Home' }"><i class="nf nf-md-home"></i>Home</a>
-        <div class="border"></div>
-      </div>
-      
-      <div class="sep"></div>
+
+      <template v-for="item in menuItems">
+        <div class="nav-link">
+          <a :href="item.path" :class="{ 'router-link-active': route.name === item.id }"><i class="nf nf-md-home"></i>{{ item.text }}</a>
+          <div class="border"></div>
+        </div>
+        <div class="sep"></div>
+      </template>
+
       <div class="nav-link">
         <a href="#/sandbox" :class="{ 'router-link-active': route.path.startsWith('/sandbox')  }"><i class="nf nf-md-toy_brick_outline"></i> Sandbox</a>
         <div class="border"></div>
@@ -79,25 +91,40 @@ const editorsMenu = ref<HTMLElement>()
 
 <style lang="sass">
 menu.main-menu
-  margin: 2px
-  margin-top: 4px
+  position: absolute
+  top: 4px
+  z-index: 100
+  margin: 0
+  padding: 0
+
+  opacity: 0
+  &:hover
+    opacity: 1
+  
+  
   nav
     display: flex
     gap: 12px
     box-shadow: 0 0 20px #444
-    padding: 0px 16px
-
+    background-color: #2b2b2b
+    border-radius: 8px
     .nav-link
       display: flex
       flex-direction: column
       gap: 2px
-
+      padding: 8px
       a 
         display: flex
         align-items: center
         gap: 6px
+        font-size: 14px
+        color: #999
         i
           font-size: 0.95em
+      &:first-child
+        padding-left: 16px
+      &:last-child
+        padding-right: 16px
 
     .sublink
       position: relative
@@ -151,5 +178,5 @@ menu.main-menu
           border-bottom: 0.15em solid var(--data-ascent-color)
 
     .sep
-      border-right: 2px solid #282828
+      border-right: 2px solid #252525
 </style>

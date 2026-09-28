@@ -14,6 +14,7 @@ import { removeItem } from "smallgame/src/utils"
 import Panels from "./components/panels/panels.vue"
 import { CommonModal, CommonModalComponent } from "./components/modals"
 import { Modals } from "./code/modal"
+import ProjectInfo from "./components/project-info/project-info.vue";
 
 const props = defineProps<{ items: IScriptListItem[], categories: IScriptCategory[] }>()
 const store = useScriptsStore()
@@ -34,9 +35,11 @@ const router = useRouter()
 const container = ref<HTMLDivElement>()
 const fps = ref<HTMLDivElement>()
 const scriptId = computed(() => route.params.name as string)
+const script = computed(() => !scriptId.value ? scriptList.value[0] : scriptList.value.find(p => p.name.replaceAll(' ', '_').toLocaleLowerCase() === scriptId.value))
 const currentModule = ref<ScriptModule | null>()
 const scriptListItems = computed(() => scriptList.value.map((p, i) => ({ id: p.name.replaceAll(' ', '_').toLocaleLowerCase(), name: p.name, category: p.category, codeDir: p.codeDir, subCategory: p.subCategory })) )
 const settings = new Settings()
+
 const viewerControls = ref<IViewerControls>(initViewerControls())
 const messages = ref<IToastMessage[]>([])
 const commonModalComponent = ref<CommonModalComponent>()
@@ -52,8 +55,8 @@ onMounted(async () => {
 })
 
 async function main() {
-  const script = !scriptId.value ? scriptList.value[0] : scriptList.value.find(p => p.name.replaceAll(' ', '_').toLocaleLowerCase() === scriptId.value)
-  if (!script) {
+  
+  if (!script.value) {
     console.warn('Script is not found')
     return
   }
@@ -62,6 +65,8 @@ async function main() {
     console.warn('container is not found')
     return
   }
+
+  
   
   const containerSize = new Size(container.value!.clientWidth, container.value!.clientHeight)
   const builders = new Builders()
@@ -86,7 +91,7 @@ async function main() {
     modals
   }
   
-  currentModule.value = await runScript(script.codeDir, data) || {}
+  currentModule.value = await runScript(script.value.codeDir, data) || {}
   currentModule.value.panels = data.panels.items
 
   if (builders.has('ui') && !currentModule.value.ui) {
@@ -139,11 +144,18 @@ function onModalClose (result: string) {
 </script>
 <template>
   <div class="code-example-template-grid">
-  <Toolbar>
+    <ProjectInfo :script @menu-click="settings.showScriptPanel = true" @settings-click="settings.showParametersPanel = !settings.showParametersPanel" >
+      <div class="fps" ref="fps"></div>
+    </ProjectInfo>
+
+     <ParameterList v-if="currentModule && settings.showParametersPanel"  :ui="currentModule.ui ?? { controls: [] }" />  
+     <ScriptList v-if="settings.showScriptPanel" :items="scriptListItems" :selected-id="scriptId" @click="changeScript" @close="settings.showScriptPanel = false" />
+    
+  <!-- <Toolbar>
     <template #project>
       <ToolbarDropdownPanel caption="Projects" :open="settings.showScriptPanel" @toggle="isOpen => settings.showScriptPanel = isOpen">
         <template #content>
-          <ScriptList :items="scriptListItems" :selected-id="scriptId" @click="changeScript" />
+         
         </template>
       </ToolbarDropdownPanel>
       
@@ -179,16 +191,16 @@ function onModalClose (result: string) {
         </template>
       </ToolbarDropdownPanel>
     </template>
-  </Toolbar>
+  </Toolbar> -->
 
   <div class="example-page show-hiddable">
     <div ref="container" class="container"></div>
     <ContextMenu v-if="currentModule && currentModule.contextMenu" :context="currentModule.contextMenu" />
     <Panels :items="currentModule?.panels ?? []" />
-    <div class="fps" ref="fps"></div>
+    
   </div>
 
-  <BottomBar>
+  <!-- <BottomBar>
     <template #telemetry-chart>
       <ToolbarDropdownPanel caption="Charts" :open="false"></ToolbarDropdownPanel>
     </template>
@@ -196,9 +208,10 @@ function onModalClose (result: string) {
       <ToolbarDropdownPanel caption="Viewer" :open="false"></ToolbarDropdownPanel>
     </template>
     <template #viewport>
-      <Viewport :viewport="viewerControls.viewport" />
+      
     </template>
-  </BottomBar>
+  </BottomBar> -->
+  <Viewport :viewport="viewerControls.viewport" />
   </div>
 
   <CommonModal ref="commonModalComponent" @close="onModalClose" />
@@ -209,7 +222,7 @@ function onModalClose (result: string) {
 
 .code-example-template-grid
   display: grid
-  grid-template-rows: 26px 1fr 26px
+  grid-template-rows: 26px 1fr 
 
 .example-page
   position: relative
@@ -219,7 +232,7 @@ function onModalClose (result: string) {
   .container
     background-color: #2b2b2b
     width: 100%
-    height: calc( 100vh -  100px)
+    height: calc( 100vh -  30px)
 
 .hiddable
   opacity: 0

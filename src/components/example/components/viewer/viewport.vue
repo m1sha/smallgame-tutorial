@@ -5,6 +5,9 @@ defineProps<{ viewport: IViewport }>()
 
 </script>
 <template>
+  <div class="viewport-wrapper">
+
+  
 <div class="viewport">
   <div title="Cursor Position">
     <span>C</span>
@@ -25,11 +28,18 @@ defineProps<{ viewport: IViewport }>()
     </span>
   </div>
 </div>
+</div>
 </template>
 
 <style lang="css">
+.viewport-wrapper  {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+}
 .viewport {
   display: flex;
+  background-color: #333;
   
   height: 26px;
   align-items: center;
