@@ -20,6 +20,7 @@ const definitions: GeneticTrainerDefinition = {
 }
 const agentTrainer = new GeneticTrainer(definitions)
 const names = new UniqueNameGenerator()
+names.useHumanStyle()
 agentTrainer.createIndividual = (epoch, needInit) => {
     const e = epoch ? ' v.' + epoch : ''
     const name = `${names.next()}${e}`

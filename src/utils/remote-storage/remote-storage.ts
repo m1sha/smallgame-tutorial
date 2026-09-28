@@ -37,6 +37,17 @@ async function get<T> (url: string, defaultValue: T) {
   return res.data as T
 }
 
+async function post<T, R> (url: string, data: R | null, defaultValue: T) {
+  const res = await axios.post(url, data)
+   if (res.status !== 200) {
+      console.log(`${res.status}. ${res.statusText}`)
+      return defaultValue
+    }
+    
+  return res.data as T
+}
+
+
 async function remove (url: string) {
   const res = await axios.delete(url)
   if (res.status !== 200) {
@@ -57,6 +68,30 @@ export class Space {
     this.description = dto.description
     this.mediaCount = dto.mediaCount
     this.documentCount = dto.documentCount
+  }
+
+  static async getOrCreate (name: string) {
+    const space = (await RemoteStorage.spaceList()).find(p => p.name === name)
+    if (space) return space
+    await post(`${url}/api/spaces/${name}`, {}, null)
+    const dto = await get(`${url}/spaces/${name}`, null)
+    return new Space(dto)
+  }
+
+  attach (file: RemoteFile) {
+
+  }
+
+  dettach (file: RemoteFile) {
+
+  }
+
+  async getOrCreateDocument <T>(name: string, defaultDocument: T) {
+    let doc = await JsonDocument.find(name)
+    if (doc) return doc.content as T
+    doc = JsonDocument.create(name, defaultDocument)
+    await doc.save()
+    return doc.content as T
   }
 }
 

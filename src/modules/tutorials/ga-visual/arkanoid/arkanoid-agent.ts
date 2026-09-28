@@ -13,7 +13,7 @@ export class ArkanoidAgent extends Individual {
     const inputLegth = 10
     this.model = new Model({ 
       input: { neurons: inputLegth }, 
-      hiddens: [ {neurons: 16, activation: 'tanh' }], 
+      hiddens: [ {neurons: 2, activation: 'tanh' }], 
       output: { neurons: 3, activation: 'softmax' }
     })
     if (needInit) this.model.initWeights(11112211)

@@ -7,15 +7,19 @@ import { ArkanoidAgent, createAgents } from "./arkanoid-agent"
 import { ArkanoidAgentsTrainerHelper } from "./worker"
 import yoneur from "./agents-raw/yoneur"
 import { RemoteStorePanel } from "../../../shared"
-import { Population } from "../../../../utils/ai/ga/population"
 import { savePopulation } from "./store/population-document"
+import { ArkanoidStore } from "./store"
 
-export default async ({ container, containerSize, fps, builders, garbageCollect, viewerControls, panels }: ScriptSettings): Promise<void> => {
+export default async ({ container, containerSize, fps, builders, garbageCollect, viewerControls, panels, modals }: ScriptSettings): Promise<void> => {
   const viewer = new Viewer(containerSize, container, { disableContextMenu: true, garbageCollect, viewerControls })
   const telemetry = builders.telemetry().noLegend()
   const score = telemetry.def('Score', 0)
   const frames = telemetry.def('Frames', 0)
   const player = telemetry.def('player', '')
+
+  const store = new ArkanoidStore()
+  await store.load()
+
   const actionsPanel = new ActionsPanel()
   panels.addPanel(actionsPanel)
   const agentsStatisticsPanel = new AgentsStatisticsPanel()
@@ -24,7 +28,6 @@ export default async ({ container, containerSize, fps, builders, garbageCollect,
   panels.addPanel(agentTrainerPanel)
   panels.addPanel(new RemoteStorePanel())
 
-  const population = new Population()
   const worldSize = new Size(560, 460)
   const arkanoid = Arkanoid.create(worldSize, () => 3)
   const renderer = new ArkanoidRenderer(worldSize)
@@ -41,9 +44,8 @@ export default async ({ container, containerSize, fps, builders, garbageCollect,
     if (keys.horizontalAxisRaw !== 0)
       arkanoid.action(keys.horizontalAxisRaw < 0 ? 1 : 2)
   }
-
   
-  let topagent = new ArkanoidAgent('yo')
+  let topagent: ArkanoidAgent | null = new ArkanoidAgent('yo')
   topagent.load(new Float32Array(yoneur))
 
   const rect = Rect.size(worldSize)
@@ -72,8 +74,10 @@ export default async ({ container, containerSize, fps, builders, garbageCollect,
 
   agentsStatisticsPanel.onPopulationCreate = async size => {
     debugger
-    const agents = createAgents(size)
-    await savePopulation('Aquazoic', agents)
+    const name = await modals.choose('Name', 'Create Population', ['Ho', 'Hi', 'Super'], 'Hi')
+    console.log('Name', name)
+    //const agents = createAgents(size)
+    //await savePopulation('Aquazoic', agents)
     //population.add()
   }
 
