@@ -2,10 +2,9 @@
 import { computed, onMounted, ref } from "vue"
 import { useRoute, useRouter } from "vue-router"
 import { Builders, IToastMessage, PanelManager, ScriptDef, ScriptModule, Settings } from "./code"
-import { ParameterList, ScriptList, Telemetry, Toolbar, ToolbarDropdownPanel, ContextMenu, EntityList, Viewport, Toasts } from './components'
+import { ParameterList, ScriptList, Telemetry, Toolbar, ToolbarDropdownPanel, ContextMenu, EntityList, Viewport as ViewportComponent, Toasts } from './components'
 import { Size } from "smallgame";
-import { BottomBar } from "./components/bottom-bar";
-import { initViewerControls, IViewerControls } from "../../modules/shared"
+import { initViewerControls, IViewerControls, Viewport } from "../../modules/shared"
 import { runScript } from "../../modules/tutorials/script-runner"
 import { IScriptCategory } from "./code/script-category"
 import { IScriptListItem } from "./code/script-list-item"
@@ -41,6 +40,7 @@ const scriptListItems = computed(() => scriptList.value.map((p, i) => ({ id: p.n
 const settings = new Settings()
 const usePan = ref(false)
 
+const viewport = ref(new Viewport())
 const viewerControls = ref<IViewerControls>(initViewerControls())
 const messages = ref<IToastMessage[]>([])
 const commonModalComponent = ref<CommonModalComponent>()
@@ -80,6 +80,7 @@ async function main() {
     fps: fps.value!, 
     containerSize, 
     builders,
+    viewport: viewport.value,
     viewerControls: viewerControls.value,
     disposer,
     messanger: {
@@ -143,6 +144,12 @@ function onModalClose (result: string) {
 
 function onViewportAction (actionName: 'pan' | 'home' | 'fit' | 'zoomIn' | 'zoomOut') {
   if (actionName === 'pan') usePan.value = !usePan.value
+
+  
+  if (actionName === 'home') viewport.value.home()
+  if (actionName === 'fit') viewport.value.fit()
+  if (actionName === 'zoomIn') viewport.value.zoomIn()
+  if (actionName === 'zoomOut') viewport.value.zoomOut()
 }
 
 </script>
@@ -156,15 +163,6 @@ function onViewportAction (actionName: 'pan' | 'home' | 'fit' | 'zoomIn' | 'zoom
      <ScriptList v-if="settings.showScriptPanel" :items="scriptListItems" :selected-id="scriptId" @click="changeScript" @close="settings.showScriptPanel = false" />
     
   <!-- <Toolbar>
-    <template #project>
-      <ToolbarDropdownPanel caption="Projects" :open="settings.showScriptPanel" @toggle="isOpen => settings.showScriptPanel = isOpen">
-        <template #content>
-         
-        </template>
-      </ToolbarDropdownPanel>
-      
-    </template>
-
     <template #common-space>
       <ToolbarDropdownPanel caption="Telemetry" :open="settings.showTelemetryPanel" @toggle="isOpen => settings.showTelemetryPanel = isOpen">
         <template #content>
@@ -172,26 +170,10 @@ function onViewportAction (actionName: 'pan' | 'home' | 'fit' | 'zoomIn' | 'zoom
         </template>
       </ToolbarDropdownPanel>
     </template>
-
-    <template #viewer-settings>
-      <ToolbarDropdownPanel caption="Viewer" :open="settings.showViewerSettingsPanel" @toggle="isOpen => settings.showViewerSettingsPanel = isOpen">
-        <template #content>
-        </template>
-      </ToolbarDropdownPanel>
-    </template>
-
     <template #entity-list>
       <ToolbarDropdownPanel caption="Objects" :open="settings.showObjectsPanel" @toggle="isOpen => settings.showObjectsPanel = isOpen">
         <template #content>
           <EntityList v-if="currentModule && currentModule.entities" :entities="currentModule.entities" />
-        </template>
-      </ToolbarDropdownPanel>
-    </template>
-
-    <template #command-panel>
-      <ToolbarDropdownPanel caption="Parameters" :open="settings.showParametersPanel" @toggle="isOpen => settings.showParametersPanel = isOpen">
-        <template #content>
-          <ParameterList v-if="currentModule"  :ui="currentModule.ui ?? { controls: [] }" />  
         </template>
       </ToolbarDropdownPanel>
     </template>
@@ -203,20 +185,9 @@ function onViewportAction (actionName: 'pan' | 'home' | 'fit' | 'zoomIn' | 'zoom
     <Panels :items="currentModule?.panels ?? []" />
     
   </div>
-
-  <!-- <BottomBar>
-    <template #telemetry-chart>
-      <ToolbarDropdownPanel caption="Charts" :open="false"></ToolbarDropdownPanel>
-    </template>
-    <template #viewer-settings>
-      <ToolbarDropdownPanel caption="Viewer" :open="false"></ToolbarDropdownPanel>
-    </template>
-    <template #viewport>
-      
-    </template>
-  </BottomBar> -->
-  <Viewport 
-    :viewport="viewerControls.viewport" 
+ 
+  <ViewportComponent 
+    :viewport="viewport" 
     :use-pan="usePan" 
     @action="onViewportAction"
     />

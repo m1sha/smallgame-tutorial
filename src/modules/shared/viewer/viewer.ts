@@ -2,7 +2,7 @@ import { Game, TSize, Screen, gameloop, GameEvent, Surface, MemSurface, Rect, Po
 import { Background } from "./background"
 import { SelectRegion } from "./select-region"
 import { SelectedObjects } from "./selected-objects"
-import { initViewerControls, IViewerControls, ViewerUI } from "./ui"
+import { initViewerControls, ViewerUI, IViewport } from "./ui"
 import { Viewport } from "./viewport"
 import { setDebounce } from "smallgame/src/time"
 import { IInputDelegate } from "./input-delegate"
@@ -33,10 +33,11 @@ export class Viewer {
   onContextMenuClick: ((pos: TPoint) => void) | null = null
   onViewportChanged: ((pos: Point, zoom: number) => void) | null = null
 
-  constructor (viewportSize: TSize, container: HTMLDivElement, options?: { disableContextMenu?: boolean, viewerControls?: IViewerControls, garbageCollect?: (callback: () => void) => void }) {
+  constructor (viewportSize: TSize, container: HTMLDivElement, options?: { disableContextMenu?: boolean, viewport: IViewport, garbageCollect?: (callback: () => void) => void }) {
     const { game, screen } = Game.create(viewportSize.width, viewportSize.height, container)
 
-    const viewerSettings = options && options.viewerControls ? options.viewerControls : initViewerControls()
+    
+    const viewerSettings = initViewerControls()
     viewerSettings.updateChanges = () => {
       // update viewerSettings
 
@@ -46,7 +47,7 @@ export class Viewer {
     }
     
 
-    this.viewport = new Viewport(viewportSize, this, viewerSettings.viewport)
+    this.viewport = new Viewport(viewportSize, this, options.viewport)
     this.game = game
     this.screen = screen
     this.surface = new MemSurface(viewportSize)
@@ -95,7 +96,7 @@ export class Viewer {
         }
         if (ev.type === 'MOUSEMOVE') {
           this.mousePosition.moveSelf(ev.pos)
-          viewerSettings.viewport.cursor = setPoint(ev.pos.x, ev.pos.y)
+         // viewerSettings.viewport.cursor = setPoint(ev.pos.x, ev.pos.y)
           if (ev.lbc && ev.ctrlKey) {
             this.background.mousePos = ev.pos
             this.background.mouseShift = ev.shift

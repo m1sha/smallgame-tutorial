@@ -30,14 +30,14 @@ const emit = defineEmits<{
     <PushButton title="Fit to display" @click="emit('action', 'fit')">
       <i class="fa fa-display" />
     </PushButton>
-    <PushButton title="Zoom in">
-      <i class="fa fa-magnifying-glass-plus" @click="emit('action', 'zoomIn')" />
+    <PushButton title="Zoom in" @click="emit('action', 'zoomIn')" >
+      <i class="fa fa-magnifying-glass-plus" />
     </PushButton>
     <span class="zoom">
       {{ (viewport.zoom * 100).toFixed(0) }}%
     </span>
-    <PushButton title="Zoom out">
-      <i class="fa fa-magnifying-glass-minus" @click="emit('action', 'zoomOut')" />
+    <PushButton title="Zoom out" @click="emit('action', 'zoomOut')">
+      <i class="fa fa-magnifying-glass-minus"  />
     </PushButton>
   </div>
 </div>
@@ -85,6 +85,11 @@ const emit = defineEmits<{
         color: #717171;
       }
 
+      &.zoom {
+        width: 5ch;
+        text-align: center;
+      }
+
       &:last-child {
         color: #bbb;
 
@@ -96,9 +101,7 @@ const emit = defineEmits<{
           width: 14ch;
         }
 
-        &.zoom {
-          width: 6ch;
-        }
+        
         
         span {
           color: #888;
