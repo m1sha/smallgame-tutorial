@@ -39,6 +39,7 @@ const script = computed(() => !scriptId.value ? scriptList.value[0] : scriptList
 const currentModule = ref<ScriptModule | null>()
 const scriptListItems = computed(() => scriptList.value.map((p, i) => ({ id: p.name.replaceAll(' ', '_').toLocaleLowerCase(), name: p.name, category: p.category, codeDir: p.codeDir, subCategory: p.subCategory })) )
 const settings = new Settings()
+const usePan = ref(false)
 
 const viewerControls = ref<IViewerControls>(initViewerControls())
 const messages = ref<IToastMessage[]>([])
@@ -65,7 +66,6 @@ async function main() {
     console.warn('container is not found')
     return
   }
-
   
   
   const containerSize = new Size(container.value!.clientWidth, container.value!.clientHeight)
@@ -141,6 +141,10 @@ function onModalClose (result: string) {
   modals?.close(result)
 }
 
+function onViewportAction (actionName: 'pan' | 'home' | 'fit' | 'zoomIn' | 'zoomOut') {
+  if (actionName === 'pan') usePan.value = !usePan.value
+}
+
 </script>
 <template>
   <div class="code-example-template-grid">
@@ -211,7 +215,11 @@ function onModalClose (result: string) {
       
     </template>
   </BottomBar> -->
-  <Viewport :viewport="viewerControls.viewport" />
+  <Viewport 
+    :viewport="viewerControls.viewport" 
+    :use-pan="usePan" 
+    @action="onViewportAction"
+    />
   </div>
 
   <CommonModal ref="commonModalComponent" @close="onModalClose" />

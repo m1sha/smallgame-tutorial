@@ -1,7 +1,11 @@
 <script setup lang="ts">
-import { IViewport } from '../../code'
+import { PushButton } from 'vue3-universal-components'
+import { IViewport } from '../../../../modules/shared/viewer/ui/viewport'
 
-defineProps<{ viewport: IViewport }>()
+defineProps<{ viewport: IViewport, usePan: boolean }>()
+const emit = defineEmits<{
+  action: [name: 'pan' | 'home' | 'fit' | 'zoomIn' | 'zoomOut']  
+}>()
 
 </script>
 <template>
@@ -10,22 +14,31 @@ defineProps<{ viewport: IViewport }>()
   
 <div class="viewport">
   <div title="Cursor Position">
-    <span>C</span>
+    <PushButton title="Pan" :class="{ selected: usePan }" @click="emit('action', 'pan')">
+      <i class="fa fa-hand" />
+    </PushButton>
+    <span style="transform: scaleX(-1) rotateZ(-5deg); color: #777; "><i class="fa-solid fa-arrow-pointer"></i></span>
     <span class="cur">
       {{ viewport.cursor.x.toFixed(0) }}<span class="spliter">:</span>{{ viewport.cursor.y.toFixed(0) }}
     </span>
   </div>
-  <div title="Viewer Viewport Offset">
-    <span>O</span>
-    <span class="offset">
-      {{ viewport.offset.x.toFixed(0) }}<span class="spliter">:</span>{{ viewport.offset.y.toFixed(0) }}
-    </span>
-  </div>
+
   <div title="Viewer Viewport Zoom">
-    <span>Z</span>
+    <PushButton title="Original size" @click="emit('action', 'home')">
+      <i class="fa fa-home" />
+    </PushButton>
+    <PushButton title="Fit to display" @click="emit('action', 'fit')">
+      <i class="fa fa-display" />
+    </PushButton>
+    <PushButton title="Zoom in">
+      <i class="fa fa-magnifying-glass-plus" @click="emit('action', 'zoomIn')" />
+    </PushButton>
     <span class="zoom">
-      {{ viewport.zoom.toFixed(3) }}
+      {{ (viewport.zoom * 100).toFixed(0) }}%
     </span>
+    <PushButton title="Zoom out">
+      <i class="fa fa-magnifying-glass-minus" @click="emit('action', 'zoomOut')" />
+    </PushButton>
   </div>
 </div>
 </div>
@@ -39,17 +52,31 @@ defineProps<{ viewport: IViewport }>()
 }
 .viewport {
   display: flex;
-  background-color: #333;
+  background-color: #232323;
   
-  height: 26px;
+  
   align-items: center;
   justify-content: space-between;
-  padding: 0 8px;
+  padding: 4px;
+  border-radius: 8px;
+
+  button.push-button {
+    font-size: 10px;
+    padding: 4px;
+    min-width: 24px;
+    background-color: #2f2f2f;
+    border: none;
+    &.selected {
+      background-color: #464;
+      color: #eee;
+    }
+  }
 
   & > div {
     display: flex;
     gap: 4px;
     cursor: default;
+    align-items: center;
     
 
     span {
@@ -62,15 +89,15 @@ defineProps<{ viewport: IViewport }>()
         color: #bbb;
 
         &.cur {
-          width: 8ch;
+          width: 11ch;
         }
 
         &.offset {
-          width: 12ch;
+          width: 14ch;
         }
 
         &.zoom {
-          width: 5ch;
+          width: 6ch;
         }
         
         span {
