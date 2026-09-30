@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from "vue"
 import { useRoute, useRouter } from "vue-router"
-import { Builders, IToastMessage, PanelManager, ScriptDef, ScriptModule, Settings } from "./code"
+import { Builders, IPanel, IToastMessage, PanelManager, ScriptDef, ScriptModule, Settings } from "./code"
 import { ParameterList, ScriptList, Telemetry, Toolbar, ToolbarDropdownPanel, ContextMenu, EntityList, Viewport as ViewportComponent, Toasts } from './components'
 import { Size } from "smallgame";
 import { Viewport } from "../../modules/shared"
@@ -14,6 +14,7 @@ import Panels from "./components/panels/panels.vue"
 import { CommonModal, CommonModalComponent } from "./components/modals"
 import { Modals } from "./code/modal"
 import ProjectInfo from "./components/project-info/project-info.vue";
+import GridBg from "./components/background/grid-bg.vue";
 
 const props = defineProps<{ items: IScriptListItem[], categories: IScriptCategory[] }>()
 const store = useScriptsStore()
@@ -92,7 +93,7 @@ async function main() {
   }
   
   currentModule.value = await runScript(script.value.codeDir, data) || {}
-  currentModule.value.panels = data.panels.items
+  currentModule.value.panels = data.panels.items as any as IPanel<any>[]
 
   if (builders.has('ui') && !currentModule.value.ui) {
     currentModule.value.ui = builders.ui().build()
@@ -158,42 +159,27 @@ function onViewportAction (actionName: 'pan' | 'home' | 'fit' | 'zoomIn' | 'zoom
       <div class="fps" ref="fps"></div>
     </ProjectInfo>
 
-     <ParameterList v-if="currentModule && settings.showParametersPanel"  :ui="currentModule.ui ?? { controls: [] }" />  
-     <ScriptList v-if="settings.showScriptPanel" :items="scriptListItems" :selected-id="scriptId" @click="changeScript" @close="settings.showScriptPanel = false" />
-    
-  <!-- <Toolbar>
-    <template #common-space>
-      <ToolbarDropdownPanel caption="Telemetry" :open="settings.showTelemetryPanel" @toggle="isOpen => settings.showTelemetryPanel = isOpen">
-        <template #content>
-          <Telemetry  v-if="currentModule && currentModule.telemetry" :telemetry="currentModule.telemetry" />
-        </template>
-      </ToolbarDropdownPanel>
-    </template>
-    <template #entity-list>
-      <ToolbarDropdownPanel caption="Objects" :open="settings.showObjectsPanel" @toggle="isOpen => settings.showObjectsPanel = isOpen">
-        <template #content>
-          <EntityList v-if="currentModule && currentModule.entities" :entities="currentModule.entities" />
-        </template>
-      </ToolbarDropdownPanel>
-    </template>
-  </Toolbar> -->
-
-  <div class="example-page show-hiddable">
-    <div ref="container" class="container"></div>
-    <ContextMenu v-if="currentModule && currentModule.contextMenu" :context="currentModule.contextMenu" />
-    <Panels :items="currentModule?.panels ?? []" />
-    
-  </div>
+    <ParameterList v-if="currentModule && settings.showParametersPanel"  :ui="currentModule.ui ?? { controls: [] }" />  
+    <ScriptList v-if="settings.showScriptPanel" :items="scriptListItems" :selected-id="scriptId" @click="changeScript" @close="settings.showScriptPanel = false" />
+    <Telemetry  v-if="currentModule && currentModule.telemetry" :telemetry="currentModule.telemetry" />
  
-  <ViewportComponent 
-    :viewport="viewport" 
-    :use-pan="usePan" 
-    @action="onViewportAction"
-    />
-  </div>
 
-  <CommonModal ref="commonModalComponent" @close="onModalClose" />
-  <Toasts :messages @close="onToastClose" />
+    <div class="example-page show-hiddable">
+      <GridBg :cell-size="16" :zoom="1" :offset="viewport.offset" :line-color="'#3b3b3b'" :show="true" />
+      <div ref="container" class="container"></div>
+      <ContextMenu v-if="currentModule && currentModule.contextMenu" :context="currentModule.contextMenu" />
+      <Panels :items="currentModule?.panels ?? []" />
+    </div>
+ 
+    <ViewportComponent 
+      :viewport="viewport" 
+      :use-pan="usePan" 
+      @action="onViewportAction"
+      />
+    </div>
+
+    <CommonModal ref="commonModalComponent" @close="onModalClose" />
+    <Toasts :messages @close="onToastClose" />
 </template>
 
 <style lang="sass">
@@ -208,7 +194,7 @@ function onViewportAction (actionName: 'pan' | 'home' | 'fit' | 'zoomIn' | 'zoom
   width: 100%
   height: 100%
   .container
-    background-color: #2b2b2b
+    position: absolute
     width: 100%
     height: calc( 100vh -  30px)
 

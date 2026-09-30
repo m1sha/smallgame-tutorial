@@ -15,18 +15,14 @@ export default async ({ container, containerSize, fps, builders, garbageCollect,
   const telemetry = builders.telemetry().noLegend()
   const score = telemetry.def('Score', 0)
   const frames = telemetry.def('Frames', 0)
-  const player = telemetry.def('player', '')
 
   const store = new ArkanoidStore()
   await store.load()
 
-  const actionsPanel = new ActionsPanel()
-  panels.addPanel(actionsPanel)
-  const agentsStatisticsPanel = new AgentsStatisticsPanel()
-  panels.addPanel(agentsStatisticsPanel)
-  const agentTrainerPanel = new AgentTrainerPanel()
-  panels.addPanel(agentTrainerPanel)
-  panels.addPanel(new RemoteStorePanel())
+  const actionsPanel = panels.use(ActionsPanel)
+  const agentsStatisticsPanel = panels.use(AgentsStatisticsPanel)
+  const agentTrainerPanel = panels.use(AgentTrainerPanel)
+  panels.use(RemoteStorePanel)
 
   const worldSize = new Size(560, 460)
   const arkanoid = Arkanoid.create(worldSize, () => 3)

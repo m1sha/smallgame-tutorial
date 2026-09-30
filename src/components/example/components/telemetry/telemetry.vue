@@ -41,7 +41,8 @@ function getValue (parameter: ITelemetryParameter) {
 .telemetry-wrapper
   position: absolute
   z-index: 1
-  left: 0
+  top: 30px
+  left: 50%
   //top: -24px
   anchor-name: --telemetry-wrapper
 

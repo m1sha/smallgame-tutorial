@@ -48,7 +48,7 @@ export class Viewer {
     this.screen = screen
     this.surface = new MemSurface(viewportSize)
     this.background = new Background(viewportSize)
-    this.background.render()
+    //this.background.render()
     this.selectRegion = new SelectRegion(viewportSize)
     this.selectRegion.render()
     this.selectedObjects = new SelectedObjects(viewportSize)
