@@ -4,7 +4,7 @@ import { useRoute, useRouter } from "vue-router"
 import { Builders, IToastMessage, PanelManager, ScriptDef, ScriptModule, Settings } from "./code"
 import { ParameterList, ScriptList, Telemetry, Toolbar, ToolbarDropdownPanel, ContextMenu, EntityList, Viewport as ViewportComponent, Toasts } from './components'
 import { Size } from "smallgame";
-import { initViewerControls, IViewerControls, Viewport } from "../../modules/shared"
+import { Viewport } from "../../modules/shared"
 import { runScript } from "../../modules/tutorials/script-runner"
 import { IScriptCategory } from "./code/script-category"
 import { IScriptListItem } from "./code/script-list-item"
@@ -41,7 +41,7 @@ const settings = new Settings()
 const usePan = ref(false)
 
 const viewport = ref(new Viewport())
-const viewerControls = ref<IViewerControls>(initViewerControls())
+
 const messages = ref<IToastMessage[]>([])
 const commonModalComponent = ref<CommonModalComponent>()
 let modals: Modals | null = null
@@ -80,8 +80,7 @@ async function main() {
     fps: fps.value!, 
     containerSize, 
     builders,
-    viewport: viewport.value,
-    viewerControls: viewerControls.value,
+    globalViewport: viewport.value,
     disposer,
     messanger: {
       info: (message: string) => {
@@ -120,7 +119,7 @@ router.beforeEach(() => { clearPrevious() })
 router.afterEach(() => { main() })
 
 function clearPrevious () {
-  viewerControls.value = initViewerControls()
+  viewport.value.home()
   if (container.value)
   while(true) {
     const child = container.value.children[0]

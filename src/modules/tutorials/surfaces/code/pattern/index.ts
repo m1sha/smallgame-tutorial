@@ -1,8 +1,8 @@
 import { loadImage, Rect, Sketch } from "smallgame"
 import { type ScriptSettings, Viewer, displayFps } from "../../../core"
 
-export default async ({ container, containerSize, fps, builders, viewerControls, garbageCollect }: ScriptSettings): Promise<void> => {
-  const viewer = new Viewer(containerSize, container, { disableContextMenu: true, garbageCollect, viewerControls })
+export default async ({ container, containerSize, fps, builders, globalViewport, garbageCollect }: ScriptSettings): Promise<void> => {
+  const viewer = new Viewer(containerSize, container, { disableContextMenu: true, garbageCollect, globalViewport })
   const ui = builders.ui()
   const zoom = ui.var(1)
   const offsetX = ui.var(0)

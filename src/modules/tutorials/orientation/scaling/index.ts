@@ -5,8 +5,8 @@ import { GMath, Point, Rect, Sketch } from "smallgame"
 
 type TDot = { center: Point, radius: number }
 
-export default async ({ container, containerSize, fps, builders, viewerControls }: ScriptSettings): Promise<ScriptModule> => {
-  const viewer = new Viewer(containerSize, container, { disableContextMenu: true, viewerControls })
+export default async ({ container, containerSize, fps, builders, globalViewport }: ScriptSettings): Promise<ScriptModule> => {
+  const viewer = new Viewer(containerSize, container, { disableContextMenu: true, globalViewport })
   const ui = builders.ui()
   const scrCenter = containerSize.toPoint().scaleSelf(0.5)
 

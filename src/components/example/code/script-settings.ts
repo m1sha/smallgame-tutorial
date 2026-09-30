@@ -1,6 +1,6 @@
 import { Size } from "smallgame"
 import { Builders } from "./builders"
-import { IViewerControls, Viewport } from "../../../modules/shared"
+import { Viewport } from "../../../modules/shared"
 import { PanelManager } from "./panels"
 import { Modals } from "./modal"
 
@@ -11,8 +11,7 @@ export interface ScriptSettings {
   fps: HTMLDivElement
   containerSize: Size
   builders: Builders
-  viewport: Viewport
-  viewerControls: IViewerControls
+  globalViewport: Viewport
   garbageCollect: (callback: () => void) => void
   messanger: { info: ( message: string) => void }
   panels: PanelManager

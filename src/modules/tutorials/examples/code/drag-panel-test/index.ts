@@ -1,9 +1,9 @@
 import { loadBlob, loadImage, Rect } from "smallgame"
 import { Assets, DragPanels, type ScriptSettings, Viewer, displayFps } from "../../../core"
 
-export default async ({ container, containerSize, fps, builders, garbageCollect, viewerControls }: ScriptSettings): Promise<void> => {
+export default async ({ container, containerSize, fps, builders, garbageCollect, globalViewport }: ScriptSettings): Promise<void> => {
   const ui = builders.ui()
-  const viewer = new Viewer(containerSize, container, { disableContextMenu: true, garbageCollect, viewerControls })
+  const viewer = new Viewer(containerSize, container, { disableContextMenu: true, garbageCollect, globalViewport })
   const telemetry = builders.telemetry()
   const panelName = telemetry.def('Panel Name', '')
   const panels = new DragPanels(containerSize)

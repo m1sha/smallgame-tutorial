@@ -3,8 +3,8 @@ import { type ScriptSettings, Viewer, displayFps } from "../../../core"
 import { TilePalette } from "./tile-palette"
 import { LevelEditor } from "./level-editor"
 
-export default async ({ container, containerSize, fps, builders, garbageCollect, viewerControls }: ScriptSettings): Promise<void> => {
-  const viewer = new Viewer(containerSize, container, { disableContextMenu: true, garbageCollect, viewerControls })
+export default async ({ container, containerSize, fps, builders, garbageCollect, globalViewport }: ScriptSettings): Promise<void> => {
+  const viewer = new Viewer(containerSize, container, { disableContextMenu: true, garbageCollect, globalViewport })
   viewer.surface.imageRendering = 'pixelated'
   
   const img = await loadImage('platformer/Terrain_(16x16).png')

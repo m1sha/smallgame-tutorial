@@ -7,8 +7,8 @@ import { Pixels } from "smallgame/src/utils/pixels"
 import { BlueNoiseGray } from "./blue-noise-gray"
 import { Halftone } from "./halftone"
 
-export default async ({ container, containerSize, fps, builders, garbageCollect, viewerControls }: ScriptSettings): Promise<void> => {
-  const viewer = new Viewer(containerSize, container, { disableContextMenu: true, garbageCollect, viewerControls })
+export default async ({ container, containerSize, fps, builders, garbageCollect, globalViewport }: ScriptSettings): Promise<void> => {
+  const viewer = new Viewer(containerSize, container, { disableContextMenu: true, garbageCollect, globalViewport })
   const img = await loadImage('img/green-mountains_612x384_61K.jpg') //await loadImage('img/lake_1280x720_264K.jpg') //
   const mask =  await loadImage('patterns/chess-tex.jpg') // await loadImage('masks/blue-noise/blue-noisewea-low-frequency.png') // await loadImage('patterns/chess-tex.jpg') //await loadImage('masks/blue-noise/blue-noisewea-low-frequency.png')
   const surface = new MemSurface(img.rect.size)

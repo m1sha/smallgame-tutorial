@@ -143,8 +143,8 @@ class Editor {
 }
 
 
-export default async ({ container, containerSize, fps, builders, viewerControls }: ScriptSettings): Promise<ScriptModule> => {
-  const viewer = new Viewer(containerSize, container, { disableContextMenu: true, viewerControls })
+export default async ({ container, containerSize, fps, builders, globalViewport }: ScriptSettings): Promise<ScriptModule> => {
+  const viewer = new Viewer(containerSize, container, { disableContextMenu: true, globalViewport })
   viewer.ui.setCellSize(64, 64)
 
   const entities = builders.entities()

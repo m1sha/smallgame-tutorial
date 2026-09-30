@@ -3,8 +3,8 @@ import { type ScriptSettings, Viewer, displayFps } from "../../../core"
 import { ColorsPalette, ImageView, Modifiers } from "./panels"
 import { Pixels } from "smallgame/src/utils/pixels"
 
-export default async ({ container, containerSize, fps, garbageCollect, viewerControls, panels }: ScriptSettings): Promise<void> => {
-  //const viewer = new Viewer(containerSize, container, { disableContextMenu: true, garbageCollect, viewerControls })
+export default async ({ container, containerSize, fps, garbageCollect, globalViewport, panels }: ScriptSettings): Promise<void> => {
+  //const viewer = new Viewer(containerSize, container, { disableContextMenu: true, garbageCollect, globalViewport })
   
   let img = await loadImage('img/solder-1w.png')
   let pixels = img.pixels

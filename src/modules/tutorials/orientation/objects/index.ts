@@ -5,13 +5,9 @@ import { Point, setPoint, Sketch } from "smallgame"
 
 interface ICircle { x: number, y: number, r: number, c: string }
 
-export default async ({ container, containerSize, fps, builders, viewerControls }: ScriptSettings): Promise<ScriptModule> => {
+export default async ({ container, containerSize, fps, builders, globalViewport }: ScriptSettings): Promise<ScriptModule> => {
   const magnifier = new Magnifier()
-  const viewer = new Viewer(containerSize, container, { disableContextMenu: true, viewerControls })
-
-  //viewerControls.background = viewer.ui.background.solid('#991141')
-  //viewerControls.updateChanges()
-
+  const viewer = new Viewer(containerSize, container, { disableContextMenu: true, globalViewport })
 
   const objects: ICircle[] = [
     { x: 10, y: 10, r: 20, c: '#188991' },

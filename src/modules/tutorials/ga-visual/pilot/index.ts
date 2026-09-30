@@ -5,8 +5,8 @@ import { CrazyPilotGame } from "./crazy-pilot/crazy-pilot"
 import { CrazyPilotAgentsTrainer } from "./crazy-pilot-agents-trainer"
 
 
-export default async ({ container, containerSize, fps, builders, garbageCollect, viewerControls }: ScriptSettings): Promise<void> => {
-  const viewer = new Viewer(containerSize, container, { disableContextMenu: true, garbageCollect, viewerControls })
+export default async ({ container, containerSize, fps, builders, garbageCollect, globalViewport }: ScriptSettings): Promise<void> => {
+  const viewer = new Viewer(containerSize, container, { disableContextMenu: true, garbageCollect, globalViewport })
   const gameFiled = new MemSurface(new Size(400, 400))
   const rect = gameFiled.rect.dup()
   rect.center = viewer.viewportRect.center

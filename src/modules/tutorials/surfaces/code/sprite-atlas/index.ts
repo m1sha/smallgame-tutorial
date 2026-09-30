@@ -2,10 +2,10 @@ import { loadBlob, loadImage, MemSurface, Sketch } from "smallgame"
 import { type ScriptSettings, Viewer, displayFps } from "../../../core"
 import { filterSmallBoundingBoxes, findSpriteBoundingBoxes } from "./bounding-box-detector"
 
-export default async ({ container, containerSize, fps, builders, garbageCollect, viewerControls }: ScriptSettings): Promise<void> => {
+export default async ({ container, containerSize, fps, builders, garbageCollect, globalViewport }: ScriptSettings): Promise<void> => {
   const telemetry = builders.telemetry().noLegend()
   const ui = builders.ui()
-  const viewer = new Viewer(containerSize, container, { disableContextMenu: true, garbageCollect, viewerControls })
+  const viewer = new Viewer(containerSize, container, { disableContextMenu: true, garbageCollect, globalViewport })
   let img = await loadImage('platformer/characters/beaver/beaver_idle.png')
   // const img = await loadImage('platformer/characters/metalslug/Weapon_SFX.png')
   let boxes = []

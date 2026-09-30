@@ -10,8 +10,8 @@ import { RemoteStorePanel } from "../../../shared"
 import { savePopulation } from "./store/population-document"
 import { ArkanoidStore } from "./store"
 
-export default async ({ container, containerSize, fps, builders, garbageCollect, viewport, panels, modals }: ScriptSettings): Promise<void> => {
-  const viewer = new Viewer(containerSize, container, { disableContextMenu: true, garbageCollect, viewport })
+export default async ({ container, containerSize, fps, builders, garbageCollect, globalViewport, panels, modals }: ScriptSettings): Promise<void> => {
+  const viewer = new Viewer(containerSize, container, { disableContextMenu: true, garbageCollect, globalViewport })
   const telemetry = builders.telemetry().noLegend()
   const score = telemetry.def('Score', 0)
   const frames = telemetry.def('Frames', 0)

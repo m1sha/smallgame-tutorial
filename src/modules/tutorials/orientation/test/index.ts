@@ -1,8 +1,8 @@
 import { MemSurface, Point, Rect, Size, Sketch } from "smallgame"
 import { type ScriptSettings, Viewer, createPattern, displayFps } from "../../core"
 
-export default async ({ container, containerSize, fps, builders, garbageCollect, viewerControls }: ScriptSettings): Promise<void> => {
-  const viewer = new Viewer(containerSize, container, { disableContextMenu: true, garbageCollect, viewerControls })
+export default async ({ container, containerSize, fps, builders, garbageCollect, globalViewport }: ScriptSettings): Promise<void> => {
+  const viewer = new Viewer(containerSize, container, { disableContextMenu: true, garbageCollect, globalViewport })
 
   const { pattern } =  await createPattern('chess-tex.jpg', 'repeat')
 

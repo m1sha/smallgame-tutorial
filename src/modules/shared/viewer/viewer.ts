@@ -2,7 +2,7 @@ import { Game, TSize, Screen, gameloop, GameEvent, Surface, MemSurface, Rect, Po
 import { Background } from "./background"
 import { SelectRegion } from "./select-region"
 import { SelectedObjects } from "./selected-objects"
-import { initViewerControls, ViewerUI, IViewport } from "./ui"
+import { ViewerUI, IViewport } from "./ui"
 import { Viewport } from "./viewport"
 import { setDebounce } from "smallgame/src/time"
 import { IInputDelegate } from "./input-delegate"
@@ -14,9 +14,11 @@ export class Viewer {
   private selectedObjects: SelectedObjects
   private screen: Screen
   private game: Game
+  private globalViewport: IViewport | null = null
   readonly surface: Surface
   readonly ui: ViewerUI
   readonly viewport: Viewport
+  
 
   #offset: Point = Point.zero
   mousePosition: Point = Point.zero
@@ -33,21 +35,15 @@ export class Viewer {
   onContextMenuClick: ((pos: TPoint) => void) | null = null
   onViewportChanged: ((pos: Point, zoom: number) => void) | null = null
 
-  constructor (viewportSize: TSize, container: HTMLDivElement, options?: { disableContextMenu?: boolean, viewport: IViewport, garbageCollect?: (callback: () => void) => void }) {
+  constructor (viewportSize: TSize, container: HTMLDivElement, options?: { disableContextMenu?: boolean, globalViewport: IViewport, garbageCollect?: (callback: () => void) => void }) {
     const { game, screen } = Game.create(viewportSize.width, viewportSize.height, container)
 
-    
-    const viewerSettings = initViewerControls()
-    viewerSettings.updateChanges = () => {
-      // update viewerSettings
-
-      if (options && options.garbageCollect) {
-        options.garbageCollect(() => this.remove())
-      }
+    if (options && options.garbageCollect) {
+      options.garbageCollect(() => this.remove())
     }
     
-
-    this.viewport = new Viewport(viewportSize, this, options.viewport)
+    this.globalViewport = options && options.globalViewport ? options.globalViewport : null
+    this.viewport = new Viewport(viewportSize, this, options.globalViewport)
     this.game = game
     this.screen = screen
     this.surface = new MemSurface(viewportSize)
@@ -96,7 +92,8 @@ export class Viewer {
         }
         if (ev.type === 'MOUSEMOVE') {
           this.mousePosition.moveSelf(ev.pos)
-         // viewerSettings.viewport.cursor = setPoint(ev.pos.x, ev.pos.y)
+          if (this.globalViewport) this.globalViewport.setCursor(ev.pos)
+         
           if (ev.lbc && ev.ctrlKey) {
             this.background.mousePos = ev.pos
             this.background.mouseShift = ev.shift

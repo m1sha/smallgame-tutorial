@@ -116,9 +116,9 @@ class Renderer {
   }
 }
 
-export default async ({ container, containerSize, fps, builders, garbageCollect, viewerControls }: ScriptSettings): Promise<void> => {
+export default async ({ container, containerSize, fps, builders, garbageCollect, globalViewport }: ScriptSettings): Promise<void> => {
   const ui = builders.ui()
-  const viewer = new Viewer(containerSize, container, { disableContextMenu: true, garbageCollect, viewerControls })
+  const viewer = new Viewer(containerSize, container, { disableContextMenu: true, garbageCollect, globalViewport })
   const { pattern } = await createPattern('cross-dec-tex.bmp', 'repeat')
   const center = viewer.viewportRect.center
   const radius = 320

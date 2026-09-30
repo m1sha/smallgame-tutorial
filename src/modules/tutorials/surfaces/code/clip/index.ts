@@ -1,8 +1,8 @@
 import { loadImage, Rect, Sketch, Surface } from "smallgame"
 import { type ScriptSettings, Viewer, displayFps } from "../../../core"
 
-export default async ({ container, containerSize, fps, builders, garbageCollect, viewerControls }: ScriptSettings): Promise<void> => {
-  const viewer = new Viewer(containerSize, container, { disableContextMenu: true, garbageCollect, viewerControls })
+export default async ({ container, containerSize, fps, builders, garbageCollect, globalViewport }: ScriptSettings): Promise<void> => {
+  const viewer = new Viewer(containerSize, container, { disableContextMenu: true, garbageCollect, globalViewport })
   const ui = builders.ui()
   const img = await loadImage('img/green-mountains_612x384_61K.jpg')
   const x = ui.var(160)

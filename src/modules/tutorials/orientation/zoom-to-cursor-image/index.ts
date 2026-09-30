@@ -3,8 +3,8 @@ import { displayFps } from "../../../../utils/display-fps"
 import { type ScriptModule, type ScriptSettings } from "../../../../components/example"
 import { loadBlob, loadImage, MemSurface, Point, Rect, Sketch } from "smallgame"
 
-export default async ({ container, containerSize, fps, builders, viewerControls }: ScriptSettings): Promise<ScriptModule> => {
-  const viewer = new Viewer(containerSize, container, { disableContextMenu: true, viewerControls })
+export default async ({ container, containerSize, fps, builders, globalViewport }: ScriptSettings): Promise<ScriptModule> => {
+  const viewer = new Viewer(containerSize, container, { disableContextMenu: true, globalViewport })
   const telemetry = builders.telemetry()
   const zoom = telemetry.def('Zoom', 1)
 
