@@ -168,8 +168,10 @@ function onViewportAction (actionName: 'pan' | 'home' | 'fit' | 'zoomIn' | 'zoom
       <GridBg :cell-size="16" :zoom="1" :offset="viewport.offset" :line-color="'#3b3b3b'" :show="true" />
       <div ref="container" class="container"></div>
       <ContextMenu v-if="currentModule && currentModule.contextMenu" :context="currentModule.contextMenu" />
-      <Panels :items="currentModule?.panels ?? []" />
+      <Panels :items="currentModule?.panels ?? []" />  
     </div>
+
+    
  
     <ViewportComponent 
       :viewport="viewport" 
@@ -192,7 +194,7 @@ function onViewportAction (actionName: 'pan' | 'home' | 'fit' | 'zoomIn' | 'zoom
   position: relative
   display: flex
   width: 100%
-  height: 100%
+  height: calc( 100vh -  30px)
   .container
     position: absolute
     width: 100%
