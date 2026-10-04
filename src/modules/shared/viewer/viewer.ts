@@ -99,7 +99,7 @@ export class Viewer {
             this.background.mouseShift = ev.shift
             this.#offset.shiftSelf(ev.shift)
             this.background.offest = this.#offset
-            this.background.render()
+            //this.background.render()
             moved = true
             this.onViewportChanged?.(Point.from(ev.shift), 1)
           }
@@ -115,7 +115,7 @@ export class Viewer {
         if (ev.type === 'MOUSEUP' && moved) {
           //this.offset.moveSelf(ev.pos)
           //this.background.offest = ev.pos
-          this.background.render()
+          //this.background.render()
         }
 
         if (ev.type === 'MOUSEUP') {
@@ -152,7 +152,7 @@ export class Viewer {
     const old = this.#offset.shift(value.neg())
     this.#offset = value
     this.background.offest = value
-    this.background.render()
+    //this.background.render()
     this.onViewportChanged?.(old, 1)
   }
 

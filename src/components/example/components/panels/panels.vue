@@ -53,7 +53,7 @@ function onpointerup (_: IPanel<any>, ev: PointerEvent) {
 
 </div>
   <div class="panel-content">
-    <component :is="panel.component"  :info="panel.info.visible" v-bind="panel.data" @postData="panel.action"  />
+    <component :is="panel.component"  :info="panel.info.visible" v-bind="panel.data" @postData="(actionName, data) => panel.execute(actionName, data)"  />
   </div>
 </div>
 

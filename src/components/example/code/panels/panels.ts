@@ -1,12 +1,13 @@
 import { TPoint } from "smallgame"
-import { Component, reactive } from "vue"
+import { Component } from "vue"
 import { Panel } from "./panel"
 
 export class PanelManager {
   items: Panel<any>[] = []
 
-  use <T extends Panel<any>>(type: (new (...args: any[]) => T)) {
+  use <T extends Panel<any>>(type: (new (...args: any[]) => T), callback?: (panel: T, actionName: string, args?: any) => void) {
     const panel = new type()
+    if (callback) panel.addCallback((actionName, args) => callback(panel, actionName, args))
     this.addPanel(panel)
     return panel
   }
