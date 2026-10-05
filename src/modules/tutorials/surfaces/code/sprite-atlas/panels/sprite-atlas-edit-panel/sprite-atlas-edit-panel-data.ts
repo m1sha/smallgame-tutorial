@@ -1,6 +1,8 @@
+import { uuidv4 } from "../../../../../../../utils"
 import { BoundingBox } from "./helpers"
 
 export class Box implements BoundingBox {
+  id = uuidv4()
   x: number
   y: number
   width: number

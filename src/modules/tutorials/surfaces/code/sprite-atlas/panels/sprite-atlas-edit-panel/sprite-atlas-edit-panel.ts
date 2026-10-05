@@ -1,4 +1,4 @@
-import { loadBlob, Point, Surface } from "smallgame"
+import { loadBlob, Point, Rect, Surface } from "smallgame"
 import { createReactiveData, Panel } from "../../../../../../../components/example"
 import SpriteAtlasEditPanelComponent from "./components/sprite-atlas-edit-panel-component.vue"
 import { Box, SpriteAtlasEditPanelData } from "./sprite-atlas-edit-panel-data"
@@ -50,5 +50,15 @@ export class SpriteAtlasEditPanel extends Panel<SpriteAtlasEditPanelData> {
 
   get mode () {
     return this.data!.editor.mode
+  }
+
+  selectBoxByPoint (point: Point) {
+    for (const box of this.boxes) {
+      box.selected = Rect.from(box).containsPoint(point)
+    }
+  }
+
+  deselectBoxes () {
+    this.boxes.forEach(p => p.selected = false)
   }
 }

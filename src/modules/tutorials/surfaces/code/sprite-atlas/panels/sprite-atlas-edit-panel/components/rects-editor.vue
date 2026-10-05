@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { PushButton, TextBox } from 'vue3-universal-components'
-defineProps<{ boxes: any[] }>()
+import { Box } from '../../../panels'
+defineProps<{ boxes: Box[] }>()
+const emit = defineEmits<{ click: [box: Box], updatedRect: [] }>()
 </script>
 
 <template>
@@ -10,18 +12,24 @@ defineProps<{ boxes: any[] }>()
 
     <div class="boxes-list v-grid-table">
       <div class="header">
+        <div class="header-column"></div>
         <div class="header-column">#</div>
         <div class="header-column">X</div>
         <div class="header-column">Y</div>
         <div class="header-column">W</div>
         <div class="header-column">H</div>
       </div>
-      <div v-for="box, index in boxes" class="row">
+      <div :key="box.id" v-for="box, index in boxes" class="row">
+        <div class="column" @click="emit('click', box)">
+          <i class="fa-solid fa-square-check" style="color: #aaa;" v-if="box.selected"></i>
+          <i class="fa-regular fa-square" v-if="!box.selected"></i>
+          <!-- <input type="checkbox" :checked="box.selected" @click="emit('click', box)"> -->
+        </div>
         <div class="column"><div class="box-num">{{ index + 1 }}</div></div>
-        <div class="column"><TextBox v-model="box.x" /></div>
-        <div class="column"><TextBox v-model="box.y" /></div>
-        <div class="column"><TextBox v-model="box.width" /></div>
-        <div class="column"><TextBox v-model="box.height" /></div>
+        <div class="column"><TextBox type="int" v-model="box.x" @update:model-value="emit('updatedRect')" /></div>
+        <div class="column"><TextBox type="int" v-model="box.y" @update:model-value="emit('updatedRect')" /></div>
+        <div class="column"><TextBox type="int" v-model="box.width" @update:model-value="emit('updatedRect')" /></div>
+        <div class="column"><TextBox type="int" v-model="box.height" @update:model-value="emit('updatedRect')" /></div>
       </div>
     </div>
 </template>

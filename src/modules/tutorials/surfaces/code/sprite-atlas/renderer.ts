@@ -13,9 +13,10 @@ export class Renderer {
     const sketch = new Sketch()
     ae.boxes.forEach(box => {
       const rect = Rect.from(box)
-      sketch.rect({ stroke: 'green', lineWidth: 1 / zoom }, rect)
+      const fill = box.selected ? '#11991140' : 'transparent'
+      sketch.rect({ stroke: 'green', fill, lineWidth: 1 / zoom }, rect)
 
-      if (ae.mode === 'edit-rect') {
+      if (ae.mode === 'edit-rect' && box.selected) {
         const d = 4
         const color = '#999'
         const points = [

@@ -21,6 +21,10 @@ const tabName = computed({
   }
 })
 
+const onRectClick = (box) => {
+  emit('postData', 'selected', box)
+}
+
 </script>
 
 <template>
@@ -40,7 +44,7 @@ const tabName = computed({
     </div>
 
     <div class="tab-content" v-if="tabName === 'editor'">
-      <RectsEditor :boxes  />
+      <RectsEditor :boxes  @click="onRectClick" @updatedRect="emit('postData', 'changed-rect')" />
     </div>
     
   </div>
@@ -78,7 +82,7 @@ const tabName = computed({
     max-height: 40vh;
     overflow-y: auto;
 
-    grid-template-columns: max-content repeat(4, max-content);
+    grid-template-columns: 20px max-content repeat(4, max-content);
     align-items: center;
 
     .header-column {
@@ -95,9 +99,14 @@ const tabName = computed({
       .vue3-uui__input-wrapper, .vue3-uui__textbox {
         width: fit-content;
       }
-      input[type="text"]  {
+      input[type="int"]  {
         width: 6ch;
         text-align: right;
+        background-color: #262626;
+        border: none;
+        color: #999;
+        outline: none;
+        border-radius: 2px;
       }
     }
   }
