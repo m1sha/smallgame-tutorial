@@ -3,6 +3,7 @@ import { createReactiveData, Panel } from "../../../../../../../components/examp
 import SpriteAtlasEditPanelComponent from "./components/sprite-atlas-edit-panel-component.vue"
 import { Box, SpriteAtlasEditPanelData } from "./sprite-atlas-edit-panel-data"
 import { filterSmallBoundingBoxes, findSpriteBoundingBoxes } from "./helpers"
+import { removeItem } from "smallgame/src/utils/array.ts"
 
 export class SpriteAtlasEditPanel extends Panel<SpriteAtlasEditPanelData> {
   img: Surface | null = null
@@ -60,5 +61,9 @@ export class SpriteAtlasEditPanel extends Panel<SpriteAtlasEditPanelData> {
 
   deselectBoxes () {
     this.boxes.forEach(p => p.selected = false)
+  }
+
+  removeBox (id: string) {
+    removeItem(this.data.boxes, p => p.id === id)
   }
 }

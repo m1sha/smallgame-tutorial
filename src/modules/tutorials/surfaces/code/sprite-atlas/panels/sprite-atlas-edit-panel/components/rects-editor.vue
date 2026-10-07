@@ -2,7 +2,7 @@
 import { PushButton, TextBox } from 'vue3-universal-components'
 import { Box } from '../../../panels'
 defineProps<{ boxes: Box[] }>()
-const emit = defineEmits<{ click: [box: Box], updatedRect: [] }>()
+const emit = defineEmits<{ click: [box: Box], updatedRect: [], removeBox: [box: Box] }>()
 </script>
 
 <template>
@@ -18,6 +18,7 @@ const emit = defineEmits<{ click: [box: Box], updatedRect: [] }>()
         <div class="header-column">Y</div>
         <div class="header-column">W</div>
         <div class="header-column">H</div>
+        <div class="header-column"></div>
       </div>
       <div :key="box.id" v-for="box, index in boxes" class="row">
         <div class="column" @click="emit('click', box)">
@@ -30,6 +31,7 @@ const emit = defineEmits<{ click: [box: Box], updatedRect: [] }>()
         <div class="column"><TextBox type="int" v-model="box.y" @update:model-value="emit('updatedRect')" /></div>
         <div class="column"><TextBox type="int" v-model="box.width" @update:model-value="emit('updatedRect')" /></div>
         <div class="column"><TextBox type="int" v-model="box.height" @update:model-value="emit('updatedRect')" /></div>
+        <div class="column"><button @click.stop="emit('removeBox', box)"><i class="fa fa-trash" /></button></div>
       </div>
     </div>
 </template>

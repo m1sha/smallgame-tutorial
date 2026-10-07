@@ -41,14 +41,17 @@ export default async ({ container, containerSize, fps, garbageCollect, globalVie
     if (actionName === 'changed-rect') {
       draw()
     }
+
+    if (actionName === 'remove-box') {
+      const box = args as Box
+      atlasEditor.removeBox(box.id)
+      draw()
+    }
   })
 
   const draw = () => renderer.render(img, atlasEditor, viewer.viewport.zoom)
 
   draw()
-  //controller.onExecute = () => {
-  //  
-  //}
 
   viewer.onInput = ev => {
     //controller.execute(ev)

@@ -44,7 +44,12 @@ const onRectClick = (box) => {
     </div>
 
     <div class="tab-content" v-if="tabName === 'editor'">
-      <RectsEditor :boxes  @click="onRectClick" @updatedRect="emit('postData', 'changed-rect')" />
+      <RectsEditor 
+        :boxes  
+        @click="onRectClick" 
+        @updatedRect="emit('postData', 'changed-rect')" 
+        @remove-box="box => emit('postData', 'remove-box', box)"
+        />
     </div>
     
   </div>
@@ -82,7 +87,7 @@ const onRectClick = (box) => {
     max-height: 40vh;
     overflow-y: auto;
 
-    grid-template-columns: 20px max-content repeat(4, max-content);
+    grid-template-columns: 20px max-content repeat(4, max-content) 60px;
     align-items: center;
 
     .header-column {
