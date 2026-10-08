@@ -609,5 +609,12 @@
     "categoryId": 10,
     "subCategoryId": null,
     "codeDir": "ga-visual/pilot"
+  },
+  {
+    "id": 100,
+    "name": "Ray",
+    "categoryId": 5,
+    "subCategoryId": 2,
+    "codeDir": "examples/code/ray"
   }
 ]
