@@ -1,3 +1,12 @@
+interface RewardCounterLike {
+  score: number
+  outsideTimes: number
+  catchTimes: number
+  moveTimes: number
+  brokenBricks: number
+  win: number
+}
+
 export class RewardCounter {
   score = 0
   outsideTimes = 0
@@ -29,6 +38,28 @@ export class RewardCounter {
   removeRewardForOutSide () {
     this.score -= 0.01
     this.outsideTimes++
+  }
+
+  dup () {
+    const result = new RewardCounter()
+    result.score = this.score
+    result.outsideTimes = this.outsideTimes
+    result.catchTimes = this.catchTimes
+    result.moveTimes = this.moveTimes
+    result.brokenBricks = this.brokenBricks
+    result.win = this.win
+    return result
+  }
+
+  diff (like: RewardCounterLike): RewardCounterLike {
+    return {
+      score: this.score - like.score,
+      outsideTimes: this.outsideTimes - like.outsideTimes,
+      catchTimes: this.catchTimes - like.catchTimes,
+      moveTimes: this.moveTimes - like.moveTimes,
+      brokenBricks: this.brokenBricks - like.brokenBricks,
+      win: this.win - like.win,
+    }
   }
 
 }

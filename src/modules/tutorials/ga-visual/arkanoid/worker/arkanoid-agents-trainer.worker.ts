@@ -1,12 +1,13 @@
 import { Size } from "smallgame"
 import { UniqueNameGenerator } from "../../../../../utils/random"
 
-import { Arkanoid } from "../../../../games/v2"
+import { Arkanoid, createEnv } from "../../../../games/v2"
 import { ArkanoidAgent } from "../arkanoid-agent"
 import { GeneticTrainer, GeneticTrainerDefinition } from "../../../../../utils/ai"
 
 const worldSize = new Size(560, 460)
-const arkanoid = Arkanoid.create(worldSize, () => 3)
+//const arkanoid = Arkanoid.create(worldSize, () => 3)
+const env = createEnv('arkanoid', { worldSize, dt: () => 3, gameTicks: 8000 })
 const definitions: GeneticTrainerDefinition = {
   elitePercent: 5,
   reproduction: {
@@ -24,12 +25,12 @@ names.useHumanStyle()
 agentTrainer.createIndividual = (epoch, needInit) => {
     const e = epoch ? ' v.' + epoch : ''
     const name = `${names.next()}${e}`
-    return new ArkanoidAgent(name, needInit) 
+    return new ArkanoidAgent(env, name, needInit) 
 }
 agentTrainer.createPopulation(300)
 agentTrainer.fitnessFunc = individual => {
   const agent = individual as ArkanoidAgent
-  return agent.calcFitness(arkanoid) 
+  return agent.calcFitness() 
 }
 
 self.onmessage = (e: MessageEvent) => {

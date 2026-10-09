@@ -1,5 +1,5 @@
 import { MemSurface, Rect, Size, Sketch } from "smallgame"
-import { Arkanoid } from "../../../games/v2"
+import { Arkanoid } from "../.."
 
 export class ArkanoidRenderer {
   image: MemSurface

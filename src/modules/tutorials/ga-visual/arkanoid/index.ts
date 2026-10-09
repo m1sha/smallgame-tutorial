@@ -1,14 +1,13 @@
 import { Rect, Size } from "smallgame"
-import { Arkanoid } from "../../../games/v2"
+import { createEnv } from "../../../games/v2"
 import { type ScriptSettings, Viewer, displayFps } from "../../core"
 import { ActionsPanel, AgentsStatisticsPanel, AgentTrainerPanel, createAgentInfo } from "./panels"
-import { ArkanoidRenderer } from "./arkanoid-renderer"
-import { ArkanoidAgent, createAgents } from "./arkanoid-agent"
+import { ArkanoidAgent } from "./arkanoid-agent"
 import { ArkanoidAgentsTrainerHelper } from "./worker"
 import yoneur from "./agents-raw/yoneur"
 import { RemoteStorePanel } from "../../../shared"
-import { savePopulation } from "./store/population-document"
 import { ArkanoidStore } from "./store"
+import { Discrete } from "../../../../utils/ai/enviroment"
 
 export default async ({ container, containerSize, fps, builders, garbageCollect, globalViewport, panels, modals }: ScriptSettings): Promise<void> => {
   const viewer = new Viewer(containerSize, container, { disableContextMenu: true, garbageCollect, globalViewport })
@@ -25,23 +24,21 @@ export default async ({ container, containerSize, fps, builders, garbageCollect,
   panels.use(RemoteStorePanel)
 
   const worldSize = new Size(560, 460)
-  const arkanoid = Arkanoid.create(worldSize, () => 3)
-  const renderer = new ArkanoidRenderer(worldSize)
-  renderer.render(arkanoid)
+  const env = createEnv('arkanoid', { worldSize, dt: () => 3 })
 
   actionsPanel.onAction = (action) => {
-    arkanoid.action(action)
-    arkanoid.next()
-    renderer.render(arkanoid)
+    //arkanoid.action(action)
+    //arkanoid.next()
+    //renderer.render(arkanoid)
     frames.value ++
   }
 
   viewer.onKeyPressed = keys => {
     if (keys.horizontalAxisRaw !== 0)
-      arkanoid.action(keys.horizontalAxisRaw < 0 ? 1 : 2)
+      env.step(new Discrete(keys.horizontalAxisRaw < 0 ? 1 : 2)) // arkanoid.action(keys.horizontalAxisRaw < 0 ? 1 : 2)
   }
   
-  let topagent: ArkanoidAgent | null = new ArkanoidAgent('yo')
+  let topagent: ArkanoidAgent | null = new ArkanoidAgent(env, 'yo')
   topagent.load(new Float32Array(yoneur))
 
   const rect = Rect.size(worldSize)
@@ -49,22 +46,19 @@ export default async ({ container, containerSize, fps, builders, garbageCollect,
   
   let decision = 0
   viewer.onFrameChanged = frame => {
+    const image = env.render()
     frame.clear()
-    frame.blit(renderer.image, rect)
+    frame.blit(image, rect)
     displayFps(fps)
-  
-    score.value = arkanoid.rewards.score
 
     if (topagent) {
-      arkanoid.next()
-      renderer.render(arkanoid)
-      
-      decision = topagent.decide(arkanoid)
-      if (decision > 0) arkanoid.action(decision)
-    }
+      const { observation, reward, terminated } = env.step(new Discrete(decision))
+      decision = topagent.decide(observation as Float32Array)
+      score.value += reward
 
-    if (arkanoid.state === 'gameover' || arkanoid.state === 'win') {
-      arkanoid.reset()
+      if (terminated) {
+        env.reset()
+      }
     }
   }
 
@@ -88,10 +82,11 @@ export default async ({ container, containerSize, fps, builders, garbageCollect,
   ArkanoidAgentsTrainerHelper.onComplete = (data) => {
     data.individuals.forEach(individual => agentsStatisticsPanel.addAget(createAgentInfo(individual)))
     const { id, name, weights } = data.individual
-    topagent = new ArkanoidAgent(name)
+    topagent = new ArkanoidAgent(env, name)
     topagent.id = id
     topagent.load(new Float32Array(weights))
-    arkanoid.reset()
+    //arkanoid.reset()
+    env.reset()
   }
 
 }

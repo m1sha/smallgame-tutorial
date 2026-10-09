@@ -3,9 +3,9 @@ import { Ball } from "./ball"
 import { BrickMap } from "./brick-map"
 import { Carrent } from "./carrent"
 import { Collider } from "./collisions"
-import { ArkanoidGameDefinition, createArkanoidGameDefinition } from "./game-definition"
+import { ArkanoidGameDefinition, createArkanoidGameDefinition } from "../game-definition"
 import { World } from "./world"
-import { RewardCounter } from "./reward-counter"
+import { RewardCounter } from "../reward-counter"
 
 export class Arkanoid {
   world: World
