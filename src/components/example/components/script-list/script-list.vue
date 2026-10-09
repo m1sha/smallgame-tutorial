@@ -99,7 +99,7 @@ watch(() => search.value, () => viewmodel.search(search.value))
 <style lang="sass">
 .script-list-wrapper
   position: absolute
-  z-index: 1
+  z-index: 100
   inset: 0
   padding: 8px 16px 
   background-color: rgba(55, 55, 55, 0.4941176471)
