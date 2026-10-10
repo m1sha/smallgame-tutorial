@@ -36,6 +36,8 @@ export class ArkanoidAgent extends Individual {
       const result = this.env.step(new Discrete(action))
       observation = result.observation
       rewards += result.reward
+
+      if (result.terminated) break
     }
 
     const ticks = gameTicks - (gameTicks - tick)

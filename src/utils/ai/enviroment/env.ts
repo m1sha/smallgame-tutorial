@@ -25,8 +25,18 @@ export type StepResult = ResetResult & {
   truncated: boolean
 }
 
-export abstract class Env /*<TAction extends Action, TObservation extends Observation>*/ {
-  constructor (config?: Record<string, unknown>) {}
+type ActionSpace = {}
+type ObservationSpace = {}
+
+export abstract class Env {
+  observationSpace: ObservationSpace
+  actionSpace: ActionSpace
+
+  constructor (protected config?: Record<string, unknown>) {
+    this.observationSpace = {}
+    this.actionSpace = {}
+  }
+
   abstract reset (config?: Record<string, unknown>): ResetResult
   abstract step (action: Action): StepResult
   abstract render (): Surface

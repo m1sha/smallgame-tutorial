@@ -11,7 +11,8 @@ export class ArkanoidEnv extends Env {
   readonly renderer: ArkanoidRenderer
   private ticks: number | undefined = undefined
   private steps: number = 0
-  private  prevRewardCounter: RewardCounter
+  private prevRewardCounter: RewardCounter
+  renderingTicks = 1
 
   constructor (config?: Record<string, unknown>) {
     super(config)
@@ -24,6 +25,7 @@ export class ArkanoidEnv extends Env {
   }
 
   reset (config?: Record<string, unknown>): ResetResult {
+    this.steps = 0
     this.arkanoid.reset()
     return {
       info: {},
@@ -38,7 +40,9 @@ export class ArkanoidEnv extends Env {
     if (!terminated) {
       if (action.value === 1) this.arkanoid.moveLeft()
       if (action.value === 2) this.arkanoid.moveRight()
-      this.arkanoid.next()
+
+      for (let i = 0; i < this.renderingTicks; i++)
+        this.arkanoid.next()
     }
     
     return {
