@@ -4,7 +4,7 @@ import { Discrete, Env, ResetResult, StepResult } from "../../../../utils/ai/env
 import { Arkanoid } from "./game/arkanoid";
 import { createArkanoidGameDefinition } from "./game-definition"
 import { ArkanoidRenderer } from "./renderer"
-import { RewardCounter } from "./reward-counter";
+import { RewardCounter } from "./reward-counter"
 
 export class ArkanoidEnv extends Env {
   readonly arkanoid: Arkanoid
@@ -25,6 +25,7 @@ export class ArkanoidEnv extends Env {
   }
 
   reset (config?: Record<string, unknown>): ResetResult {
+    this.renderingTicks = 1
     this.steps = 0
     this.arkanoid.reset()
     return {
@@ -38,8 +39,7 @@ export class ArkanoidEnv extends Env {
     let terminated = typeof this.ticks === 'number' && this.steps++ > this.ticks
    
     if (!terminated) {
-      if (action.value === 1) this.arkanoid.moveLeft()
-      if (action.value === 2) this.arkanoid.moveRight()
+      this.arkanoid.action(action.value)
 
       for (let i = 0; i < this.renderingTicks; i++)
         this.arkanoid.next()

@@ -36,8 +36,9 @@ export class Arkanoid {
     this.state = 'playing'
   }
 
-  moveLeft () {
+  private moveLeft () {
     if (this.state !== 'playing') return
+    if (this.ball.velocity.isZero()) this.ball.velocity.moveSelf(1, 1)
     const tick = this.def.getDt()
     this.carrent.moveLeft(tick)
     if (this.carrent.position.x < 0 || this.carrent.position.x + this.carrent.size.width > this.world.size.width) {
@@ -47,8 +48,9 @@ export class Arkanoid {
     this.rewards.addRewardForMovement()
   }
 
-  moveRight () {
+  private moveRight () {
     if (this.state !== 'playing') return
+    if (this.ball.velocity.isZero()) this.ball.velocity.moveSelf(-1, 1)
     const tick = this.def.getDt()
     this.carrent.moveRight(tick)
     if (this.carrent.position.x < 0 || this.carrent.position.x + this.carrent.size.width > this.world.size.width) {
@@ -59,7 +61,7 @@ export class Arkanoid {
   }
 
   action (n: number) {
-    if (n < 1 || n > 2) throw new Error('An action must be 1 or 2.')
+    if (n < 0 || n > 2) throw new Error('An action must be 0, 1, or 2.')
     if (n === 1) this.moveLeft()
     if (n === 2) this.moveRight()
   }
