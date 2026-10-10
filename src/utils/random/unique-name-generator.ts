@@ -24,6 +24,7 @@ export class UniqueNameGenerator {
 
     const val = this.names[this.order[this.position++]];
     if (this.nameStyle === 'none') return val
+    
     const temp = val.split(' ')
     const mid = new Random().pick(['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'])
     return `${temp[0].charAt(0)}. ${mid}. ${temp[1]}`

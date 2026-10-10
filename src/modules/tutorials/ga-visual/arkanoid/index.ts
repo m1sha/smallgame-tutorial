@@ -84,8 +84,8 @@ export default async ({ container, containerSize, fps, builders, garbageCollect,
     //population.add()
   }
 
-  agentTrainerPanel.epochs = 100
-  agentTrainerPanel.onStartTrain = () => ArkanoidAgentsTrainerHelper.train(agentTrainerPanel.epochs)
+  agentTrainerPanel.epochs = 10
+  agentTrainerPanel.onStartTrain = () => ArkanoidAgentsTrainerHelper.train(agentTrainerPanel.epochs, agentTrainerPanel.definition)
 
   ArkanoidAgentsTrainerHelper.onTrain = (data) => {
     agentTrainerPanel.epoch = data.epoch

@@ -20,3 +20,17 @@ export type GeneticTrainerDefinition = {
     strength: number
   }
 }
+
+export function defualtGeneticTrainerDefinition (): GeneticTrainerDefinition {
+  return {
+    elitePercent: 5,
+    reproduction: {
+      tournamentCount: 3,
+      crossover: { type: 'UniformCrossover' },
+    },
+    mutation: {
+      rate: 0.1,
+      strength: 0.2
+    }
+  }
+}

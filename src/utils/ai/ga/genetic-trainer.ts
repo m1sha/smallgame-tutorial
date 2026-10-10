@@ -2,13 +2,13 @@ import { Individual } from "./individual"
 import { blendCrossover, uniformCrossover } from "./mate"
 import { mutate } from "./mutate"
 import { Population } from "./population"
-import { GeneticTrainerDefinition } from './genetic-trainer-definitions'
+import { defualtGeneticTrainerDefinition, GeneticTrainerDefinition } from './genetic-trainer-definitions'
 
 export class GeneticTrainer {
   #epochs = 0
   population: Population
 
-  constructor (readonly def: GeneticTrainerDefinition, population?: Population) {
+  constructor (public def: GeneticTrainerDefinition = defualtGeneticTrainerDefinition(), population?: Population) {
     this.population = population ? population : new Population()
   }
 

@@ -4,6 +4,7 @@ import AgentTrainer from "./components/agent-trainer.vue"
 import { createReactiveData } from "../../../../../../components/example"
 import { AgentsTrainerData } from "./agent-trainer-data.ts"
 import { GeneticTrainerDefinition } from "../../../../../../utils/ai"
+import { toRaw } from "vue"
 
 export class AgentTrainerPanel extends Panel<AgentsTrainerData> {
   constructor () {
@@ -34,6 +35,8 @@ export class AgentTrainerPanel extends Panel<AgentsTrainerData> {
   set epoch (value: number) { this.data.training.epoch = value }
   get epochs () { return this.data.training.epochs }
   set epochs (value: number) { this.data.training.epochs = value }
+
+  get definition () { return toRaw(this.data.definition) }
 
   addLog (epoch: number, max: number, mean: number, min: number, brockenBricks: number, catchTimes: number) {
     this.data.log.push({ 

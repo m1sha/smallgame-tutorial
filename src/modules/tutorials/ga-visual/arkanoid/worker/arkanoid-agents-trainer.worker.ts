@@ -1,27 +1,15 @@
 import { Size } from "smallgame"
 import { UniqueNameGenerator } from "../../../../../utils/random"
 
-import { Arkanoid, createEnv } from "../../../../games/v2"
+import { createEnv } from "../../../../games/v2"
 import { ArkanoidAgent } from "../arkanoid-agent"
 import { GeneticTrainer, GeneticTrainerDefinition } from "../../../../../utils/ai"
 
 const worldSize = new Size(560, 460)
-//const arkanoid = Arkanoid.create(worldSize, () => 3)
 const env = createEnv('arkanoid', { worldSize, dt: () => 3, gameTicks: 8000 })
-const definitions: GeneticTrainerDefinition = {
-  elitePercent: 5,
-  reproduction: {
-    tournamentCount: 3,
-    crossover: { type: 'UniformCrossover' },
-  },
-  mutation: {
-    rate: 0.1,
-    strength: 0.2
-  }
-}
-const agentTrainer = new GeneticTrainer(definitions)
+
+const agentTrainer = new GeneticTrainer()
 const names = new UniqueNameGenerator()
-names.useHumanStyle()
 agentTrainer.createIndividual = (epoch, needInit) => {
     const e = epoch ? ' v.' + epoch : ''
     const name = `${names.next()}${e}`
@@ -36,12 +24,14 @@ agentTrainer.fitnessFunc = individual => {
 self.onmessage = (e: MessageEvent) => {
   const command = e.data.command
   const epochs = e.data.epochs
+  const definitions = e.data.definitions
   if (command === 'train') {
-    train(epochs)
+    train(epochs, definitions)
   }
 }
 
-function train (epochs: number) {
+function train (epochs: number, definitions: GeneticTrainerDefinition) {
+  agentTrainer.def = definitions
   agentTrainer.train(epochs, epoch => {
     const topone = agentTrainer.population.top(1)[0] as ArkanoidAgent
     const meen =  agentTrainer.population.meen()
