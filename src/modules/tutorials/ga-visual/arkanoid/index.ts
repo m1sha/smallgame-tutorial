@@ -11,10 +11,6 @@ import { Discrete } from "../../../../utils/ai/enviroment"
 
 export default async ({ container, containerSize, fps, builders, garbageCollect, globalViewport, panels, modals }: ScriptSettings): Promise<void> => {
   const viewer = new Viewer(containerSize, container, { disableContextMenu: true, garbageCollect, globalViewport })
-  const telemetry = builders.telemetry().noLegend()
-  const score = telemetry.def('Score', 0)
-  const frames = telemetry.def('Frames', 0)
-
   const store = new ArkanoidStore()
   await store.load()
 
@@ -25,17 +21,28 @@ export default async ({ container, containerSize, fps, builders, garbageCollect,
 
   const worldSize = new Size(560, 460)
   const env = createEnv('arkanoid', { worldSize, dt: () => 3 })
+  const reset = () => {
+    actionsPanel.frameCount = 0
+    actionsPanel.score = 0
+    env.reset()
+  }
+  //env.renderingTicks = 10
 
-  actionsPanel.onAction = (action) => {
-    //arkanoid.action(action)
-    //arkanoid.next()
-    //renderer.render(arkanoid)
-    frames.value ++
+  actionsPanel.onAction = (actionName, args) => {
+    if (actionName === 'reset') reset()
+    if (actionName === 'move') {
+      env.step(new Discrete(args))
+      env.render()
+      actionsPanel.frameCount ++
+    }
+    
   }
 
+  let interactiveAction = 0
   viewer.onKeyPressed = keys => {
-    if (keys.horizontalAxisRaw !== 0)
-      env.step(new Discrete(keys.horizontalAxisRaw < 0 ? 1 : 2)) // arkanoid.action(keys.horizontalAxisRaw < 0 ? 1 : 2)
+    interactiveAction = 0
+    if (keys.horizontalAxisRaw !== 0) 
+      interactiveAction = keys.horizontalAxisRaw < 0 ? 1 : 2
   }
   
   let topagent: ArkanoidAgent | null = new ArkanoidAgent(env, 'yo')
@@ -51,14 +58,20 @@ export default async ({ container, containerSize, fps, builders, garbageCollect,
     frame.blit(image, rect)
     displayFps(fps)
 
-    if (topagent) {
-      const { observation, reward, terminated } = env.step(new Discrete(decision))
-      decision = topagent.decide(observation as Float32Array)
-      score.value += reward
+    if (actionsPanel.mode !== 'step')
+      actionsPanel.frameCount++
 
-      if (terminated) {
-        env.reset()
-      }
+    
+
+    if (actionsPanel.mode === 'agent' || actionsPanel.mode === 'interactive') {
+      const action = new Discrete(actionsPanel.mode === 'agent'  && topagent ? decision : interactiveAction) 
+      const { observation, reward, terminated } = env.step(action)
+
+      if (actionsPanel.mode === 'agent' && topagent) decision = topagent.decide(observation as Float32Array)
+      
+      actionsPanel.score += reward
+
+      if (terminated) reset()
     }
   }
 
@@ -85,8 +98,7 @@ export default async ({ container, containerSize, fps, builders, garbageCollect,
     topagent = new ArkanoidAgent(env, name)
     topagent.id = id
     topagent.load(new Float32Array(weights))
-    //arkanoid.reset()
-    env.reset()
+    reset()
   }
 
 }

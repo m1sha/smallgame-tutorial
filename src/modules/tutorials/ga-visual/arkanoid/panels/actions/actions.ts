@@ -5,17 +5,34 @@ import { ActionsData } from "./actions-data.ts";
 import { createReactiveData } from "../../../../../../components/example/index.ts";
 
 export class ActionsPanel extends Panel<ActionsData> {
-  onAction: ((action: number) => void) | null = null
+  onAction: ((actionName: string, args?: any) => void) | null = null
   constructor () {
-    super('Actions', ActionPanelComponent, new Point(600, 50))
+    super('Arkanoid', ActionPanelComponent, new Point(400, 50))
 
-    this.action = (actionName) => {
-      let a = 0
-      if (actionName === 'left') a = 1
-      if (actionName === 'right') a = 2
-      this.onAction?.(a)
+    this.action = (actionName, arg) => {
+      this.onAction?.(actionName, arg)
     }
 
-    this.data = createReactiveData({ parameters: { mode: 'step' }})
+    this.data = createReactiveData({ parameters: { mode: 'step', frames: 0, score: 0 }})
+  }
+
+  get mode () {
+    return this.data!.parameters.mode
+  }
+
+  get frameCount () {
+    return this.data!.parameters.frames
+  }
+
+  set frameCount (value: number) {
+    this.data!.parameters.frames = value
+  }
+
+  get score () {
+    return this.data!.parameters.score
+  }
+
+  set score (value: number) {
+    this.data!.parameters.score = value
   }
 }
