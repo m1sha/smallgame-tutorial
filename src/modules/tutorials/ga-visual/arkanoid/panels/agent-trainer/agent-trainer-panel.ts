@@ -12,6 +12,7 @@ export class AgentTrainerPanel extends Panel<AgentsTrainerData> {
 
     
   const definition: GeneticTrainerDefinition = {
+    seed: 0 | Math.random() * 1_000_000_000,
     elitePercent: 5,
     reproduction: {
       tournamentCount: 3,

@@ -40,6 +40,12 @@ const emit = defineEmits<{ postData: [actionName: string]}>()
         <p>Training Settings</p>
       </div>
       <div class="block">
+        <div style="display: flex; align-items: center;">
+          <span>Seed</span>
+          <TextBox v-model="definition.seed" />
+        </div>
+      </div>
+      <div class="block">
         <div>
           <span>Epoch</span>
           <span>{{ training.epoch }}</span>

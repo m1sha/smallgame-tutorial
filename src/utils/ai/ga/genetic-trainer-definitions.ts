@@ -10,6 +10,7 @@ export type BlendCrossover = {
 type Crossovers = UniformCrossover | BlendCrossover
 
 export type GeneticTrainerDefinition = {
+  seed?: number 
   elitePercent: number
   reproduction: {
     tournamentCount: number,
