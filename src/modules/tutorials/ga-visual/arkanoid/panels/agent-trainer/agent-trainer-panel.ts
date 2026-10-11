@@ -23,10 +23,13 @@ export class AgentTrainerPanel extends Panel<AgentsTrainerData> {
     }
   }
 
-    this.data = createReactiveData({ training: { epoch: 0, epochs: 0 }, log: [], definition })
+    this.data = createReactiveData({ training: { epoch: 0, epochs: 0 }, log: [], definition, running: false })
     this.action = (actionName) => {
       if (actionName === 'train') {
         this.onStartTrain?.(this.data.training.epoch, this.data.training.epochs, this.data.definition)
+      }
+      if (actionName === 'stop') {
+        this.onStopTrain?.()
       }
     }
   }
@@ -37,6 +40,9 @@ export class AgentTrainerPanel extends Panel<AgentsTrainerData> {
   set epochs (value: number) { this.data.training.epochs = value }
 
   get definition () { return toRaw(this.data.definition) }
+
+  get running () { return this.data.running }
+  set running (value: boolean) { this.data.running = value }
 
   addLog (epoch: number, max: number, mean: number, min: number, brockenBricks: number, catchTimes: number) {
     this.data.log.push({ 
@@ -52,4 +58,5 @@ export class AgentTrainerPanel extends Panel<AgentsTrainerData> {
   }
 
   onStartTrain: ((epoch: number, epochs: number, definition: GeneticTrainerDefinition) => void) | null = null
+  onStopTrain: (() => void) | null = null
 } 

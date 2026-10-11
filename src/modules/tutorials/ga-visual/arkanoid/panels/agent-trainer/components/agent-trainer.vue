@@ -49,7 +49,8 @@ const emit = defineEmits<{ postData: [actionName: string]}>()
           <TextBox v-model="training.epochs" />
         </div>
         <div>
-          <button @click="emit('postData', 'train')">Train</button>
+          <button v-if="!running" @click="emit('postData', 'train')">Train</button>
+          <button v-if="running" @click="emit('postData', 'stop')">Stop</button>
         </div>
       </div>
     </div>

@@ -24,13 +24,13 @@ export class GeneticTrainer {
     }
   }
 
-  train (epochs: number, callback: (epoch: number) => void) {
-    for (let i = 0; i < epochs; i++) {
-      this.#epochs++
-      this._evaluate()
-      callback(this.#epochs)
-      this._train()
-    }
+  evaluate () {
+    this._evaluate()
+  }
+
+  train () {
+    this.#epochs++
+    this._train()
   }
 
   private _train () {

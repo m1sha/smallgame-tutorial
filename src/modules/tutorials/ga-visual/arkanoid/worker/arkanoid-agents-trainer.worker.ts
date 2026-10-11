@@ -25,15 +25,37 @@ self.onmessage = (e: MessageEvent) => {
   const command = e.data.command
   const epochs = e.data.epochs
   const definitions = e.data.definitions
+  const cancellationToken = new Uint8Array(e.data.buffer)
   if (command === 'train') {
-    train(epochs, definitions)
+    train(epochs, definitions, cancellationToken)
+  }
+
+}
+
+function train (epochs: number, definitions: GeneticTrainerDefinition, cancellationToken: Uint8Array) {
+  agentTrainer.def = definitions
+  
+  for (let epoch = 0; epoch < epochs; epoch++ ) {
+    agentTrainer.evaluate()
+  
+    const topone = agentTrainer.population.top(1)[0] as ArkanoidAgent
+    postStatistic(epoch + 1, topone)
+
+    if (isStopped(cancellationToken)) {
+      postResult(epoch + 1, topone)
+      break
+    }
+
+    if (epoch < epochs - 1) {
+      agentTrainer.train()
+      continue
+    }
+
+    postResult(epoch + 1, topone)
   }
 }
 
-function train (epochs: number, definitions: GeneticTrainerDefinition) {
-  agentTrainer.def = definitions
-  agentTrainer.train(epochs, epoch => {
-    const topone = agentTrainer.population.top(1)[0] as ArkanoidAgent
+function postStatistic (epoch: number, topone: ArkanoidAgent) {
     const meen =  agentTrainer.population.meen()
     const min =  agentTrainer.population.worst()
     const brokenBricks = topone.rewards.brokenBricks
@@ -50,10 +72,10 @@ function train (epochs: number, definitions: GeneticTrainerDefinition) {
         catchTimes
       } 
     })
+}
 
-    if (epoch < epochs - 1) return
-
-    const individuals: any[] = []
+function postResult (epoch: number, topone: ArkanoidAgent) {
+   const individuals: any[] = []
     for (const individual of agentTrainer.population.individuals) {
       const a = individual as ArkanoidAgent
       individuals.push({
@@ -86,6 +108,8 @@ function train (epochs: number, definitions: GeneticTrainerDefinition) {
         }
       }
     })
-  })
+}
 
+function isStopped (cancellationToken: Uint8Array) {
+  return Atomics.load(cancellationToken, 0) === 0
 }

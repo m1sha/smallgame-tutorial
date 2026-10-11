@@ -7,6 +7,7 @@ export type AgentsTrainerData = {
   }
   log: TrainLogRecord[]
   definition: GeneticTrainerDefinition
+  running: boolean
 }
 
 export type TrainLogRecord = {

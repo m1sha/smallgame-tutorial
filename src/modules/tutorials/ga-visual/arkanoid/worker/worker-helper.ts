@@ -5,15 +5,23 @@ interface IArkanoidAgentsTrainerHelper {
   onTrain: ((data: any) => void) | null
   onComplete: ((data: any) => void) | null
   train (epochs: number, config: any): void
+  cancellationToken: Uint8Array
+  stop (): void
+  //running: boolean
 }
 
 const ArkanoidAgentsTrainerHelper: IArkanoidAgentsTrainerHelper = {
   onTrain: null,
   onComplete: null,
+  cancellationToken: new Uint8Array(new SharedArrayBuffer(4)),
+  //running: false,
   train (epochs: number, definitions: any) {
+    const self = ArkanoidAgentsTrainerHelper
+    Atomics.store(self.cancellationToken, 0, 1)
+
     worker?.terminate()
     worker = new ArkanoidAgentsTrainer()
-    worker.postMessage({ command: 'train', epochs, definitions })
+    worker.postMessage({ command: 'train', epochs, definitions, buffer: self.cancellationToken.buffer })
     worker.onmessage = e => {
     const command = e.data.command
     const result = e.data.result
@@ -23,6 +31,10 @@ const ArkanoidAgentsTrainerHelper: IArkanoidAgentsTrainerHelper = {
       ArkanoidAgentsTrainerHelper.onComplete?.(result)
     }
 
+  },
+  stop () {
+    const self = ArkanoidAgentsTrainerHelper
+    Atomics.store(self.cancellationToken, 0, 0)
   }
 }
 
