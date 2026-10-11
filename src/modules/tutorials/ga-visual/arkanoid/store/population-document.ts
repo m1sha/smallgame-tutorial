@@ -1,5 +1,6 @@
 import { JsonDocument, RemoteStorage, uuidv4 } from "../../../../../utils"
 import { Model, ModelDefinition } from "../../../../../utils/ai"
+import { ArkanoidAgent } from "../arkanoid-agent"
 
 export type PopulationDocument = {
   id: string
@@ -31,4 +32,16 @@ export async function savePopulation (name: string, agents: { id: string, name: 
 
   const doc = JsonDocument.create(name, population)
   await doc.save()
+}
+
+export async function loadPopulation (name: string) {
+ const doc = await JsonDocument.find(name)
+ const population = await doc.load<PopulationDocument>()
+ const agents = population.agents.map(p => {
+  const agent = new ArkanoidAgent(p.name)
+  agent.id = p.id
+  agent.model.setWeights(new Float32Array(p.weights))
+  return agent
+ })
+ return { agents }
 }

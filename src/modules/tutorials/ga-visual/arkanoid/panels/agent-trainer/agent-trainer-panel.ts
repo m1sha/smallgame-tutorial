@@ -8,7 +8,7 @@ import { toRaw } from "vue"
 
 export class AgentTrainerPanel extends Panel<AgentsTrainerData> {
   constructor () {
-    super('Agents Trainer', AgentTrainer, new Point(1500, 10))
+    super('GA Trainer', AgentTrainer, new Point(1500, 10))
 
     
   const definition: GeneticTrainerDefinition = {

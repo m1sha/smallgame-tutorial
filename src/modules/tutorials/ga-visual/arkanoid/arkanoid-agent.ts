@@ -1,14 +1,14 @@
 
 import { Individual, Model } from "../../../../utils/ai"
 import { Discrete, Env } from "../../../../utils/ai/enviroment"
-import { UniqueNameGenerator } from "../../../../utils/random"
-import { Arkanoid, RewardCounter } from "../../../games/v2"
+import { Random, UniqueNameGenerator } from "../../../../utils/random"
+import { RewardCounter } from "../../../games/v2"
 export class ArkanoidAgent extends Individual {
   model: Model
   timeLife = 0
   rewards: RewardCounter
 
-  constructor (private env: Env, name: string, private needInit: boolean = false) {
+  constructor ( name: string, private needInit: boolean = false) {
     super()
     this.name = name
     const inputLegth = 10
@@ -25,15 +25,15 @@ export class ArkanoidAgent extends Individual {
     return this.model.predict(observations)
   }
 
-  calcFitness () {
+  calcFitness (env: Env,) {
     const gameTicks = 80000
-    let { observation } = this.env.reset({ gameTicks })
+    let { observation } = env.reset({ gameTicks })
     
     let tick = 0
     let rewards = 0
     for (tick; tick < gameTicks; tick++) {
       const action = this.model.predict(observation as Float32Array)
-      const result = this.env.step(new Discrete(action))
+      const result = env.step(new Discrete(action))
       observation = result.observation
       rewards += result.reward
 
@@ -49,7 +49,7 @@ export class ArkanoidAgent extends Individual {
   }
 
   dup(): ArkanoidAgent {
-    const clone = new ArkanoidAgent(this.env, this.name, this.needInit)
+    const clone = new ArkanoidAgent(this.name, this.needInit)
     clone.name = this.name
     clone.cloneCount = this.cloneCount + 1
     clone.fitness = this.fitness
@@ -58,12 +58,13 @@ export class ArkanoidAgent extends Individual {
   }
 }
 
-const names = new UniqueNameGenerator()
-export function createAgents (env: Env, count: number, needInit = true) {
+const random = new Random(1)
+const names = new UniqueNameGenerator(() => random.next())
+export function createAgents (count: number, needInit = true) {
   const result: ArkanoidAgent[] = []
   for (let i =0; i < count; i++) {
     const name = `${names.next()}`
-    result.push(new ArkanoidAgent(env, name, needInit))
+    result.push(new ArkanoidAgent(name, needInit))
   }
   return result
 }

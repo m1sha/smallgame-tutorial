@@ -6,7 +6,7 @@ import { createReactiveData } from "../../../../../../components/example"
 
 export class AgentsStatisticsPanel extends Panel<AgentsStatisticsData> {
   constructor () {
-    super('Agents', AgentsStatisticsComponent, new Point(10, 310))
+    super('Populations', AgentsStatisticsComponent, new Point(10, 310))
     this.data = createReactiveData({ agents: [] })
     this.action = (actionName, args) => {
       if (actionName === 'download-weigths') {

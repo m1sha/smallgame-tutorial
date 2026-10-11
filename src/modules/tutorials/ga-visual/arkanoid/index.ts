@@ -2,12 +2,13 @@ import { Rect, Size } from "smallgame"
 import { createEnv } from "../../../games/v2"
 import { type ScriptSettings, Viewer, displayFps } from "../../core"
 import { ActionsPanel, AgentsStatisticsPanel, AgentTrainerPanel, createAgentInfo } from "./panels"
-import { ArkanoidAgent } from "./arkanoid-agent"
+import { ArkanoidAgent, createAgents } from "./arkanoid-agent"
 import { ArkanoidAgentsTrainerHelper } from "./worker"
 import yoneur from "./agents-raw/yoneur"
 import { RemoteStorePanel } from "../../../shared"
 import { ArkanoidStore } from "./store"
 import { Discrete } from "../../../../utils/ai/enviroment"
+import { savePopulation } from "./store/population-document"
 
 export default async ({ container, containerSize, fps, builders, garbageCollect, globalViewport, panels, modals }: ScriptSettings): Promise<void> => {
   const viewer = new Viewer(containerSize, container, { disableContextMenu: true, garbageCollect, globalViewport })
@@ -45,7 +46,7 @@ export default async ({ container, containerSize, fps, builders, garbageCollect,
       interactiveAction = keys.horizontalAxisRaw < 0 ? 1 : 2
   }
   
-  let topagent: ArkanoidAgent | null = new ArkanoidAgent(env, 'yo')
+  let topagent: ArkanoidAgent | null = new ArkanoidAgent('yo')
   topagent.load(new Float32Array(yoneur))
 
   const rect = Rect.size(worldSize)
@@ -60,8 +61,6 @@ export default async ({ container, containerSize, fps, builders, garbageCollect,
 
     if (actionsPanel.mode !== 'step')
       actionsPanel.frameCount++
-
-    
 
     if (actionsPanel.mode === 'agent' || actionsPanel.mode === 'interactive') {
       const action = new Discrete(actionsPanel.mode === 'agent'  && topagent ? decision : interactiveAction) 
@@ -79,18 +78,21 @@ export default async ({ container, containerSize, fps, builders, garbageCollect,
     debugger
     const name = await modals.choose('Name', 'Create Population', ['Ho', 'Hi', 'Super'], 'Hi')
     console.log('Name', name)
-    //const agents = createAgents(size)
-    //await savePopulation('Aquazoic', agents)
+    const agents = createAgents(size)
+    console.log(agents.map(p => p.name).join('\n'))
+    await savePopulation('Nullyobic', agents)
     //population.add()
   }
-
   
   agentTrainerPanel.epochs = 10
   agentTrainerPanel.onStartTrain = () => {
-    //debugger
     agentTrainerPanel.running = true
-  
-    ArkanoidAgentsTrainerHelper.train(agentTrainerPanel.epochs, agentTrainerPanel.definition)
+    ArkanoidAgentsTrainerHelper.train(
+      'Nullyobic', 
+      agentTrainerPanel.epochs, 
+      agentTrainerPanel.definition, 
+      { gameTicks: 8000, dt: 3, worldSize: worldSize }
+    )
   }
   agentTrainerPanel.onStopTrain = () => {
     agentTrainerPanel.running = false
@@ -103,9 +105,10 @@ export default async ({ container, containerSize, fps, builders, garbageCollect,
   }
 
   ArkanoidAgentsTrainerHelper.onComplete = (data) => {
+    agentTrainerPanel.running = false
     data.individuals.forEach(individual => agentsStatisticsPanel.addAget(createAgentInfo(individual)))
     const { id, name, weights } = data.individual
-    topagent = new ArkanoidAgent(env, name)
+    topagent = new ArkanoidAgent(name)
     topagent.id = id
     topagent.load(new Float32Array(weights))
     reset()

@@ -26,7 +26,7 @@ export class Population {
     population.individuals.forEach(p => this.add(p))
   }
 
-  top (count) {
+  top (count: number) {
     return this.individuals.sort((a, b) => b.fitness - a.fitness).slice(0, count)
   }
 

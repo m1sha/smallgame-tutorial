@@ -7,7 +7,7 @@ import { createReactiveData } from "../../../../../../components/example/index.t
 export class ActionsPanel extends Panel<ActionsData> {
   onAction: ((actionName: string, args?: any) => void) | null = null
   constructor () {
-    super('Arkanoid', ActionPanelComponent, new Point(400, 50))
+    super('Game', ActionPanelComponent, new Point(400, 50))
 
     this.action = (actionName, arg) => {
       this.onAction?.(actionName, arg)

@@ -1,63 +1,67 @@
 import { Size } from "smallgame"
 import { UniqueNameGenerator } from "../../../../../utils/random"
-
 import { createEnv } from "../../../../games/v2"
 import { ArkanoidAgent } from "../arkanoid-agent"
 import { GeneticTrainer, GeneticTrainerDefinition } from "../../../../../utils/ai"
+import { loadPopulation } from "../store/population-document"
+import { GameEmulSetting } from "./worker-helper"
 
-const worldSize = new Size(560, 460)
-const env = createEnv('arkanoid', { worldSize, dt: () => 3, gameTicks: 8000 })
-
-const agentTrainer = new GeneticTrainer()
-const names = new UniqueNameGenerator()
-agentTrainer.createIndividual = (epoch, needInit) => {
-    const e = epoch ? ' v.' + epoch : ''
-    const name = `${names.next()}${e}`
-    return new ArkanoidAgent(env, name, needInit) 
-}
-agentTrainer.createPopulation(300)
-agentTrainer.fitnessFunc = individual => {
-  const agent = individual as ArkanoidAgent
-  return agent.calcFitness() 
-}
-
-self.onmessage = (e: MessageEvent) => {
+self.onmessage = async (e: MessageEvent) => {
   const command = e.data.command
   const epochs = e.data.epochs
   const definitions = e.data.definitions
+  const gameEmulSetting = e.data.gameEmulSetting
+  const populationName = e.data.populationName
   const cancellationToken = new Uint8Array(e.data.buffer)
   if (command === 'train') {
-    train(epochs, definitions, cancellationToken)
+    train(populationName, epochs, definitions, gameEmulSetting, cancellationToken)
   }
-
 }
 
-function train (epochs: number, definitions: GeneticTrainerDefinition, cancellationToken: Uint8Array) {
-  agentTrainer.def = definitions
+async function train (populationName: string, epochs: number, definitions: GeneticTrainerDefinition, gameEmulSetting: GameEmulSetting, cancellationToken: Uint8Array) {
+  const worldSize = new Size(gameEmulSetting.worldSize)
+  const env = createEnv('arkanoid', { worldSize, dt: () => gameEmulSetting.dt, gameTicks: gameEmulSetting.gameTicks })
+  const trainer = new GeneticTrainer()
+  const names = new UniqueNameGenerator()
   
-  for (let epoch = 0; epoch < epochs; epoch++ ) {
-    agentTrainer.evaluate()
+  trainer.createIndividual = (epoch, needInit) => {
+    const e = epoch ? ' v.' + epoch : ''
+    const name = `${names.next()}${e}`
+    return new ArkanoidAgent(name, needInit) 
+  }
+
+  const { agents } = await loadPopulation(populationName)
+  agents.forEach(p => trainer.population.add(p))
+
+  trainer.fitnessFunc = individual => {
+    const agent = individual as ArkanoidAgent
+    return agent.calcFitness(env) 
+  }
+  trainer.def = definitions
   
-    const topone = agentTrainer.population.top(1)[0] as ArkanoidAgent
-    postStatistic(epoch + 1, topone)
+  for (let epoch = 0; epoch < epochs; epoch++) {
+    trainer.evaluate()
+  
+    const topone = trainer.population.top(1)[0] as ArkanoidAgent
+    postStatistic(trainer, epoch + 1, topone)
 
     if (isStopped(cancellationToken)) {
-      postResult(epoch + 1, topone)
+      postResult(trainer, epoch + 1, topone)
       break
     }
 
     if (epoch < epochs - 1) {
-      agentTrainer.train()
+      trainer.train()
       continue
     }
 
-    postResult(epoch + 1, topone)
+    postResult(trainer, epoch + 1, topone)
   }
 }
 
-function postStatistic (epoch: number, topone: ArkanoidAgent) {
-    const meen =  agentTrainer.population.meen()
-    const min =  agentTrainer.population.worst()
+function postStatistic (ga: GeneticTrainer, epoch: number, topone: ArkanoidAgent) {
+    const meen = ga.population.meen()
+    const min = ga.population.worst()
     const brokenBricks = topone.rewards.brokenBricks
     const catchTimes = topone.rewards.catchTimes
 
@@ -74,9 +78,9 @@ function postStatistic (epoch: number, topone: ArkanoidAgent) {
     })
 }
 
-function postResult (epoch: number, topone: ArkanoidAgent) {
+function postResult (ga: GeneticTrainer, epoch: number, topone: ArkanoidAgent) {
    const individuals: any[] = []
-    for (const individual of agentTrainer.population.individuals) {
+    for (const individual of ga.population.individuals) {
       const a = individual as ArkanoidAgent
       individuals.push({
         id: individual.id,
