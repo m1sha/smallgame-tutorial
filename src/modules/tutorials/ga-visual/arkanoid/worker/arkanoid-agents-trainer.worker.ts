@@ -5,6 +5,7 @@ import { ArkanoidAgent } from "../arkanoid-agent"
 import { GeneticTrainer, GeneticTrainerDefinition } from "../../../../../utils/ai"
 import { loadPopulation } from "../store/population-document"
 import { GameEmulSetting } from "./worker-helper"
+import { CancellationToken, execute } from "../../../../../utils/workers"
 
 self.onmessage = async (e: MessageEvent) => {
   const command = e.data.command
@@ -12,13 +13,13 @@ self.onmessage = async (e: MessageEvent) => {
   const definitions = e.data.definitions
   const gameEmulSetting = e.data.gameEmulSetting
   const populationName = e.data.populationName
-  const cancellationToken = new Uint8Array(e.data.buffer)
+  const cancellationToken = new CancellationToken(e.data.buffer)
   if (command === 'train') {
     train(populationName, epochs, definitions, gameEmulSetting, cancellationToken)
   }
 }
 
-async function train (populationName: string, epochs: number, definitions: GeneticTrainerDefinition, gameEmulSetting: GameEmulSetting, cancellationToken: Uint8Array) {
+async function train (populationName: string, epochs: number, definitions: GeneticTrainerDefinition, gameEmulSetting: GameEmulSetting, cancellationToken: CancellationToken) {
   //debugger
   const worldSize = new Size(gameEmulSetting.worldSize)
   const env = createEnv('arkanoid', { worldSize, dt: () => gameEmulSetting.dt, gameTicks: gameEmulSetting.gameTicks })
@@ -41,26 +42,25 @@ async function train (populationName: string, epochs: number, definitions: Genet
     return agent.calcFitness(env) 
   }
   trainer.def = definitions
+
+  execute((termenate, epoch) => {
+    learn(trainer, epoch, termenate) 
+  }, epochs, cancellationToken)
   
-  for (let epoch = 0; epoch < epochs; epoch++) {
-    trainer.evaluate()
   
-    const topone = trainer.population.top(1)[0] as ArkanoidAgent
-    postStatistic(trainer, epoch + 1, topone)
-
-    if (isStopped(cancellationToken)) {
-      postResult(trainer, epoch + 1, topone)
-      break
-    }
-
-    if (epoch < epochs - 1) {
-      trainer.train()
-      continue
-    }
-
-    postResult(trainer, epoch + 1, topone)
-  }
 }
+
+function learn (trainer: GeneticTrainer, epoch: number, termenate: boolean) {
+  trainer.evaluate()
+  const topone = trainer.population.top(1)[0] as ArkanoidAgent
+  postStatistic(trainer, epoch + 1, topone)
+  if (termenate) {
+    postResult(trainer, epoch + 1, topone)
+    return
+  }
+  trainer.train()
+}
+
 
 function postStatistic (ga: GeneticTrainer, epoch: number, topone: ArkanoidAgent) {
     const meen = ga.population.meen()
@@ -117,6 +117,3 @@ function postResult (ga: GeneticTrainer, epoch: number, topone: ArkanoidAgent) {
     })
 }
 
-function isStopped (cancellationToken: Uint8Array) {
-  return Atomics.load(cancellationToken, 0) === 0
-}
