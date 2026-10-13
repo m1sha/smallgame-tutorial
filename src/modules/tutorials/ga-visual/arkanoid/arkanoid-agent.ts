@@ -8,7 +8,7 @@ export class ArkanoidAgent extends Individual {
   timeLife = 0
   rewards: RewardCounter
 
-  constructor ( name: string, private needInit: boolean = false) {
+  constructor ( name: string, private needInit: boolean = false, seed?: number) {
     super()
     this.name = name
     const inputLegth = 10
@@ -17,7 +17,7 @@ export class ArkanoidAgent extends Individual {
       hiddens: [ {neurons: 2, activation: 'tanh' }], 
       output: { neurons: 3, activation: 'softmax' }
     })
-    if (needInit) this.model.initWeights(11112211)
+    if (needInit) this.model.initWeights(seed)
     this.rewards = new RewardCounter()
   }
 
@@ -25,7 +25,7 @@ export class ArkanoidAgent extends Individual {
     return this.model.predict(observations)
   }
 
-  calcFitness (env: Env,) {
+  calcFitness (env: Env) {
     const gameTicks = 80000
     let { observation } = env.reset({ gameTicks })
     
@@ -41,10 +41,11 @@ export class ArkanoidAgent extends Individual {
     }
 
     const ticks = gameTicks - (gameTicks - tick)
-    const longPlay = ticks /gameTicks 
+    const longPlay = ticks / gameTicks 
     this.timeLife = longPlay
-    this.fitness = rewards + longPlay * 0.1
+    this.fitness = rewards
 
+    env.stop()
     return this.fitness 
   }
 

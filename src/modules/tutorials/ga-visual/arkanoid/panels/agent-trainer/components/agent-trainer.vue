@@ -42,7 +42,7 @@ const emit = defineEmits<{ postData: [actionName: string]}>()
       <div class="block">
         <div style="display: flex; align-items: center;">
           <span>Seed</span>
-          <TextBox v-model="definition.seed" />
+          <TextBox v-model="definition.seed" type="number" />
         </div>
       </div>
       <div class="block">
@@ -52,7 +52,7 @@ const emit = defineEmits<{ postData: [actionName: string]}>()
         </div>
         <div style="display: flex; align-items: center;">
           <span>Epochs</span>
-          <TextBox v-model="training.epochs" />
+          <TextBox v-model="training.epochs" type="number" />
         </div>
         <div>
           <button v-if="!running" @click="emit('postData', 'train')">Train</button>

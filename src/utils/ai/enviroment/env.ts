@@ -40,4 +40,5 @@ export abstract class Env {
   abstract reset (config?: Record<string, unknown>): ResetResult
   abstract step (action: Action): StepResult
   abstract render (): Surface
+  abstract stop (): void
 }

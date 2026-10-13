@@ -3,10 +3,14 @@ import { Individual } from "./individual";
 export class Population {
   individuals: Individual[] = []
 
+  constructor (private random: () => number) {
+
+  }
+
   tournamentSelect(k: number = 3): Individual {
-    let best = this.individuals[Math.floor(Math.random() * this.individuals.length)]
+    let best = this.individuals[Math.floor(this.random() * this.individuals.length)]
     for (let i = 1; i < k; i++) {
-      const candidate = this.individuals[Math.floor(Math.random() * this.individuals.length)]
+      const candidate = this.individuals[Math.floor(this.random() * this.individuals.length)]
       const e = candidate.fitness > best.fitness
       if (e) best = candidate
     }

@@ -12,6 +12,7 @@ export class ArkanoidEnv extends Env {
   private ticks: number | undefined = undefined
   private steps: number = 0
   private prevRewardCounter: RewardCounter
+  private stopped: boolean = false
   renderingTicks = 1
 
   constructor (config?: Record<string, unknown>) {
@@ -28,6 +29,7 @@ export class ArkanoidEnv extends Env {
     this.renderingTicks = 1
     this.steps = 0
     this.arkanoid.reset()
+    this.stopped = false
     return {
       info: {},
       observation: this.getObservations(this.arkanoid)
@@ -36,6 +38,14 @@ export class ArkanoidEnv extends Env {
   
 
   step (action: Discrete): StepResult {
+    if (this.stopped) return {
+      info: {},
+      observation: this.getObservations(this.arkanoid),
+      reward: this.calcReward(),
+      terminated: true,
+      truncated: true
+    }
+    
     let terminated = typeof this.ticks === 'number' && this.steps++ > this.ticks
    
     if (!terminated) {
@@ -59,22 +69,28 @@ export class ArkanoidEnv extends Env {
     return this.renderer.image
   }
 
+  stop () {
+    this.stopped = true
+  }
+
   private calcReward () {
     const diff = this.arkanoid.rewards.diff(this.prevRewardCounter)
     this.prevRewardCounter = this.arkanoid.rewards.dup()
-    return diff.brokenBricks / this.arkanoid.brickMap.count + diff.win
+    const brokenBricksReward = diff.brokenBricks / this.arkanoid.brickMap.count
+    const catchReward = 0 // diff.catchTimes * 0.01
+    return brokenBricksReward + catchReward + diff.win
   }
 
   private getObservations (arkanoid: Arkanoid) {
     const arr = new Float32Array(10)
     const size = arkanoid.world.size
     const { ball, carrent } = arkanoid
-    arr[0] = (ball.position.x - carrent.position.x) / size.width
-    arr[1] = (ball.position.y - carrent.position.y) / size.height
+    arr[0] = ball.position.x / size.width //(ball.position.x - carrent.position.x) / size.width
+    arr[1] = ball.position.y / size.height //(ball.position.y - carrent.position.y) / size.height
     arr[2] = ball.velocity.x
     arr[3] = ball.velocity.y
     arr[4] = 0 //this.arkanoid.ball.radius / size.height
-    arr[5] = (carrent.position.x + carrent.size.width / 2) / size.width
+    arr[5] = carrent.position.x / size.width
     arr[6] = carrent.position.y / size.height
     arr[7] = carrent.velocity.x
     arr[8] = carrent.velocity.y

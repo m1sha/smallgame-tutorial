@@ -1,5 +1,5 @@
 import { Size } from "smallgame"
-import { UniqueNameGenerator } from "../../../../../utils/random"
+import { Random, UniqueNameGenerator } from "../../../../../utils/random"
 import { createEnv } from "../../../../games/v2"
 import { ArkanoidAgent } from "../arkanoid-agent"
 import { GeneticTrainer, GeneticTrainerDefinition } from "../../../../../utils/ai"
@@ -19,19 +19,22 @@ self.onmessage = async (e: MessageEvent) => {
 }
 
 async function train (populationName: string, epochs: number, definitions: GeneticTrainerDefinition, gameEmulSetting: GameEmulSetting, cancellationToken: Uint8Array) {
+  //debugger
   const worldSize = new Size(gameEmulSetting.worldSize)
   const env = createEnv('arkanoid', { worldSize, dt: () => gameEmulSetting.dt, gameTicks: gameEmulSetting.gameTicks })
-  const trainer = new GeneticTrainer()
-  const names = new UniqueNameGenerator()
+  const random = new Random(definitions.seed)
+  const trainer = new GeneticTrainer(definitions, () => random.next())
+  const names = new UniqueNameGenerator(() => random.next())
   
   trainer.createIndividual = (epoch, needInit) => {
     const e = epoch ? ' v.' + epoch : ''
     const name = `${names.next()}${e}`
-    return new ArkanoidAgent(name, needInit) 
+    return new ArkanoidAgent(name, needInit, definitions.seed) 
   }
 
-  const { agents } = await loadPopulation(populationName)
-  agents.forEach(p => trainer.population.add(p))
+  //const { agents } = await loadPopulation(populationName)
+  //agents.forEach(p => trainer.population.add(p))
+  trainer.createPopulation(300)
 
   trainer.fitnessFunc = individual => {
     const agent = individual as ArkanoidAgent

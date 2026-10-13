@@ -3,16 +3,13 @@ import { blendCrossover, uniformCrossover } from "./mate"
 import { mutate } from "./mutate"
 import { Population } from "./population"
 import { defualtGeneticTrainerDefinition, GeneticTrainerDefinition } from './genetic-trainer-definitions'
-import { Random } from "../../random"
 
 export class GeneticTrainer {
   #epochs = 0
   population: Population
-  random: Random
 
-  constructor (public def: GeneticTrainerDefinition = defualtGeneticTrainerDefinition(), population?: Population) {
-    this.population = population ? population : new Population()
-    this.random = new Random(def.seed)
+  constructor (public def: GeneticTrainerDefinition = defualtGeneticTrainerDefinition(), private random: () => number) {
+    this.population = new Population(random)
   }
 
   get epochs () { return this.#epochs }
@@ -41,7 +38,7 @@ export class GeneticTrainer {
     
     const eliteCount = Math.max(1, Math.floor(this.population.count * def.elitePercent * 0.01))
     const elites = this.population.top(eliteCount)
-    const newGeneration = new Population()
+    const newGeneration = new Population(this.random)
     elites.forEach(p => newGeneration.add(p.dup()))
     
     const reproduction = def.reproduction
@@ -51,15 +48,15 @@ export class GeneticTrainer {
 
       let brain = null
       if (reproduction.crossover.type === 'UniformCrossover') {
-        brain = uniformCrossover(parentA.model.getWeights(), parentB.model.getWeights())
+        brain = uniformCrossover(parentA.model.getWeights(), parentB.model.getWeights(), this.random)
       }
       if (reproduction.crossover.type === 'BlendCrossover') {
-        brain = blendCrossover(parentA.model.getWeights(), parentB.model.getWeights(), reproduction.crossover.alpha)
+        brain = blendCrossover(parentA.model.getWeights(), parentB.model.getWeights(), reproduction.crossover.alpha, this.random)
       }
 
       if (!brain) throw new Error('brain is null')
        
-      mutate(brain, def.mutation.rate, def.mutation.strength, () => this.random.next())
+      mutate(brain, def.mutation.rate, def.mutation.strength, this.random)
 
       const child = this.createIndividual(this.epochs + 1, false)
       child.model.setWeights(brain)
