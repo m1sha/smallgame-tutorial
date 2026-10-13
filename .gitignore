@@ -24,3 +24,8 @@ dist-ssr
 *.sw?
 
 public/*
+
+# VuePress
+docs/
+docs/.vuepress/.cache/
+docs/.vuepress/.temp/
