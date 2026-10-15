@@ -37,7 +37,6 @@ export class Arkanoid {
   }
 
   private moveLeft () {
-    if (this.state !== 'playing') return
     if (this.ball.velocity.isZero()) this.ball.velocity.moveSelf(1, 1)
     const tick = this.def.getDt()
     this.carrent.moveLeft(tick)
@@ -49,7 +48,6 @@ export class Arkanoid {
   }
 
   private moveRight () {
-    if (this.state !== 'playing') return
     if (this.ball.velocity.isZero()) this.ball.velocity.moveSelf(-1, 1)
     const tick = this.def.getDt()
     this.carrent.moveRight(tick)
@@ -62,6 +60,7 @@ export class Arkanoid {
 
   action (n: number) {
     if (n < 0 || n > 2) throw new Error('An action must be 0, 1, or 2.')
+    if (this.state !== 'playing') return
     if (n === 1) this.moveLeft()
     if (n === 2) this.moveRight()
   }
@@ -77,16 +76,9 @@ export class Arkanoid {
     const tick = this.def.getDt()
 
     this.ball.move(tick)
-
     const bgResult = this.collider.ballCollidesWorld(this.ball, this.world)
-
     if (bgResult === 'GameOver') {
       this.state = 'gameover'
-      
-      return
-    }
-
-    if (bgResult === 'Collided') {
       return
     }
 
@@ -97,6 +89,7 @@ export class Arkanoid {
     if (this.collider.ballCollidesBricks(this.ball, this.brickMap.bricks)) {
       this.rewards.addRewardForBrokenBrick()
     }
+    
   }
 
   static create (worldSize: Size, getDt: () => number) {

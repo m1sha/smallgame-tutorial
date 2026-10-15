@@ -21,7 +21,7 @@ export default async ({ container, containerSize, fps, builders, garbageCollect,
   panels.use(RemoteStorePanel)
 
   const worldSize = new Size(560, 460)
-  const env = createEnv('arkanoid', { worldSize, dt: () => 4 })
+  const env = createEnv('arkanoid', { worldSize, dt: () => 2 })
   const reset = () => {
     actionsPanel.frameCount = 0
     actionsPanel.score = 0
@@ -94,7 +94,7 @@ export default async ({ container, containerSize, fps, builders, garbageCollect,
       'Nullyobic', 
       agentTrainerPanel.epochs, 
       agentTrainerPanel.definition, 
-      { gameTicks: 8000, dt: 4, worldSize: worldSize }
+      { gameTicks: 8000, dt: 2, worldSize: worldSize }
     )
   }
   agentTrainerPanel.onStopTrain = () => {

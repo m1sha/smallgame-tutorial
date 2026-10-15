@@ -30,11 +30,16 @@ export class Collider  {
     const cx1 = carrent.position.x + carrent.size.width
 
     if (ball.position.y + ball.radius < carrent.position.y) return false
+    if (ball.position.y + ball.radius > carrent.position.y + carrent.size.height + ball.radius) return true
     
     const collided = (cx0 <= bx0 && bx0 <= cx1) || (cx0 <= bx1 && bx1 <= cx1)
     if (collided) {
       ball.velocity.y = -Math.abs(ball.velocity.y)
       ball.position.y -= 4
+
+      const dx = 1 - (ball.position.x - carrent.position.x) / carrent.size.width
+      const x = Math.cos(-180*GMath.deg*dx)
+      ball.velocity.x = x * (dx > 0.5 ? 1: -1)
     }
     return collided
   }
